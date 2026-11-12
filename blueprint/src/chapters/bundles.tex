@@ -1,0 +1,363 @@
+\chapter{Vector bundles}
+\label{chap:bundles}
+
+Vector bundles with fibres modeled on locally convex spaces, defined by trivializing covers,
+pullbacks, Hom and dual bundles and the cotangent bundle, sections, connections on vector bundles
+with their curvature, induced connections and bundle metrics. As for connections on the tangent
+bundle (Chapter~\ref{chap:connections}), bilinear families are encoded as maps of several
+variables, with joint smoothness.
+
+\section{Vector bundles and their connections}
+\label{sec:vector-bundles}
+
+\begin{definition}[Trivializing covers]
+  \label{def:trivialization-cover}
+  \lean{LocallyConvex.Manifolds.TrivializationCover,
+    LocallyConvex.Manifolds.TrivializationCover.domain,
+    LocallyConvex.Manifolds.TrivializationCover.transDomain,
+    LocallyConvex.Manifolds.TrivializationCover.trans,
+    LocallyConvex.Manifolds.TrivializationCover.smoothMBOn_trans,
+    LocallyConvex.Manifolds.atlasCover}
+  \leanok
+  \uses{def:mb-manifold}
+  A \emph{trivializing cover} of $M$, indexed by a set $\iota$, is a family of open sets
+  $U_i \subseteq M$, each contained in the domain of a chart $\varphi_i$ of the atlas, together
+  with a choice, for every $x \in M$, of an index $i(x)$ with $x \in U_{i(x)}$. The domains of
+  the charts of the atlas form one.
+\end{definition}
+
+\begin{definition}[Vector bundles]
+  \label{def:vector-bundle}
+  \lean{LocallyConvex.Manifolds.MBVectorBundleCore,
+    LocallyConvex.Manifolds.MBVectorBundleCore.coordChangeLinear,
+    LocallyConvex.Manifolds.MBVectorBundleCore.continuousOn_coordChange,
+    LocallyConvex.Manifolds.MBVectorBundleCore.toFiberBundleCore,
+    LocallyConvex.Manifolds.MBVectorBundleCore.TotalSpace,
+    LocallyConvex.Manifolds.MBVectorBundleCore.bundleChart}
+  \leanok
+  \uses{def:trivialization-cover, def:tangent-bundle}
+  A \emph{vector bundle} over $M$ with fiber $F$, trivialized over a trivializing cover
+  $(U_i, \varphi_i)$, is given by coordinate changes $g_{ij}(x) \colon F \to F$ between the
+  trivializations over $U_i$ and $U_j$, linear for $x \in U_i \cap U_j$, satisfying the cocycle
+  conditions, and such that $(y, \xi) \mapsto g_{ij}(\varphi_i^{-1} y)\xi$ is smooth on
+  $\varphi_i(U_i \cap U_j) \times F$.
+\end{definition}
+
+If $F$ is not normable, $L(F)$ carries no vector topology for which the evaluation is continuous
+\cite[Satz 1]{Mai63},
+so one cannot ask $y \mapsto g_{ij}(y)$ to be a smooth map into $GL(F)$; joint smoothness of
+$(y, \xi) \mapsto g_{ij}(y)\xi$ is the substitute. For Banach spaces it is the classical
+condition only up to this difference of topologies on $L(F)$.
+
+\begin{theorem}[The total space is a manifold]
+  \label{thm:vector-bundle-manifold}
+  \lean{LocallyConvex.Manifolds.MBVectorBundleCore.smoothMBOn_bundleChart_transition,
+    LocallyConvex.Manifolds.MBVectorBundleCore.bundleChart_transition_mem,
+    LocallyConvex.Manifolds.MBVectorBundleCore.mbManifold,
+    LocallyConvex.Manifolds.tangentMBCore}
+  \leanok
+  \uses{def:vector-bundle}
+  The total space of a vector bundle with fiber $F$ is a manifold modeled on $E \times F$, with
+  transition maps $(y, \xi) \mapsto (\tau y, g(y)\xi)$. The tangent bundle is a vector bundle,
+  with coordinate changes $(y, w) \mapsto \dd\tau(y) w$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As for the tangent bundle: the transition maps are compositions of transition maps of $M$ with
+  the smooth maps $(y, \xi) \mapsto g(y)\xi$.
+\end{proof}
+
+\begin{definition}[Pullback bundles]
+  \label{def:pullback-bundle}
+  \lean{LocallyConvex.Manifolds.TrivializationCover.pullback,
+    LocallyConvex.Manifolds.SmoothMBM.continuous,
+    LocallyConvex.Manifolds.MBVectorBundleCore.pullback,
+    LocallyConvex.Manifolds.MBVectorBundleCore.pullbackMap,
+    LocallyConvex.Manifolds.MBVectorBundleCore.pullbackMap_proj}
+  \leanok
+  \uses{def:vector-bundle, def:contmdiff}
+  Let $f \colon N \to M$ be smooth and $V$ a vector bundle over $M$, trivialized over
+  $(U_i, \varphi_i)$. The \emph{pullback} $f^*V$ is the vector bundle over $N$ trivialized over the
+  sets $k.\mathrm{source} \cap f^{-1}(U_i)$, for $k$ a chart of $N$, with coordinate changes
+  $g_{ij} \circ f$. Its fiber over $x$ is the fiber of $V$ over $f(x)$.
+\end{definition}
+
+The bundle $f^*V$ need not be trivial over the domain of a chart of $N$, since $f$ need not map
+it into a single $U_i$; this is why vector bundles are trivialized over general covers rather
+than over the atlas of the base.
+
+\begin{theorem}[Hom bundles, dual bundles and the cotangent bundle]
+  \label{thm:hom-bundle}
+  \lean{LocallyConvex.Manifolds.MBVectorBundleCore.continuous_coordChange,
+    LocallyConvex.Manifolds.MBVectorBundleCore.coordCLM,
+    LocallyConvex.Manifolds.MBVectorBundleCore.coordCLM_apply,
+    LocallyConvex.Manifolds.MBVectorBundleCore.smoothMBOn_coordCLM,
+    LocallyConvex.Manifolds.MBVectorBundleCore.smoothMBOn_coordCLM_symm,
+    LocallyConvex.Manifolds.homCore, LocallyConvex.Manifolds.homCore_coordChange_apply,
+    LocallyConvex.Manifolds.trivialCore, LocallyConvex.Manifolds.dualCore,
+    LocallyConvex.Manifolds.cotangentCore}
+  \leanok
+  \uses{def:vector-bundle, thm:vector-bundle-manifold}
+  Let $V_1$, $V_2$ be vector bundles over $M$ with normed fibers $F_1$, $F_2$. There is a vector
+  bundle $\mathrm{Hom}(V_1, V_2)$ with fiber $\Lin(F_1, F_2)$ (operator norm) and coordinate
+  changes $A \mapsto g_2(x) \circ A \circ g_1(x)^{-1}$. In particular there is a dual bundle
+  $V' = \mathrm{Hom}(V, \R)$, and if $E$ is normed, a cotangent bundle $T^*M = (TM)'$, with
+  no completeness or reflexivity assumption.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The cocycle conditions are those of $V_1$ and $V_2$. For smoothness, the maps
+  $y \mapsto g_{ij}(y)$ are smooth for the operator norm, because $(y, \xi) \mapsto g_{ij}(y)\xi$
+  is smooth (\cite{LCA}, theorem on operator-valued maps, \texttt{contDiffMBOn\_of\_unc\_clm}),
+  and composition of operators is continuous and bilinear.
+\end{proof}
+
+If a fiber is not normable, $L(F_1, F_2)$ carries no vector topology for which the evaluation is
+continuous (\cite[Satz 1 and its footnote]{Mai63}), and these constructions are not available;
+Lempert notes the same restriction
+\cite[\S2, p.~488]{Lem98}.
+
+\begin{definition}[Connections on vector bundles]
+  \label{def:bundle-connection}
+  \lean{LocallyConvex.Manifolds.BundleConnection,
+    LocallyConvex.Manifolds.localCovDerivB}
+  \leanok
+  \uses{def:vector-bundle, def:connection-forms}
+  A \emph{connection} on a vector bundle is given by symbols $\Gamma_i(y)(a, \xi) \in F$ in the
+  trivialization over each chart, smooth and bilinear, subject to the gauge transformation law
+  \[
+    \Gamma_j(\tau y)(\dd\tau(y) a, g(y)\xi) = g(y)\Gamma_i(y)(a, \xi) + (\partial_a g)(y)\xi,
+  \]
+  where $\tau = j \circ i^{-1}$ and $g(y) = g_{ij}(i^{-1} y)$. In a trivialization, the covariant
+  derivative of a section is $\nabla_X s = \dd s \cdot X - \Gamma(X, s)$.
+\end{definition}
+
+\begin{lemma}[Calculus of the covariant derivative]
+  \label{lem:bundle-cov-deriv}
+  \lean{LocallyConvex.Manifolds.dMB_fiber_comp,
+    LocallyConvex.Manifolds.localCovDerivB_transition,
+    LocallyConvex.Manifolds.IsLocalSymbol.dMB_apply,
+    LocallyConvex.Manifolds.IsLocalSymbol.localCovDerivB_curv,
+    LocallyConvex.Manifolds.IsLocalSymbol.contDiffMBOn_localCovDerivB,
+    LocallyConvex.Manifolds.IsLocalSymbol.mono}
+  \leanok
+  \uses{def:bundle-connection, lem:conn-local-curv}
+  Under the gauge transformation law, the covariant derivative transforms covariantly:
+  if $X_j(\tau y) = \dd\tau(y) X_i(y)$ and $s_j \circ \tau = g \cdot s_i$, then
+  $\nabla_{X_j} s_j(\tau y) = g(y) \nabla_{X_i} s_i(y)$. For $C^2$ fields and sections,
+  $\nabla_X\nabla_Y s - \nabla_Y\nabla_X s - \nabla_{[X, Y]} s = \Omega(X, Y) s$ pointwise.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Product rules for $y \mapsto g(y)s(y)$ and $y \mapsto \Gamma(y)(A y, B y)$; in the curvature
+  formula the terms with derivatives of the fields and the section cancel, using the symmetry of
+  second derivatives of $s$, as in Lemma~\ref{lem:conn-local-curv}.
+\end{proof}
+
+\begin{theorem}[The curvature is a tensor]
+  \label{thm:curvature-gauge}
+  \lean{LocallyConvex.Manifolds.curvature_gauge,
+    LocallyConvex.Manifolds.BundleConnection.curvLoc_transition,
+    LocallyConvex.Manifolds.BundleConnection.dLoc_curvLoc,
+    LocallyConvex.Manifolds.Connection.toBundleConnection,
+    LocallyConvex.Manifolds.Connection.localCurv_transition}
+  \leanok
+  \uses{lem:bundle-cov-deriv, thm:second-bianchi, def:connection}
+  The curvature forms of a connection on a vector bundle satisfy
+  $\Omega_j(\tau y)(\dd\tau\, u, \dd\tau\, v)(g\xi) = g\,\Omega_i(y)(u, v)\xi$, and the second
+  Bianchi identity holds in every trivialization. A connection on $M$ is a connection on the
+  tangent bundle; in particular its curvature is a tensor.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Apply the curvature formula of Lemma~\ref{lem:bundle-cov-deriv} to the constant fields $u$,
+  $v$ and the constant section $\xi$ in the chart $i$, and to their images
+  $\dd\tau(\sigma z)u$, $\dd\tau(\sigma z)v$, $g(\sigma z)\xi$ in the chart $j$, where
+  $\sigma = \tau^{-1}$. Covariant derivatives and brackets transform covariantly, so the
+  left-hand sides correspond under $g(y)$. The argument uses neither partitions of unity nor
+  bump functions, which need not exist on locally convex manifolds.
+\end{proof}
+
+\begin{definition}[Sections and the covariant derivative]
+  \label{def:bundle-sections}
+  \lean{LocallyConvex.Manifolds.MBVectorBundleCore.IsSection,
+    LocallyConvex.Manifolds.MBVectorBundleCore.localRep,
+    LocallyConvex.Manifolds.MBVectorBundleCore.bundleChart_mem_atlas,
+    LocallyConvex.Manifolds.MBVectorBundleCore.localRep_transition,
+    LocallyConvex.Manifolds.MBVectorBundleCore.localRep_indexAt,
+    LocallyConvex.Manifolds.MBVectorBundleCore.contDiffMBOn_localRep,
+    LocallyConvex.Manifolds.BundleConnection.covDeriv,
+    LocallyConvex.Manifolds.BundleConnection.isSection_covDeriv,
+    LocallyConvex.Manifolds.BundleConnection.covDeriv_snd,
+    LocallyConvex.Manifolds.localCovDerivB_congr_right}
+  \leanok
+  \uses{def:bundle-connection, def:vector-field}
+  A section $s$ of a vector bundle has local representatives $s_i$ with
+  $s_j(\tau y) = g(y) s_i(y)$; those of a $C^k$ section are $C^k$. For a connection, the
+  covariant derivative $\nabla_X s$ of a section along a vector field is defined in the
+  preferred chart at each point by $\dd s_i \cdot X_i - \Gamma_i(X_i, s_i)$.
+\end{definition}
+
+\begin{theorem}[The global covariant derivative and curvature]
+  \label{thm:bundle-cov-deriv-global}
+  \lean{LocallyConvex.Manifolds.BundleConnection.localRep_covDeriv,
+    LocallyConvex.Manifolds.BundleConnection.curvature,
+    LocallyConvex.Manifolds.BundleConnection.curvature_eq}
+  \leanok
+  \uses{def:bundle-sections, lem:bundle-cov-deriv}
+  For a $C^1$ section, $\nabla_X s$ is given by $\dd s_j \cdot X_j - \Gamma_j(X_j, s_j)$ in
+  every trivialization. For $C^2$ fields and sections, the curvature
+  $R(X, Y)s = \nabla_X\nabla_Y s - \nabla_Y\nabla_X s - \nabla_{[X, Y]} s$ at $x$ is the
+  curvature form of the preferred chart evaluated at the values of $X$, $Y$, $s$ at $x$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The first statement is Lemma~\ref{lem:bundle-cov-deriv} between the preferred chart and the
+  chart $j$; the second is the local curvature formula, as for Theorem~\ref{thm:conn-curvature-tensorial}.
+\end{proof}
+
+\begin{definition}[Bundle metrics and metric connections]
+  \label{def:bundle-metric}
+  \lean{LocallyConvex.Manifolds.IsLocalBundleMetric, LocallyConvex.Manifolds.metricD,
+    LocallyConvex.Manifolds.IsLocalCompatible, LocallyConvex.Manifolds.BundleMetric,
+    LocallyConvex.Manifolds.BundleMetric.IsPositive,
+    LocallyConvex.Manifolds.BundleConnection.IsMetric}
+  \leanok
+  \uses{def:bundle-connection}
+  A \emph{bundle metric} is a smooth family $h_i(y)$ of symmetric bilinear forms on $F$ in each
+  trivialization, with $h_j(\tau y)(g\xi, g\eta) = h_i(y)(\xi, \eta)$; positivity is not
+  required. A connection is \emph{metric} if
+  $\partial_a h(\xi, \eta) = -h(\Gamma(a, \xi), \eta) - h(\xi, \Gamma(a, \eta))$ in every
+  trivialization.
+\end{definition}
+
+For a weak metric a metric connection need not exist; the statements below assume one.
+
+\begin{theorem}[Metric connections]
+  \label{thm:metric-connections}
+  \lean{LocallyConvex.Manifolds.IsLocalBundleMetric.dMB_apply,
+    LocallyConvex.Manifolds.IsLocalBundleMetric.localCompat_sections,
+    LocallyConvex.Manifolds.IsLocalBundleMetric.bundleCurv_skew,
+    LocallyConvex.Manifolds.BundleConnection.IsMetric.curvLoc_skew,
+    LocallyConvex.Manifolds.BundleConnection.IsMetric.curvature_skew}
+  \leanok
+  \uses{def:bundle-metric, thm:bundle-cov-deriv-global}
+  For a metric connection, $X h(s, t) = h(\nabla_X s, t) + h(s, \nabla_X t)$ for $C^1$
+  sections, and the curvature is skew-adjoint:
+  $h(R(X, Y)s, t) + h(s, R(X, Y)t) = 0$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The first statement is the product rule for $h$. For the second, differentiate the
+  compatibility condition in a second direction; the symmetry of the second derivatives of
+  $y \mapsto h(y)(\xi, \eta)$ gives the identity, after the terms
+  $h(\Gamma(a, \xi), \Gamma(b, \eta)) + h(\Gamma(b, \xi), \Gamma(a, \eta))$ cancel by symmetry.
+\end{proof}
+
+\begin{theorem}[Pullback connections]
+  \label{thm:pullback-connection}
+  \lean{LocallyConvex.Manifolds.TrivializationCover.pullbackRep,
+    LocallyConvex.Manifolds.TrivializationCover.smoothMBOn_pullbackRep,
+    LocallyConvex.Manifolds.TrivializationCover.pullbackRep_trans,
+    LocallyConvex.Manifolds.BundleConnection.pullbackSymbol,
+    LocallyConvex.Manifolds.BundleConnection.isLocalSymbol_pullbackSymbol,
+    LocallyConvex.Manifolds.BundleConnection.pullback}
+  \leanok
+  \uses{def:pullback-bundle, def:bundle-connection}
+  Let $f \colon N \to M$ be smooth and $\nabla$ a connection on $V$. In the trivialization of
+  $f^*V$ over $k.\mathrm{source} \cap f^{-1}(U_i)$, let $F = \varphi_i \circ f \circ k^{-1}$. The
+  symbols $\Gamma_i(F y)(\dd F(y) a, \xi)$ define a connection $f^*\nabla$ on $f^*V$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The local representatives intertwine the coordinate changes, $F_q \circ \tau' = \tau \circ F_p$,
+  so by the chain rule the gauge law of $f^*\nabla$ is the gauge law of $\nabla$ at $F_p(y)$, in
+  the direction $\dd F_p(y) a$.
+\end{proof}
+
+\begin{theorem}[Connections on Hom bundles]
+  \label{thm:hom-connection}
+  \lean{LocallyConvex.Manifolds.IsLocalSymbol.continuous_right,
+    LocallyConvex.Manifolds.BundleConnection.homSymbolCLM,
+    LocallyConvex.Manifolds.BundleConnection.homSymbol,
+    LocallyConvex.Manifolds.BundleConnection.homSymbol_apply,
+    LocallyConvex.Manifolds.BundleConnection.isLocalSymbol_homSymbol,
+    LocallyConvex.Manifolds.BundleConnection.hom_transition,
+    LocallyConvex.Manifolds.BundleConnection.hom}
+  \leanok
+  \uses{thm:hom-bundle, def:bundle-connection}
+  Let $\nabla^1$, $\nabla^2$ be connections on vector bundles $V_1$, $V_2$ with normed fibers.
+  The symbols $\Gamma^{\mathrm{Hom}}(y)(a, A)\xi = \Gamma_2(y)(a, A\xi) - A\,\Gamma_1(y)(a, \xi)$
+  define a connection on $\mathrm{Hom}(V_1, V_2)$, the local form of
+  $(\nabla_a A)\xi = \nabla^2_a(A\xi) - A(\nabla^1_a \xi)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The map $y \mapsto \Gamma^{\mathrm{Hom}}(y)$ is smooth for the operator norm because
+  $((y, a, A), \xi) \mapsto \Gamma^{\mathrm{Hom}}(y)(a, A)\xi$ is smooth (\cite{LCA}, theorem on
+  operator-valued maps). For the gauge law, write the coordinate changes as
+  $A \mapsto g_2 A g_1^{-1}$; differentiating $g_1(g_1^{-1}\xi) = \xi$ gives
+  $\partial(g_1^{-1}) = -g_1^{-1}(\partial g_1)g_1^{-1}$, and the gauge laws of $\nabla^1$ and
+  $\nabla^2$ give that of $\Gamma^{\mathrm{Hom}}$.
+\end{proof}
+
+\begin{corollary}[The dual connection]
+  \label{cor:dual-connection}
+  \lean{LocallyConvex.Manifolds.BundleConnection.trivial,
+    LocallyConvex.Manifolds.BundleConnection.dual,
+    LocallyConvex.Manifolds.BundleConnection.dual_Γ_apply}
+  \leanok
+  \uses{thm:hom-connection}
+  A connection on a bundle $V$ with normed fiber induces a connection on the dual bundle $V'$,
+  with symbols $\Gamma'(y)(a, \alpha)\xi = -\alpha(\Gamma(y)(a, \xi))$.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Apply Theorem~\ref{thm:hom-connection} to $V$ and the trivial bundle $M \times \R$ with the
+  trivial connection, whose symbols vanish.
+\end{proof}
+
+\begin{definition}[Refinements]
+  \label{def:cover-refinement}
+  \lean{LocallyConvex.Manifolds.TrivializationCover.Refines,
+    LocallyConvex.Manifolds.TrivializationCover.refineRep,
+    LocallyConvex.Manifolds.MBVectorBundleCore.refine,
+    LocallyConvex.Manifolds.TrivializationCover.inf,
+    LocallyConvex.Manifolds.TrivializationCover.infLeft,
+    LocallyConvex.Manifolds.TrivializationCover.infRight}
+  \leanok
+  \uses{def:vector-bundle}
+  A trivializing cover $(W_w)$ \emph{refines} $(V_k)$ along a map of indices $r$ if
+  $W_w \subseteq V_{r(w)}$. A vector bundle trivialized over $(V_k)$ is trivialized over the
+  refinement, with coordinate changes $g_{r(w) r(w')}$. Two covers $(U_i)$, $(V_k)$ have the
+  common refinement $(U_i \cap V_k)$.
+\end{definition}
+
+\begin{theorem}[Connections on refinements; Hom bundles over different covers]
+  \label{thm:refine-connection}
+  \lean{LocallyConvex.Manifolds.BundleConnection.refineSymbol,
+    LocallyConvex.Manifolds.BundleConnection.isLocalSymbol_refineSymbol,
+    LocallyConvex.Manifolds.BundleConnection.refine,
+    LocallyConvex.Manifolds.homCoreInf, LocallyConvex.Manifolds.BundleConnection.homInf}
+  \leanok
+  \uses{def:cover-refinement, thm:hom-connection}
+  A connection on $V$ is written in the trivializations of a refinement with the symbols
+  $\Gamma_{r(w)}(F y)(\dd F(y) a, \xi)$, where $F = \varphi_{r(w)} \circ \varphi_w^{-1}$. In
+  particular, $\mathrm{Hom}(V_1, V_2)$ and its induced connection are defined for bundles
+  trivialized over different covers, over their common refinement.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As for pullback connections (Theorem~\ref{thm:pullback-connection}), with the change of charts
+  $F$ in place of the local representative of $f$.
+\end{proof}

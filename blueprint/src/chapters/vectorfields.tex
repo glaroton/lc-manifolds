@@ -1,0 +1,273 @@
+\chapter{Vector fields and the Frobenius theorem}
+\label{chap:vectorfields}
+
+Vector fields, their Lie bracket and their action on functions as derivations, and the Frobenius
+theorem on Banach manifolds. The bracket is defined in charts and needs no completeness; the
+Frobenius theorem needs Banach models, and it fails already for distributions of rank one on a
+Fréchet space (see the counterexamples of \cite{LCA}). The local theorem is the one of
+lc-analysis, after Penot \cite{Pen70}.
+
+\section{Vector fields and derivations}
+
+\begin{definition}[Vector fields]
+  \label{def:vector-field}
+  \lean{LocallyConvex.Manifolds.IsVectorField, LocallyConvex.Manifolds.localRep}
+  \leanok
+  \uses{def:tangent-bundle}
+  A \emph{vector field} on $M$ is a section $X \colon M \to \T M$ of the tangent bundle. Its
+  \emph{local representative} in a chart $i$ is $\widetilde{X}_i \colon i(\operatorname{dom} i)
+  \to E$, $\widetilde{X}_i(y) = $ the coordinates of $X(i^{-1}y)$ in the chart $i$.
+\end{definition}
+
+\begin{proposition}[Local representatives]
+  \label{prop:man-localrep}
+  \lean{LocallyConvex.Manifolds.localRep_transition, LocallyConvex.Manifolds.contDiffMBOn_localRep,
+    LocallyConvex.Manifolds.contMDiffMB_of_localRep, LocallyConvex.Manifolds.localRep_chartAt}
+  \leanok
+  \uses{def:vector-field, thm:man-tangent-manifold}
+  On chart overlaps, $\widetilde{X}_j \circ \tau = \dd\tau(\cdot)\,\widetilde{X}_i$ for the
+  transition map $\tau = j \circ i^{-1}$. A vector field is $\Ck{k}$ as a map $M \to \T M$ if and
+  only if its local representatives are $\Ck{k}$ (one direction in every chart of the atlas, the
+  other from the preferred charts).
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The transformation law is the cocycle property of the coordinate changes. The local
+  representative $\widetilde{X}_i$ is the second component of the local representative of $X$ in
+  the charts $i$ and $\T i$, which gives both implications.
+\end{proof}
+
+For maps $X, Y$ defined on an open subset of $E$, the \emph{local bracket} is
+\[
+  [X, Y](y) = \dd Y(y)\,X(y) - \dd X(y)\,Y(y).
+\]
+
+\begin{lemma}[The local bracket]
+  \label{lem:man-local-bracket}
+  \lean{LocallyConvex.Manifolds.localBracket, LocallyConvex.Manifolds.dMB_dMB_comp_apply,
+    LocallyConvex.Manifolds.localBracket_transition, LocallyConvex.Manifolds.localBracket_jacobi,
+    LocallyConvex.Manifolds.contDiffMBOn_localBracket}
+  \leanok
+  Let $\tau$ be $\Ck{2}$, and let $X_i, Y_i, X_j, Y_j$ be $\Ck{1}$ with
+  $X_j \circ \tau = \dd\tau \cdot X_i$ and $Y_j \circ \tau = \dd\tau \cdot Y_i$ near $y$. Then
+  $[X_j, Y_j](\tau y) = \dd\tau(y)\,[X_i, Y_i](y)$. The local bracket satisfies the Jacobi identity
+  for $\Ck{2}$ fields, and it is $\Ck{k}$ for $\Ck{k+1}$ fields.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Differentiating $y \mapsto \dd\tau(y)\,X_i(y)$ in the direction $Y_i(y)$ gives
+  $\dd^2\tau(y)(Y_i, X_i) + \dd\tau(y)\,\dd X_i(y)\,Y_i$. In the difference defining the bracket
+  the second derivatives $\dd^2\tau(y)(Y_i, X_i)$ and $\dd^2\tau(y)(X_i, Y_i)$ cancel by the
+  symmetry of the second differential. The Jacobi identity is a direct computation with the
+  derivative of the local bracket, where again the second derivatives cancel by symmetry.
+\end{proof}
+
+\begin{definition}[The Lie bracket]
+  \label{def:man-lie-bracket}
+  \lean{LocallyConvex.Manifolds.lieBracket}
+  \leanok
+  \uses{def:vector-field, lem:man-local-bracket}
+  The \emph{Lie bracket} of the vector fields $X$ and $Y$ is the vector field whose value at $x$
+  is the local bracket $[\widetilde{X}, \widetilde{Y}](c_x(x))$ of the local representatives in
+  the preferred chart at $x$.
+\end{definition}
+
+\begin{theorem}[The bracket is well defined]
+  \label{thm:man-lie-bracket}
+  \lean{LocallyConvex.Manifolds.localRep_lieBracket, LocallyConvex.Manifolds.localRep_lieBracket_eventuallyEq,
+    LocallyConvex.Manifolds.lieBracket_swap, LocallyConvex.Manifolds.lieBracket_jacobi,
+    LocallyConvex.Manifolds.contMDiffMB_lieBracket}
+  \leanok
+  \uses{def:man-lie-bracket, prop:man-localrep}
+  Let $X$, $Y$ be $\Ck{1}$ vector fields. In every chart $j$ of the atlas, the local
+  representative of $[X, Y]$ is the local bracket $[\widetilde{X}_j, \widetilde{Y}_j]$. The
+  bracket is antisymmetric, it satisfies the Jacobi identity for $\Ck{2}$ fields, and if $X$ and
+  $Y$ are $\Ck{k+1}$, then $[X, Y]$ is $\Ck{k}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  \uses{lem:man-local-bracket}
+  The local representatives in the preferred chart at $x$ and in $j$ are related by
+  Proposition~\ref{prop:man-localrep}, so Lemma~\ref{lem:man-local-bracket} applies. The other
+  statements are then read in a single chart.
+\end{proof}
+
+\begin{remark}[No flows]
+  \label{rem:man-no-flows}
+  In finite dimensions, chart independence of the bracket is usually derived from its
+  description as the Lie derivative along the flow of $X$. In infinite dimensions vector fields
+  need not have flows, so this argument is not available. We prove it directly, as above: the
+  second derivatives of the transition maps cancel by the symmetry of second derivatives.
+\end{remark}
+
+\begin{theorem}[Related fields]
+  \label{thm:man-related}
+  \lean{LocallyConvex.Manifolds.IsRelated, LocallyConvex.Manifolds.localRep_related, LocallyConvex.Manifolds.lieBracket_related}
+  \leanok
+  \uses{thm:man-lie-bracket, def:tangent-map}
+  Let $f \colon M \to N$ be $\Ck{2}$. We say that $X$ on $M$ and $X'$ on $N$ are $f$-related if
+  $\T f \circ X = X' \circ f$. If $X, Y$ are $f$-related to $X', Y'$ (all of them $\Ck{1}$), then
+  $[X, Y]$ is $f$-related to $[X', Y']$ \cite[\S V.1]{Lan99}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In charts, $\widetilde{X}'_j \circ h = \dd h \cdot \widetilde{X}_i$ with $h = j \circ f \circ
+  i^{-1}$. This is the hypothesis of Lemma~\ref{lem:man-local-bracket} with $h$ in place of
+  $\tau$, whose proof only uses that $\tau$ is $\Ck{2}$.
+\end{proof}
+
+We now let vector fields act on functions. As explained in Remark~\ref{rem:man-universes}, a
+function $\varphi \colon M \to \R$ is said to be $\Ck{k}$ when all its local representatives
+$\varphi \circ i^{-1}$ are $\Ck{k}$ on $i(\operatorname{dom} i)$.
+
+\begin{definition}[Derivative along a vector field]
+  \label{def:man-vf-deriv}
+  \lean{LocallyConvex.Manifolds.IsCkFunction, LocallyConvex.Manifolds.vfDeriv, LocallyConvex.Manifolds.smulField}
+  \leanok
+  \uses{def:vector-field}
+  For a vector field $X$ and $\varphi \colon M \to \R$, we let
+  $X(\varphi)(x) = \dd(\varphi \circ c_x^{-1})(c_x(x))\,\widetilde{X}(c_x(x))$, computed in the
+  preferred chart at $x$. The product $\varphi Y$ of a function and a vector field is
+  $(\varphi Y)(x) = \varphi(x)\,Y(x)$.
+\end{definition}
+
+\begin{theorem}[Vector fields as derivations]
+  \label{thm:man-derivation}
+  \lean{LocallyConvex.Manifolds.vfDeriv_chart, LocallyConvex.Manifolds.vfDeriv_mul, LocallyConvex.Analysis.HasDirDerivAt.smul_fun,
+    LocallyConvex.Manifolds.isVectorField_smulField, LocallyConvex.Manifolds.localRep_smulField,
+    LocallyConvex.Manifolds.lieBracket_smulField}
+  \leanok
+  \uses{def:man-vf-deriv, thm:man-lie-bracket}
+  Let $\varphi, \psi$ be $\Ck{1}$ functions. Then $X(\varphi)(x) = \dd(\varphi \circ
+  j^{-1})(j(x))\,\widetilde{X}_j(j(x))$ in every chart $j$ around $x$, and the Leibniz rules
+  \[
+    X(\varphi\psi) = X(\varphi)\,\psi + \varphi\,X(\psi), \qquad
+    [X, \varphi Y] = X(\varphi)\,Y + \varphi\,[X, Y]
+  \]
+  hold, the second one for $\Ck{1}$ vector fields $X$, $Y$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Chart independence follows from $\widetilde{X}_j \circ \tau = \dd\tau \cdot \widetilde{X}_i$
+  and the chain rule. The first Leibniz rule is the product rule in a chart. For the second one,
+  $\widetilde{(\varphi Y)}_i = (\varphi \circ i^{-1})\,\widetilde{Y}_i$, and we differentiate this
+  product in the local bracket.
+\end{proof}
+
+\begin{theorem}[Vector fields are determined by local functions]
+  \label{thm:man-determined}
+  \lean{LocallyConvex.Manifolds.vfDeriv_clm_comp_chart, LocallyConvex.Manifolds.eq_of_vfDeriv_clm_comp_chart}
+  \leanok
+  \uses{thm:man-derivation}
+  Let $c$ be a chart around $x$. For $\lambda \in E'$ we have $X(\lambda \circ c)(x) =
+  \lambda(\widetilde{X}_c(c(x)))$. Consequently, if $X(\lambda \circ c)(x) = Y(\lambda \circ c)(x)$
+  for every continuous linear functional $\lambda$, then $X(x) = Y(x)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The first statement is Theorem~\ref{thm:man-derivation} in the chart $c$, since $\lambda$ is
+  linear. The second follows because continuous linear functionals separate the points of the
+  Hausdorff locally convex space $E$ (Hahn--Banach).
+\end{proof}
+
+\begin{remark}[No bump functions]
+  \label{rem:man-no-bumps}
+  Smooth bump functions need not exist on manifolds modeled on locally convex spaces. Hence a vector field is not determined in general by its
+  action on \emph{globally} defined functions, and the classical identification of vector fields
+  with derivations of $\Ck{\infty}(M)$ is not available. Theorem~\ref{thm:man-determined} is the
+  substitute: functions defined on a chart domain suffice.
+\end{remark}
+
+\section{Distributions and the Frobenius theorem}
+
+\begin{definition}[Distributions]
+  \label{def:man-distribution}
+  \lean{LocallyConvex.Manifolds.Distribution, LocallyConvex.Manifolds.Distribution.inChart,
+    LocallyConvex.Manifolds.Distribution.IsSmoothSplit,
+    LocallyConvex.Manifolds.Distribution.IsInvolutive}
+  \leanok
+  A \emph{distribution} $D$ on a manifold $M$ modeled on a normed space $E$ assigns to each
+  $x \in M$ a subspace $D_x \subseteq T_x M$. It is \emph{smooth and split of type $(E_1, E_2)$}
+  if around each $x_0$, read in the preferred chart $i$ at $x_0$ and through a linear isomorphism
+  $\ell \colon E \to E_1 \times E_2$, it is the field of graphs of a smooth map
+  $f \colon \ell(W) \to L(E_1, E_2)$: this is the local form of a split subbundle of $\T M$
+  \cite[Ch.~VI, \S1, pp.~155--157]{Lan99}. It is \emph{involutive} if $[X, Y](x) \in D_x$ for all
+  vector fields $X$, $Y$ which are $\Ck{1}$ near $x$ and tangent to $D$ near $x$.
+\end{definition}
+
+\begin{remark}
+  On a Banach manifold a local vector field need not extend to a global one, since there need not
+  be smooth bump functions. Involutivity is therefore required for fields that are $\Ck{1}$ only
+  near the point; asking it only for global fields would be a weaker condition.
+\end{remark}
+
+\begin{lemma}[Involutivity gives (Frob)]
+  \label{lem:man-involutive-frob}
+  \lean{LocallyConvex.Manifolds.Distribution.IsInvolutive.frob,
+    LocallyConvex.Manifolds.frob_of_localBracket, LocallyConvex.Manifolds.localBracket_eq_lieBracket,
+    LocallyConvex.Manifolds.lieBracket_conj}
+  \leanok
+  \uses{def:man-distribution, thm:man-lie-bracket}
+  If $D$ is involutive and, near $x_0$, the field of graphs of $f$ as above, then $f$ satisfies
+  Penot's condition (Frob) on $\ell(W)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The fields reading $\ell^{-1}(a, f(\ell y)\,a)$ in the chart $i$, extended by $0$ outside its
+  domain, are tangent to $D$ and $\Ck{1}$ near every point of the domain. Their bracket at $x$ is
+  computed in the preferred chart at $x$ and transported to $i$ by the transformation rule of the
+  local bracket. On normed spaces the local bracket is the Lie bracket, which commutes with
+  $\ell$, and the bracket of the graph fields lies in the graph exactly under (Frob)
+  (lc-analysis, \texttt{lieBracket\_mem\_graph\_iff}).
+\end{proof}
+
+\begin{theorem}[The Frobenius theorem on Banach manifolds {\cite[Ch.~VI, Theorems~1.1 and 1.2]{Lan99}}]
+  \label{thm:man-frobenius}
+  \lean{LocallyConvex.Manifolds.Distribution.IsInvolutive.exists_flat_chart,
+    LocallyConvex.Manifolds.fderiv_mem_graph_iff,
+    LocallyConvex.Manifolds.fderiv_injective_of_leftInverse,
+    LocallyConvex.Manifolds.fderiv_fst_of_fst_eq}
+  \leanok
+  \uses{lem:man-involutive-frob}
+  Let $E_1$, $E_2$ be Banach spaces and $D$ a smooth, split, involutive distribution of type
+  $(E_1, E_2)$. Then around every $x_0 \in M$ there is a chart $\varphi$ of the maximal atlas, with
+  $\varphi(x_0) = i(x_0)$, in which $D$ is the constant subspace $\ell^{-1}(E_1 \times 0)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Lemma~\ref{lem:man-involutive-frob} and the Frobenius theorem in chart form (lc-analysis,
+  \texttt{exists\_frobenius\_chart}) there is a diffeomorphism $\Phi(x, y) = (x, \alpha(x, y))$
+  fixing $\ell(i(x_0))$ with $D\Phi(q)(a, 0) = (a, f(\Phi q)\,a)$. Put
+  $\psi = \ell^{-1} \circ \Phi \circ \ell$ and $\varphi = \psi^{-1} \circ i$. Since $D\Phi(q)$ is
+  injective and preserves first components, $D\Phi(q)\,v \in \operatorname{graph} f(\Phi q)$ if and
+  only if $v \in E_1 \times 0$.
+\end{proof}
+
+\begin{theorem}[Converse of Frobenius]
+  \label{thm:man-frobenius-converse}
+  \lean{LocallyConvex.Manifolds.Distribution.isInvolutive_of_flat,
+    LocallyConvex.Manifolds.Distribution.isInvolutive_iff_flat,
+    LocallyConvex.Manifolds.localBracket_mem_of_eventually_mem,
+    LocallyConvex.Manifolds.dMB_transition_comp}
+  \leanok
+  \uses{thm:man-frobenius}
+  If around every point there is a chart of the maximal atlas in which $D$ is a constant subspace
+  $\ell^{-1}(E_1 \times 0)$, then $D$ is involutive. Hence a smooth split distribution with
+  $E_1$, $E_2$ Banach is involutive if and only if it admits such flat charts.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Read in a flat chart, two vector fields tangent to $D$ near $x$ take values in the closed
+  subspace $\ell^{-1}(E_1 \times 0)$, hence so do their derivatives and their local bracket. The
+  local bracket transforms like a vector field under the change of charts, so the bracket in the
+  preferred chart at $x$ lies in $D_x$. No completeness or splitting is needed for this direction.
+\end{proof}

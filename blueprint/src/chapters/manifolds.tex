@@ -1,0 +1,171 @@
+\chapter{Manifolds and smooth maps}
+\label{chap:manifolds}
+
+In this chapter we set up the basic objects of the library: manifolds modeled on locally convex
+spaces and $\Ck{k}$ maps between them. The calculus is the Michal--Bastiani calculus of
+\cite{LCA}; the references for the manifold theory are \cite[\S I.3]{Nee06} and
+\cite[Ch.~3]{GN26}, and \cite{Lan99} for the Banach case. Throughout, $E$, $F$, $G$ denote real
+Hausdorff locally convex spaces. We stress from the start that \emph{no completeness is assumed}:
+nothing in this chapter needs it. Tangent bundles, vector fields and manifolds with rough boundary
+are treated in the next chapters.
+
+\section{Manifolds}
+
+\begin{definition}[The Michal--Bastiani groupoid]
+  \label{def:mb-groupoid}
+  \lean{LocallyConvex.Manifolds.mbGroupoid}
+  \leanok
+  The groupoid $\mathcal{G}_{\mb}(E)$ consists of the homeomorphisms $\varphi\colon U \to V$
+  between open subsets of $E$ such that $\varphi$ is smooth on $U$ and $\varphi^{-1}$ is smooth
+  on $V$, in the sense of Michal--Bastiani.
+\end{definition}
+
+That this is a structure groupoid (closed under composition, inversion and restriction, and
+local in nature) follows from the chain rule and the locality of smoothness.
+
+\begin{definition}[Manifolds]
+  \label{def:mb-manifold}
+  \lean{LocallyConvex.Manifolds.MBManifold, LocallyConvex.Manifolds.BanachManifold, LocallyConvex.Manifolds.HilbertManifold}
+  \leanok
+  \uses{def:mb-groupoid}
+  A \emph{manifold modeled on $E$} is a topological space $M$ with an atlas of charts with
+  values in $E$ whose transition maps belong to $\mathcal{G}_{\mb}(E)$
+  \cite[Definition I.3.1]{Nee06}. A \emph{Banach manifold} is a manifold modeled on a normed
+  space which is complete; a \emph{Hilbert manifold} is one modeled on a complete inner product
+  space.
+\end{definition}
+
+In Lean, a manifold is a Mathlib \texttt{ChartedSpace} $E$ $M$ with \texttt{HasGroupoid} for
+$\mathcal{G}_{\mb}(E)$; Mathlib's charted spaces accept an arbitrary topological model space, so
+no new infrastructure is needed. Every chart comes with a \emph{preferred chart}
+$c_x = \texttt{chartAt}\ x$ at each point $x \in M$, and we use it systematically.
+
+\begin{remark}[The model space need not be complete]
+  \label{rem:man-complete}
+  We follow the convention of Glöckner--Neeb \cite[\S5.7]{GN26}: the model space of a manifold
+  is not assumed to be complete. The formal theory of this and the following chapters (charts,
+  smooth maps, tangent bundle, vector fields, connections, submanifolds) does not use
+  completeness, since the calculus of \cite{LCA} replaces integrals in the model space by
+  Hahn--Banach arguments. Results that need completeness (integrals with values in $E$,
+  ordinary differential equations, exponential maps, inverse function theorems) say so in their
+  hypotheses. In particular, a manifold modeled on an incomplete normed space is a manifold in
+  our sense, but it is not a Banach manifold. Without completeness things do go wrong:
+  \cite[Example 5.6.8]{GN26} is a Lie group modeled on an incomplete normed algebra that has no
+  exponential function.
+\end{remark}
+
+On normed spaces, Michal--Bastiani smoothness agrees with Fréchet smoothness, so for complete
+normed $E$ a Banach manifold is the classical object of \cite{Lan99}.
+
+\begin{proposition}[Products]
+  \label{prop:man-product}
+  \lean{LocallyConvex.Manifolds.prod_mem_mbGroupoid, LocallyConvex.Analysis.SmoothMBOn.prodMap,
+    LocallyConvex.Manifolds.smoothMBM_fst, LocallyConvex.Manifolds.smoothMBM_snd, LocallyConvex.Manifolds.ContMDiffMBOn.prodMk}
+  \leanok
+  \uses{def:mb-manifold, def:contmdiff}
+  If $M$ and $N$ are manifolds modeled on $E$ and $F$, then $M \times N$, with the product
+  charts, is a manifold modeled on $E \times F$. The projections onto $M$ and $N$ are smooth, and
+  a pair $(f, g)$ of $\Ck{k}$ maps $P \to M$, $P \to N$ is a $\Ck{k}$ map $P \to M \times N$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The transition maps of the product atlas are products $\varphi \times \psi$ of transition
+  maps, and a product of smooth diffeomorphisms between open sets is again one, since
+  $(\varphi \times \psi) = (\varphi \circ \pi_1, \psi \circ \pi_2)$ and pairs of smooth maps are
+  smooth. In charts the projections are the linear maps $\pi_1, \pi_2$.
+\end{proof}
+
+In Lean the model space of the product is Mathlib's type synonym \texttt{ModelProd} $E$ $F$ of
+$E \times F$, which avoids instance diamonds when $M$ or $N$ is itself a product.
+
+\section{Smooth maps}
+
+For maps $f \colon M \to N$, open $U \subseteq M$ and charts $e$ of $M$, $e'$ of $N$, we denote
+by
+\[
+  D(f, U, e, e') = e(\operatorname{dom} e) \cap e^{-1}\bigl(U \cap f^{-1}(\operatorname{dom}
+  e')\bigr) \subseteq E
+\]
+the domain of the local representative $e' \circ f \circ e^{-1}$. It is open when $f$ is
+continuous on $U$ (\texttt{LocallyConvex.Manifolds.isOpen\_chartDomain}).
+
+\begin{definition}[$\Ck{k}$ maps between manifolds]
+  \label{def:contmdiff}
+  \lean{LocallyConvex.Manifolds.chartDomain, LocallyConvex.Manifolds.ContMDiffMBOn, LocallyConvex.Manifolds.ContMDiffMB,
+    LocallyConvex.Manifolds.SmoothMBMOn, LocallyConvex.Manifolds.SmoothMBM}
+  \leanok
+  \uses{def:mb-manifold}
+  A map $f \colon M \to N$ is $\Ck{k}$ on an open set $U \subseteq M$ if it is continuous on $U$
+  and, for every $x \in U$, the local representative $c'_{f(x)} \circ f \circ c_x^{-1}$ in the
+  preferred charts is $\Ck{k}$ on $D(f, U, c_x, c'_{f(x)})$. It is \emph{smooth} on $U$ if it is
+  $\Ck{k}$ on $U$ for every $k$.
+\end{definition}
+
+Only the preferred charts appear in the definition. The next result says that this is no
+restriction.
+
+\begin{theorem}[Independence of the charts]
+  \label{thm:man-contmdiff-chart}
+  \lean{LocallyConvex.Manifolds.smoothMBOn_transition, LocallyConvex.Manifolds.smoothMBOn_transition_of_mem_maximalAtlas,
+    LocallyConvex.Manifolds.ContMDiffMBOn.contDiffMBOn_chart,
+    LocallyConvex.Manifolds.ContMDiffMBOn.contDiffMBOn_chart_of_mem_maximalAtlas,
+    LocallyConvex.Manifolds.contMDiffMB_of_chartAt}
+  \leanok
+  \uses{def:contmdiff}
+  If $f$ is $\Ck{k}$ on $U$, then its local representatives $e' \circ f \circ e^{-1}$ in arbitrary
+  charts of the atlases (or of the maximal atlases) are $\Ck{k}$ on $D(f, U, e, e')$.
+  Conversely, a continuous map whose local representatives in the preferred charts are
+  $\Ck{k}$ near the center of each chart is $\Ck{k}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The transition maps are smooth by definition of the atlas. Near a point $y = e(p)$ we write
+  $e' f e^{-1} = (e' c'^{-1}) \circ (c' f c^{-1}) \circ (c e^{-1})$ with $c = c_p$,
+  $c' = c'_{f(p)}$; the three factors are $\Ck{k}$ and the chain rule applies. Since $\Ck{k}$ is a
+  local property, this suffices.
+\end{proof}
+
+\begin{theorem}[Composition]
+  \label{thm:man-comp}
+  \lean{LocallyConvex.Manifolds.ContMDiffMBOn.comp, LocallyConvex.Manifolds.SmoothMBMOn.comp, LocallyConvex.Manifolds.SmoothMBM.comp,
+    LocallyConvex.Manifolds.smoothMBMOn_id, LocallyConvex.Manifolds.smoothMBMOn_const}
+  \leanok
+  \uses{def:contmdiff, thm:man-contmdiff-chart}
+  If $f$ is $\Ck{k}$ on $U$, $g$ is $\Ck{k}$ on $V$ and $f(U) \subseteq V$, then $g \circ f$ is
+  $\Ck{k}$ on $U$. Identities and constant maps are smooth.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the preferred charts at $x$ and $g(f(x))$, near a point we insert the preferred chart $d$ at
+  the intermediate point and write the local representative of $g \circ f$ as the composition of
+  the local representatives of $g$ and $f$ in the charts involving $d$. These are $\Ck{k}$ by
+  Theorem~\ref{thm:man-contmdiff-chart}, and we conclude by the chain rule.
+\end{proof}
+
+\begin{proposition}[Consistency with the calculus]
+  \label{prop:man-consistency}
+  \lean{LocallyConvex.Manifolds.contMDiffMBOn_iff_contDiffMBOn}
+  \leanok
+  \uses{def:contmdiff}
+  For a map $f \colon E \to F$ between the model spaces themselves (with their identity charts)
+  and $U \subseteq E$ open, $f$ is $\Ck{k}$ on $U$ as a map between manifolds if and only if it
+  is $\Ck{k}$ on $U$ in the sense of Michal--Bastiani.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The preferred charts are identities, so $D(f, U, \id, \id) = U$ and the local representative
+  is $f$ itself.
+\end{proof}
+
+\begin{remark}[Universes]
+  \label{rem:man-universes}
+  The model spaces $E$, $F$, $G$ live in a common universe, because the Michal--Bastiani
+  derivative of a map defined on $E$ is a map defined on $E \times E$. The manifolds themselves
+  are unrestricted. A consequence that will reappear below is that real-valued functions on
+  $M$ are not treated as maps between manifolds (the model space $\R$ need not be in the
+  universe of $E$), but through their local representatives.
+\end{remark}

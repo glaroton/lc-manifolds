@@ -1,0 +1,462 @@
+\chapter{Symplectic manifolds}
+\label{chap:symplectic}
+
+Symplectic forms on manifolds modeled on locally convex spaces. In infinite dimensions
+nondegeneracy splits into a weak and a strong notion, and many symplectic forms of interest are
+only weakly nondegenerate. Hamiltonian vector fields are then unique but need not exist, and the
+Darboux theorem fails \cite[Proposition, p.~591]{Mar72}. For strong symplectic forms on Banach
+manifolds Darboux's theorem holds \cite[\S1, Theorem]{Wei69}; Moser's proof needs flows of
+time-dependent vector fields, which exist on Banach manifolds but need not exist on locally convex
+ones, and it is formalized in Section~\ref{sec:darboux} for Banach models. Real-valued forms
+require models in the lowest universe, since the space of values of a form lives in the universe
+of the model.
+
+\section{Symplectic forms}
+
+\begin{definition}[Symplectic forms]
+  \label{def:symplectic}
+  \lean{LocallyConvex.Manifolds.SymplecticForm, LocallyConvex.Manifolds.SymplecticForm.IsStrong}
+  \leanok
+  \uses{def:diff-form, def:closed-exact}
+  A \emph{symplectic form} on $M$ is a closed $2$-form $\omega \in \Omega^2(M, \R)$ which is
+  \emph{weakly nondegenerate}: if $\omega_x(v, w) = 0$ for all $w \in T_xM$, then $v = 0$. It is
+  \emph{strong} if moreover every continuous linear functional on $T_xM$ is of the form
+  $\omega_x(v, \cdot)$, for every $x \in M$.
+\end{definition}
+
+In other words, $\omega$ is weak if the flat map $\omega^\flat_x \colon T_xM \to T_xM'$,
+$v \mapsto \omega_x(v, \cdot)$, is injective, and strong if it is bijective. We use no topology
+on the dual space.
+
+\begin{theorem}[Strong symplectic normed spaces are reflexive]
+  \label{thm:symplectic-reflexive}
+  \lean{LocallyConvex.Manifolds.surjective_inclusionInDoubleDual_of_skew,
+    LocallyConvex.Manifolds.SymplecticForm.continuous_form,
+    LocallyConvex.Manifolds.SymplecticForm.flatCLM,
+    LocallyConvex.Manifolds.SymplecticForm.IsStrong.surjective_inclusionInDoubleDual}
+  \leanok
+  \uses{def:symplectic}
+  Let $V$ be a normed space and $\omega$ a continuous skew-symmetric bilinear form on $V$ such
+  that $\omega^\flat \colon V \to V'$ is surjective. Then $V$ is reflexive: the canonical map
+  $V \to V''$ is surjective. Consequently, a nonempty manifold modeled on a normed space $E$ which
+  carries a strong symplectic form has a reflexive model.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Let $\Phi \in V''$. The functional $-\Phi \circ \omega^\flat$ is continuous, so it equals
+  $\omega(v, \cdot)$ for some $v \in V$. For $\varphi = \omega(w, \cdot) \in V'$,
+  $\varphi(v) = \omega(w, v) = -\omega(v, w) = \Phi(\omega^\flat w) = \Phi(\varphi)$, and every
+  $\varphi$ is of this form. For the second statement, $\omega_x$ is continuous on $E \times E$
+  because its local representative is, so it is a bounded bilinear form on the normed space $E$.
+  No completeness is used.
+\end{proof}
+
+In particular non-reflexive Banach spaces such as $\ell^1$ or $c_0$ do not model strong
+symplectic manifolds. Marsden observes the converse phenomenon for cotangent bundles: the
+canonical form of $T^*M$ is strong if the model of $M$ is reflexive, and only weak otherwise
+\cite[p.~590]{Mar72}.
+
+\section{Hamiltonian and symplectic vector fields}
+
+\begin{definition}[Hamiltonian and symplectic vector fields]
+  \label{def:hamiltonian}
+  \lean{LocallyConvex.Manifolds.SymplecticForm.IsHamiltonianFor,
+    LocallyConvex.Manifolds.SymplecticForm.IsSymplecticField}
+  \leanok
+  \uses{def:symplectic, def:interior, def:lie-deriv}
+  A smooth vector field $X$ is a \emph{Hamiltonian vector field} of $f \in C^\infty(M, \R)$ if
+  $i_X \omega = \dd f$, and a \emph{symplectic vector field} if $L_X \omega = 0$.
+\end{definition}
+
+\begin{theorem}[Hamiltonian and symplectic fields]
+  \label{thm:hamiltonian-fields}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.ext_vec,
+    LocallyConvex.Manifolds.SymplecticForm.interior_injective,
+    LocallyConvex.Manifolds.SymplecticForm.IsHamiltonianFor.unique,
+    LocallyConvex.Manifolds.SymplecticForm.isSymplecticField_iff,
+    LocallyConvex.Manifolds.SymplecticForm.IsHamiltonianFor.isSymplecticField,
+    LocallyConvex.Manifolds.SymplecticForm.IsSymplecticField.exists_isHamiltonianFor,
+    LocallyConvex.Manifolds.SymplecticForm.interior_bracket,
+    LocallyConvex.Manifolds.SymplecticForm.IsSymplecticField.bracket,
+    LocallyConvex.Manifolds.SymplecticForm.IsHamiltonianFor.lieDeriv_self}
+  \leanok
+  \uses{def:hamiltonian, thm:cartan-calculus, thm:poincare}
+  Let $\omega$ be a symplectic form on $M$.
+  \begin{enumerate}
+    \item A vector field is determined by $i_X\omega$; in particular Hamiltonian vector fields
+      are unique.
+    \item $X$ is symplectic if and only if $i_X\omega$ is closed. Hamiltonian fields are
+      symplectic.
+    \item If $M$ is smoothly contractible, every symplectic vector field is Hamiltonian.
+    \item If $X$ and $Y$ are symplectic, then $i_{[X, Y]}\omega = \dd(\omega(Y, X))$; so
+      $[X, Y]$ is Hamiltonian.
+    \item (Conservation of energy) If $X$ is the Hamiltonian field of $f$, then $L_X f = 0$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  (1) is weak nondegeneracy at each point. (2) Since $\omega$ is closed, Cartan's formula gives
+  $L_X \omega = \dd(i_X\omega)$; and $\dd \dd f = 0$. (3) is the Poincaré Lemma applied to the
+  closed $1$-form $i_X\omega$. (4) From $[L_X, i_Y] = i_{[X, Y]}$ and $L_X\omega = 0$ we get
+  $i_{[X, Y]}\omega = L_X i_Y\omega = \dd i_X i_Y \omega + i_X \dd i_Y\omega$, and
+  $\dd i_Y \omega = 0$. (5) $L_X f = i_X \dd f = i_X i_X \omega = 0$.
+\end{proof}
+
+\begin{definition}[Poisson bracket]
+  \label{def:poisson}
+  \lean{LocallyConvex.Manifolds.SymplecticForm.poisson}
+  \leanok
+  \uses{def:hamiltonian}
+  For $f$ with Hamiltonian vector field $X_f$ and any $g \in C^\infty(M, \R)$, the
+  \emph{Poisson bracket} is $\{f, g\} = -L_{X_f} g$.
+\end{definition}
+
+\begin{theorem}[Properties of the Poisson bracket]
+  \label{thm:poisson}
+  \lean{LocallyConvex.Manifolds.SymplecticForm.poisson_eq,
+    LocallyConvex.Manifolds.SymplecticForm.poisson_eq_lieDeriv,
+    LocallyConvex.Manifolds.SymplecticForm.poisson_antisymm,
+    LocallyConvex.Manifolds.SymplecticForm.isHamiltonianFor_bracket,
+    LocallyConvex.Manifolds.SymplecticForm.poisson_jacobi}
+  \leanok
+  \uses{def:poisson, thm:hamiltonian-fields}
+  Let $f, g, h$ have Hamiltonian vector fields $X_f, X_g, X_h$. Then
+  $\{f, g\} = \omega(X_f, X_g) = L_{X_g} f = -\{g, f\}$; the bracket $[X_f, X_g]$ is the
+  Hamiltonian vector field of $-\{f, g\}$; and the Jacobi identity
+  $\{f, \{g, h\}\} - \{g, \{f, h\}\} = \{\{f, g\}, h\}$ holds.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The first identities follow from $i_{X_g}\omega = \dd g$ and the skew-symmetry of $\omega$, and
+  the statement on $[X_f, X_g]$ is part~(4) of Theorem~\ref{thm:hamiltonian-fields}. For the
+  Jacobi identity, $[L_{X_f}, L_{X_g}] = L_{[X_f, X_g]}$ on functions, and
+  $L_{[X_f, X_g]} h = i_{[X_f, X_g]} i_{X_h}\omega = -i_{X_h} i_{[X_f, X_g]}\omega
+  = -L_{X_h} L_{X_f} g$.
+\end{proof}
+
+\section{Symplectic maps}
+
+\begin{definition}[Symplectic maps]
+  \label{def:symplectic-map}
+  \lean{LocallyConvex.Manifolds.IsSymplecticMap}
+  \leanok
+  \uses{def:symplectic, def:diff-form-pullback}
+  A smooth map $\varphi \colon (N, \omega_0) \to (M, \omega)$ is \emph{symplectic} if
+  $\varphi^*\omega = \omega_0$.
+\end{definition}
+
+\begin{proposition}[Symplectic maps]
+  \label{prop:symplectic-maps}
+  \lean{LocallyConvex.Manifolds.isSymplecticMap_id, LocallyConvex.Manifolds.IsSymplecticMap.comp,
+    LocallyConvex.Manifolds.IsSymplecticMap.isHamiltonianFor}
+  \leanok
+  \uses{def:symplectic-map, prop:related-forms}
+  Identities and compositions of symplectic maps are symplectic. If $\varphi$ is symplectic,
+  $X$ and $Y$ are $\varphi$-related and $Y$ is the Hamiltonian field of $f$, then $X$ is the
+  Hamiltonian field of $f \circ \varphi$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  $\varphi^*(i_Y\omega) = i_X \varphi^*\omega$ and $\varphi^* \dd f = \dd(f \circ \varphi)$.
+\end{proof}
+
+\section{The canonical symplectic form}
+
+\begin{definition}[Canonical symplectic form]
+  \label{def:canonical-symplectic}
+  \lean{LocallyConvex.Manifolds.atlas_self, LocallyConvex.Manifolds.prefChart_self,
+    LocallyConvex.Manifolds.formLocalRep_self, LocallyConvex.Manifolds.liouvilleForm,
+    LocallyConvex.Manifolds.liouvilleForm_d_apply,
+    LocallyConvex.Manifolds.canonicalSymplectic}
+  \leanok
+  \uses{def:symplectic, def:diff-form-d}
+  Let $H$ be a real inner product space, not necessarily complete. The \emph{Liouville form} on
+  $H \times H$ is $\theta_{(x, a)}(y, b) = \langle x, b \rangle$, and the \emph{canonical
+  symplectic form} is
+  $\omega = \dd\theta$, $\omega((y, b), (y', b')) = \langle y, b' \rangle - \langle y', b \rangle$.
+  This is the skew form induced by the symmetric form $\langle \cdot, \cdot \rangle$
+  in \cite[p.~590]{Mar72}.
+\end{definition}
+
+\begin{proposition}[The canonical symplectic form]
+  \label{prop:canonical-symplectic}
+  \lean{LocallyConvex.Manifolds.canonicalSymplectic_isExact,
+    LocallyConvex.Manifolds.canonicalSymplectic_isStrong}
+  \leanok
+  \uses{def:canonical-symplectic, thm:symplectic-reflexive}
+  The canonical symplectic form is exact and weakly nondegenerate. If $H$ is a Hilbert space, it
+  is strong.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  If $\omega((y, b), \cdot) = 0$, evaluating at $(0, y)$ and $(b, 0)$ gives $y = b = 0$. If $H$
+  is complete, a functional $\varphi$ on $H \times H$ is
+  $\varphi(y', b') = \langle a_1, y' \rangle + \langle a_2, b' \rangle$ by the Riesz
+  representation theorem, and $\varphi = \omega((a_2, -a_1), \cdot)$.
+\end{proof}
+
+If $H$ is not complete, then $H \times H$ is not reflexive (its bidual is the bidual of the
+completion), so by Theorem~\ref{thm:symplectic-reflexive} it carries no strong symplectic form
+at all; this converse is not formalized.
+
+\section{The real analytic Darboux theorem}
+\label{sec:darboux-analytic}
+
+Real analyticity is in the sense of Milnor (Definition~2.2.2 of \cite{GN26}): restrictions of
+complex analytic maps on open subsets of the complexification.
+
+\begin{lemma}[A real analytic primitive]
+  \label{lem:primitive-analytic}
+  \lean{LocallyConvex.Manifolds.Darboux.fderiv_skew,
+    LocallyConvex.Manifolds.Darboux.radialPrimitive,
+    LocallyConvex.Manifolds.Darboux.mem_ball_segment,
+    LocallyConvex.Manifolds.Darboux.abs_le_one_of_mem_uIcc,
+    LocallyConvex.Manifolds.Darboux.radialPrimitive_spec,
+    LocallyConvex.Manifolds.Darboux.realAnalyticOn_radialPrimitive,
+    LocallyConvex.Manifolds.Darboux.exists_primitive_realAnalytic}
+  \leanok
+  \uses{thm:darboux-local}
+  Let $E$ and $D \cong E'$ be Banach spaces and $\Theta \colon B(p, r) \to \Lin(E, D)$ real
+  analytic, skew-symmetric and closed, with $\Theta(p) = 0$. On a smaller ball,
+  $\alpha(y) = \int_0^1 s\, \Theta(p + s(y - p))(y - p)\, \dd s$ is real analytic, $\dd\alpha =
+  \Theta$, $\alpha(p) = 0$ and $\dd\alpha(p) = 0$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Differentiating under the integral sign, $\dd\alpha(y)(a, b)$ is the integral of $2s\,
+  \Theta(z_s)(a, b) + s^2\, \dd\Theta(z_s)(y - p)(a, b) = \frac{\dd}{\dd s}\bigl(s^2
+  \Theta(z_s)(a, b)\bigr)$, $z_s = p + s(y - p)$, by the closedness of $\Theta$ and the skew-symmetry
+  of $\dd\Theta$. For real analyticity, $\alpha(y)$ is the value at time $1$ of the solution of
+  $\dot y = 0$, $\dot a = s\, \Theta(p + s(y - p))(y - p)$ starting at $(y, 0)$; the time-dependent
+  field is real analytic and stationary at $(p, 0)$, and the flow up to time $1$ near $(p, 0)$ is
+  real analytic (Theorem~\ref{thm:maximal-flow} and its real analytic version). This replaces real
+  analytic parametric integrals, which are not available.
+\end{proof}
+
+\begin{theorem}[The real analytic local Darboux theorem]
+  \label{thm:darboux-local-analytic}
+  \lean{LocallyConvex.Manifolds.Darboux.exists_darboux_local_realAnalytic',
+    LocallyConvex.Manifolds.Darboux.exists_darboux_local_realAnalytic}
+  \leanok
+  \uses{thm:darboux-local, lem:primitive-analytic}
+  In Theorem~\ref{thm:darboux-local}, if $\Omega \colon U \to \Lin(E, E')$ is real analytic, then
+  $\psi$ and $\psi^{-1}$ can be chosen real analytic.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Moser's method with the primitive of Lemma~\ref{lem:primitive-analytic}. The field $X_t =
+  -\Omega_t^{-1}\alpha$ is real analytic since inversion in the Banach algebra $\Lin(E)$ is
+  \cite[Proposition~2.2.13]{GN26}; the flow of $(1, X_t)$ is real analytic, so $\psi = F_1$ is;
+  and $\psi^{-1}(y) = \mathrm{Fl}(-1, (1, y))$ for the flow of the suspended field, so no real
+  analytic inverse function theorem is needed. We do not claim this argument is new; we know no
+  reference for the real analytic case on Banach manifolds.
+\end{proof}
+
+\begin{theorem}[Real analytic Darboux charts]
+  \label{thm:darboux-analytic}
+  \lean{LocallyConvex.Manifolds.DifferentialForm.exists_realAnalytic_darboux_chart,
+    LocallyConvex.Manifolds.SymplecticForm.IsStrong.exists_realAnalytic_darboux_chart,
+    LocallyConvex.Manifolds.DifferentialForm.IsRealAnalytic.exists_clm_localRep}
+  \leanok
+  \uses{thm:darboux-local-analytic, thm:darboux}
+  Let $M$ be a real analytic manifold modeled on a Banach space and $\omega$ a closed real
+  analytic real $2$-form \cite[Remark~3.6.18]{GN26}, strongly nondegenerate at $x_0$. Then the Darboux chart of
+  Theorem~\ref{thm:darboux} can be chosen in the real analytic maximal atlas.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As for Theorem~\ref{thm:darboux}, with Theorem~\ref{thm:darboux-local-analytic}; $\varphi =
+  \psi^{-1} \circ i$ is compatible with the real analytic atlas since $\psi$ is a real analytic
+  diffeomorphism.
+\end{proof}
+
+\begin{remark}[On the hypothesis]
+  Real analytic forms are defined by the real analyticity of $(y, u, v) \mapsto \Omega(y)(u, v)$
+  \cite[Remark~3.6.18]{GN26}, while the local theorem needs $y \mapsto \Omega(y) \in \Lin(E, E')$
+  real analytic for the operator norm. The second follows from the first: this is the real
+  analytic counterpart of the theorem on operator-valued maps used in
+  Theorem~\ref{thm:hom-bundle}, proved in lc-analysis by extending to the complexification and
+  applying the holomorphic version there.
+\end{remark}
+
+\section{The cotangent bundle}
+\label{sec:cotangent-symplectic}
+
+In this section $E$ is a normed space (not necessarily complete) and $M$ a manifold modeled on
+$E$, so that the cotangent bundle $T^*M = (TM)'$ exists, with fiber $E' = \Lin(E, \R)$
+(Theorem~\ref{thm:hom-bundle}); its total space is a manifold modeled on $E \times E'$.
+
+\begin{definition}[The canonical $1$-form {\cite[\S V.7, Proposition~7.1]{Lan99}}]
+  \label{def:liouville-cotangent}
+  \lean{LocallyConvex.Manifolds.CotangentBundle,
+    LocallyConvex.Manifolds.CotangentBundle.covec,
+    LocallyConvex.Manifolds.CotangentBundle.coordChange_apply,
+    LocallyConvex.Manifolds.CotangentBundle.chartAt_eq,
+    LocallyConvex.Manifolds.CotangentBundle.exists_eq_bundleChart,
+    LocallyConvex.Manifolds.liouvilleLoc, LocallyConvex.Manifolds.liouvilleFun,
+    LocallyConvex.Manifolds.formLocalRep_liouvilleFun,
+    LocallyConvex.Manifolds.smoothMBOn_liouvilleLoc,
+    LocallyConvex.Manifolds.cotangentLiouville,
+    LocallyConvex.Manifolds.cotangentLiouville_apply,
+    LocallyConvex.Manifolds.cotangentLiouville_localRep,
+    LocallyConvex.Manifolds.cotangentLiouville_localRep_prefChart}
+  \leanok
+  \uses{thm:hom-bundle, def:diff-form}
+  The \emph{canonical (Liouville) $1$-form} $\theta$ on $T^*M$ is $\theta_\lambda(z) =
+  \lambda(T\pi\, z)$, for the projection $\pi \colon T^*M \to M$. It is a smooth $1$-form: in the
+  chart of $T^*M$ built from a chart $c$ of $M$ and the trivialization over a chart $j$, its
+  local representative is $((y, \mu), (u, \psi)) \mapsto \mu(g_{cj}(y) u)$, where $g_{cj}(y) =
+  \dd(j \circ c^{-1})(y)$; for $j = c$ it is $\theta_{(y, \mu)}(u, \psi) = \mu(u)$.
+\end{definition}
+
+\begin{proposition}[The canonical symplectic form {\cite[\S V.7, Proposition~7.2]{Lan99}}]
+  \label{prop:cotangent-symplectic}
+  \lean{LocallyConvex.Manifolds.cotangentLiouville_d_apply,
+    LocallyConvex.Manifolds.cotangentSymplectic,
+    LocallyConvex.Manifolds.cotangentSymplectic_apply,
+    LocallyConvex.Manifolds.cotangentSymplectic_isExact}
+  \leanok
+  \uses{def:liouville-cotangent, def:symplectic, def:diff-form-d}
+  The \emph{canonical symplectic form} $\omega = -\dd\theta$ on $T^*M$ is
+  $\omega_\lambda((u_1, \psi_1), (u_2, \psi_2)) = \psi_2(u_1) - \psi_1(u_2)$ in the preferred
+  chart. It is exact and weakly nondegenerate, for every normed model $E$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  In the preferred chart $\theta$ is $((y, \mu), (u, \psi)) \mapsto \mu(u)$, linear in $(y, \mu)$,
+  and the local formula for $\dd$ gives $\dd\theta((u_1, \psi_1), (u_2, \psi_2)) = \psi_1(u_2) -
+  \psi_2(u_1)$. If $\omega((u_1, \psi_1), \cdot) = 0$, testing on $(0, \psi)$ gives $\psi(u_1) = 0$
+  for all $\psi \in E'$, so $u_1 = 0$ by the Hahn--Banach theorem, and testing on $(u, 0)$ gives
+  $\psi_1 = 0$. We follow Lang's sign, which agrees with Definition~\ref{def:canonical-symplectic}
+  under $\psi \leftrightarrow \langle \cdot, b \rangle$.
+\end{proof}
+
+\begin{theorem}[Strong nondegeneracy and reflexivity]
+  \label{thm:cotangent-strong}
+  \lean{LocallyConvex.Manifolds.cotangentSymplectic_isStrong_iff}
+  \leanok
+  \uses{prop:cotangent-symplectic}
+  If $M$ is nonempty, the canonical symplectic form on $T^*M$ is strongly nondegenerate if and
+  only if $E$ is reflexive, i.e.\ the canonical map $E \to E''$ is surjective. In particular the
+  cotangent bundle of a manifold modeled on a non-reflexive Banach space (such as $\ell^1$ or
+  $c_0$) is only a weak symplectic manifold; cotangent bundles of non-reflexive spaces are
+  mentioned in \cite[p.~590]{Mar72}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  A functional $\varphi$ on $E \times E'$ is $\omega((u, \psi), \cdot)$ for $\psi =
+  -\varphi(\cdot, 0)$ and $u \in E$ representing $\varphi(0, \cdot) \in E''$. Conversely, for
+  $\Phi \in E''$, write $\Phi \circ \mathrm{pr}_2 = \omega((u, \psi), \cdot)$ and test on $(0,
+  \psi')$: $\Phi(\psi') = \psi'(u)$. No completeness is used. (Theorem~\ref{thm:symplectic-reflexive}
+  would give the reflexivity of $E \times E'$.)
+\end{proof}
+
+\section{The Darboux theorem}
+\label{sec:darboux}
+
+In this section $E$ is a Banach space. A closed real $2$-form $\omega$ is \emph{strongly
+nondegenerate at $x_0$} if $\omega^\flat_{x_0} \colon T_{x_0}M \to T_{x_0}M'$ is bijective.
+
+\begin{theorem}[The local Darboux theorem {\cite[\S1, Theorem]{Wei69}, \cite[Theorem~V.8.1]{Lan99}}]
+  \label{thm:darboux-local}
+  \lean{LocallyConvex.Manifolds.Darboux.moser_identity,
+    LocallyConvex.Manifolds.Darboux.exists_primitive,
+    LocallyConvex.Manifolds.Darboux.exists_flow_of_stationary,
+    LocallyConvex.Manifolds.SmoothVectorField.ofOpens,
+    LocallyConvex.Manifolds.Darboux.exists_darboux_local_of_primitive,
+    LocallyConvex.Manifolds.Darboux.exists_darboux_local',
+    LocallyConvex.Manifolds.Darboux.exists_darboux_local}
+  \leanok
+  \uses{cor:poincare-star, thm:maximal-flow}
+  Let $U \subseteq E$ be open and $\Omega \colon U \to \Lin(E, E')$ smooth for the operator norm,
+  with $\Omega(y)$ skew-symmetric, $\dd\Omega = 0$, and $\Omega(p)$ bijective. Then there is a
+  diffeomorphism $\psi$ between open neighborhoods of $p$ in $U$ with $\psi(p) = p$,
+  $\dd\psi(p) = \id$ and $\psi^*\Omega = \Omega(p)$:
+  $\Omega(\psi x)(\dd\psi(x) u, \dd\psi(x) v) = \Omega(p)(u, v)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Moser's method \cite[\S4, Theorem~2]{Mos65}. Put $\Omega_0 = \Omega(p)$, $\Theta = \Omega -
+  \Omega_0$ and $\Omega_t = \Omega_0 + t\Theta$.
+  \begin{enumerate}
+    \item On a ball $B$ around $p$, $\Theta = \dd\alpha$ with $\alpha(p) = 0$ and
+      $\dd\alpha(p) = 0$: the Poincaré lemma for star-shaped sets
+      (Corollary~\ref{cor:poincare-star}) gives a primitive $\eta$, from which we subtract the
+      closed affine form $\eta(p) + \dd\eta(p)(y - p)$.
+    \item The set $W$ of $(t, y)$ with $\Omega_t(y)$ invertible is open and contains
+      $\mathbb{R} \times \{p\}$. On $W$ put $X_t(y) = -\Omega_t(y)^{-1}\alpha(y)$, so that
+      $\Omega_t(X_t, \cdot) = -\alpha$, $X_t(p) = 0$ and $\partial_x X_t(p) = 0$.
+    \item The autonomous field $Z(t, y) = (1, X_t(y))$ on the open set $W \subseteq \mathbb{R}
+      \times E$, regarded as a manifold, has the integral curve $t \mapsto (t, p)$ through
+      $(0, p)$, defined on $\mathbb{R}$. Since the domain of the maximal flow is open
+      (Theorem~\ref{thm:maximal-flow}) and $[-1, 2]$ is compact, the flow $F_t$ of $X_t$ with
+      $F_0 = \id$ is defined and smooth on $(-\delta, 1 + \delta) \times V$ for a neighborhood
+      $V$ of $p$; this is Weinstein's ``compactness of $[0, 1]$ and openness of the domain''.
+    \item For $x \in V$ and $u, v \in E$, $t \mapsto \Omega_t(F_t x)(\partial_x F_t(x) u,
+      \partial_x F_t(x) v)$ has derivative $0$, by the variational equation
+      $\partial_t \partial_x F_t = \partial_x X_t \circ \partial_x F_t$ and an algebraic identity,
+      the pointwise form of $\frac{\dd}{\dd t}(F_t^*\Omega_t) = F_t^*(\dd\alpha +
+      \dd(i_{X_t}\Omega_t)) = 0$.
+    \item Hence $F_1^*\Omega = \Omega_0$, and $\partial_x F_t(p) = \id$, so by the inverse
+      function theorem $\psi = F_1$ is a local diffeomorphism at $p$.
+  \end{enumerate}
+  No bump functions are used (they need not exist on a Banach space): the field lives on $W$ and
+  is never cut off. We normalize the primitive so that $\dd\alpha(p) = 0$, which gives
+  $\dd\psi(p) = \id$. We do not claim this argument is new.
+\end{proof}
+
+\begin{theorem}[Darboux charts {\cite[\S1, Theorem]{Wei69}, \cite[Theorem~V.8.1]{Lan99}}]
+  \label{thm:darboux}
+  \lean{LocallyConvex.Manifolds.clm₂OfAlternating,
+    LocallyConvex.Manifolds.DifferentialForm.exists_clm_localRep,
+    LocallyConvex.Manifolds.DifferentialForm.clm_localRep_spec,
+    LocallyConvex.Manifolds.DifferentialForm.darboux_chart_of_local,
+    LocallyConvex.Manifolds.DifferentialForm.exists_darboux_chart,
+    LocallyConvex.Manifolds.SymplecticForm.IsStrong.exists_darboux_chart}
+  \leanok
+  \uses{thm:darboux-local, def:symplectic, thm:symplectic-reflexive}
+  Let $M$ be modeled on a Banach space and $\omega$ a closed real $2$-form on $M$, strongly
+  nondegenerate at $x_0$. There is a chart $\varphi$ of the maximal atlas around $x_0$, with the
+  same value and differential at $x_0$ as the preferred chart, in which $\omega$ has constant
+  coefficients, equal to its value at $x_0$. In particular every strong symplectic manifold modeled
+  on a Banach space is locally isomorphic to its model with a constant form.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the preferred chart $i$ at $x_0$, $\omega$ is a smooth map $y \mapsto \Omega(y) \in
+  \Lin(E, E')$, continuous for the operator norm since the model is normed (lc-analysis). Apply
+  Theorem~\ref{thm:darboux-local} and put $\varphi = \psi^{-1} \circ i$.
+\end{proof}
+
+\begin{remark}[Infinite-dimensional subtleties]
+  \label{rem:darboux-subtleties}
+  \begin{itemize}
+    \item Strong nondegeneracy is used once, to define $X_t$, and only at $x_0$: with completeness
+      the open mapping theorem makes $\Omega_0 \colon E \to E'$ a topological isomorphism, and
+      invertible operators form an open set for the operator norm. For weakly nondegenerate forms
+      the theorem fails, even on Hilbert space \cite[Proposition, p.~591]{Mar72}. Marsden's
+      counterexample is formalized in lc-analysis
+      (\texttt{LocallyConvex.Analysis.Counterexamples.Marsden.no\_darboux\_chart}).
+    \item Reflexivity is a consequence, not a hypothesis (Theorem~\ref{thm:symplectic-reflexive}).
+    \item Completeness of $E$ is used for the flows, the inverse function theorem, the smoothness
+      of $L \mapsto L^{-1}$ and the open mapping theorem. On non-normable models there is no
+      vector topology on $\Lin(E, E')$ for which evaluation is continuous, and neither the flows
+      nor the inverse function theorem are available.
+    \item No Hausdorff hypothesis on $M$ is needed: the flows live in $W \subseteq \mathbb{R} \times
+      E$ and the argument takes place in one chart.
+  \end{itemize}
+  Weinstein also proves a relative version for pairs of manifolds \cite[Theorem~4.1,
+  Corollary~4.2]{Wei71}, which is not formalized.
+\end{remark}

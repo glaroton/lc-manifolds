@@ -1,0 +1,234 @@
+\chapter{Counterexamples}
+\label{chap:counterexamples}
+
+Counterexamples that separate notions which agree in finite dimensions. This chapter collects
+those about immersions and Finsler structures: a weak immersion that is not an immersion
+($\ell^1 \to \ell^2$), an injective immersion that is not initial (the figure eight), an
+immersion between Banach spaces that is not split ($c_0 \subseteq \ell^\infty$, by Phillips'
+lemma), and a Finsler length structure that is not a Finsler metric. Three more are stated next
+to the results they limit: McAlpin's complete Riemannian manifold without shortest curves
+(Example~\ref{ex:ms-mcalpin}), a bounded Finsler structure on an incomplete model whose distance
+does not give the manifold topology (Theorem~\ref{thm:ms-incomplete-counterexample}), and a weak
+Riemannian metric without Levi-Civita connection (Theorem~\ref{thm:mt-no-levi-civita}).
+
+\section{Weak immersions, injective immersions and split immersions}
+
+The notions of immersion form a chain: split immersions are immersions,
+immersions are weak immersions, and injective immersions need not be initial. In finite
+dimensions the first two notions coincide. The three examples of this section show that every
+implication is strict, and that the first two separations occur already between Banach spaces.
+
+\subsection{A weak immersion that is not an immersion}
+
+Let $\iota \colon \ell^1 \to \ell^2$ be the inclusion of real sequences. Both spaces are Banach
+spaces, hence manifolds with a single chart.
+
+\begin{proposition}[$\ell^1 \to \ell^2$]
+  \label{prop:ex-l1-l2}
+  \lean{LocallyConvex.Manifolds.lpInclusion, LocallyConvex.Manifolds.lpInclusion_injective, LocallyConvex.Manifolds.not_boundedBelow_lpInclusion, LocallyConvex.Manifolds.isWeakImmersion_lpInclusion, LocallyConvex.Manifolds.not_isImmersion_lpInclusion}
+  \leanok
+  \uses{def:weak-immersion, def:immersion}
+  The inclusion $\iota$ is continuous, linear and injective, hence a weak immersion. It is not
+  bounded below, hence it is not an immersion.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Continuity follows from the closed graph theorem: the graph of $\iota$ is closed because the
+  coordinate evaluations are continuous on both spaces. The differential of $\iota$ at every
+  point is $\iota$, which is injective. For $x_n = e_0 + \dots + e_{n-1}$ we have
+  $\|x_n\|_1 = n$ and $\|x_n\|_2 = \sqrt n$, so no inequality $m\|x\|_1 \le \|\iota x\|_2$ with
+  $m > 0$ can hold, and $\iota$ is not a topological isomorphism onto its range.
+\end{proof}
+
+\begin{remark}
+  The range of $\iota$ is dense in $\ell^2$ and not closed. In finite dimensions an injective
+  linear map is automatically a topological isomorphism onto a closed subspace; in infinite
+  dimensions the condition that the differential be an embedding with closed range is a genuine
+  additional requirement, and this is the reason to distinguish weak immersions from
+  immersions.
+\end{remark}
+
+\subsection{An injective immersion that is not initial: the figure eight}
+
+Let $\theta(t) = 2\arctan t \in (-\pi, \pi)$ and
+\[
+  j \colon \R \to \R^2, \qquad j(t) = (\sin\theta(t), \sin 2\theta(t)).
+\]
+As $t$ runs over $\R$, $j(t)$ traces the figure eight (a lemniscate), passing through the origin
+at $t = 0$ and tending to the origin again as $t \to \pm\infty$.
+
+\begin{proposition}[The figure eight is immersed]
+  \label{prop:ex-lemniscate-immersed}
+  \lean{LocallyConvex.Manifolds.Lemniscate.j, LocallyConvex.Manifolds.Lemniscate.j_injective, LocallyConvex.Manifolds.Lemniscate.vel_ne_zero, LocallyConvex.Manifolds.Lemniscate.isImmersedSubmanifold_lemniscate}
+  \leanok
+  \uses{def:immersion}
+  The map $j$ is smooth, injective and has nonvanishing velocity; hence it is an injective
+  immersion.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  On $(-\pi, \pi)$ the pair $(\sin a, \sin 2a)$ determines $a$, which gives injectivity. If
+  $\dot j(t) = 0$, then $\cos\theta = 0$ and $\cos 2\theta = 0$ at the same time, which is
+  impossible. A nonzero vector spans a closed line, so $v \mapsto v\,\dot j(t)$ is a
+  topological isomorphism onto a closed subspace.
+\end{proof}
+
+\begin{theorem}[The figure eight is not initial]
+  \label{thm:ex-lemniscate-not-initial}
+  \lean{LocallyConvex.Manifolds.Lemniscate.f, LocallyConvex.Manifolds.Lemniscate.g, LocallyConvex.Manifolds.Lemniscate.j_g, LocallyConvex.Manifolds.Lemniscate.one_lt_g, LocallyConvex.Manifolds.Lemniscate.g_zero, LocallyConvex.Manifolds.Lemniscate.not_isInitialSubmanifold_lemniscate}
+  \leanok
+  \uses{prop:ex-lemniscate-immersed, def:initial-submanifold}
+  Let $\sigma(s) = \tfrac12\arctan s$ and $f(s) = (\sin\sigma, -\sin 2\sigma)$. Then $f$ is a
+  smooth curve in $\R^2$ with values in $j(\R)$, but its unique lift $g$ with $j \circ g = f$ is
+  not continuous at $0$. Hence $j$ is not an initial submanifold.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The curve $f$ crosses the origin along the branch that $j$ reaches only as $t \to \pm\infty$.
+  Explicitly, $g = \tan(\lambda/2)$ with $\lambda(s) = \pi - \sigma(s)$ for $s > 0$,
+  $\lambda(s) = -\pi - \sigma(s)$ for $s < 0$ and $\lambda(0) = 0$; trigonometric identities give
+  $j \circ g = f$. For $s > 0$ we have $g(s) > 1$, while $g(0) = 0$. If $j$ were initial, $g$
+  would be smooth, in particular continuous.
+\end{proof}
+
+\begin{remark}
+  This is the classical finite dimensional example; it shows that the condition defining
+  initial submanifolds is not a consequence of being an injective immersion, and has nothing to
+  do with infinite dimensions. The topology of $\R$ transported by $j$ is strictly finer than the
+  topology induced by $\R^2$ on the figure eight.
+\end{remark}
+
+\subsection{An immersion that is not split: \texorpdfstring{$c_0 \subseteq \ell^\infty$}{c0 in l-infinity}}
+
+We realize $\ell^\infty$ as the Banach space of bounded real sequences and $c_0$ as the closed
+subspace of sequences tending to $0$. The classical obstruction is the following result of
+Phillips \cite[7.5, pp.~539--540]{Phi40}, stated there for the space $c$ of convergent
+sequences, which contains $c_0$ with codimension one; we formalize the short proof of Whitley \cite{Whi66}.
+
+\begin{theorem}[Phillips' lemma]
+  \label{thm:ex-phillips}
+  \lean{LocallyConvex.Manifolds.Phillips.Linf, LocallyConvex.Manifolds.Phillips.c0, LocallyConvex.Manifolds.Phillips.isClosed_c0, LocallyConvex.Manifolds.Phillips.not_closedComplemented_c0}
+  \leanok
+  There is no continuous linear projection of $\ell^\infty$ onto $c_0$.
+\end{theorem}
+
+The proof rests on an uncountable family of almost disjoint subsets of $\N$, and on the fact
+that a functional vanishing on $c_0$ can only see countably many of them.
+
+\begin{lemma}[An almost disjoint family]
+  \label{lem:ex-almost-disjoint}
+  \lean{LocallyConvex.Manifolds.Phillips.N, LocallyConvex.Manifolds.Phillips.infinite_N, LocallyConvex.Manifolds.Phillips.finite_N_inter, LocallyConvex.Manifolds.Phillips.ind, LocallyConvex.Manifolds.Phillips.ind_not_mem_c0}
+  \leanok
+  For each $A \subseteq \N$ there is an infinite set $N_A \subseteq \N$ such that
+  $N_A \cap N_B$ is finite whenever $A \ne B$. The indicator $\chi_A \in \ell^\infty$ of $N_A$
+  does not belong to $c_0$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Index the finite binary words by $\N$, and let $N_A$ be the set of indices of the initial
+  segments of the indicator function of $A$. If $A$ and $B$ differ at $i_0$, their initial
+  segments of length larger than $i_0$ are different, so $N_A \cap N_B$ is finite. Since $N_A$
+  is infinite, $\chi_A$ takes the value $1$ infinitely often.
+\end{proof}
+
+\begin{lemma}[Whitley]
+  \label{lem:ex-whitley}
+  \lean{LocallyConvex.Manifolds.Phillips.abs_le_of_eventually, LocallyConvex.Manifolds.Phillips.countable_ne_zero}
+  \leanok
+  \uses{lem:ex-almost-disjoint}
+  Let $f$ be a continuous linear functional on $\ell^\infty$ that vanishes on $c_0$. If
+  $|x_k| \le 1$ for all but finitely many $k$, then $|f(x)| \le \|f\|$. Consequently,
+  $f(\chi_A) \ne 0$ only for countably many $A \subseteq \N$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  For the first claim, modify $x$ on a finite set to obtain $y$ with $\|y\| \le 1$; then
+  $x - y \in c_0$ and $f(x) = f(y)$. For the second, suppose $|f(\chi_A)| > 1/m$ for every $A$ in
+  a finite set $\mathcal F$, and let $x = \sum_{A \in \mathcal F} \pm\chi_A$, with the signs of
+  $f(\chi_A)$. Off the finite set where two of the $N_A$ meet, $|x_k| \le 1$; hence
+  $\#\mathcal F/m < f(x) \le \|f\|$. So each set $\{A : |f(\chi_A)| > 1/m\}$ is finite.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:ex-phillips}]
+  \proves{thm:ex-phillips}
+  \leanok
+  \uses{lem:ex-whitley}
+  Suppose $P$ is a continuous projection onto $c_0$, and apply Lemma~\ref{lem:ex-whitley} to the
+  functionals $f_n = e_n \circ (1 - P)$, where $e_n$ is the $n$-th coordinate. The subsets of
+  $\N$ are uncountable, so some $A$ avoids the countable union of the exceptional sets. Then
+  $(1 - P)\chi_A = 0$, that is, $\chi_A = P\chi_A \in c_0$, a contradiction.
+\end{proof}
+
+\begin{corollary}[Embedded but not split]
+  \label{cor:ex-c0}
+  \lean{LocallyConvex.Manifolds.Phillips.isEmbeddedSubmanifold_c0, LocallyConvex.Manifolds.Phillips.not_isSplitSubmanifold_c0, LocallyConvex.Manifolds.Phillips.isImmersion_c0, LocallyConvex.Manifolds.Phillips.not_isSplitImmersion_c0}
+  \leanok
+  \uses{thm:ex-phillips, prop:ex-subspace, prop:ex-subspace-immersion,
+    def:embedded-submanifold, def:split-submanifold, def:immersion, def:split-immersion}
+  The subspace $c_0$ is an embedded submanifold of $\ell^\infty$ that is not split, and the
+  inclusion $c_0 \to \ell^\infty$ is an immersion that is not a split immersion.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Combine Propositions~\ref{prop:ex-subspace} and~\ref{prop:ex-subspace-immersion} with
+  Theorem~\ref{thm:ex-phillips}.
+\end{proof}
+
+\begin{remark}
+  In Hilbert spaces every closed subspace is complemented, so the distinction between embedded
+  and split submanifolds, and between immersions and split immersions, is invisible there. For
+  Banach spaces it is not, and Corollary~\ref{cor:ex-c0} gives the standard witness.
+\end{remark}
+
+\section{A Finsler length structure that is not a Finsler metric}
+\label{sec:mt-cusp}
+
+The difference between the two notions is not an infinite-dimensional phenomenon. On $\R^2$ with
+the sup norm, let
+\[
+  \beta(x, y) = \frac{\max(0, x^2 - |y|)}{x^2 + |y|} \quad (\beta(0,0) = 0), \qquad
+  \mu_p(v) = \|v\| + \beta(p)\,|v_2| .
+\]
+The weight $\beta$ takes values in $[0,1]$, is supported in the cusp $\{|y| < x^2\}$, equals $1$
+on the $x$-axis minus the origin, and is continuous away from the origin.
+
+\begin{proposition}
+  \label{prop:mt-cusp-fibers}
+  \lean{LocallyConvex.Manifolds.CuspFinsler.field, LocallyConvex.Manifolds.CuspFinsler.isNondegenerate, LocallyConvex.Manifolds.CuspFinsler.isReversible, LocallyConvex.Manifolds.CuspFinsler.continuousAt_β}
+  \leanok
+  \uses{def:mt-field}
+  Each $\mu_p$ is a reversible Finsler norm.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  It is the sum of the norm and a nonnegative multiple of the seminorm $|v_2|$.
+\end{proof}
+
+\begin{theorem}
+  \label{thm:mt-cusp}
+  \lean{LocallyConvex.Manifolds.CuspFinsler.not_continuous, LocallyConvex.Manifolds.CuspFinsler.lengthStructure, LocallyConvex.Manifolds.CuspFinsler.eventually_outside_cusp, LocallyConvex.Manifolds.CuspFinsler.lengthStructure_not_finslerMetric}
+  \leanok
+  \uses{prop:mt-cusp-fibers, def:finsler-metric, def:finsler-length-structure}
+  The field $\mu$ is a Finsler length structure but not a Finsler metric.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  It is not continuous on $\T\R^2$ at $(0, e_2)$: $\mu_{(t,0)}(e_2) = 2$ for $t \neq 0$, while
+  $\mu_0(e_2) = 1$. Let now $\gamma$ be a $\Ck{1}$ curve. Away from the times where $\gamma$ passes
+  through the origin, $\beta \circ \gamma$ is continuous. Suppose that $\gamma(t_0) = 0$. If
+  $\dot\gamma_2(t_0) \neq 0$, then $|\gamma_2(t)| \ge c\,|t - t_0|$ while $\gamma_1(t)^2 =
+  O(|t-t_0|^2)$, so near $t_0$ the curve stays outside the cusp and $\beta(\gamma(t)) = 0$. If
+  $\dot\gamma_2(t_0) = 0$, then $0 \le \beta(\gamma)\,|\dot\gamma_2| \le |\dot\gamma_2| \to 0$.
+\end{proof}
+
+The example shows what a $\Ck{1}$ curve can and cannot see: through a point $p$ it only meets the
+pairs $(p, v)$ that are compatible with the way it approaches $p$. The pairs $((1/n, 0), e_2)$,
+which converge to $(0, e_2)$ in $\T\R^2$, are not of this kind.

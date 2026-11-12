@@ -1,0 +1,470 @@
+\chapter{Sprays and geodesics}
+\label{chap:geodesics}
+
+Sprays, the correspondence between quadratic sprays and symmetric connections, and geodesics on
+Banach manifolds: the geodesic equation in charts, local existence with uniform time, uniqueness,
+maximal geodesics, the exponential map and normal neighbourhoods, after Lang
+\cite[\S\S IV.3--4, VIII.5]{Lan99}. In general locally convex spaces there is no existence theorem
+for ordinary differential equations, so existence is only claimed for Banach models.
+
+\section{Sprays}
+
+A spray, or second order vector field, is a vector field $\xi$ on $TM$ such that
+$T\pi \circ \xi = \id$. In a chart it has the form $(x, v) \mapsto (x, v; v, f(x, v))$, and it is
+determined by its \emph{local part} $f$. As we did for connections, we encode sprays through their
+local parts.
+
+\begin{definition}[Spray]
+  \label{def:spray}
+  \lean{LocallyConvex.Manifolds.Spray, LocallyConvex.Manifolds.Spray.IsQuadratic}
+  \leanok
+  \uses{def:mb-manifold, def:tangent-bundle}
+  A \emph{spray} on $M$ assigns to each chart $i$ of the atlas a smooth map
+  $f_i \colon i(U_i) \times E \to E$ such that, for every pair of charts $i, j$, every $y$ in the
+  domain of $\tau = j \circ i^{-1}$ and every $v \in E$,
+  \[
+    f_j\bigl(\tau y, \dd\tau(y)(v)\bigr) = \dd\tau(y)\bigl(f_i(y, v)\bigr) + \dd^{(2)}\tau(y; v, v).
+  \]
+  The spray is \emph{quadratic} if $f_i(x, s v) = s^2 f_i(x, v)$ for all $i$, $x$, $v$ and
+  $s \in \R$.
+\end{definition}
+
+The change of charts law is the change of charts law of the double tangent bundle $T(TM)$,
+restricted to the points of the form $(x, v; v, w)$. In \cite{Lan99}, \S IV.3, a spray is by
+definition quadratic; we keep the two notions apart, since the quadratic condition is what is
+needed to pass to connections.
+
+\begin{proposition}[The spray of a connection]
+  \label{prop:conn-to-spray}
+  \lean{LocallyConvex.Manifolds.Connection.toSpray, LocallyConvex.Manifolds.Connection.toSpray_isQuadratic}
+  \leanok
+  \uses{def:connection, def:spray}
+  Every connection defines a quadratic spray, with local parts $f_i(x, v) = \Gamma_i(x)(v, v)$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Restrict the change of charts law of $\Gamma$ to the diagonal $a = b = v$. Homogeneity of degree
+  two follows from bilinearity.
+\end{proof}
+
+The converse requires recovering a bilinear map from its quadratic form, and checking that the
+polarization obeys the change of charts law of connections. For the first point, the following
+identity holds without any regularity assumption.
+
+\begin{lemma}[Homogeneous maps of degree two]
+  \label{lem:conn-homogeneous}
+  \lean{LocallyConvex.Manifolds.hasDirDerivAt_of_homogeneous, LocallyConvex.Manifolds.dMB_dMB_zero_of_homogeneous, LocallyConvex.Manifolds.polarization}
+  \leanok
+  Let $g \colon E \to F$ satisfy $g(s v) = s^2 g(v)$ for all $s \in \R$, $v \in E$. Then
+  $\dd^{(2)} g(0; v, v) = 2\, g(v)$. Moreover, if $B$ is symmetric and bilinear, then
+  $B(a + b, a + b) - B(a - b, a - b) = 4 B(a, b)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  By homogeneity, $g(s v + t v) - g(s v) = \bigl((s + t)^2 - s^2\bigr) g(v)$, so the difference
+  quotient can be computed exactly and $\dd g(s v)(v) = 2 s\, g(v)$ for every $s$.
+  Differentiating once more along the line $s \mapsto s v$ at $s = 0$ gives $2 g(v)$. The
+  polarization identity is immediate.
+\end{proof}
+
+\begin{theorem}[The connection of a quadratic spray]
+  \label{thm:conn-spray-to-connection}
+  \lean{LocallyConvex.Manifolds.Spray.polar, LocallyConvex.Manifolds.Spray.polar_eq, LocallyConvex.Manifolds.Spray.polar_transition, LocallyConvex.Manifolds.Spray.toConnection, LocallyConvex.Manifolds.Spray.toConnection_isSymmetric, LocallyConvex.Manifolds.Spray.toConnection_toSpray}
+  \leanok
+  \uses{def:spray, def:connection, lem:conn-homogeneous, prop:conn-to-spray}
+  Let $f$ be a quadratic spray. In each chart $i$ put
+  \[
+    \Gamma_i(x)(a, b) = \tfrac14\bigl(f_i(x, a + b) - f_i(x, a - b)\bigr)
+      = \tfrac12\, \dd^{(2)}\bigl(f_i(x, \cdot)\bigr)(0; a, b).
+  \]
+  Then the $\Gamma_i$ are the symbols of a symmetric connection, whose spray is $f$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Lemma~\ref{lem:conn-homogeneous} applied to $g = f_i(x, \cdot)$ and to the symmetric
+  bilinear map $\tfrac12 \dd^{(2)} g(0; \cdot, \cdot)$, the two expressions agree; the second one
+  is bilinear and symmetric, and $\Gamma_i(x)(v, v) = f_i(x, v)$. Smoothness of the symbols
+  follows from the first expression. The change of charts law for $\Gamma$ is obtained by
+  polarizing the change of charts law of the spray, using that $\dd\tau(y)$ is linear and
+  $\dd^{(2)}\tau(y; \cdot, \cdot)$ is symmetric and bilinear. This is \cite{Lan99}, Prop.~IV.3.2
+  and \S VIII.2.
+\end{proof}
+
+Thus quadratic sprays and symmetric connections are the same object, through
+$f(x, v) = \Gamma_x(v, v)$; in the rest of the chapter we work with connections.
+
+\section{Geodesics on Banach manifolds}
+
+In this section $E$ is a Banach space. Then Michal--Bastiani and Fr\'echet derivatives agree, and
+in a chart $i$ the geodesic equation is the second order equation
+\[
+  c'' = \Gamma_i(c)(c', c')
+\]
+on the open set $\varphi_i(U_i) \subseteq E$, with $\Gamma_i$ smooth and bilinear in the last two
+variables. We say that $\alpha$ is a \emph{geodesic on an open set} $I \subseteq \mathbb{R}$ if it is
+continuous on $I$ and satisfies this equation at every $t \in I$ in the preferred chart at
+$\alpha(t)$.
+
+\begin{theorem}[The geodesic equation does not depend on the chart]
+  \label{thm:geodesic-eq-chart}
+  \lean{LocallyConvex.Manifolds.geodesicEq_comp, LocallyConvex.Manifolds.Connection.geodesicEqAt_of_chart}
+  \leanok
+  If $\alpha$ is continuous at $t$ and satisfies the geodesic equation at $t$ in a chart around
+  $\alpha(t)$, it satisfies it in every chart around $\alpha(t)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  With $\tau = \varphi_j \circ \varphi_i^{-1}$ and $c = \varphi_i \circ \alpha$,
+  $(\tau \circ c)'' = D^2\tau(c', c') + D\tau(c'')$, and the change of charts law of the symbols
+  reads $\Gamma_j(\tau y)(D\tau\, a, D\tau\, b) = D\tau\, \Gamma_i(y)(a, b) + D^2\tau(a, b)$.
+\end{proof}
+
+\begin{theorem}[Local existence of geodesics, with uniform time]
+  \label{thm:geodesic-existence}
+  \lean{LocallyConvex.Manifolds.Connection.exists_isGeodesicOn_uniform, LocallyConvex.Manifolds.Connection.exists_isGeodesicOn}
+  \leanok
+  \uses{thm:geodesic-eq-chart}
+  Let $y_0$ be a point of the chart $i$. There is $r > 0$ such that for every $K \ge 0$ there is
+  $\varepsilon > 0$ with the following property: for every $y$ with $\|y - y_0\| \le r$ and every
+  $w$ with $\|w\| \le K$ there is a geodesic $\alpha$ on $(-\varepsilon, \varepsilon)$, staying in
+  the domain of $i$, with $\varphi_i(\alpha(0)) = y$ and $(\varphi_i \circ \alpha)'(0) = w$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Picard--Lindel\"of for the first order system $(c, v)' = (v, \Gamma_i(c)(v, v))$, whose right
+  hand side is $\Ck{1}$, hence locally Lipschitz; the time is uniform for small velocities, and the
+  homogeneity of the equation ($t \mapsto c(st)$ is a solution with initial velocity $s\, c'(0)$)
+  makes it uniform for velocities bounded by $K$.
+\end{proof}
+
+\begin{theorem}[Uniqueness of geodesics]
+  \label{thm:geodesic-uniqueness}
+  \lean{LocallyConvex.Manifolds.Connection.IsGeodesicOn.eqOn}
+  \leanok
+  \uses{thm:geodesic-eq-chart}
+  If $M$ is Hausdorff, two geodesics on $(a, b)$ with the same position and velocity at some
+  $t_0 \in (a, b)$ agree on $(a, b)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The set of $t$ near which the two geodesics agree is open. It is also closed in $(a, b)$: at a
+  limit point $t$ the two curves meet, because $M$ is Hausdorff; in a chart around this common
+  point both solve the same equation, which has unique solutions since its right hand side is
+  locally Lipschitz. By connectedness it is all of $(a, b)$.
+\end{proof}
+
+\begin{remark}
+  The Hausdorff hypothesis cannot be dropped: on the line with two origins, the two copies of a
+  line through the origins are geodesics of the flat connection with the same data at $t = 1$, and
+  they differ at $t = 0$.
+\end{remark}
+
+\begin{theorem}[Extension of geodesics]
+  \label{thm:geodesic-extension}
+  \lean{LocallyConvex.Manifolds.Connection.IsGeodesicOn.exists_extend}
+  \leanok
+  \uses{thm:geodesic-existence, thm:geodesic-uniqueness}
+  Let $M$ be Hausdorff, and let $\alpha$ be a geodesic on $(a, b)$ such that $\alpha(t) \to q$ as
+  $t \to b^-$ and the velocity of $\alpha$, read in a chart around $q$, stays bounded as
+  $t \to b^-$. Then $\alpha$ extends to a geodesic on $(a, b')$ for some $b' > b$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Let $\varepsilon$ be the uniform time of Theorem~\ref{thm:geodesic-existence} around
+  $\varphi_i(q)$. Take $t_1 > b - \varepsilon/2$ with $\alpha(t_1)$ close to $q$, and the geodesic
+  $\mu$ with the position and velocity of $\alpha$ at $t_1$. By uniqueness
+  $\mu(t - t_1) = \alpha(t)$ where both are defined, so the two curves glue to a geodesic on
+  $(a, t_1 + \varepsilon)$, and $t_1 + \varepsilon > b$.
+\end{proof}
+
+\begin{theorem}[Complete Finsler manifolds: geodesics extend {\cite[Prop.~9.2.1]{Lar22}}]
+  \label{thm:finsler-geodesic-extension}
+  \lean{LocallyConvex.Manifolds.Connection.IsGeodesicOn.exists_extend_of_complete}
+  \leanok
+  \uses{thm:geodesic-extension}
+  Let $M$ be Hausdorff, with a Finsler length structure $\mu$ bounded below, such that $M$ is
+  complete for the symmetrized distance $\max(d_b(x, y), d_b(y, x))$. If $\alpha$ is a geodesic on
+  $(a, b)$ with $\mu(\dot\alpha)$ and $\mu(-\dot\alpha)$ bounded, then $\alpha$ extends to a
+  geodesic on an interval $(a', b') \supsetneq (a, b)$ at both ends.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Reparametrizing arcs of $\alpha$ by a smooth ramp gives $\Ck{1}$ competitors for $d_b$, so
+  $d_b(\alpha(s), \alpha(t)) \le L(t - s)$ and the same backwards; thus $\alpha(t)$ is Cauchy as
+  $t \to b^-$. Its limit in $(M, d_b)$ is a limit in $M$ because $\mu$ is bounded below, and the
+  lower bound also bounds the velocity in a chart around the limit point.
+  Theorem~\ref{thm:geodesic-extension} applies; the end $a$ is treated by reversing time.
+\end{proof}
+
+\begin{remark}
+  In \cite{Lar22} the metric is invariant under the parallel transport of the spray, so geodesics
+  have constant speed; we only use bounded speed. Since $\mu$ need not be reversible, both
+  $\mu(\dot\alpha)$ and $\mu(-\dot\alpha)$ have to be bounded. With maximal geodesics, the
+  statement ``every geodesic is defined on $\mathbb{R}$'' is Theorem~\ref{thm:finsler-geodesically-complete}.
+\end{remark}
+
+\begin{theorem}[Maximal geodesics {\cite[\S IV.3, \S IV.4]{Lan99}}]
+  \label{thm:maximal-geodesic}
+  \lean{LocallyConvex.Manifolds.tangentSMul,
+    LocallyConvex.Manifolds.Connection.IsGeodesicOn.eqOn_of_ordConnected,
+    LocallyConvex.Manifolds.Connection.IsGeodesicThrough,
+    LocallyConvex.Manifolds.Connection.exists_isGeodesicThrough,
+    LocallyConvex.Manifolds.Connection.maxInterval,
+    LocallyConvex.Manifolds.Connection.maxGeodesic,
+    LocallyConvex.Manifolds.Connection.isOpen_maxInterval,
+    LocallyConvex.Manifolds.Connection.isGeodesicThrough_maxGeodesic,
+    LocallyConvex.Manifolds.Connection.IsGeodesicThrough.subset_maxInterval,
+    LocallyConvex.Manifolds.Connection.IsGeodesicThrough.maxGeodesic_eq,
+    LocallyConvex.Manifolds.Connection.maxInterval_smul,
+    LocallyConvex.Manifolds.Connection.maxGeodesic_smul,
+    LocallyConvex.Manifolds.Connection.maxInterval_zero_smul}
+  \leanok
+  \uses{thm:geodesic-existence, thm:geodesic-uniqueness}
+  Let $M$ be Hausdorff and modeled on a Banach space, with a connection. The geodesics with
+  initial velocity $v \in \T M$ glue to a \emph{maximal geodesic} $\gamma_v$, defined on an open
+  interval $J_v \ni 0$: every geodesic with initial velocity $v$ on an open interval $I \ni 0$ is
+  the restriction of $\gamma_v$ to $I$. For $s \neq 0$, $J_{sv} = s^{-1}J_v$ and
+  $\gamma_{sv}(t) = \gamma_v(st)$; the maximal geodesic with zero initial velocity is constant and
+  defined on $\mathbb{R}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As for the maximal flow (Theorem~\ref{thm:maximal-flow}), from local existence and uniqueness on
+  intervals; homogeneity because $t \mapsto \alpha(st)$ is a geodesic with initial velocity
+  $s\,\dot\alpha(0)$. The maximal geodesic is built directly from the geodesics, not as the
+  projection of the maximal flow of the geodesic spray on $\T M$; the two agree by
+  Theorem~\ref{thm:geodesic-spray-flow}. We do not claim this argument is new.
+\end{proof}
+
+\begin{definition}[The exponential map {\cite[\S IV.4]{Lan99}, \cite[\S9.2]{Lar22}}]
+  \label{def:exp}
+  \lean{LocallyConvex.Manifolds.Connection.expDomain, LocallyConvex.Manifolds.Connection.exp,
+    LocallyConvex.Manifolds.Connection.expDomainAt, LocallyConvex.Manifolds.Connection.expAt,
+    LocallyConvex.Manifolds.Connection.smul_mem_expDomain_iff,
+    LocallyConvex.Manifolds.Connection.exp_smul}
+  \leanok
+  \uses{thm:maximal-geodesic}
+  The \emph{exponential map} is $\exp v = \gamma_v(1)$, on $D(\exp) = \{v : 1 \in J_v\}$, and
+  $\exp_p$ is its restriction to $T_pM$. Then $tv \in D(\exp)$ if and only if $t \in J_v$, and
+  $\exp(tv) = \gamma_v(t)$; so the maximal geodesic is $t \mapsto \exp(tv)$.
+\end{definition}
+
+\begin{definition}[The geodesic spray {\cite[\S IV.3, pp.~97--98]{Lan99}}]
+  \label{def:geodesic-spray}
+  \lean{LocallyConvex.Manifolds.Connection.sprayFun,
+    LocallyConvex.Manifolds.Connection.ddChart_sprayFun,
+    LocallyConvex.Manifolds.Connection.spray,
+    LocallyConvex.Manifolds.Connection.rep_spray,
+    LocallyConvex.Manifolds.Connection.spray_isSecondOrder}
+  \leanok
+  \uses{def:connection}
+  Let $M$ be modeled on a Banach space, with a connection. The \emph{geodesic spray} is the
+  smooth vector field $S$ on the manifold $\T M$ (modeled on $E \times E$) which, in the chart of
+  $\T M$ over a chart $i$ of $M$, reads
+  \[
+    (x, w) \longmapsto (x, w;\ w, \Gamma_i(x)(w, w)).
+  \]
+  It is well defined: under the transition maps of $\T\T M$, the local formulas in two charts
+  agree by the change of charts law of the symbols. It is a second-order vector field,
+  $\pi_* S(v) = v$.
+\end{definition}
+
+\begin{theorem}[Geodesics and the flow of the spray {\cite[\S IV.3, p.~97]{Lan99}}]
+  \label{thm:geodesic-spray-flow}
+  \lean{LocallyConvex.Manifolds.Connection.IsGeodesicOn.isIntegralCurveOn_velocity,
+    LocallyConvex.Manifolds.Connection.isGeodesicOn_proj_of_isIntegralCurveOn,
+    LocallyConvex.Manifolds.Connection.velocity_proj_of_isIntegralCurveOn,
+    LocallyConvex.Manifolds.Connection.maxInterval_eq_spray,
+    LocallyConvex.Manifolds.Connection.maxGeodesic_eq_proj_flow,
+    LocallyConvex.Manifolds.Connection.flow_spray_eq_velocity}
+  \leanok
+  \uses{def:geodesic-spray, thm:maximal-geodesic, thm:maximal-flow}
+  The velocity $\dot\alpha$ of a geodesic is an integral curve of $S$; conversely, an integral
+  curve $\beta$ of $S$ is the velocity of its projection $\pi\beta$, which is a geodesic. Hence,
+  if $M$ is Hausdorff, the maximal interval $J_v$ of the geodesic with initial velocity $v$ is the
+  maximal interval of the integral curve of $S$ through $v$, $\gamma_v(t) = \pi(\mathrm{Fl}_S(t, v))$
+  and $\mathrm{Fl}_S(t, v) = \dot\gamma_v(t)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the chart of $\T M$ over a chart $i$ of $M$, an integral curve of $S$ is a curve $(x, w)$
+  with $x' = w$ and $w' = \Gamma_i(x)(w, w)$, which is the geodesic equation for $x$.
+\end{proof}
+
+\begin{theorem}[$D(\exp)$ is open and $\exp$ is smooth {\cite[\S IV.4, p.~107]{Lan99},
+  \cite[\S6.1.2]{Lar22}}]
+  \label{thm:exp-smooth}
+  \lean{LocallyConvex.Manifolds.Connection.expDomain_eq_preimage_flowDomain,
+    LocallyConvex.Manifolds.Connection.exp_eq_proj_flow,
+    LocallyConvex.Manifolds.Connection.isOpen_expDomain,
+    LocallyConvex.Manifolds.Connection.smoothMBMOn_exp,
+    LocallyConvex.Manifolds.Connection.isOpen_expDomainAt,
+    LocallyConvex.Manifolds.Connection.smoothMBMOn_expAt,
+    LocallyConvex.Manifolds.Connection.zero_mem_expDomain,
+    LocallyConvex.Manifolds.Connection.tangentSMul_mem_expDomain,
+    LocallyConvex.Manifolds.Connection.starConvex_expDomainAt}
+  \leanok
+  \uses{thm:geodesic-spray-flow, def:exp, thm:maximal-flow}
+  Let $M$ be Hausdorff and modeled on a Banach space, with a connection. The domain $D(\exp)$ is
+  open in $\T M$, contains the zero section and is star-shaped in the fibers, and
+  $\exp\colon D(\exp) \to M$ is smooth. For each $p \in M$, $D(\exp_p)$ is an open star-shaped
+  neighbourhood of $0$ in $T_pM$, and $\exp_p$ is smooth on it.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Theorem~\ref{thm:geodesic-spray-flow}, $D(\exp) = \{v : (1, v) \in D(\mathrm{Fl}_S)\}$ and
+  $\exp = \pi \circ \mathrm{Fl}_S(1, \cdot)$; the domain of the maximal flow is open and the flow
+  is smooth on it (Theorem~\ref{thm:maximal-flow}, applied to the Hausdorff manifold $\T M$).
+  Star-shapedness is $tv \in D(\exp) \iff t \in J_v$. The library works with smooth manifolds,
+  so $\exp$ is smooth, rather than $C^{p-2}$ on a $C^p$ manifold as in \cite{Lan99}. That
+  $\exp_p$ is a local diffeomorphism at $0$ is Theorem~\ref{thm:exp-local-diffeo}.
+\end{proof}
+
+\begin{theorem}[$\exp_p$ is a local diffeomorphism at $0$ {\cite[Thm.~IV.4.1, p.~108]{Lan99},
+  \cite[Obs.~6.2.2, p.~155]{Lar22}}]
+  \label{thm:exp-local-diffeo}
+  \lean{LocallyConvex.Manifolds.exists_openPartialHomeomorph_of_contDiffOn,
+    LocallyConvex.Manifolds.smoothMBMOn_trans_chart_symm,
+    LocallyConvex.Manifolds.Connection.expAt_zero,
+    LocallyConvex.Manifolds.Connection.contDiffOn_chart_expAt,
+    LocallyConvex.Manifolds.Connection.hasFDerivAt_expAt_zero,
+    LocallyConvex.Manifolds.Connection.exists_expAt_openPartialHomeomorph}
+  \leanok
+  \uses{thm:exp-smooth}
+  Let $M$ be Hausdorff and modeled on a Banach space, with a connection, and let $p \in M$.
+  Read in the preferred chart $\varphi$ at $p$, the derivative at $0$ of
+  $w \mapsto \varphi(\exp_p w)$ is the identity: $d(\exp_p)(0_p) = \mathrm{id}$. Hence $\exp_p$
+  restricts to a diffeomorphism from an open neighbourhood of $0$ in $T_pM$, contained in
+  $D(\exp_p)$, onto an open neighbourhood of $p$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Since $\exp_p(tw) = \gamma_w(t)$ for $t \in J_w$ and $\gamma_w'(0) = w$, the derivative of
+  $\varphi \circ \exp_p$ at $0$ in the direction $w$ is $w$. Michal--Bastiani smooth maps between
+  open sets of Banach spaces are Fr\'echet smooth, so the inverse function theorem applies to
+  $\varphi \circ \exp_p$; on the open set where its derivative is invertible the local inverse is
+  smooth, and composing with $\varphi^{-1}$ gives the diffeomorphism onto an open set of $M$.
+\end{proof}
+
+\begin{theorem}[$G = (\pi, \exp)$ is a local diffeomorphism at $0_p$
+  {\cite[Prop.~VIII.5.1, p.~215]{Lan99}, \cite[\S6.2.1, p.~156]{Lar22}}]
+  \label{thm:exp-pair-local-diffeo}
+  \lean{LocallyConvex.Manifolds.Connection.expChart,
+    LocallyConvex.Manifolds.Connection.expChartDomain,
+    LocallyConvex.Manifolds.Connection.contDiffOn_expChart,
+    LocallyConvex.Manifolds.Connection.expChart_zero,
+    LocallyConvex.Manifolds.prodShear,
+    LocallyConvex.Manifolds.Connection.hasFDerivAt_expChart,
+    LocallyConvex.Manifolds.Connection.exists_expChart_openPartialHomeomorph,
+    LocallyConvex.Manifolds.Connection.exists_expPair_openPartialHomeomorph,
+    LocallyConvex.Manifolds.Connection.exists_expPair_normal}
+  \leanok
+  \uses{thm:exp-local-diffeo}
+  Under the hypotheses of Theorem~\ref{thm:exp-local-diffeo}, the map
+  $G(v) = (\pi v, \exp v)$, $D(\exp) \to M \times M$, has differential
+  $(a, b) \mapsto (a, a + b)$ at $0_p$ in charts, and restricts to a diffeomorphism from an open
+  neighbourhood $V \subseteq D(\exp)$ of $0_p$ onto an open neighbourhood of $(p, p)$. There is an
+  open $W \ni p$ with $W \times W \subseteq G(V)$: any $x, y \in W$ are joined by a unique geodesic
+  $t \mapsto \exp(tv)$, $0 \le t \le 1$, with $v \in V$, and $v$ depends smoothly on $(x, y)$
+  \cite[Teo.~6.2.3 (1)]{Lar22}, \cite[Cor.~VIII.5.2 (1)]{Lan99}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the chart of $\T M$ over $\varphi$ and the chart $\varphi \times \varphi$ of $M \times M$,
+  $G$ reads $(x, u) \mapsto (x, \varphi(\exp(x, u)))$. Since $G(x, 0) = (x, x)$ and
+  $d(\exp_p)(0) = \mathrm{id}$ (Theorem~\ref{thm:exp-local-diffeo}), its differential at
+  $(\varphi p, 0)$ is $(a, b) \mapsto (a, a + b)$, invertible; the inverse function theorem
+  concludes. Uniqueness is injectivity of $G$ on $V$.
+\end{proof}
+
+\begin{theorem}[Uniformly normal neighbourhoods {\cite[Teo.~6.2.3 (2), p.~156]{Lar22},
+  \cite[Cor.~VIII.5.2 (2), p.~216]{Lan99}}]
+  \label{thm:uniformly-normal}
+  \lean{LocallyConvex.Manifolds.OpenPartialHomeomorph.slice,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.contDiffOn_slice,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.contDiffOn_slice_symm,
+    LocallyConvex.Manifolds.Connection.tangentChart_symm_proj_chart,
+    LocallyConvex.Manifolds.Connection.exists_uniformlyNormal}
+  \leanok
+  \uses{thm:exp-pair-local-diffeo}
+  Under the hypotheses of Theorem~\ref{thm:exp-local-diffeo}, let $\varphi$ be the preferred chart
+  at $p$ and read tangent vectors in the chart $T$ of $\T M$ over $\varphi$. There are an open
+  $W \ni p$ in the domain of $\varphi$ and $r > 0$ such that for every $q \in W$ the vectors of
+  $T_qM$ with coordinates $(\varphi q, u)$, $\|u\| < r$, lie in $D(\exp)$, and
+  $u \mapsto \exp_q(T^{-1}(\varphi q, u))$ is a diffeomorphism of $B_r(0) \subseteq E$ onto an open
+  set containing $W$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The local inverse of $G$ in charts (Theorem~\ref{thm:exp-pair-local-diffeo}) is defined on a
+  neighbourhood of $(\varphi p, 0)$ in $E \times E$, which contains a product of balls
+  $B_r(\varphi p) \times B_r(0)$; its image is an open neighbourhood of $(\varphi p, \varphi p)$,
+  which contains $B_\delta(\varphi p) \times B_\delta(\varphi p)$. Take
+  $W = \varphi^{-1}(B_{\min(\delta, r)}(\varphi p))$. Since $G$ preserves the first coordinate,
+  slicing at $x = \varphi q$ gives the diffeomorphism at $q$. No local compactness is used: the
+  radius $r$ is uniform because it comes from the inverse function theorem applied to $G$ at the
+  single point $0_p$. We do not claim this argument is new. The book also states the result for
+  every $r \le R$ and that the joining geodesic stays in $\exp_x(B_R(0))$; these refinements are
+  not formalized.
+\end{proof}
+
+\begin{theorem}[Complete Finsler manifolds are geodesically complete {\cite[Prop.~9.2.1]{Lar22}}]
+  \label{thm:finsler-geodesically-complete}
+  \lean{LocallyConvex.Manifolds.Connection.velocity_maxGeodesic_zero,
+    LocallyConvex.Manifolds.Connection.not_bddAbove_maxInterval_of_complete,
+    LocallyConvex.Manifolds.Connection.maxInterval_eq_univ_of_complete,
+    LocallyConvex.Manifolds.Connection.expDomain_eq_univ_of_maxInterval_eq_univ,
+    LocallyConvex.Manifolds.Connection.expDomainAt_eq_univ,
+    LocallyConvex.Manifolds.Connection.exists_expDomainAt_eq_univ,
+    LocallyConvex.Manifolds.Connection.expDomain_eq_univ_of_complete,
+    LocallyConvex.Manifolds.Connection.exists_expDomainAt_eq_univ_of_complete}
+  \leanok
+  \uses{thm:finsler-geodesic-extension, thm:maximal-geodesic, def:exp}
+  Under the hypotheses of Theorem~\ref{thm:finsler-geodesic-extension}, assume that every
+  geodesic on a bounded open interval has bounded speed $\mu(\dot\alpha)$ and bounded backward
+  speed $\mu(-\dot\alpha)$. Each assertion implies the next:
+  \begin{enumerate}
+    \item $M$ is complete for the symmetrized distance;
+    \item every maximal geodesic is defined on $\mathbb{R}$;
+    \item $M$ is geodesically complete: $D(\exp) = \T M$;
+    \item there is $p \in M$ with $D(\exp_p) = T_pM$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  $1 \Rightarrow 2$: if $b = \sup J_v$ were finite, Theorem~\ref{thm:finsler-geodesic-extension}
+  would extend $\gamma_v$ past $b$, against maximality; boundedness below reduces to boundedness
+  above through $J_{-v} = -J_v$. $2 \Rightarrow 3 \Rightarrow 4$ are immediate from
+  Definition~\ref{def:exp}. We do not claim this argument is new.
+\end{proof}
+
+\begin{remark}[What fails in infinite dimensions]
+  In finite dimensions the Hopf--Rinow theorem makes 1--4 equivalent for Riemannian (and
+  reversible Finsler) manifolds, and adds that $\exp_p$ is onto. In infinite dimensions the last
+  conclusion fails: Atkin constructs a complete Riemannian Hilbert manifold, the unit sphere of
+  $\R \times \ell^2$ with the metric induced by $|\xi|^2 + \langle Tx, x\rangle$ for a suitable
+  strictly positive operator $T$, whose two poles are joined by no geodesic
+  \cite[(3), p.~262, and Lemma~6, p.~265]{Atk75}, so that $\exp_p$ is not onto (see also
+  \cite[p.~288]{Eke78}). Even shortest curves
+  need not exist: on the ellipsoid image of the unit sphere of a Hilbert space by
+  $A = \mathrm{diag}(1, 1 + 2^{-1}, 1 + 2^{-2}, \dots)$, a complete Riemannian Hilbert manifold,
+  $e_0$ and $-e_0$ are at distance $\pi$ but every curve joining them is strictly longer
+  (McAlpin, as presented in \cite[Ejemplo~10.4.2, pp.~295--296]{Lar22}). No local compactness is
+  used in the proof above: the extension rests on the uniform existence time of geodesics with
+  bounded initial velocity in a chart and on the lower bound of $\mu$.
+\end{remark}

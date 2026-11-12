@@ -1,0 +1,922 @@
+\chapter{Metrics}
+\label{chap:metrics}
+
+This chapter collects the metric structures on a manifold $M$ modeled on a locally convex space
+$E$. There are two families, and it is worth separating them from the start. A \emph{Finsler}
+structure assigns to each tangent space a (possibly asymmetric) seminorm; it measures lengths of
+curves and gives a distance. A \emph{bilinear} structure assigns to each tangent space a symmetric
+bilinear form, of any signature; it gives Riemannian, Lorentzian and pseudo-Riemannian metrics.
+The two families meet in exactly one place: a Riemannian metric is a Finsler metric, through
+$v \mapsto \sqrt{g_x(v,v)}$. Lorentzian and pseudo-Riemannian metrics are not.
+
+In infinite dimensions each family splits further, according to two different questions. For
+Finsler structures the question is \emph{how $\mu_p$ depends on $p$}: continuously on the tangent
+bundle, or only along curves. For bilinear structures the question is \emph{which topology $g_x$
+induces on $\T_x M$}: the one of the model (strong) or a coarser one (weak). We keep a separate
+word for each question, and we never use one for the other.
+
+
+\section{Finsler seminorms and two continuity conditions}
+
+\begin{definition}[Finsler seminorm]
+  \label{def:finsler-seminorm}
+  \lean{LocallyConvex.Manifolds.FinslerSeminorm, LocallyConvex.Manifolds.FinslerSeminorm.IsNorm, LocallyConvex.Manifolds.FinslerSeminorm.IsReversible}
+  \leanok
+  A \emph{Finsler seminorm} on a topological vector space $E$ is a continuous function
+  $\mu \colon E \to [0, \infty)$ that is subadditive, $\mu(v + w) \le \mu(v) + \mu(w)$, and
+  positively homogeneous, $\mu(c v) = c\,\mu(v)$ for $c \ge 0$. It is a \emph{Finsler norm} if
+  $\mu(v) = 0$ only for $v = 0$, and it is \emph{reversible} if $\mu(-v) = \mu(v)$.
+\end{definition}
+
+This is the notion of \cite[Def.~2.2]{Lar19}. A Finsler seminorm need not be symmetric: a
+reversible one is a continuous seminorm in the usual sense. Nothing is lost by allowing asymmetry
+at this stage.
+
+\begin{definition}[Field of Finsler seminorms]
+  \label{def:mt-field}
+  \lean{LocallyConvex.Manifolds.FinslerSeminormField, LocallyConvex.Manifolds.FinslerSeminormField.fiber, LocallyConvex.Manifolds.FinslerSeminormField.IsNondegenerate, LocallyConvex.Manifolds.FinslerSeminormField.IsReversible}
+  \leanok
+  \uses{def:finsler-seminorm, def:tangent-bundle}
+  A \emph{field of Finsler seminorms} on $M$ is a function $\mu \colon \T M \to [0,\infty)$ whose
+  restriction $\mu_x$ to each tangent space $\T_x M$ is a Finsler seminorm.
+\end{definition}
+
+No condition relates $\mu_x$ and $\mu_y$ for $x \neq y$. There are two natural ones, and the
+whole point of this section is that they are different.
+
+\begin{definition}[Finsler metric]
+  \label{def:finsler-metric}
+  \lean{LocallyConvex.Manifolds.FinslerMetric}
+  \leanok
+  \uses{def:mt-field}
+  A \emph{Finsler metric} is a field of Finsler seminorms $\mu$ that is continuous as a function
+  $\mu \colon \T M \to \R$ on the tangent bundle.
+\end{definition}
+
+\begin{definition}[Finsler length structure]
+  \label{def:finsler-length-structure}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure}
+  \leanok
+  \uses{def:mt-field, def:ck-curve, def:velocity}
+  A \emph{Finsler length structure} is a field of Finsler seminorms $\mu$ such that
+  $t \mapsto \mu(\dot\gamma(t))$ is continuous for every $\Ck{1}$ curve $\gamma$ in $M$.
+\end{definition}
+
+These are, respectively, the ``continuous'' Finsler metrics and the Finsler metrics ``continuous
+along paths'' of \cite[Def.~2.3]{Lar19}. We reserve the name \emph{Finsler metric} for the first
+notion, since this is what the term means for any reader, and we give the second one its own name:
+a Finsler length structure is exactly what is needed to measure lengths of curves (compare the
+length structures of \cite[\S2.1.1]{BBI01}), and nothing more.
+
+\begin{remark}[Two words we avoid]
+  We do not speak of \emph{weak} Finsler metrics: the word \emph{weak} is used below for bilinear
+  metrics, and there it refers to the topology of the fibers, not to the continuity on $\T M$.
+  We do not use \emph{Finsler structure} alone either: Palais \cite[Def.~2.1 and 2.6]{Pal66} uses
+  it for a much stronger notion, in which each $\mu_x$ is a norm inducing the topology of the
+  fiber, locally uniformly equivalent to $\mu_{x_0}$. That notion only makes sense for normable
+  models and is not formalized here.
+\end{remark}
+
+\begin{theorem}[Velocities are continuous]
+  \label{thm:mt-continuous-velocity}
+  \lean{LocallyConvex.Manifolds.FinslerMetric.toFinslerLengthStructure}
+  \leanok
+  \uses{def:finsler-metric, def:finsler-length-structure, def:velocity}
+  The velocity $t \mapsto \dot\gamma(t)$ of a $\Ck{1}$ curve is a continuous curve in $\T M$.
+  Consequently, every Finsler metric is a Finsler length structure.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In a chart $i$ around $\gamma(t_0)$ the velocity reads $s \mapsto (i(\gamma(s)), (i \circ
+  \gamma)'(s))$, which is continuous because $i \circ \gamma$ is $\Ck{1}$. The corresponding chart
+  of $\T M$ is a homeomorphism onto its image, so the velocity is continuous near $t_0$.
+\end{proof}
+
+The converse fails, already on $\R^2$ (Section~\ref{sec:mt-cusp}). The natural source of Finsler
+length structures that are not Finsler metrics are quotient metrics (Section~\ref{sec:mt-quotients}).
+
+\section{Length and distance}
+
+The following notions only use the continuity of $\mu$ along curves. We state them for Finsler
+length structures, so that they apply to quotient metrics; for a Finsler metric they are obtained
+through Theorem~\ref{thm:mt-continuous-velocity}.
+
+\begin{definition}[Length]
+  \label{def:mt-length}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.length, LocallyConvex.Manifolds.FinslerMetric.length}
+  \leanok
+  \uses{def:finsler-length-structure}
+  The length of a $\Ck{1}$ curve $\gamma$ on $[a, b]$ is
+  $L_\mu(\gamma) = \int_a^b \mu\bigl(\dot\gamma(t)\bigr)\, dt$.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:mt-length}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.length_nonneg, LocallyConvex.Manifolds.FinslerLengthStructure.length_add, LocallyConvex.Manifolds.FinslerLengthStructure.length_const}
+  \leanok
+  \uses{def:mt-length}
+  Lengths are nonnegative, additive on adjacent intervals, and constant curves have length zero.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The integrand is continuous and nonnegative; additivity is that of the integral. The velocity
+  of a constant curve vanishes and $\mu_x(0) = 0$ by positive homogeneity.
+\end{proof}
+
+\begin{definition}[Chains of arcs]
+  \label{def:mt-chain}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.Reach, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.single, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.nonneg, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.trans}
+  \leanok
+  \uses{def:mt-length}
+  A \emph{chain of $\Ck{1}$ arcs} from $x$ to $y$ of length $L$ is either empty ($x = y$, $L = 0$)
+  or an arc $\gamma|_{[a, b]}$ of a $\Ck{1}$ curve with $\gamma(a) = x$, followed by a chain from
+  $\gamma(b)$ to $y$; its length is the sum of the lengths of the arcs. Chains concatenate, and
+  their lengths add.
+\end{definition}
+
+A chain is a piecewise $\Ck{1}$ path, cut at its corners. Encoding the paths in this way makes
+concatenation a formality: there is no need to smooth the curve at the junctions, which on a
+manifold would require reparametrizations with vanishing velocity at the end points.
+
+\begin{definition}[Finsler distance]
+  \label{def:mt-dist}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.dist, LocallyConvex.Manifolds.FinslerLengthStructure.dist_le_of_reach, LocallyConvex.Manifolds.FinslerLengthStructure.dist_le, LocallyConvex.Manifolds.FinslerLengthStructure.dist_self, LocallyConvex.Manifolds.FinslerMetric.dist}
+  \leanok
+  \uses{def:mt-chain}
+  The distance $d_\mu(x, y) \in [0, \infty]$ is the infimum of the lengths of the chains of
+  $\Ck{1}$ arcs from $x$ to $y$, and $\infty$ if there is none. It satisfies $d_\mu(x, x) = 0$.
+\end{definition}
+
+This is \cite[Def.~2.7]{Lar19}, where the infimum is taken over piecewise $\Ck{1}$ curves.
+
+\begin{theorem}[Triangle inequality]
+  \label{thm:mt-triangle}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.dist_triangle}
+  \leanok
+  \uses{def:mt-dist}
+  $d_\mu(x, z) \leq d_\mu(x, y) + d_\mu(y, z)$ for all $x, y, z \in M$. Hence $d_\mu$ is an
+  extended, possibly asymmetric, pseudo-distance.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  If there is no chain from $x$ to $y$ or from $y$ to $z$, the right-hand side is $\infty$.
+  Otherwise concatenate a chain from $x$ to $y$ with a chain from $y$ to $z$, and take infima.
+\end{proof}
+
+\begin{proposition}[Reversible fields give symmetric distances]
+  \label{prop:mt-dist-comm}
+  \lean{LocallyConvex.Manifolds.isCkCurve_reverse, LocallyConvex.Manifolds.velocity_reverse, LocallyConvex.Manifolds.FinslerLengthStructure.length_reverse, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.symm, LocallyConvex.Manifolds.FinslerLengthStructure.dist_comm}
+  \leanok
+  \uses{thm:mt-triangle}
+  The reversed curve $t \mapsto \gamma(-t)$ of a $\Ck{1}$ curve is $\Ck{1}$, with velocity
+  $-\dot\gamma(-t)$. If $\mu$ is reversible, reversing an arc does not change its length, so
+  chains can be run backwards and $d_\mu(x, y) = d_\mu(y, x)$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  In a chart, the reversed curve is the composition of $\gamma$ with $t \mapsto -t$, and the
+  chain rule gives the velocity. The length follows by the change of variables $t \mapsto -t$.
+\end{proof}
+
+\begin{remark}[Degenerate distances]
+  The distance may vanish between distinct points even when every $\mu_x$ is a norm: Michor and
+  Mumford proved that the geodesic distance of the $L^2$ metric on the diffeomorphism group of a
+  manifold vanishes \cite[Thm.~5.2]{MM05}. So $d_\mu$ is in general only a pseudo-distance.
+\end{remark}
+
+\section{Lifting curves versus lifting neighborhoods}
+\label{sec:mt-quotients}
+
+Let $\pi \colon N \to M$ be a $\Ck{1}$ map and $\mu$ a field of Finsler seminorms on $M$. Typically
+$\mu$ is defined through $\pi$, as a quotient metric $\mu(w) = \inf\{\mu_N(v) : \T\pi\, v = w\}$, and
+what one controls is the function $\mu \circ \T\pi$ on $\T N$. The two continuity conditions then
+correspond to two lifting properties of $\pi$.
+
+\begin{lemma}[Chain rule for velocities]
+  \label{lem:mt-chain}
+  \lean{LocallyConvex.Manifolds.tangentMap_velocity, LocallyConvex.Manifolds.velocity_congr}
+  \leanok
+  \uses{def:tangent-map, def:velocity}
+  If $\pi$ is $\Ck{1}$ and $\Gamma$ is a $\Ck{1}$ curve in $N$, then
+  $\T\pi\bigl(\dot\Gamma(t)\bigr) = (\pi \circ \Gamma)^{\boldsymbol\cdot}(t)$. The velocity at $t$
+  only depends on the germ of the curve at $t$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  In charts, this is the chain rule of Michal--Bastiani calculus \cite{LCA} for the composition of
+  the local representative of $\pi$ with the local representative of $\Gamma$.
+\end{proof}
+
+\begin{theorem}[Lifting curves gives a Finsler length structure]
+  \label{thm:mt-lift-curves}
+  \lean{LocallyConvex.Manifolds.FinslerSeminormField.toFinslerLengthStructureOfLifts}
+  \leanok
+  \uses{lem:mt-chain, def:finsler-length-structure}
+  Suppose that every $\Ck{1}$ curve of $M$ has, near each time, a $\Ck{1}$ lift to $N$, and that
+  $\mu \circ \T\pi$ is continuous along the velocities of $\Ck{1}$ curves of $N$. Then $\mu$ is a
+  Finsler length structure.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Near $t_0$, $\gamma = \pi \circ \Gamma$, so $\dot\gamma = \T\pi(\dot\Gamma)$ by
+  Lemma~\ref{lem:mt-chain}, and $\mu(\dot\gamma) = (\mu \circ \T\pi)(\dot\Gamma)$ is continuous.
+\end{proof}
+
+\begin{theorem}[Lifting neighborhoods gives a Finsler metric]
+  \label{thm:mt-quotient-map}
+  \lean{LocallyConvex.Manifolds.FinslerSeminormField.toFinslerMetricOfIsQuotientMap}
+  \leanok
+  \uses{def:finsler-metric, def:tangent-map}
+  If $\T\pi \colon \T N \to \T M$ is a quotient map and $\mu \circ \T\pi$ is continuous on $\T N$,
+  then $\mu$ is a Finsler metric.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  This is the universal property of quotient maps.
+\end{proof}
+
+\begin{remark}[Submersions and homogeneous spaces]
+  For Banach manifolds, a submersion (surjective differential with complemented kernel) has local
+  smooth sections through every point, by the inverse function theorem. Then $\T\pi$ is open,
+  hence a quotient map, and $\Ck{1}$ curves lift locally (compose them with a local section): the
+  hypotheses on $\pi$ of both theorems hold. On locally convex manifolds there is no inverse
+  function theorem and neither property is automatic; a curve may have $\Ck{1}$ lifts while
+  $\T\pi$ is not a quotient map. This is the situation of homogeneous spaces $G/K$ of
+  infinite-dimensional Lie groups in \cite[Lemma~3.19]{Lar19}: under a uniformity assumption on
+  the metric of $G$, the quotient metric is continuous along paths that have piecewise smooth
+  lifts, and continuous on the tangent bundle when $\pi_*$ is a quotient map.
+\end{remark}
+
+\section{Bilinear metrics}
+
+\begin{definition}[Smooth symmetric bilinear field]
+  \label{def:mt-bilin}
+  \lean{LocallyConvex.Manifolds.SymmBilinField, LocallyConvex.Manifolds.bilinLocalRep, LocallyConvex.Manifolds.SymmBilinField.continuous_fiber, LocallyConvex.Manifolds.SymmBilinField.continuous_quadratic, LocallyConvex.Manifolds.SymmBilinField.IsWeaklyNondegenerate}
+  \leanok
+  \uses{def:tangent-bundle}
+  A smooth field of symmetric bilinear forms on $M$ assigns to each $x$ a symmetric bilinear form
+  $g_x$ on $\T_x M$, such that the local representatives $(y, a, b) \mapsto g_{i^{-1}(y)}(a, b)$ are
+  smooth in every chart $i$. Each $g_x$ is then jointly continuous, and $v \mapsto g_x(v,v)$ is
+  continuous on $\T M$. The field is \emph{weakly nondegenerate} if $g_x(v, \cdot) = 0$ forces
+  $v = 0$.
+\end{definition}
+
+\subsection{Riemannian metrics}
+
+\begin{definition}[Weak Riemannian metric]
+  \label{def:weak-riemannian}
+  \lean{LocallyConvex.Manifolds.WeakRiemannianMetric, LocallyConvex.Manifolds.WeakRiemannianMetric.IsStrongAt}
+  \leanok
+  \uses{def:mt-bilin}
+  A \emph{weak Riemannian metric} is a smooth field of positive definite symmetric bilinear forms.
+  It is \emph{strong} at $x$ if the sets $\{v : g_x(v,v) < \varepsilon\}$ form a basis of
+  neighborhoods of $0$ in $\T_x M$.
+\end{definition}
+
+This is \cite[Definition~4.1]{Sch23}. \emph{Weak} refers to the topology of the fibers: $g_x$ is
+continuous on $\T_x M$, but the norm $\sqrt{g_x(v,v)}$ may induce a strictly coarser topology than
+the one of the model. A strong Riemannian metric forces the model to be a pre-Hilbert space; it is
+a Hilbert space only if the model is complete, and we say so only in that case. On a Fréchet model
+that is not normable, such as the space $C^\infty_{\mathrm{per}}$ of Chapter~\ref{chap:examples},
+every Riemannian metric is weak.
+
+\begin{theorem}[Riemannian metrics are Finsler metrics]
+  \label{thm:mt-riemannian-finsler}
+  \lean{LocallyConvex.Manifolds.BilinForm.sq_le_mul, LocallyConvex.Manifolds.BilinForm.sqrt_add_le, LocallyConvex.Manifolds.WeakRiemannianMetric.toFinslerMetric, LocallyConvex.Manifolds.WeakRiemannianMetric.toFinslerMetric_isNondegenerate, LocallyConvex.Manifolds.WeakRiemannianMetric.toFinslerMetric_isReversible}
+  \leanok
+  \uses{def:weak-riemannian, def:finsler-metric}
+  If $g$ is a weak Riemannian metric, $\mu_x(v) = \sqrt{g_x(v, v)}$ is a Finsler metric, and each
+  $\mu_x$ is a reversible Finsler norm.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Subadditivity is the triangle inequality, which follows from the Cauchy--Schwarz inequality
+  $g_x(v,w)^2 \le g_x(v,v)\,g_x(w,w)$; the latter is the nonpositivity of the discriminant of
+  $t \mapsto g_x(v + t w, v + t w) \ge 0$. Continuity on $\T M$ is that of $v \mapsto g_x(v,v)$.
+\end{proof}
+
+So lengths and distances of Riemannian metrics are those of the previous sections.
+
+\subsection{Fundamental decompositions and the index}
+
+\begin{definition}[Fundamental decomposition]
+  \label{def:fundamental-decomposition}
+  \lean{LocallyConvex.Manifolds.FundamentalDecomposition}
+  \leanok
+  Let $B$ be a symmetric bilinear form on a topological vector space $E$. A \emph{fundamental
+  decomposition} of $B$ is a splitting $E = E_+ \oplus E_-$ given by a continuous projection,
+  $B$-orthogonal, with $B$ positive definite on $E_+$ and negative definite on $E_-$.
+\end{definition}
+
+\begin{theorem}[The index is well defined]
+  \label{thm:mt-index}
+  \lean{LocallyConvex.Manifolds.FundamentalDecomposition.rank_le_rank_neg, LocallyConvex.Manifolds.FundamentalDecomposition.rank_neg_eq}
+  \leanok
+  \uses{def:fundamental-decomposition}
+  A negative definite subspace has (algebraic) dimension at most $\dim E_-$. In particular, two
+  fundamental decompositions of $B$ have negative parts of the same dimension.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  A negative definite subspace $N$ meets $E_+$ only at $0$, so the projection onto $E_-$ along
+  $E_+$ is injective on $N$. Apply this to the negative part of each decomposition.
+\end{proof}
+
+\begin{remark}[Algebraic versus Hilbert dimension]
+  The argument works for any cardinal and needs no completeness. For a Krein space one usually
+  measures $E_-$ by its \emph{Hilbert} dimension; for infinite index the two dimensions differ, and
+  the invariance of the Hilbert dimension uses the completeness of $(E_+, B)$ and $(E_-, -B)$
+  \cite[Corollary~IV.7.4]{Bog74}. That version is formalized in lc-analysis
+  (\texttt{KreinDecomposition.intrinsicDim\_neg\_eq} and
+  \texttt{KreinDecomposition.intrinsicDim\_neg\_eq\_card}).
+\end{remark}
+
+\begin{proposition}
+  \label{prop:mt-nondegenerate}
+  \lean{LocallyConvex.Manifolds.FundamentalDecomposition.nondegenerate}
+  \leanok
+  \uses{def:fundamental-decomposition}
+  A form with a fundamental decomposition is weakly nondegenerate.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  If $B(v, \cdot) = 0$, write $v = a + b$ with $a \in E_+$, $b \in E_-$. By orthogonality
+  $B(a,a) = B(v,a) = 0$ and $B(b,b) = B(v,b) = 0$, so $a = b = 0$.
+\end{proof}
+
+\subsection{Pseudo-Riemannian and Lorentzian metrics}
+
+\begin{definition}[Weak pseudo-Riemannian metric]
+  \label{def:weak-pseudo-riemannian}
+  \lean{LocallyConvex.Manifolds.WeakPseudoRiemannianMetric, LocallyConvex.Manifolds.WeakPseudoRiemannianMetric.index, LocallyConvex.Manifolds.WeakPseudoRiemannianMetric.index_eq, LocallyConvex.Manifolds.WeakPseudoRiemannianMetric.isWeaklyNondegenerate}
+  \leanok
+  \uses{def:mt-bilin, thm:mt-index, prop:mt-nondegenerate}
+  A \emph{weak pseudo-Riemannian metric} is a smooth field of symmetric bilinear forms admitting a
+  fundamental decomposition of each tangent space. Its \emph{index} at $x$ is the dimension of the
+  negative part of any such decomposition; it may be any cardinal.
+\end{definition}
+
+Index $0$ gives back weak Riemannian metrics; finite index corresponds to tangent spaces of
+Pontryagin type, infinite index to tangent spaces of Krein type. We keep the infinite index in the
+theory on purpose: Krein spaces appear naturally in operator theory.
+
+\begin{proposition}
+  \label{prop:mt-riemannian-index}
+  \lean{LocallyConvex.Manifolds.FundamentalDecomposition.ofPosDef, LocallyConvex.Manifolds.WeakRiemannianMetric.toWeakPseudoRiemannianMetric, LocallyConvex.Manifolds.WeakRiemannianMetric.index_eq_zero}
+  \leanok
+  \uses{def:weak-riemannian, def:weak-pseudo-riemannian}
+  A weak Riemannian metric is a weak pseudo-Riemannian metric of index $0$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Take $E_+ = E$, $E_- = 0$ and the identity as projection.
+\end{proof}
+
+\begin{definition}[Weak Lorentzian metric]
+  \label{def:weak-lorentzian}
+  \lean{LocallyConvex.Manifolds.WeakLorentzianMetric}
+  \leanok
+  \uses{def:weak-pseudo-riemannian}
+  A \emph{weak Lorentzian metric} is a weak pseudo-Riemannian metric of index $1$ at every point.
+\end{definition}
+
+\begin{theorem}[Lorentzian metrics from timelike vectors]
+  \label{thm:mt-timelike}
+  \lean{LocallyConvex.Manifolds.FundamentalDecomposition.ofTimelike, LocallyConvex.Manifolds.FundamentalDecomposition.rank_neg_ofTimelike, LocallyConvex.Manifolds.SymmBilinField.toWeakLorentzianMetric}
+  \leanok
+  \uses{def:weak-lorentzian, def:fundamental-decomposition}
+  Let $g$ be a smooth field of symmetric bilinear forms such that each $\T_x M$ contains a vector $v$
+  with $g_x(v,v) < 0$ whose $g_x$-orthogonal is positive definite. Then $\T_x M = v^\perp \oplus \R v$
+  is a fundamental decomposition, and $g$ is a weak Lorentzian metric.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The projection onto $v^\perp$ is $w \mapsto w - \frac{g_x(w, v)}{g_x(v, v)}\, v$, which is
+  continuous because $g_x(v, \cdot)$ is. The remaining conditions are direct computations, and
+  $\R v$ has dimension $1$.
+\end{proof}
+
+So the decomposition of a Lorentzian tangent space is automatically topological: no closedness or
+complementation has to be assumed.
+
+\begin{remark}[Lorentzian metrics are not Finsler metrics]
+  Since $g_x(v,v)$ takes negative values, $\sqrt{g_x(v,v)}$ is not defined, and $\sqrt{|g_x(v,v)|}$
+  is not subadditive. The theory of lengths of a Lorentzian metric (timelike curves, the reverse
+  triangle inequality) is different and is not developed here.
+\end{remark}
+
+\begin{remark}[What is not formalized]
+  We do not prove that the index is locally constant, nor that fundamental decompositions can be
+  chosen continuously in $x$. These are genuine infinite-dimensional questions when the topology
+  of $g_x$ is weaker than that of the model. The Krein-space conditions (completeness of
+  $(E_+, g)$ and $(E_-, -g)$, and the topology of the majorant $g(P_+\cdot, P_+\cdot) - g(P_-\cdot,
+  P_-\cdot)$) are not formalized either.
+\end{remark}
+
+\section{The Levi-Civita connection}
+\label{sec:mt-levi-civita}
+
+In this section $g$ is a smooth field of symmetric bilinear forms of any signature
+(Definition~\ref{def:mt-bilin}). In a chart $i$ we write $G(y)(a, b)$ for its local representative
+and $\partial G(y)(u)(a, b)$ for the derivative of $G$ in the base point, in the direction $u$.
+Recall that, with the conventions of Chapter~\ref{chap:connections}, the covariant derivative is
+$\nabla_X Y = \dd \tilde Y \cdot \tilde X - \Gamma(\tilde X, \tilde Y)$ in a chart.
+
+\begin{definition}[Metric connections]
+  \label{def:mt-metric-connection}
+  \lean{LocallyConvex.Manifolds.SymmBilinField.localForm, LocallyConvex.Manifolds.SymmBilinField.localDeriv, LocallyConvex.Manifolds.Connection.IsMetric}
+  \leanok
+  \uses{def:mt-bilin, def:connection}
+  A connection is \emph{metric} for $g$ if in every chart
+  \[
+    \partial G(y)(u)(a, b) = -G(y)\bigl(\Gamma_y(u, a), b\bigr) - G(y)\bigl(a, \Gamma_y(u, b)\bigr).
+  \]
+\end{definition}
+
+This is the chart expression of $X\, g(Y, Z) = g(\nabla_X Y, Z) + g(Y, \nabla_X Z)$: differentiate
+$y \mapsto G(y)(\tilde Y(y), \tilde Z(y))$ in the direction $\tilde X$ and use the bilinearity of
+$G(y)$.
+
+\begin{theorem}[Koszul formula]
+  \label{thm:mt-koszul}
+  \lean{LocallyConvex.Manifolds.koszul, LocallyConvex.Manifolds.koszul_eq, LocallyConvex.Manifolds.Connection.koszul}
+  \leanok
+  \uses{def:mt-metric-connection}
+  If the connection is symmetric and metric for $g$, then in every chart
+  \[
+    G(y)\bigl(\Gamma_y(u, a), b\bigr) = \tfrac12 \bigl(-\partial G(y)(u)(a, b) - \partial G(y)(a)(u, b)
+      + \partial G(y)(b)(u, a)\bigr).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Write the compatibility condition for the three cyclic permutations of $(u, a, b)$, add the first
+  two and subtract the third; the symmetry of $\Gamma_y$ and of $G(y)$ cancels four of the six
+  terms.
+\end{proof}
+
+The proof is pure algebra at a point: it uses neither completeness, nor nondegeneracy, nor the
+sign of $g$.
+
+\begin{theorem}[Uniqueness of the Levi-Civita connection]
+  \label{thm:mt-lc-unique}
+  \lean{LocallyConvex.Manifolds.eq_of_koszul, LocallyConvex.Manifolds.SymmBilinField.localForm_nondegenerate, LocallyConvex.Manifolds.Connection.Γ_eq_of_isMetric, LocallyConvex.Manifolds.Connection.covDeriv_eq_of_isMetric, LocallyConvex.Manifolds.WeakPseudoRiemannianMetric.covDeriv_eq, LocallyConvex.Manifolds.WeakRiemannianMetric.covDeriv_eq}
+  \leanok
+  \uses{thm:mt-koszul, prop:mt-nondegenerate}
+  If $g$ is weakly nondegenerate, two symmetric metric connections have the same symbols in every
+  chart, hence the same covariant derivative. In particular this holds for weak pseudo-Riemannian
+  metrics of any index, finite or infinite, and for weak Riemannian and weak Lorentzian metrics.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Theorem~\ref{thm:mt-koszul}, $G(y)(\Gamma_y(u, a) - \Gamma'_y(u, a), b) = 0$ for every $b$.
+  The local representative $G(y)$ is weakly nondegenerate because $g_x$ is and the coordinate
+  changes are invertible.
+\end{proof}
+
+\begin{theorem}[The metric spray]
+  \label{thm:mt-metric-spray}
+  \lean{LocallyConvex.Manifolds.koszul_diag, LocallyConvex.Manifolds.compatible_of_koszul, LocallyConvex.Manifolds.koszul_of_spray, LocallyConvex.Manifolds.compatible_iff_spray, LocallyConvex.Manifolds.SymmBilinField.localDeriv_add_dir, LocallyConvex.Manifolds.SymmBilinField.localDeriv_add_left, LocallyConvex.Manifolds.SymmBilinField.localDeriv_add_right, LocallyConvex.Manifolds.Connection.isMetric_iff_spray}
+  \leanok
+  \uses{thm:mt-koszul, prop:conn-to-spray}
+  A symmetric connection is metric for $g$ if and only if its spray $F_y(v) = \Gamma_y(v, v)$
+  satisfies, in every chart,
+  \[
+    G(y)\bigl(F_y(v), z\bigr) = -\partial G(y)(v)(v, z) + \tfrac12\, \partial G(y)(z)(v, v).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  On the diagonal $u = a = v$ the Koszul formula is the formula of the statement. Conversely,
+  polarizing the formula of the statement in $v$ gives back the Koszul formula, since $\Gamma_y$ is
+  symmetric and bilinear and $\partial G(y)$ is additive in each of its three arguments; and the
+  Koszul formula gives back the compatibility with $G$. The additivity of $\partial G(y)(u)(a, b)$
+  in $a$ and $b$ follows by differentiating the identity
+  $G(y + tu)(a + a', b) = G(y + tu)(a, b) + G(y + tu)(a', b)$, valid for small $t$.
+\end{proof}
+
+In the notation of \cite[Teorema 10.1.1]{Lar22}, where $G(y)(a, b) = \langle a, g(y) b\rangle$ and
+$\partial G(y)(z)(a, b) = \langle a, g_{*y,z}\, b\rangle$, the formula of the statement is
+$\langle F_y(v), g(y) z\rangle = -\langle g_{*y,v}\, v, z\rangle + \frac12 \langle g_{*y,z}\, v,
+v\rangle$, and the Koszul formula is its polarization; see also \cite[Ch.~VIII, Theorem 4.2, MS 1]{Lan99}, whose bilinear map $B_U$ is our $\Gamma$.
+
+\begin{proposition}[The obstruction to existence]
+  \label{prop:mt-lc-existence}
+  \lean{LocallyConvex.Manifolds.exists_symm_compatible_iff, LocallyConvex.Manifolds.Connection.koszul_represented}
+  \leanok
+  \uses{thm:mt-koszul}
+  Let $B$ be a symmetric, weakly nondegenerate bilinear form and $D(u)(a, b)$ symmetric in $(a, b)$.
+  Symbols $\Gamma$ that are symmetric and compatible with $B$ exist if and only if every Koszul
+  functional $b \mapsto \frac12(-D(u)(a, b) - D(a)(u, b) + D(b)(u, a))$ is of the form $B(c, \cdot)$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  One direction is Theorem~\ref{thm:mt-koszul}. For the other, choose $\Gamma(u, a)$ representing
+  the Koszul functional; it is symmetric by weak nondegeneracy, and compatible by the algebra of the
+  previous proof.
+\end{proof}
+
+\begin{remark}[Existence is not automatic]
+  For a strong Riemannian metric on a Hilbert manifold every continuous functional is represented
+  (Riesz), and the Levi-Civita connection exists \cite[Ch.~VIII, Theorem 4.1]{Lan99}. For weak metrics, and
+  every metric on a Fréchet manifold that is not normable is weak, the Koszul functional need not be
+  represented: Schmeding gives a weak Riemannian metric on $\ell^2$ with no metric spray
+  \cite[Example~4.22]{Sch23}. Even when it is represented at every point, the symbols so obtained
+  have to be smooth and satisfy the change of charts law; neither follows from the pointwise
+  statement. Existence is therefore a property of the metric at hand, to be checked in examples.
+\end{remark}
+
+The following example, after Schmeding, shows that the obstruction of
+Proposition~\ref{prop:mt-lc-existence} does occur.
+
+\begin{theorem}[A weak Riemannian metric without Levi-Civita connection]
+  \label{thm:mt-no-levi-civita}
+  \lean{LocallyConvex.Manifolds.NoLeviCivita.form, LocallyConvex.Manifolds.NoLeviCivita.conformalMetric, LocallyConvex.Manifolds.NoLeviCivita.localDeriv_conformal, LocallyConvex.Manifolds.NoLeviCivita.not_exists_isMetric, LocallyConvex.Manifolds.NoLeviCivita.L2.diag, LocallyConvex.Manifolds.NoLeviCivita.L2.diag_symm, LocallyConvex.Manifolds.NoLeviCivita.L2.diag_pos, LocallyConvex.Manifolds.NoLeviCivita.L2.v_not_mem_range, LocallyConvex.Manifolds.NoLeviCivita.L2.not_exists_isMetric}
+  \leanok
+  \uses{prop:mt-lc-existence, def:weak-riemannian}
+  Let $H$ be a real inner product space, $T$ a continuous, symmetric and positive definite
+  operator on $H$, and $v \in H$. Then $g_p(x, y) = e^{\langle v, p\rangle} \langle Tx, y\rangle$
+  is a weak Riemannian metric on $H$, and if $v \notin T(H)$ it has no symmetric metric
+  connection. On $\ell^2$, the operator $Tx = (x_n / (n + 1))_n$ and the vector
+  $v = (1 / (n + 1))_n$ satisfy these hypotheses.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The derivative in the base point is $\partial G(p)(w)(x, y) = \langle v, w\rangle g_p(x, y)$.
+  By Theorem~\ref{thm:mt-metric-spray}, a symmetric metric connection would give $c \in H$ with
+  \[
+    \langle Tc, b\rangle = -\langle v, x\rangle \langle Tx, b\rangle
+      + \tfrac12 \langle Tx, x\rangle \langle v, b\rangle \qquad (b \in H),
+  \]
+  that is, $T(c + \langle v, x\rangle x) = \frac12 \langle Tx, x\rangle v$. For $x = v \neq 0$
+  this puts $v$ in $T(H)$. On $\ell^2$, $Tc = v$ forces $c_n = 1$ for every $n$, and the
+  constant sequence $1$ is not in $\ell^2$.
+\end{proof}
+
+When $T$ is invertible, $g$ is a strong metric and the Levi-Civita connection exists; the
+example needs a metric $\langle T\cdot, \cdot\rangle$ whose topology is strictly coarser than
+that of $H$. Schmeding's original example \cite[Example~4.22]{Sch23}, the metric
+$e^{-\|p\|^2} \sum_n x_n y_n / n^3$ of \cite[Example~4.12]{Sch23} (after Magnani and Tiberio), uses
+the weight $n^{-3}$ and the factor $e^{-\|p\|^2}$; the obstruction is the same.
+
+\section{Submanifolds: orthogonal projectors in any signature}
+\label{sec:mt-projector-metric}
+
+Let $\beta$ be a continuous symmetric bilinear form on $F$, of any signature: an inner product,
+or the indefinite form of a Krein or a Pontryagin space. Let $X \subseteq F$ be an embedded
+submanifold with a field of projectors $P$ onto its tangent spaces
+(Section~\ref{sec:conn-projectors}). In a slice chart, with $\psi = \varphi^{-1}|_S$, the
+\emph{induced form} is $G(y)(a, b) = \beta(\dd\psi_y a, \dd\psi_y b)$. We say that $P$ is
+\emph{$\beta$-orthogonal} if $\beta(P_p w, t) = \beta(w, t)$ for every $w \in F$ and every
+$t \in \T_p X$.
+
+\begin{lemma}[Orthogonal projectors need nondegenerate ranges]
+  \label{lem:mt-orth-nondegenerate}
+  \lean{LocallyConvex.Manifolds.nondegenerate_of_orthogonal}
+  \leanok
+  If $\beta$ is weakly nondegenerate and $Q$ is a $\beta$-orthogonal projector, no nonzero vector
+  of the range of $Q$ is $\beta$-orthogonal to the whole range.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  If $t \in \operatorname{ran} Q$ is orthogonal to $\operatorname{ran} Q$, then
+  $\beta(w, t) = \beta(Qw, t) = 0$ for every $w \in F$, so $t = 0$.
+\end{proof}
+
+\begin{theorem}[Gauss: the projector connection is metric]
+  \label{thm:mt-gauss}
+  \lean{LocallyConvex.Manifolds.ProjectorField.IsOrthogonal, LocallyConvex.Manifolds.ProjectorField.inducedForm, LocallyConvex.Manifolds.ProjectorField.inducedDeriv, LocallyConvex.Manifolds.ProjectorField.inducedDeriv_eq, LocallyConvex.Manifolds.ProjectorField.dMB_param_mem_tangentSpace, LocallyConvex.Manifolds.ProjectorField.isMetric_symb}
+  \leanok
+  \uses{thm:projector-connection, def:mt-metric-connection}
+  If $P$ is $\beta$-orthogonal, the connection of $P$ is metric for the induced form in every
+  slice chart:
+  $\partial G(y)(u)(a, b) = -G(y)(\Gamma(u, a), b) - G(y)(a, \Gamma(u, b))$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By the product rule,
+  $\partial G(y)(u)(a, b) = \beta(\dd\psi\, a, \dd^2\psi(u, b)) + \beta(\dd^2\psi(u, a), \dd\psi\, b)$.
+  On the other hand $\dd\psi\,\Gamma(u, a) = -P(\dd^2\psi(u, a))$, and since $\dd\psi\, b$ is
+  tangent, $\beta(P \dd^2\psi(u, a), \dd\psi\, b) = \beta(\dd^2\psi(u, a), \dd\psi\, b)$. The same
+  holds with $a$ and $b$ exchanged.
+\end{proof}
+
+No sign condition on $\beta$ is used: the computation is the one of the Riemannian case
+\cite[\S10.1.1]{Lar22}.
+
+\begin{theorem}[The projector connection is the Levi-Civita connection]
+  \label{thm:mt-projector-levi-civita}
+  \lean{LocallyConvex.Manifolds.ProjectorField.inducedForm_sub, LocallyConvex.Manifolds.ProjectorField.inducedForm_nondegenerate, LocallyConvex.Manifolds.ProjectorField.symb_eq_of_isMetric}
+  \leanok
+  \uses{thm:mt-gauss, lem:mt-orth-nondegenerate, thm:mt-lc-unique}
+  If $\beta$ is weakly nondegenerate and $P$ is $\beta$-orthogonal, then in every slice chart the
+  induced form is weakly nondegenerate, and every symmetric family of symbols compatible with it
+  coincides with the symbols of $P$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Lemma~\ref{lem:mt-orth-nondegenerate} the tangent spaces are nondegenerate, and
+  $\dd\psi_y$ maps $S$ injectively onto $\T_p X$; so $G(y)$ is weakly nondegenerate. Then
+  Theorem~\ref{thm:mt-gauss} and the uniqueness given by the Koszul formula
+  (Theorem~\ref{thm:mt-lc-unique}) apply.
+\end{proof}
+
+\begin{theorem}[The induced metric]
+  \label{thm:mt-induced-metric}
+  \lean{LocallyConvex.Manifolds.ProjectorField.bilinAt, LocallyConvex.Manifolds.ProjectorField.smoothMBOn_inducedForm, LocallyConvex.Manifolds.ProjectorField.dMB_param_transition, LocallyConvex.Manifolds.ProjectorField.inducedFun, LocallyConvex.Manifolds.ProjectorField.bilinLocalRep_inducedFun, LocallyConvex.Manifolds.ProjectorField.inducedMetric, LocallyConvex.Manifolds.ProjectorField.inducedRiemannian}
+  \leanok
+  \uses{def:mt-bilin, thm:mt-gauss}
+  The induced forms of the slice charts define a smooth field of symmetric bilinear forms on $X$,
+  the \emph{induced metric}, whose local representative in each slice chart is
+  $\beta(\dd\psi_y a, \dd\psi_y b)$. If $\beta$ is positive definite, it is a weak Riemannian
+  metric.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Define the form at $x$ in the preferred slice chart. If $\tau$ is the change from a slice chart
+  $\varphi$ to the preferred chart $\varphi'$, then $\psi' \circ \tau = \psi$ near $y$, and the
+  chain rule gives $\dd\psi'_{\tau y}(\dd\tau_y v) = \dd\psi_y v$. So the local representative
+  in the chart of $\varphi$ is $\beta(\dd\psi_y a, \dd\psi_y b)$, which is smooth by the product
+  rule. Positivity follows from the injectivity of $\dd\psi_y$.
+\end{proof}
+
+\begin{theorem}[Levi-Civita connection of a submanifold, any signature]
+  \label{thm:mt-submanifold-levi-civita}
+  \lean{LocallyConvex.Manifolds.ProjectorField.connection_isMetric, LocallyConvex.Manifolds.ProjectorField.inducedMetric_isWeaklyNondegenerate, LocallyConvex.Manifolds.ProjectorField.covDeriv_eq_connection}
+  \leanok
+  \uses{thm:mt-induced-metric, thm:mt-projector-levi-civita, thm:mt-lc-unique}
+  If $P$ is $\beta$-orthogonal, the connection of $P$ is metric for the induced metric. If
+  moreover $\beta$ is weakly nondegenerate, the induced metric is weakly nondegenerate, and every
+  symmetric connection which is metric for it has the covariant derivative of $P$: the
+  Levi-Civita connection of $X$ is obtained by deriving in $F$ and projecting.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In each chart of the atlas of $X$ the local representative is the induced form, so
+  Theorem~\ref{thm:mt-gauss} gives the compatibility. Uniqueness is
+  Theorem~\ref{thm:mt-lc-unique}.
+\end{proof}
+
+\begin{remark}[The indefinite case]
+  For an inner product on a Hilbert space every closed subspace has an orthogonal projector. For
+  an indefinite $\beta$ this fails, and Lemma~\ref{lem:mt-orth-nondegenerate} shows the first
+  obstruction: a degenerate tangent space, such as that of a lightlike hypersurface of a
+  Lorentzian space, admits no $\beta$-orthogonal projector, and the description of the
+  Levi-Civita connection by ``derive and project'' is lost. In a Krein space a closed subspace
+  has a $\beta$-orthogonal projector exactly when it is itself a Krein space with the induced form
+  (Bognár, Theorem~V.3.4, in lc-analysis); being closed, nondegenerate and decomposable is not
+  enough \cite[Example~V.3.3]{Bog74} (in lc-analysis).
+\end{remark}
+
+The theory of ortho-complemented subspaces of Krein spaces used below (Bognár, Theorems~V.3.1,
+V.3.4, V.3.5 and Example~V.3.3), together with the majorant topology, the intrinsic dimension and
+continuous families of Krein spaces, is formalized in lc-analysis and documented in the chapter on
+Krein spaces of its blueprint.
+
+\begin{corollary}[Orthogonal fields of projectors in a Krein space]
+  \label{cor:mt-krein-projector-field}
+  \lean{LocallyConvex.Manifolds.ProjectorField.tangentSubmodule,
+    LocallyConvex.Manifolds.ProjectorField.isOrthoComplemented_of_isOrthogonal,
+    LocallyConvex.Manifolds.ProjectorField.isKreinSpace_of_isOrthogonal,
+    LocallyConvex.Manifolds.ProjectorField.continuous_E_of_isOrthogonal}
+  \leanok
+  \uses{thm:mt-gauss}
+  Let $X$ be a submanifold of a real Hilbert space with $\beta(x, y) = \langle Jx, y\rangle$. A
+  $\beta$-orthogonal field of projectors has ortho-complemented tangent spaces, which are Krein
+  spaces, and continuous projectors. Conversely, a closed tangent space which is a Krein space has a continuous
+  $\beta$-orthogonal projector; whether these can be chosen smoothly in $p$ is not addressed.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Bognár's Theorem~V.3.4 \cite[Theorem~V.3.4]{Bog74}, formalized in lc-analysis (chapter on Krein spaces of its blueprint), items 2, 3 and 4.
+\end{proof}
+
+\section{\texorpdfstring{$(M, d_b)$}{(M, d)} is an interior metric space}
+\label{sec:ms-finsler-interior}
+
+Let $\mu$ be a reversible Finsler length structure on $M$ (Definition~\ref{def:finsler-length-structure}).
+Its distance $d_b$ (Definition~\ref{def:mt-dist}) is then a pseudo-distance, and $(M, d_b)$ is a
+pseudo-metric space; without reversibility $d_b$ is only a quasi-distance and the symmetric
+theory of the previous section does not apply as such.
+
+\begin{theorem}[\texorpdfstring{\cite[Prop.~9.1.2]{Lar22}}{Prop. 9.1.2}]
+  \label{thm:ms-finsler-interior}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.FinslerSpace, LocallyConvex.Manifolds.FinslerLengthStructure.edist_le_abs_length, LocallyConvex.Manifolds.FinslerLengthStructure.continuous_toFinsler, LocallyConvex.Manifolds.FinslerLengthStructure.eVariationOn_le_length, LocallyConvex.Manifolds.FinslerLengthStructure.arcPath, LocallyConvex.Manifolds.FinslerLengthStructure.lengthDist_le_of_reach, LocallyConvex.Manifolds.FinslerLengthStructure.isInterior}
+  \leanok
+  \uses{prop:ms-length-dist, def:ms-interior, thm:mt-triangle, prop:mt-dist-comm}
+  $\Ck{1}$ curves are continuous for $d_b$, the metric length of a $\Ck{1}$ arc is at most its
+  Finsler length, $\ell(\gamma) \leq L_b(\gamma)$, and $(M, d_b)$ is an interior metric space.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  $d_b(\gamma(s), \gamma(t)) \leq |L_b(\gamma|_{[s, t]})|$ gives the continuity. For a partition,
+  $\sum d_b(\gamma(t_i), \gamma(t_{i+1})) \leq \sum L_b(\gamma|_{[t_i, t_{i+1}]}) \leq L_b(\gamma)$.
+  Hence $d_\ell$ is bounded by the length of every chain of $\Ck{1}$ arcs, so $d_\ell \leq d_b$;
+  the other inequality is Proposition~\ref{prop:ms-length-dist}.
+\end{proof}
+
+\section{Bounded Finsler structures and the topology}
+\label{sec:ms-bounded}
+
+In this section the model $E$ is a normed space; from Lemma~\ref{lem:ms-exit} on, it is complete
+and $M$ is Hausdorff.
+
+\begin{definition}[\texorpdfstring{\cite[Def.~9.1.3, Obs.~9.1.4]{Lar22}}{Def. 9.1.3}]
+  \label{def:ms-bounded}
+  \lean{LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedBelowOn, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedAboveOn, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedBelow, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedAbove, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded.isBoundedBelow, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded.isBoundedAbove}
+  \leanok
+  $\mu$ is \emph{bounded below} if every point has an open neighborhood $U$ in the domain of a
+  chart $\varphi$ and $C > 0$ with $\|\varphi_{*x} v\| \leq C \mu_x(v)$ for $x \in U$; it is
+  \emph{bounded above} if $m \mu_x(v) \leq \|\varphi_{*x} v\|$ for some $m > 0$. A Finsler
+  structure bounded above gives a \emph{weak Finsler manifold}; bounded above and below, a
+  \emph{strong} one.
+\end{definition}
+
+\begin{remark}[Locally convex models]
+  If the model is not normable, no Finsler norm $\mu_x$ can be bounded above and below by a norm
+  inducing the topology of the model, since that topology would then be a norm topology. Strong
+  Finsler manifolds are a phenomenon of normed models.
+\end{remark}
+
+\begin{lemma}[The integrated bound]
+  \label{lem:ms-integrated}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.norm_chart_sub_le}
+  \leanok
+  \uses{def:ms-bounded}
+  If $\mu$ is bounded below on $U$ with constant $C$ and $E$ is complete, a $\Ck{1}$ curve that
+  stays in $U$ satisfies $\|\varphi(\gamma(t)) - \varphi(\gamma(s))\| \leq C L_b(\gamma|_{[s, t]})$
+  \cite[(9.2)]{Lar22}.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Integrate the derivative of $\varphi \circ \gamma$ and bound its norm by $C \mu(\dot\gamma)$.
+\end{proof}
+
+\begin{lemma}[Leaving a chart costs length]
+  \label{lem:ms-exit}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.arc_exit, LocallyConvex.Manifolds.FinslerLengthStructure.reach_exit}
+  \leanok
+  \uses{lem:ms-integrated, def:mt-chain}
+  Let $\mu$ be bounded below on $U$ with constant $C$, and let $\bar B(\varphi(x_0), r)$ be the
+  image of a part of $U$. A chain of $\Ck{1}$ arcs of length $L$ starting at $x_0$ either has
+  $C L \geq r$, or ends at a point $y \in U$ with $\|\varphi(y) - \varphi(x_0)\| \leq C L$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  For a single arc, let $t_0$ be the first time at which the arc leaves
+  $U \cap \varphi^{-1}(B(\varphi(x_0), r))$. If $C L_b(\gamma|_{[a, t_0]}) < r$, the points
+  $\varphi(\gamma(t))$, $t < t_0$, form a Cauchy family in a closed ball inside $\varphi(U)$; by
+  completeness they converge, and since $M$ is Hausdorff the limit is $\varphi(\gamma(t_0))$, which
+  is then inside the ball: a contradiction. Chains follow by induction.
+\end{proof}
+
+\begin{theorem}[\texorpdfstring{\cite[Lema~9.1.8]{Lar22}}{Lema 9.1.8}]
+  \label{thm:ms-bounded-below}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.exists_chart_norm_le_dist, LocallyConvex.Manifolds.FinslerLengthStructure.eq_of_dist_eq_zero, LocallyConvex.Manifolds.FinslerLengthStructure.continuous_ofFinsler}
+  \leanok
+  \uses{lem:ms-exit, thm:ms-finsler-interior}
+  If $\mu$ is bounded below, every point $x_0$ has a chart and $C, r > 0$ such that
+  $d_b(x_0, y) < r / C$ implies that $y$ is in the chart and
+  $\|\varphi(y) - \varphi(x_0)\| \leq C d_b(x_0, y)$. Consequently $d_b$ separates points, and, for
+  a reversible $\mu$, every open set of $M$ is open for $d_b$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Apply Lemma~\ref{lem:ms-exit} to chains whose length approaches $d_b(x_0, y)$.
+\end{proof}
+
+\begin{theorem}[Lema 9.1.8 fails without completeness of the model]
+  \label{thm:ms-incomplete-counterexample}
+  \lean{LocallyConvex.Manifolds.IncompleteFinsler.GluingCurve,
+    LocallyConvex.Manifolds.IncompleteFinsler.GluingCurve.nonempty_of_not_completeSpace,
+    LocallyConvex.Manifolds.IncompleteFinsler.Glued,
+    LocallyConvex.Manifolds.IncompleteFinsler.Glued.t2Space,
+    LocallyConvex.Manifolds.IncompleteFinsler.Glued.isBounded,
+    LocallyConvex.Manifolds.IncompleteFinsler.Glued.not_continuous_ofFinsler,
+    LocallyConvex.Manifolds.IncompleteFinsler.Glued.not_reach_exit,
+    LocallyConvex.Manifolds.IncompleteFinsler.exists_not_continuous_ofFinsler,
+    LocallyConvex.Manifolds.IncompleteFinsler.not_completeSpace_c00,
+    LocallyConvex.Manifolds.IncompleteFinsler.exists_not_continuous_ofFinsler_c00}
+  \leanok
+  \uses{thm:ms-bounded-below, lem:ms-exit}
+  For every incomplete normed space $E_0$ there is a Hausdorff manifold $M$ modeled on
+  $\mathbb{R} \times E_0$ with a reversible, nondegenerate Finsler metric, bounded above and below,
+  such that the identity $(M, d_b) \to M$ is not continuous. This applies to $c_{00}$ with the
+  $\ell^2$ norm. So the completeness of the model cannot be dropped from
+  Theorem~\ref{thm:ms-bounded-below} nor from Corolario~9.1.9 of \cite{Lar22}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Every incomplete normed space carries a smooth curve $c \colon (-\infty, 1) \to E_0$ with
+  $\|c'\| \le K$, $c'(s) \to 0$ as $s \to 1^-$ and no cluster point in $E_0$ as $s \to 1^-$: move
+  along a non-convergent sequence with fast decaying increments by smooth steps on the intervals
+  $[1 - 2^{-k}, 1 - 2^{-k-1}]$. Glue two copies of $E = \mathbb{R} \times E_0$ along
+  $\{s < 1\}$ by $\tau(s, v) = (s, v + c(s))$. The result is Hausdorff because $c$ has no cluster
+  point. The norm of $E$ read in the two charts is a Finsler metric, continuous because
+  $c' \to 0$ and bounded above and below because $\|c'\| \le K$. For $p = (1, 0)$ in the first
+  copy and $q_\delta = (1, c(1 - \delta))$ in the second, going down the first copy to
+  $(1 - \delta, 0)_1 = (1 - \delta, c(1 - \delta))_2$ and up the second gives
+  $d_b(p, q_\delta) \le (2 + K)\delta$, while no $q_\delta$ lies in the first copy, an open
+  neighborhood of $p$. The exit argument of Lemma~\ref{lem:ms-exit} fails exactly where
+  completeness is used: the limit lies in the completion of $E$. We found no source for this
+  counterexample; we do not claim it is new.
+\end{proof}
+
+\begin{theorem}[Weak and strong Finsler manifolds]
+  \label{thm:ms-bounded-above}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.dist_le_norm_chart, LocallyConvex.Manifolds.FinslerLengthStructure.continuous_toFinsler_of_isBoundedAbove, LocallyConvex.Manifolds.FinslerLengthStructure.homeomorphFinsler}
+  \leanok
+  \uses{def:ms-bounded, thm:ms-bounded-below}
+  If $\mu$ is bounded above with constant $m$, then $d_b(x, y) \leq \|\varphi(y) - \varphi(x)\| / m$
+  near each point \cite[(9.3)]{Lar22}, so the topology of $d_b$ is coarser than that of $M$. For a
+  strong Finsler manifold (reversible, complete model, $M$ Hausdorff) the identity is a
+  homeomorphism between $M$ and $(M, d_b)$ \cite[Cor.~9.1.9]{Lar22}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The segment from $\varphi(x)$ to $\varphi(y)$, reparametrized by a smooth transition function so
+  that it is a $\Ck{1}$ curve on all of $\R$, has Finsler length at most
+  $\|\varphi(y) - \varphi(x)\| / m$. The second statement combines this with
+  Theorem~\ref{thm:ms-bounded-below}.
+\end{proof}
+
+\begin{lemma}[\texorpdfstring{\cite[Lema~9.1.6]{Lar22}}{Lema 9.1.6}]
+  \label{lem:ms-lipschitz}
+  \lean{LocallyConvex.Manifolds.FinslerSeminormField.chartFun, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_tcc, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_smul, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_zero, LocallyConvex.Manifolds.FinslerSeminormField.isBoundedAbove_of_lipschitz}
+  \leanok
+  \uses{def:ms-bounded}
+  If $\mu$, read in charts, is Lipschitz near the zero section, then $\mu$ is bounded above.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Near $(\varphi(p), 0)$ the Lipschitz condition gives
+  $\mu_q(w) \leq K(\|\varphi(q) - \varphi(p)\| + \|\varphi_{*q} w\|)$; applied to a multiple of $w$ of
+  fixed small norm and combined with homogeneity, it gives $\mu_q(w) \leq 2K \|\varphi_{*q} w\|$
+  for $q$ close to $p$.
+\end{proof}
+
+\begin{theorem}[\texorpdfstring{\cite[Teorema~9.1.5]{Lar22}}{Teorema 9.1.5}]
+  \label{thm:ms-finite-dim}
+  \lean{LocallyConvex.Manifolds.tangentCoordChange_smul, LocallyConvex.Manifolds.FinslerMetric.isBounded_of_finiteDimensional}
+  \leanok
+  \uses{def:ms-bounded, def:finsler-metric}
+  If the model is finite-dimensional, every Finsler metric whose seminorms are norms is strong.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In a chart, $(y, v) \mapsto \mu(y, v)$ is continuous on the tangent bundle, hence attains a
+  positive minimum and a maximum on the compact set $\bar B \times S$, closed ball times unit
+  sphere. Homogeneity gives the bounds for every vector.
+\end{proof}
+
+\begin{corollary}[\texorpdfstring{Hopf--Rinow for Finsler manifolds \cite[Cor.~9.1.10]{Lar22}}{Hopf-Rinow for Finsler manifolds}]
+  \label{cor:ms-finsler-hopf-rinow}
+  \lean{LocallyConvex.Manifolds.FinslerMetric.metricSpace, LocallyConvex.Manifolds.FinslerMetric.locallyCompactSpace, LocallyConvex.Manifolds.FinslerMetric.exists_rectPath_length_eq}
+  \leanok
+  \uses{thm:ms-finite-dim, thm:ms-bounded-above, thm:ms-finsler-interior, thm:ms-hopf-rinow}
+  Let $M$ be a Hausdorff manifold modeled on a finite-dimensional normed space, with a reversible
+  Finsler metric whose seminorms are norms and with finite distance $d_b$. If $(M, d_b)$ is
+  complete, any two points are joined by a continuous curve whose length is their distance.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  By Theorem~\ref{thm:ms-finite-dim} the metric is strong; by Theorems~\ref{thm:ms-bounded-below}
+  and~\ref{thm:ms-bounded-above}, $d_b$ is a distance and $(M, d_b)$ is homeomorphic to $M$, hence
+  locally compact. It is an interior space by Theorem~\ref{thm:ms-finsler-interior}, and
+  Theorem~\ref{thm:ms-hopf-rinow} applies.
+\end{proof}
+
+Whether these shortest curves can be taken piecewise $\Ck{1}$ is a separate question
+\cite[Obs.~9.1.11]{Lar22}.

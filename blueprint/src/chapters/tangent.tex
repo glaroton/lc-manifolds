@@ -1,0 +1,237 @@
+\chapter{Tangent bundles}
+\label{chap:tangent}
+
+The tangent bundle and the tangent map of a manifold modeled on a locally convex space, the
+double tangent bundle with its canonical flip, and curves with their velocities
+\cite[\S3.3]{GN26}, \cite[Ch.~III]{Lan99}. As in Chapter~\ref{chap:manifolds}, no completeness
+is assumed.
+
+\section{The tangent bundle and tangent maps}
+
+\begin{definition}[The tangent bundle]
+  \label{def:tangent-bundle}
+  \lean{LocallyConvex.Manifolds.tangentCoordChange, LocallyConvex.Manifolds.tangentBundleCore,
+    LocallyConvex.Manifolds.TangentBundle, LocallyConvex.Manifolds.tangentChart}
+  \leanok
+  \uses{def:mb-manifold}
+  For charts $i$, $j$ of the atlas of $M$ and $x$ in both domains, the \emph{coordinate change}
+  of tangent vectors is $v \mapsto \dd(j \circ i^{-1})(i(x))\,v$. The \emph{tangent bundle}
+  $\T M$ is the fiber bundle with fiber $E$ obtained by gluing the trivial bundles over the
+  chart domains along these coordinate changes. For a chart $i$, the map
+  $\T M \supseteq \T M|_{\operatorname{dom} i} \to E \times E$ that sends $(x, v)$ to
+  $(i(x), v_i)$, with $v_i$ the coordinates of $v$ in the chart $i$, is the \emph{chart of $\T M$
+  over $i$}.
+\end{definition}
+
+In Lean, $\T M$ is the total space of a Mathlib \texttt{FiberBundleCore} indexed by the charts of
+the atlas, whose index at $x$ is the preferred chart $c_x$. Thus a point of $\T M$ is a pair
+$(x, v)$ with $x \in M$ and $v \in E$, and \emph{$v$ is the tangent vector written in the
+coordinates of the preferred chart at $x$}. In any other chart $i$, its coordinates are
+$\dd(i \circ c_x^{-1})(c_x(x))\,v$. This is a choice of representative, not a restriction:
+every construction below (tangent maps, local representatives of vector fields, Lie brackets,
+derivations, velocities) is defined in the preferred chart and then shown to transform correctly
+in every chart of the atlas. The coordinate changes satisfy the cocycle condition by the chain
+rule (\texttt{LocallyConvex.Manifolds.tangentCoordChange\_comp}), and they are continuous in $(x, v)$ since
+the transition maps are $\Ck{1}$.
+
+\begin{theorem}[$\T M$ is a manifold]
+  \label{thm:man-tangent-manifold}
+  \lean{LocallyConvex.Manifolds.smoothMBOn_tangentChart_transition, LocallyConvex.Manifolds.tangentChart_transition_mem,
+    LocallyConvex.Manifolds.tangentChart_mem_atlas, LocallyConvex.Manifolds.tangentChart_transition_apply}
+  \leanok
+  \uses{def:tangent-bundle}
+  The charts of $\T M$ over the charts of $M$ form an atlas modeled on $E \times E$ whose
+  transition maps are
+  \[
+    (y, w) \longmapsto \bigl(\tau(y), \dd\tau(y)\,w\bigr), \qquad \tau = j \circ i^{-1}.
+  \]
+  In particular they are smooth, and $\T M$ is a manifold modeled on $E \times E$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The formula is the cocycle property of the coordinate changes. The map $(y, w) \mapsto
+  \dd\tau(y)\,w$ is smooth because $\tau$ is, by the recursive definition of $\Ck{k}$, and pairs of
+  smooth maps are smooth. The inverse transition has the same form with $\tau^{-1}$.
+\end{proof}
+
+\begin{definition}[The tangent map]
+  \label{def:tangent-map}
+  \lean{LocallyConvex.Manifolds.tangentMap}
+  \leanok
+  \uses{def:tangent-bundle, def:contmdiff}
+  Let $f \colon M \to N$. The \emph{tangent map} $\T f \colon \T M \to \T N$ sends $(x, v)$ to
+  \[
+    \bigl(f(x),\ \dd(c'_{f(x)} \circ f \circ c_x^{-1})(c_x(x))\,v\bigr),
+  \]
+  where $c_x$ and $c'_{f(x)}$ are the preferred charts at $x$ and $f(x)$.
+\end{definition}
+
+The definition makes sense for every $f$, since $\dd$ is a total function in Lean; it is
+meaningful when $f$ is $\Ck{1}$.
+
+\begin{theorem}[The tangent map in charts; chain rule]
+  \label{thm:man-tangent-map}
+  \lean{LocallyConvex.Analysis.dMB_eq_comp_of_eventuallyEq, LocallyConvex.Manifolds.dMB_chart_comp,
+    LocallyConvex.Manifolds.dMB_comp_chart, LocallyConvex.Manifolds.tangentMap_chart, LocallyConvex.Manifolds.tangentMap_id,
+    LocallyConvex.Manifolds.tangentMap_comp}
+  \leanok
+  \uses{def:tangent-map, thm:man-contmdiff-chart}
+  Let $f \colon M \to N$ be $\Ck{1}$. The derivatives of the local representatives of $f$
+  transform under changes of charts by the derivatives of the transition maps. Consequently, in
+  the charts of $\T M$ and $\T N$ over charts $i$ of $M$ and $j$ of $N$, the tangent map reads
+  \[
+    (y, w) \longmapsto \bigl(h(y), \dd h(y)\,w\bigr), \qquad h = j \circ f \circ i^{-1}.
+  \]
+  Moreover $\T\id = \id$ and, for $\Ck{1}$ maps $f$ and $g$, $\T(g \circ f) = \T g \circ \T f$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Near a point, the local representative of $f$ in one pair of charts agrees with the
+  composition of its local representative in another pair with transition maps; the chain rule for maps that agree with a composition near the point gives
+  the transformation laws. The formula in charts follows by composing these laws with the
+  coordinate changes of $\T M$ and $\T N$, and functoriality is the chain rule in the preferred
+  charts.
+\end{proof}
+
+\begin{theorem}[Smoothness of the tangent map]
+  \label{thm:man-tangent-map-smooth}
+  \lean{LocallyConvex.Manifolds.ContMDiffMB.tangentMap}
+  \leanok
+  \uses{thm:man-tangent-map, thm:man-tangent-manifold}
+  If $f \colon M \to N$ is $\Ck{k+1}$, then $\T f \colon \T M \to \T N$ is $\Ck{k}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the charts of the tangent bundles $\T f$ is $(y, w) \mapsto (h(y), \dd h(y)\,w)$, and
+  $\dd h$ is $\Ck{k}$ on its domain because $h$ is $\Ck{k+1}$.
+\end{proof}
+
+\section{The double tangent bundle}
+
+The double tangent bundle is $\T\T M = \T(\T M)$, the tangent bundle of the manifold $\T M$
+(Theorem~\ref{thm:man-tangent-manifold}). We follow \cite[Cap.~5]{Lar22} and \cite[\S
+IV.3]{Lan99}. A chart $i$ of $M$ gives a chart of $\T M$ and then a chart of $\T\T M$, in which
+points are written $((x, v), (u, w))$: $(x, v)$ is the base point in $\T M$, and $(u, w)$ the
+tangent vector at it.
+
+\begin{theorem}[Transition maps of $\T\T M$]
+  \label{thm:man-double-transition}
+  \lean{LocallyConvex.Manifolds.tangentAtlas, LocallyConvex.Manifolds.dMB_tangentChart_transition,
+    LocallyConvex.Manifolds.DoubleTangentBundle, LocallyConvex.Manifolds.ddChart, LocallyConvex.Manifolds.ddChart_transition_apply}
+  \leanok
+  \uses{thm:man-tangent-manifold}
+  Let $\tau = j \circ i^{-1}$. In the charts of $\T\T M$ over $i$ and $j$, the transition map is
+  \[
+    ((x, v), (u, w)) \longmapsto \bigl((\tau x, \dd\tau_x v),\ (\dd\tau_x u,\ \dd^2\tau_x(u, v)
+    + \dd\tau_x w)\bigr).
+  \]
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The transition maps of $\T\T M$ are those of the tangent bundle of $\T M$, namely the
+  transition map $\sigma(x, v) = (\tau x, \dd\tau_x v)$ of $\T M$ together with its derivative.
+  Differentiating $\sigma$ in the direction $(u, w)$ gives $(\dd\tau_x u, \dd^2\tau_x(u, v) +
+  \dd\tau_x w)$, since $\dd\tau_x$ is linear in $v$.
+\end{proof}
+
+\begin{theorem}[The canonical flip]
+  \label{thm:man-flip}
+  \lean{LocallyConvex.Manifolds.swapUV, LocallyConvex.Manifolds.ddChart_transition_swap, LocallyConvex.Manifolds.ddChartAt,
+    LocallyConvex.Manifolds.flip, LocallyConvex.Manifolds.flip_proj_proj, LocallyConvex.Manifolds.ddChart_flip,
+    LocallyConvex.Manifolds.flip_flip}
+  \leanok
+  \uses{thm:man-double-transition}
+  The swap $((x, v), (u, w)) \mapsto ((x, u), (v, w))$ commutes with the transition maps of
+  $\T\T M$. Hence the map $\kappa \colon \T\T M \to \T\T M$ defined as the swap in the preferred
+  chart reads as the swap in every chart of $\T\T M$ over a chart of $M$. It covers the identity
+  of $M$, and $\kappa \circ \kappa = \id$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  By Theorem~\ref{thm:man-double-transition}, the claim amounts to $\dd^2\tau_x(u, v) =
+  \dd^2\tau_x(v, u)$, the symmetry of the second differential. The rest is immediate from the
+  coordinate expression.
+\end{proof}
+
+The smoothness of $\kappa$ is not stated in the library.
+
+\section{Curves and velocities}
+
+Curves are maps $\alpha \colon \R \to M$. We treat them, like functions, through their local
+representatives, without regarding $\R$ as a manifold.
+
+\begin{definition}[$\Ck{k}$ curves and lifts]
+  \label{def:ck-curve}
+  \lean{LocallyConvex.Manifolds.IsCkCurve, LocallyConvex.Manifolds.liftCoord, LocallyConvex.Manifolds.IsCkLift}
+  \leanok
+  \uses{def:mb-manifold, def:tangent-bundle}
+  A curve $\alpha \colon \R \to M$ is $\Ck{k}$ if it is continuous and $i \circ \alpha$ is
+  $\Ck{k}$ on the open set $\alpha^{-1}(\operatorname{dom} i)$ for every chart $i$ of the atlas. A
+  \emph{lift} of $\alpha$ is a curve $\beta \colon \R \to \T M$ with $\beta(t) \in \T_{\alpha(t)}
+  M$; its fiber coordinate in the chart $i$ is the second component $\mu_i(t)$ of the chart of
+  $\T M$ over $i$ at $\beta(t)$. The lift is $\Ck{k}$ if every $\mu_i$ is $\Ck{k}$ on
+  $\alpha^{-1}(\operatorname{dom} i)$.
+\end{definition}
+
+\begin{definition}[Velocity]
+  \label{def:velocity}
+  \lean{LocallyConvex.Manifolds.velocity}
+  \leanok
+  \uses{def:ck-curve}
+  The \emph{velocity} of a curve $\alpha$ is the lift $\dot\alpha(t) = (\alpha(t),
+  (c_{\alpha(t)} \circ \alpha)'(t))$, the derivative of the local representative in the preferred
+  chart at $\alpha(t)$.
+\end{definition}
+
+\begin{theorem}[The velocity in charts]
+  \label{thm:man-velocity}
+  \lean{LocallyConvex.Manifolds.dMB_chart_curve, LocallyConvex.Manifolds.liftCoord_velocity,
+    LocallyConvex.Manifolds.isCkLift_velocity, LocallyConvex.Manifolds.continuous_velocity}
+  \leanok
+  \uses{def:velocity, thm:man-tangent-manifold}
+  Let $\alpha$ be a $\Ck{1}$ curve. For charts $i$, $j$ around $\alpha(t)$ we have
+  $(j \circ \alpha)'(t) = \dd(j \circ i^{-1})(i(\alpha(t)))\,(i \circ \alpha)'(t)$; hence the fiber
+  coordinate of $\dot\alpha(t)$ in any chart $j$ is $(j \circ \alpha)'(t)$. The velocity is a
+  continuous curve in $\T M$, and if $\alpha$ is $\Ck{k+1}$, then $\dot\alpha$ is a $\Ck{k}$ lift.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Near $t$, $j \circ \alpha = (j \circ i^{-1}) \circ (i \circ \alpha)$, and we apply the chain
+  rule. The second statement is the first one with $i$ the preferred chart. In the chart of
+  $\T M$ over $i$, $\dot\alpha$ reads $s \mapsto (i(\alpha(s)), (i \circ \alpha)'(s))$, which is
+  continuous (respectively $\Ck{k}$ in the second component); the charts of $\T M$ are
+  homeomorphisms onto their images.
+\end{proof}
+
+\begin{proposition}[Germs and the chain rule for velocities]
+  \label{prop:man-velocity-chain}
+  \lean{LocallyConvex.Manifolds.velocity_congr, LocallyConvex.Manifolds.tangentMap_velocity}
+  \leanok
+  \uses{def:velocity, def:tangent-map}
+  The velocity $\dot\alpha(t)$ only depends on the germ of $\alpha$ at $t$. If $p \colon N \to
+  M$ is $\Ck{1}$ and $\Gamma$ is a $\Ck{1}$ curve in $N$, then $\T p\,(\dot\Gamma(t))$ is the velocity of $p \circ \Gamma$
+  at $t$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Directional derivatives only depend on germs. For the chain rule, near $t$ we write
+  $c' \circ p \circ \Gamma = (c' \circ p \circ c^{-1}) \circ (c \circ \Gamma)$ in the preferred
+  charts $c$ at $\Gamma(t)$ and $c'$ at $p(\Gamma(t))$, and apply the chain rule.
+\end{proof}
+
+\begin{remark}
+  \label{rem:man-curves-ode}
+  The continuity of $\dot\alpha$ in $\T M$ is what makes lengths of curves meaningful for Finsler
+  metrics (see Definition~\ref{def:finsler-length-structure}); the chain rule for velocities is used for quotient
+  metrics, where curves in $N$ are pushed down along a projection $p$. On the other hand, we do
+  not claim the existence of integral curves of vector fields, or of curves with prescribed
+  velocity: this would require existence theorems for ordinary differential equations, which
+  fail in general locally convex spaces, and in Banach spaces need completeness.
+\end{remark}

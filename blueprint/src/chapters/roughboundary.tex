@@ -1,0 +1,332 @@
+\chapter{Manifolds with rough boundary}
+\label{chap:roughboundary}
+
+Manifolds with rough boundary, after \cite[\S3.5]{GN26}: the charts take values in locally
+convex subsets with dense interior of the model space, with the calculus of such sets developed
+in \cite{LCA}. This includes manifolds with boundary and with corners. We prove that the boundary
+is well defined, and treat open subsets, graphs, subspaces and the tangent bundle.
+
+\section{Manifolds with rough boundary}
+\label{sec:rough-boundary}
+
+Following \cite[\S3.5]{GN26}, manifolds may be modeled on subsets of $E$ that are not open: a
+subset $V \subseteq E$ is \emph{locally convex} if every point of $V$ has a convex neighborhood
+in $V$, and it has \emph{dense interior} if $V \subseteq \overline{V^0}$. The $\Ck{k}$ calculus
+of \cite{LCA} (\cite[\S1.4]{GN26}) works on such sets: $f\colon V \to F$ is $\Ck{1}$ if it is
+continuous, $\Ck{1}$ on $V^0$, and $\dd(f|_{V^0})$ extends continuously to $V \times E$. Below,
+$r \in \N_0 \cup \{\infty\}$ and ``$\Ck{r}$ on $V$'' means $\Ck{k}$ on $V$ for every $k \le r$.
+Mathlib's charted spaces need open targets, so rough atlases are a separate structure, built on
+Mathlib's partial homeomorphisms.
+
+\begin{definition}[Rough charts and rough atlases]
+  \label{def:rough-atlas}
+  \lean{LocallyConvex.Manifolds.ContDiffLCUpTo, LocallyConvex.Manifolds.IsRoughChart,
+    LocallyConvex.Manifolds.RoughAtlas}
+  \leanok
+  A \emph{rough $E$-chart} of a topological space $M$ is a homeomorphism
+  $\varphi\colon U_\varphi \to V_\varphi$ from an open subset of $M$ onto a locally convex subset
+  of $E$ with dense interior. A \emph{$\Ck{r}$ atlas of rough charts} is a set $\mathcal{A}$ of
+  rough charts whose domains cover $M$ and whose transition maps
+  $\psi \circ \varphi^{-1}\colon \varphi(U_\varphi \cap U_\psi) \to E$ are $\Ck{r}$; for $r = 0$
+  one requires moreover that $\varphi(x) \in V_\varphi^0$ if and only if $\psi(x) \in V_\psi^0$
+  \cite[Definition 3.5.1(a), p.~278]{GN26}.
+\end{definition}
+
+The domains $\varphi(U_\varphi \cap U_\psi)$ are relatively open in $V_\varphi$, hence again
+locally convex with dense interior, so the $\Ck{r}$ condition makes sense
+\cite[Remark 3.5.2, p.~279]{GN26}.
+
+\begin{theorem}[The boundary is well defined]
+  \label{thm:rough-boundary}
+  \lean{LocallyConvex.Manifolds.ContDiffLC.mem_interior_of_rightInvOn,
+    LocallyConvex.Manifolds.IsRoughChart.mem_interior_of_trans,
+    LocallyConvex.Manifolds.RoughAtlas.mem_interior_iff, LocallyConvex.Manifolds.RoughAtlas.boundary,
+    LocallyConvex.Manifolds.RoughAtlas.mem_boundary_iff}
+  \leanok
+  \uses{def:rough-atlas}
+  Let $\varphi$, $\psi$ be charts of a $\Ck{r}$ atlas of rough charts at $x \in M$. Then
+  $\varphi(x) \in V_\varphi^0$ if and only if $\psi(x) \in V_\psi^0$
+  \cite[Lemma 3.5.6, pp.~279--280]{GN26}. Hence the \emph{boundary} $\partial M$, the set of
+  points $x$ with $\varphi(x) \notin V_\varphi^0$ for some chart $\varphi$ at $x$
+  \cite[Definition 3.5.1(c), p.~278]{GN26}, can be tested in any chart.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  For $r = 0$ this is an axiom. Let $r \ge 1$, $\kappa = \psi \circ \varphi^{-1}$,
+  $y = \varphi(x) \in V_\varphi^0$, and suppose $z = \kappa(y)$ is not interior. Take an open
+  $W \ni z$ such that $C = V_\psi \cap W$ is convex with nonempty interior. By Hahn--Banach there
+  is $\lambda \in E'$ with $\lambda < \lambda(z)$ on $C^0$, hence $\lambda \le \lambda(z)$ on
+  $C$. Pick $a \in C^0$ and $v = z - a$, so $\lambda(v) > 0$. The chain rule applied to
+  $\kappa \circ \kappa^{-1} = \id$ at $z$ gives $u$ with $\dd\kappa(y, u) = v$. For $t > 0$ small,
+  $\kappa(y + tu) \in C$, so $t^{-1}(\lambda(\kappa(y + tu)) - \lambda(z)) \le 0$; these
+  quotients converge to $\lambda(v) > 0$, a contradiction.
+\end{proof}
+
+\begin{remark}[Infinite-dimensional subtleties]
+  \label{rem:rough-subtleties}
+  For $r = 0$ the axiom on interior points cannot be dropped in infinite dimensions: a closed
+  ball of an infinite-dimensional Banach space is homeomorphic to the whole space
+  \cite[Remark 3.5.9, p.~280]{GN26}. The proof above uses Hahn--Banach, hence the local
+  convexity of $E$ and of $V_\psi$, but no completeness. The boundary $\partial M$ is only a
+  subset of $M$; it need not be a submanifold (corners of $[0,1]^2$), and no structure on it is
+  constructed.
+\end{remark}
+
+\begin{definition}[Manifolds with rough boundary]
+  \label{def:rough-manifold}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.IsCompatible, LocallyConvex.Manifolds.RoughAtlas.maximal,
+    LocallyConvex.Manifolds.RoughAtlas.IsMaximal, LocallyConvex.Manifolds.RoughAtlas.maximal_isMaximal,
+    LocallyConvex.Manifolds.RoughAtlas.maximal_atlas_eq, LocallyConvex.Manifolds.RoughAtlas.boundary_maximal,
+    LocallyConvex.Manifolds.RoughManifold}
+  \leanok
+  \uses{def:rough-atlas, thm:rough-boundary}
+  A \emph{$\Ck{r}$ manifold with rough boundary} is a topological space with a maximal $\Ck{r}$
+  atlas of rough charts \cite[Definition 3.5.1(b), p.~278]{GN26}. Every rough atlas is contained
+  in exactly one maximal atlas, the set of rough charts compatible with it, and the boundary does
+  not change when the atlas is replaced by its maximal atlas.
+\end{definition}
+
+\begin{proof}
+  \leanok
+  The transition map between two charts compatible with $\mathcal{A}$ factors, near each point,
+  through a chart of $\mathcal{A}$, and is $\Ck{r}$ by the chain rule.
+\end{proof}
+
+\begin{definition}[$\Ck{s}$ maps]
+  \label{def:rough-contmdiff}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.ContMDiff}
+  \leanok
+  \uses{def:rough-atlas}
+  A map $f\colon M \to N$ between manifolds with rough boundary is $\Ck{s}$ if it is
+  continuous and all its local representatives
+  $\psi \circ f \circ \varphi^{-1}\colon \varphi(f^{-1}(U_\psi) \cap U_\varphi) \to F$ are $\Ck{s}$
+  \cite[Definition 3.5.11, p.~281]{GN26}.
+\end{definition}
+
+\begin{proposition}[Composition and chart independence]
+  \label{prop:rough-comp}
+  \lean{LocallyConvex.Manifolds.IsRoughChart.contDiffLCUpTo_comp,
+    LocallyConvex.Manifolds.RoughAtlas.ContMDiff.comp, LocallyConvex.Manifolds.RoughAtlas.contMDiff_id,
+    LocallyConvex.Manifolds.RoughAtlas.contMDiff_maximal_iff}
+  \leanok
+  \uses{def:rough-contmdiff, def:rough-manifold}
+  Compositions of $\Ck{s}$ maps are $\Ck{s}$ \cite[Proposition 3.5.12, p.~281]{GN26}. For
+  $s \le r$, a map is $\Ck{s}$ for given atlases if and only if it is $\Ck{s}$ for their maximal
+  atlases.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Near a point, $\psi \circ (g \circ f) \circ \varphi^{-1}
+  = (\psi \circ g \circ \kappa^{-1}) \circ (\kappa \circ f \circ \varphi^{-1})$ for a chart
+  $\kappa$ at the image point, and the chain rule on locally convex subsets with dense interior
+  applies, since the domain of $\psi \circ g \circ \kappa^{-1}$ is relatively open in
+  $V_\kappa$. Chart independence follows by composing with the identity maps
+  $(M, \mathcal{A}_{\max}) \to (M, \mathcal{A})$ and $(N, \mathcal{B}) \to (N, \mathcal{B}_{\max})$,
+  which are $\Ck{s}$ by definition of the maximal atlases.
+\end{proof}
+
+\begin{proposition}[Examples]
+  \label{prop:rough-examples}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.ofChartedSpace, LocallyConvex.Manifolds.RoughAtlas.boundary_ofChartedSpace,
+    LocallyConvex.Manifolds.RoughAtlas.prod, LocallyConvex.Manifolds.RoughAtlas.boundary_prod,
+    LocallyConvex.Manifolds.RoughAtlas.ofSubset, LocallyConvex.Manifolds.RoughAtlas.boundary_ofSubset,
+    LocallyConvex.Manifolds.RoughAtlas.ofConvex, LocallyConvex.Manifolds.RoughAtlas.halfSpace,
+    LocallyConvex.Manifolds.RoughAtlas.unitInterval, LocallyConvex.Manifolds.RoughAtlas.boundary_unitInterval}
+  \leanok
+  \uses{def:rough-atlas, thm:rough-boundary, def:mb-manifold}
+  \begin{enumerate}
+    \item A manifold modeled on $E$ is a $\Ck{r}$ manifold with rough boundary, for every $r$,
+      with empty boundary \cite[Example 3.5.3(a), p.~279; Remark 3.5.7, p.~280]{GN26}.
+    \item Products of $\Ck{r}$ manifolds with rough boundary, with the product charts, are
+      $\Ck{r}$ manifolds with rough boundary \cite[Example 3.5.5, p.~279]{GN26}, and
+      $\partial(M \times N) = \partial M \times N \cup M \times \partial N$.
+    \item A nonempty locally convex subset $U \subseteq E$ with dense interior, with the single
+      chart $U \hookrightarrow E$, is a $\Ck{r}$ manifold with rough boundary, whose boundary is
+      $U \setminus U^0$ \cite[Example 3.5.3(b), p.~279; Remark 3.5.7, p.~280]{GN26}. This
+      applies to convex sets with nonempty interior, such as closed half-spaces
+      $\{\lambda \ge 0\}$, $\lambda \ne 0$, and $[0, 1]$, whose boundary is $\{0, 1\}$.
+  \end{enumerate}
+\end{proposition}
+
+\begin{remark}
+  \label{rem:rough-dense}
+  \cite[Example 3.5.3(b)]{GN26} is stated for locally convex subsets with nonempty interior;
+  the inclusion is a rough chart only if the interior is dense, which is what we assume. For
+  convex sets the two conditions agree.
+\end{remark}
+
+\begin{proposition}[Open subsets and full submanifolds]
+  \label{prop:rough-full-submanifold}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.restrict, LocallyConvex.Manifolds.RoughAtlas.boundary_restrict,
+    LocallyConvex.Manifolds.RoughAtlas.IsFullSubmanifold, LocallyConvex.Manifolds.RoughAtlas.fullSubmanifold,
+    LocallyConvex.Manifolds.RoughAtlas.boundary_fullSubmanifold,
+    LocallyConvex.Manifolds.RoughAtlas.mem_interior_inter_preimage_iff}
+  \leanok
+  \uses{prop:rough-examples}
+  A nonempty open subset $U$ of a $\Ck{r}$ manifold with rough boundary $M$ is one, with the
+  restricted charts, and $\partial U = U \cap \partial M$ \cite[Example 3.5.4, p.~279]{GN26}. A
+  nonempty subset $N \subseteq M$ such that every point of $N$ has a chart $\varphi$ with
+  $\varphi(U_\varphi \cap N)$ locally convex with dense interior (a \emph{full submanifold}) is a
+  $\Ck{r}$ manifold with rough boundary, with
+  $\partial N = N \cap (\partial M \cup (N \setminus N^0))$
+  \cite[Definition 3.5.19 and (3.24), p.~284]{GN26}.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The targets of the restricted charts are relatively open in, or locally convex subsets with
+  dense interior of, the targets of the charts of $M$, and the transition maps are restrictions of
+  those of $M$. A point $\varphi(x)$ is interior to $\varphi(U_\varphi \cap N)$ if and only if it is
+  interior to $V_\varphi$ and $x$ is interior to $N$, which gives the boundary and condition (A3)
+  for $r = 0$.
+\end{proof}
+
+\begin{definition}[Submanifolds of manifolds with rough boundary]
+  \label{def:rough-submanifold}
+  \lean{LocallyConvex.Manifolds.IsAdaptedTo, LocallyConvex.Manifolds.subChart,
+    LocallyConvex.Manifolds.RoughAtlas.IsSubmanifold, LocallyConvex.Manifolds.RoughAtlas.submanifold,
+    LocallyConvex.Manifolds.IsLocallyConvexSubset.preimage_clm}
+  \leanok
+  \uses{prop:rough-full-submanifold}
+  Let $F \subseteq E$ be a closed vector subspace. A subset $N \subseteq M$ is a submanifold
+  modeled on $F$ if every point of $N$ lies in a chart $\varphi$ with
+  $\varphi(U_\varphi \cap N) = V_\varphi \cap F$ and $V_\varphi \cap F$ with dense interior relative to
+  $F$ (S1), and, for $r = 0$, adapted charts agree on boundary points (S2). The charts
+  $\varphi|_{U_\varphi \cap N}$ then form a $\Ck{r}$ atlas of rough $F$-charts of $N$
+  \cite[Definition 3.5.14 and Remark 3.5.16, pp.~282--283]{GN26}; the transition maps are
+  corestricted to $F$ by \cite[Lemma 1.4.16]{GN26}.
+\end{definition}
+
+\begin{proposition}[Graphs]
+  \label{prop:rough-graph}
+  \lean{LocallyConvex.Manifolds.roughGraphChart, LocallyConvex.Manifolds.isAdaptedTo_roughGraphChart,
+    LocallyConvex.Manifolds.RoughAtlas.isCompatible_roughGraphChart,
+    LocallyConvex.Manifolds.RoughAtlas.exists_roughGraphChart,
+    LocallyConvex.Manifolds.RoughAtlas.isSubmanifold_graph,
+    LocallyConvex.Manifolds.RoughAtlas.graphSubmanifold,
+    LocallyConvex.Manifolds.RoughAtlas.boundary_graphSubmanifold}
+  \leanok
+  \uses{def:rough-submanifold}
+  Let $M$ be a $\Ck{r}$ manifold with rough boundary modeled on $E$, $N$ a $\Ck{r}$ manifold without
+  boundary modeled on $F$, and $f \colon M \to N$ a $\Ck{r}$ map. Every point of the graph of $f$
+  lies in a chart of $M \times N$ adapted to the graph and to $E \times \{0\}$; for $r \geq 1$ the
+  graph is a submanifold of $M \times N$ modeled on $E \times \{0\}$, with boundary
+  $\{(x, f(x)) : x \in \partial M\}$ \cite[Proposition 3.5.17, pp.~283--284]{GN26}.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  For charts $\varphi$ of $M$ and $\psi$ of $N$, the chart
+  $\theta(x, y) = (\varphi(x), \psi(y) - \psi(f(x)))$ is $g \circ (\varphi \times \psi)$ for the
+  $\Ck{r}$ diffeomorphism $g(z, w) = (z, w - h(z))$, $h = \psi \circ f \circ \varphi^{-1}$, so it is
+  compatible with the product atlas. Its target is relatively open in
+  $\varphi(U_\varphi \cap f^{-1}(U_\psi)) \times F$, because $\psi$ has open target, and it maps the
+  graph onto $E \times \{0\}$. For $r = 0$, G--N obtain a submanifold with prescribed boundary
+  \cite[3.5.15]{GN26}, which we do not formalize.
+\end{proof}
+
+\begin{definition}[Manifolds with corners]
+  \label{def:corners}
+  \lean{LocallyConvex.Manifolds.quadrant, LocallyConvex.Manifolds.RoughAtlas.IsWithCorners,
+    LocallyConvex.Manifolds.RoughAtlas.IsWithBoundary, LocallyConvex.Manifolds.RoughAtlas.quadrantAtlas,
+    LocallyConvex.Manifolds.RoughAtlas.boundary_quadrantAtlas,
+    LocallyConvex.Manifolds.RoughAtlas.isWithCorners_quadrantAtlas}
+  \leanok
+  \uses{prop:rough-examples}
+  A manifold with rough boundary modeled on $\R^n$ is a manifold with corners (with boundary) if
+  its maximal atlas contains charts around every point whose ranges are open subsets of
+  $[0, \infty[^n$ (of $\R^{n-1} \times [0, \infty[$) \cite[Remark 3.5.10, p.~281]{GN26}. The
+  quadrant itself is a manifold with corners, whose boundary is the set of points with a vanishing
+  coordinate.
+\end{definition}
+
+\begin{definition}[The tangent bundle of a manifold with rough boundary]
+  \label{def:rough-tangent-bundle}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.tangentCoordChange,
+    LocallyConvex.Manifolds.RoughAtlas.tangentCoordChange_comp,
+    LocallyConvex.Manifolds.RoughAtlas.exists_clm_tangentCoordChange,
+    LocallyConvex.Manifolds.RoughAtlas.tangentCoordChange_inv,
+    LocallyConvex.Manifolds.RoughAtlas.tangentBundleCore,
+    LocallyConvex.Manifolds.RoughAtlas.TangentBundle, LocallyConvex.Manifolds.RoughAtlas.tangentChart}
+  \leanok
+  \uses{def:rough-atlas}
+  Let $\mathcal{A}$ be a $\Ck{r}$ atlas of rough charts of $M$, $r \ge 1$. The tangent bundle
+  $TM$ is glued from the sets $V_\varphi \times E$, $\varphi \in \mathcal{A}$, along the
+  maps $T(\psi \circ \varphi^{-1})\colon (y, w) \mapsto (\psi\varphi^{-1}(y),
+  \dd(\psi \circ \varphi^{-1})(y, w))$; its tangent charts are
+  $T\varphi\colon TU_\varphi \to V_\varphi \times E$
+  \cite[3.5.22, p.~285; Definitions 3.3.5 and 3.3.7, p.~257]{GN26}. In Lean, $TM$ is the total
+  space of a fiber bundle core over the chart domains, with fiber $E$ and coordinate changes
+  $\dd(\psi \circ \varphi^{-1})(\varphi(x), \cdot)$.
+\end{definition}
+
+\begin{remark}[Fibers over boundary points]
+  \label{rem:rough-tangent-linear}
+  At a boundary point $x$, $\dd(\psi \circ \varphi^{-1})(\varphi(x), \cdot)$ is the
+  continuous extension of the differential from the interior, not a derivative at an interior
+  point. It is nevertheless continuous linear \cite[Lemma 1.4.7]{GN26} and invertible, by the
+  chain rule \cite[Proposition 1.4.10]{GN26} on the domains $\varphi(U_\varphi \cap U_\psi)$,
+  which are locally convex with dense interior. Hence each fiber, also over $\partial M$, is a
+  topological vector space isomorphic to $E$ through every chart; it is all of $E$, not a cone of
+  inward vectors.
+\end{remark}
+
+\begin{theorem}[$TM$ is a manifold with rough boundary]
+  \label{thm:rough-tangent-atlas}
+  \lean{LocallyConvex.Manifolds.ContDiffLCUpTo.tangent,
+    LocallyConvex.Manifolds.RoughAtlas.isRoughChart_tangentChart,
+    LocallyConvex.Manifolds.RoughAtlas.tangentChart_trans_eqOn,
+    LocallyConvex.Manifolds.RoughAtlas.tangentAtlas,
+    LocallyConvex.Manifolds.RoughAtlas.boundary_tangentAtlas,
+    LocallyConvex.Manifolds.RoughAtlas.contMDiff_proj}
+  \leanok
+  \uses{def:rough-tangent-bundle, thm:rough-boundary, def:rough-contmdiff}
+  For $r \ge 1$, the tangent charts form a $\Ck{r-1}$ atlas of rough $E \times E$-charts of
+  $TM$, with transition maps $T(\psi \circ \varphi^{-1})$; the boundary of $TM$ is
+  $\pi^{-1}(\partial M)$, and $\pi\colon TM \to M$ is $\Ck{r-1}$
+  \cite[3.5.22, p.~285; Lemma 3.3.8, p.~258]{GN26}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The targets $V_\varphi \times E$ are locally convex with dense interior. If $g$ is $\Ck{s}$ on
+  $D$, $s \ge 1$, then $(y, w) \mapsto (g(y), \dd g(y, w))$ is $\Ck{s-1}$ on $D \times E$
+  \cite[Definition 3.3.3, p.~256]{GN26}, since $\dd g$ is $\Ck{s-1}$ and pairs of $\Ck{s-1}$
+  maps are $\Ck{s-1}$. As $(V_\varphi \times E)^0 = V_\varphi^0 \times E$, interior points of
+  $TM$ are the vectors over interior points of $M$, which gives the boundary of $TM$ and, for
+  $r = 1$, the axiom on interior points.
+\end{proof}
+
+\begin{theorem}[Tangent maps and the chain rule]
+  \label{thm:rough-tangent-map}
+  \lean{LocallyConvex.Manifolds.RoughAtlas.tangentMap,
+    LocallyConvex.Manifolds.RoughAtlas.dLC_localRep_change,
+    LocallyConvex.Manifolds.RoughAtlas.tangentChart_tangentMap,
+    LocallyConvex.Manifolds.RoughAtlas.continuous_tangentMap,
+    LocallyConvex.Manifolds.RoughAtlas.contMDiff_tangentMap,
+    LocallyConvex.Manifolds.RoughAtlas.tangentMap_id,
+    LocallyConvex.Manifolds.RoughAtlas.tangentMap_comp,
+    LocallyConvex.Manifolds.RoughAtlas.tangentCoordChange_ofChartedSpace}
+  \leanok
+  \uses{thm:rough-tangent-atlas, prop:rough-comp}
+  Let $f\colon M \to N$ be $\Ck{s}$, $s \ge 1$. The tangent map $Tf$, given in tangent charts by
+  $T(\psi \circ f \circ \varphi^{-1})$, does not depend on the charts and is $\Ck{s-1}$; moreover
+  $T(\id) = \id$ and $T(g \circ f) = Tg \circ Tf$ for $\Ck{1}$ maps
+  \cite[Definition 3.3.11, p.~259; Proposition 3.3.12, p.~259; Remark 3.3.13, p.~260;
+  3.5.22, p.~285]{GN26}. For ordinary manifolds the coordinate changes of $TM$ are those of
+  Definition~\ref{def:tangent-bundle}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  For charts $\varphi, \varphi'$ at $x$ and $\psi, \psi'$ at $f(x)$, both
+  $\dd(\psi' \circ f \circ \varphi'^{-1})(\varphi'(x), \dd(\varphi' \circ \varphi^{-1})(\varphi(x), v))$
+  and $\dd(\psi' \circ \psi^{-1})(\psi(f(x)), \dd(\psi \circ f \circ \varphi^{-1})(\varphi(x), v))$
+  are equal to $\dd(\psi' \circ f \circ \varphi^{-1})(\varphi(x), v)$, by the chain rule on the
+  common domain $\varphi(U_\varphi \cap U_{\varphi'} \cap f^{-1}(U_\psi \cap U_{\psi'}))$, which
+  has dense interior; the differential on a smaller domain with dense interior is the
+  restriction. The chain rule for $T(g \circ f)$ is the same computation. We do not claim this
+  argument is new.
+\end{proof}

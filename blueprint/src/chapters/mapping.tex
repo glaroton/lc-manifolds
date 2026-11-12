@@ -1,0 +1,1052 @@
+\chapter{Local additions and manifolds of mappings}
+\label{chap:mapping}
+
+Glöckner and Neeb build the manifold structure of $C^\ell(M, N)$, for $M$ compact and $N$ with a
+local addition, in \cite[\S3.8, \S4.1, \S4.2]{GN26}. This chapter follows them: local additions
+and the ways to produce them (open subsets, products, normalization, ambient formulas on
+submanifolds, real analytic local additions), the manifolds $C(K, N)$ and $C^\ell(M, N)$ with
+their exponential law, evaluation maps and tangent spaces, and the compact-open $C^\ell$ topology,
+described both through iterated tangent maps \cite[Def.~4.1.2]{GN26} and through jets on compact
+sets in charts. The models of $C^\ell(M, N)$ vary with the point, so these manifolds are atlases
+with varying models. As in the rest of the library, \emph{no completeness} of the models is
+assumed.
+
+\section{Local additions}
+
+\begin{definition}[Local additions {\cite[Def.~3.8.11]{GN26}}]
+  \label{def:local-addition}
+  \lean{LocallyConvex.Manifolds.LocalAddition, LocallyConvex.Manifolds.LocalAddition.toFun,
+    LocallyConvex.Manifolds.LocalAddition.source,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBMOn_toFun,
+    LocallyConvex.Manifolds.LocalAddition.toOpenPartialHomeomorph_apply,
+    LocallyConvex.Manifolds.LocalAddition.IsNormalized,
+    LocallyConvex.Manifolds.TangentBundle.vec}
+  \leanok
+  \uses{def:tangent-bundle, def:contmdiff, prop:man-product}
+  A \emph{local addition} on $M$ is a smooth map $\Sigma \colon \Omega \to M$ on an open subset
+  $\Omega \subseteq \T M$ containing the zero section, with $\Sigma(0_x) = x$, such that
+  $\theta = (\pi, \Sigma) \colon \Omega \to M \times M$ is a smooth diffeomorphism onto an open
+  subset of $M \times M$. It is \emph{normalized} if $T_{0_x}(\Sigma|_{\T_x M}) = \mathrm{id}$
+  for all $x$; in the preferred chart $\varphi_x$ at $x$, this reads
+  $\dd(\varphi_x \circ \Sigma(x, \cdot))(0)(w) = w$. In Lean the data is the map $\theta$, an
+  open partial homeomorphism $\T M \to M \times M$ with source $\Omega$, smooth with smooth
+  inverse, whose first component is the bundle projection.
+\end{definition}
+
+\begin{proposition}[Open subsets of the model space]
+  \label{prop:open-local-addition}
+  \lean{LocallyConvex.Manifolds.opens_atlas_apply,
+    LocallyConvex.Manifolds.tangentCoordChange_opens,
+    LocallyConvex.Manifolds.chartAt_tangentBundle_opens_apply,
+    LocallyConvex.Manifolds.addOpen, LocallyConvex.Manifolds.smoothMBMOn_addOpen,
+    LocallyConvex.Manifolds.smoothMBMOn_addOpen_symm,
+    LocallyConvex.Manifolds.openLocalAddition,
+    LocallyConvex.Manifolds.isNormalized_openLocalAddition}
+  \leanok
+  \uses{def:local-addition}
+  Let $U$ be an open subset of $E$. Then $\Sigma(x, v) = x + v$ on
+  $\Omega = \{(x, v) \in \T U : x + v \in U\}$ is a normalized local addition on $U$, and
+  $\theta(x, v) = (x, x + v)$ maps $\Omega$ onto $U \times U$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The charts of $U$ are the inclusion, so $\T U = U \times E$ with the identity as coordinate
+  changes. In these coordinates $\theta$ and $\theta^{-1}(x, y) = (x, y - x)$ are restrictions
+  of continuous linear maps.
+\end{proof}
+
+\begin{proposition}[Normalization {\cite[Remark~3.8.16]{GN26}}]
+  \label{prop:normalize-local-addition}
+  \lean{LocallyConvex.Manifolds.LocalAddition.alpha, LocallyConvex.Manifolds.LocalAddition.beta,
+    LocallyConvex.Manifolds.LocalAddition.alpha_beta,
+    LocallyConvex.Manifolds.LocalAddition.beta_alpha,
+    LocallyConvex.Manifolds.smoothMBM_of_coordAt,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBM_normMap,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBM_normMapInv,
+    LocallyConvex.Manifolds.LocalAddition.normEquiv,
+    LocallyConvex.Manifolds.LocalAddition.normalize,
+    LocallyConvex.Manifolds.LocalAddition.normalize_toFun,
+    LocallyConvex.Manifolds.LocalAddition.isNormalized_normalize}
+  \leanok
+  \uses{def:local-addition}
+  Let $\Sigma$ be a local addition on $M$. Then $\alpha_x = T_{0_x}(\Sigma|_{\T_x M})$ is
+  invertible for every $x$, the map $F \colon \T M \to \T M$, $F(v) = \alpha_{\pi v}^{-1} v$, is a
+  diffeomorphism, and $\Sigma \circ F$ is a normalized local addition.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  In the preferred chart $\varphi$ at $x$, the map $v \mapsto \varphi(\Sigma(x, v))$ has the local
+  inverse $z \mapsto \theta^{-1}(x, \varphi^{-1} z)$ read in the tangent chart, so $\alpha_x$ is
+  invertible by the chain rule. In an arbitrary chart, $\alpha_x$ and $\alpha_x^{-1}$ are
+  conjugated by the derivative of the transition map and are partial derivatives of the chart
+  representatives of $\theta$ and $\theta^{-1}$; hence $F$ and $F^{-1}$ are smooth. Glöckner and
+  Neeb argue instead that $\theta$ restricts to diffeomorphisms of the fibres; we do not claim
+  this argument is new.
+\end{proof}
+
+\begin{lemma}[The tangent bundle of a product]
+  \label{lem:tangent-prod}
+  \lean{LocallyConvex.Manifolds.prodChart_mem_atlas,
+    LocallyConvex.Manifolds.tangentCoordChange_prod, LocallyConvex.Manifolds.tangentProdMk,
+    LocallyConvex.Manifolds.tangentProdSplit, LocallyConvex.Manifolds.tangentProdSplit_eq,
+    LocallyConvex.Manifolds.smoothMBM_tangentProdSplit,
+    LocallyConvex.Manifolds.chartAt_tangentProdMk,
+    LocallyConvex.Manifolds.continuous_tangentProdMk,
+    LocallyConvex.Manifolds.smoothMBM_tangentProdMk,
+    LocallyConvex.Manifolds.tangentProdHomeomorph}
+  \leanok
+  \uses{thm:man-tangent-manifold, thm:man-tangent-map-smooth, prop:man-product}
+  The map $\T(M_1 \times M_2) \to \T M_1 \times \T M_2$, $v \mapsto (\T \mathrm{pr}_1(v),
+  \T \mathrm{pr}_2(v))$, is a smooth diffeomorphism.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The coordinate changes of $\T(M_1 \times M_2)$ between product charts are the products of the
+  coordinate changes of $\T M_1$ and $\T M_2$. Hence, in charts, the inverse map
+  $(v_1, v_2) \mapsto (v_1, v_2)$ is the regrouping $((a, b), (c, d)) \mapsto ((a, c), (b, d))$
+  of coordinates, which is continuous linear; the map itself is smooth by
+  Theorem~\ref{thm:man-tangent-map-smooth}.
+\end{proof}
+
+\begin{proposition}[Products of local additions {\cite[Lemma~3.8.17]{GN26}}]
+  \label{prop:prod-local-addition}
+  \lean{LocallyConvex.Manifolds.SmoothMBMOn.prodMap,
+    LocallyConvex.Manifolds.smoothMBM_prodProdProdComm,
+    LocallyConvex.Manifolds.LocalAddition.prodTheta, LocallyConvex.Manifolds.LocalAddition.prod}
+  \leanok
+  \uses{def:local-addition, lem:tangent-prod}
+  If $\Sigma_1$ and $\Sigma_2$ are local additions on $M_1$ and $M_2$, then, identifying
+  $\T(M_1 \times M_2)$ with $\T M_1 \times \T M_2$, $\Sigma_1 \times \Sigma_2$ is a local addition on
+  $M_1 \times M_2$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The map $\theta$ is $\theta_1 \times \theta_2$ composed with the identification of
+  Lemma~\ref{lem:tangent-prod} and the regrouping
+  $(M_1 \times M_1) \times (M_2 \times M_2) \cong (M_1 \times M_2) \times (M_1 \times M_2)$, all of
+  which are smooth with smooth inverses.
+\end{proof}
+
+\begin{proposition}[Local additions on embedded submanifolds from ambient formulas]
+  \label{prop:ambient-local-addition}
+  \lean{LocallyConvex.Manifolds.IsEmbeddedSubmanifold.contMDiffMBOn_of_val,
+    LocallyConvex.Manifolds.IsEmbeddedSubmanifold.ambVec,
+    LocallyConvex.Manifolds.IsEmbeddedSubmanifold.ofAmb,
+    LocallyConvex.Manifolds.IsEmbeddedSubmanifold.coe_coordAt_slice,
+    LocallyConvex.Manifolds.IsEmbeddedSubmanifold.smoothMBM_ambient,
+    LocallyConvex.Manifolds.IsEmbeddedSubmanifold.contMDiffMBOn_of_ambient,
+    LocallyConvex.Manifolds.AmbientAddition,
+    LocallyConvex.Manifolds.AmbientAddition.toLocalAddition,
+    LocallyConvex.Manifolds.AmbientAddition.toLocalAddition_toFun,
+    LocallyConvex.Manifolds.AmbientAddition.isNormalized_toLocalAddition}
+  \leanok
+  \uses{def:local-addition, def:embedded-submanifold, def:tangent-space-submanifold}
+  Let $X \subseteq F$ be an embedded submanifold modeled on a closed subspace $S$. Let
+  $\sigma \colon \Omega \to F$ and $\tau \colon V \to F$ be smooth on open subsets of $F \times F$
+  such that, for $p \in X$, $(p, 0) \in \Omega$, $\sigma(p, 0) = p$, and $w \mapsto \sigma(p, w)$ is a
+  bijection from $\{w \in T_pX : (p, w) \in \Omega\}$ onto $\{q \in X : (p, q) \in V\}$ with inverse
+  $q \mapsto \tau(p, q)$. Then $\Sigma(v) = \sigma(\pi v, v)$, with $v$ read in $F$, is a local
+  addition on $X$, normalized if $\dd\sigma(p, \cdot)(0) = \mathrm{id}$ on $T_pX$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  A map into $X$ is smooth when it is smooth into $F$: in a slice chart $\varphi$ its local
+  representative is the corestriction to $S$ of $\varphi$ composed with the map into $F$. In the
+  same chart, the fiber coordinate of a tangent vector $v$ at $p$ is $\dd\varphi(p) w$, where
+  $w \in T_pX \subseteq F$ is its ambient vector; so the ambient map $\T X \to F \times F$,
+  $v \mapsto (p, w)$, is smooth, and a map into $\T X$ is smooth when its composition with the
+  ambient map is. Then $\theta = (\pi, \Sigma)$ and $\theta^{-1}(p, q) = (p, \tau(p, q))$ are
+  smooth. Glöckner and Neeb obtain local additions from Lie group structures and from sprays
+  \cite[Prop.~3.8.12, Prop.~3.8.13]{GN26}; we do not claim this argument is new.
+\end{proof}
+
+\begin{proposition}[Injectivity near a compact set {\cite[Prop.~3.8.18, Cor.~3.8.19]{GN26}}]
+  \label{prop:local-diffeo-compact}
+  \lean{LocallyConvex.Manifolds.exists_isOpen_injOn_of_isCompact,
+    LocallyConvex.Manifolds.IsLocalHomeomorph.exists_openPartialHomeomorph_of_isCompact,
+    LocallyConvex.Manifolds.ContMDiffMBOn.of_local,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.contMDiffMBOn_of_local,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.contMDiffMBOn_symm_of_local,
+    LocallyConvex.Manifolds.exists_contMDiffMB_diffeo_of_isCompact,
+    LocallyConvex.Manifolds.exists_smoothMBM_diffeo_of_isCompact}
+  \leanok
+  \uses{def:contmdiff}
+  A continuous map $f \colon X \to Y$ into a Hausdorff space, injective on a compact set $K$ and
+  locally injective at the points of $K$, is injective on an open neighborhood of $K$. Hence a
+  local $C^k$-diffeomorphism ($k \in \N$ or $k = \infty$) into a Hausdorff manifold that is
+  injective on a compact set $K$ is a $C^k$-diffeomorphism from an open neighborhood of $K$ onto
+  an open set.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The set $\{(x, y) : f(x) = f(y) \Rightarrow x = y\}$ is a neighborhood of each point of
+  $K \times K$: of $(x, x)$ by local injectivity, of $(x, y)$ with $x \ne y$ because
+  $f(x) \ne f(y)$ have disjoint neighborhoods. By the Wallace lemma it contains $A \times B$ for
+  neighborhoods $A$, $B$ of $K$, and $f$ is injective on the interior of $A \cap B$. Glöckner and
+  Neeb argue with nets; we do not claim this argument is new. For the second statement, the
+  restriction is open and continuous, hence a homeomorphism onto its open image, and its inverse
+  agrees near each point with a local inverse of $f$. The real analytic case is
+  Corollary~\ref{cor:local-diffeo-analytic}.
+\end{proof}
+
+\begin{proposition}[Injectivity near a $\sigma$-compact set {\cite[Prop.~3.8.20, Cor.~3.8.21]{GN26}}]
+  \label{prop:local-diffeo-sigma-compact}
+  \lean{LocallyConvex.Manifolds.IsSigmaCompact.exists_compact_exhaustion,
+    LocallyConvex.Manifolds.exists_isOpen_injOn_of_isSigmaCompact_image,
+    LocallyConvex.Manifolds.exists_isOpen_injOn_of_isSigmaCompact,
+    LocallyConvex.Manifolds.exists_openPartialHomeomorph_of_injOn,
+    LocallyConvex.Manifolds.exists_openPartialHomeomorph_of_isSigmaCompact,
+    LocallyConvex.Manifolds.locallyCompactSpace_of_finiteDimensional,
+    LocallyConvex.Manifolds.exists_contMDiffMB_diffeo_of_isSigmaCompact,
+    LocallyConvex.Manifolds.exists_smoothMBM_diffeo_of_isSigmaCompact}
+  \leanok
+  \uses{prop:local-diffeo-compact}
+  Let $f \colon X \to Y$ be continuous, $Y$ Hausdorff with every point having a compact
+  neighborhood, and $A \subseteq X$ $\sigma$-compact such that $f(A)$ is closed, $f|_A$ is an
+  embedding and $f$ is locally injective at the points of $A$. Then $f$ is injective on an open
+  neighborhood of $A$. Hence a local $C^k$-diffeomorphism ($k \in \N$ or $k = \infty$) into a
+  Hausdorff, locally compact manifold (for instance a finite-dimensional one) which restricts to
+  such an embedding on $A$ is a $C^k$-diffeomorphism from an open neighborhood of $A$ onto an open
+  set.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Take a compact exhaustion $\emptyset = C_0 \subseteq C_1 \subseteq \cdots$ of a neighborhood of
+  $f(A)$ with $C_n \subseteq \operatorname{int} C_{n+1}$. The ``annuli''
+  $O_j = \operatorname{int} C_{j+1} \setminus C_{j-1}$ meet only for $|i - j| \le 1$. Let $V_j$
+  be an open neighborhood of the compact set $A \cap f^{-1}(C_{j+1})$ on which $f$ is injective
+  (Proposition~\ref{prop:local-diffeo-compact}); then $f$ is injective on
+  $U = \bigcup_j f^{-1}(O_j) \cap V_j \cap V_{j+1}$. Glöckner and Neeb use their Lemma~A.5.5
+  instead of the annuli, and the Hausdorff property of the domain, which is not needed here. The
+  statement of \cite[Cor.~3.8.21]{GN26} concludes $K \subseteq U$, a misprint for $A \subseteq U$;
+  its finite-dimensionality hypothesis is only used through local compactness of the target. We
+  do not claim this argument is new.
+\end{proof}
+
+\section{Real analytic local additions}
+
+Real analyticity is meant in Milnor's sense (Chapter~\ref{chap:analytic}): local restrictions of
+complex analytic maps on complexifications, with no completeness of the model.
+
+\begin{proposition}[Tangent bundles and products of real analytic manifolds]
+  \label{prop:analytic-bundle}
+  \lean{LocallyConvex.Manifolds.realAnalyticOn_tangentChart_transition,
+    LocallyConvex.Manifolds.tangentChart_transition_mem_realAnalyticGroupoid,
+    LocallyConvex.Manifolds.TangentBundle.realAnalyticManifold,
+    LocallyConvex.Manifolds.RealAnalyticOn.prodMap,
+    LocallyConvex.Manifolds.prod_mem_realAnalyticGroupoid,
+    LocallyConvex.Manifolds.Prod.realAnalyticManifold,
+    LocallyConvex.Manifolds.realAnalyticMOn_fst, LocallyConvex.Manifolds.realAnalyticMOn_snd,
+    LocallyConvex.Manifolds.RealAnalyticMOn.prodMk}
+  \leanok
+  \uses{def:analytic-manifold, def:analytic-maps, def:tangent-bundle}
+  If $M$ is a real analytic manifold modeled on $E$, its tangent bundle $\T M$ is a real analytic
+  manifold modeled on $E \times E$. Products of real analytic manifolds are real analytic
+  manifolds, and the projections and pairings of real analytic maps are real analytic.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The transition maps of $\T M$ are $(y, w) \mapsto (\tau(y), \dd\tau(y)\, w)$ for transition maps
+  $\tau$ of $M$, and the differential of a real analytic map is real analytic: if $g$ is a complex
+  analytic extension of $\tau$, then $\dd g$ is one of $\dd\tau$ (lc-analysis). Products of real
+  analytic maps are real analytic because products of complex analytic extensions are complex
+  analytic extensions.
+\end{proof}
+
+\begin{definition}[Real analytic local additions {\cite[p.~325]{GN26}}]
+  \label{def:analytic-local-addition}
+  \lean{LocallyConvex.Manifolds.LocalAddition.IsRealAnalytic,
+    LocallyConvex.Manifolds.LocalAddition.IsRealAnalytic.realAnalyticMOn_toFun}
+  \leanok
+  \uses{def:local-addition, prop:analytic-bundle}
+  A local addition $\Sigma$ on a real analytic manifold $M$ is \emph{real analytic} if
+  $\theta = (\pi, \Sigma)$ is a real analytic diffeomorphism onto its open image. Then $\Sigma$ is
+  real analytic.
+\end{definition}
+
+A real analytic manifold is a smooth manifold, so a local addition on it makes sense, and being
+real analytic is a property of a smooth local addition. The real analytic and the smooth maximal
+atlases differ; the charted space structure of $\T M$ is built from a real analytic atlas of $M$.
+
+\begin{corollary}[Real analytic local diffeomorphisms {\cite[Cor.~3.8.19, Cor.~3.8.21]{GN26}}]
+  \label{cor:local-diffeo-analytic}
+  \lean{LocallyConvex.Manifolds.realAnalyticMOn_of_local,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.realAnalyticMOn_of_local,
+    LocallyConvex.Manifolds.OpenPartialHomeomorph.realAnalyticMOn_symm_of_local,
+    LocallyConvex.Manifolds.exists_realAnalyticMOn_diffeo_of_isCompact,
+    LocallyConvex.Manifolds.exists_realAnalyticMOn_diffeo_of_isSigmaCompact}
+  \leanok
+  \uses{prop:local-diffeo-compact, prop:local-diffeo-sigma-compact, def:analytic-maps}
+  Real analyticity of maps between real analytic manifolds is a local property. Hence
+  Propositions~\ref{prop:local-diffeo-compact} and~\ref{prop:local-diffeo-sigma-compact} hold for
+  real analytic local diffeomorphisms.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Locality: real analyticity is checked in charts, and on chart domains it is local in the model
+  \cite[Lemma~2.2.3]{GN26}. The rest is the topological part of the two propositions.
+\end{proof}
+
+\begin{definition}[Split real analytic submanifolds {\cite[Def.~3.1.10]{GN26}}]
+  \label{def:split-analytic-submanifold}
+  \lean{LocallyConvex.Manifolds.IsAnalyticSliceChart,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.toEmbedded,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.chartedSpace}
+  \leanok
+  \uses{def:embedded-submanifold, def:analytic-manifold}
+  Let $S \subseteq F$ be a complemented subspace, with a continuous linear projection $P \colon F
+  \to S$. A subset $X \subseteq F$ is a \emph{split real analytic submanifold} modeled on $S$ if
+  every point of $X$ lies in a \emph{real analytic slice chart}: a real analytic diffeomorphism
+  $\varphi$ between open subsets of $F$ with $\varphi(U \cap X) = \varphi(U) \cap S$. The
+  restrictions of these charts form an atlas of $X$. Such an $X$ is an embedded submanifold.
+\end{definition}
+
+\begin{theorem}[Split real analytic submanifolds are real analytic manifolds]
+  \label{thm:split-analytic-submanifold}
+  \lean{LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticOn_sliceChart_transition,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticManifold,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticMOn_of_val,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticMOn_val,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.ambient,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticMOn_ambient,
+    LocallyConvex.Manifolds.IsSplitAnalyticSubmanifold.realAnalyticMOn_of_ambient}
+  \leanok
+  \uses{def:split-analytic-submanifold, prop:analytic-bundle}
+  A split real analytic submanifold $X \subseteq F$ is a real analytic manifold modeled on $S$. A
+  map into $X$ is real analytic if and only if it is real analytic into $F$. The ambient map
+  $\T X \to F \times F$, $v \mapsto (\pi v, w)$, with $w \in T_p X \subseteq F$ the ambient vector of
+  $v$, is real analytic, and a map into $\T X$ is real analytic as soon as its composition with the
+  ambient map is.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As for smooth embedded submanifolds (Proposition~\ref{prop:ambient-local-addition}), with
+  real analytic maps in place of smooth ones. The only new point is corestriction: a map with
+  values in $S$ which is real analytic into $F$ is real analytic into $S$ because it equals its
+  composition with $P$.
+\end{proof}
+
+\begin{remark}[Why complemented]
+  For smooth maps, a map with values in a closed subspace $S$ is smooth into $S$. For real analytic
+  maps in Milnor's sense this is less clear: a complex analytic extension to $D_{\mathbb{C}}$ of a
+  map with values in $S$ need not take values in $S_{\mathbb{C}}$. Assuming $S$ complemented avoids
+  the issue. In finite dimensions, and for closed subspaces of Hilbert spaces, this is no
+  restriction; for general locally convex (even Banach) spaces it is. The real analytic atlas
+  differs from the atlas of all smooth slice charts, so the two tangent bundles of $X$ are
+  different types in Lean, although the tangent spaces $T_pX \subseteq F$ agree.
+\end{remark}
+
+\begin{proposition}[Real analytic local additions from ambient formulas]
+  \label{prop:analytic-ambient-local-addition}
+  \lean{LocallyConvex.Manifolds.AnalyticAmbientAddition,
+    LocallyConvex.Manifolds.AnalyticAmbientAddition.realAnalyticMOn_theta,
+    LocallyConvex.Manifolds.AnalyticAmbientAddition.realAnalyticMOn_thetaInv,
+    LocallyConvex.Manifolds.AnalyticAmbientAddition.toLocalAddition,
+    LocallyConvex.Manifolds.AnalyticAmbientAddition.toLocalAddition_toFun,
+    LocallyConvex.Manifolds.AnalyticAmbientAddition.isRealAnalytic_toLocalAddition}
+  \leanok
+  \uses{thm:split-analytic-submanifold, def:analytic-local-addition,
+    prop:ambient-local-addition}
+  Let $X \subseteq F$ be a split real analytic submanifold, and $\sigma$, $\tau$ real analytic maps
+  on open subsets of $F \times F$ satisfying the hypotheses of
+  Proposition~\ref{prop:ambient-local-addition}. Then $\Sigma(v) = \sigma(\pi v, v)$ is a real
+  analytic local addition on $X$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  By Theorem~\ref{thm:split-analytic-submanifold}, $\theta = (\pi, \Sigma)$ and
+  $\theta^{-1}(p, q) = (p, \tau(p, q))$ are real analytic, because their compositions with the
+  inclusion and with the ambient map are. Glöckner and Neeb do not discuss ambient formulas; we do
+  not claim this argument is new.
+\end{proof}
+
+\section{Manifolds of continuous maps}
+
+Let $K$ be a compact Hausdorff space and $N$ a manifold with a local addition
+$\Sigma \colon \Omega \to N$, $\theta = (\pi, \Sigma)$.
+
+\begin{definition}[The spaces $\Gamma_f$ {\cite[4.1.30, Lemma~4.1.31]{GN26}}]
+  \label{def:gamma-f}
+  \lean{LocallyConvex.Manifolds.coordAt, LocallyConvex.Manifolds.continuousAt_iff_coordAt,
+    LocallyConvex.Manifolds.sectionSubmodule, LocallyConvex.Manifolds.Sec,
+    LocallyConvex.Manifolds.Sec.CoordIdx, LocallyConvex.Manifolds.Sec.coordFun,
+    LocallyConvex.Manifolds.Sec.toPi, LocallyConvex.Manifolds.Sec.instLocallyConvexSpaceReal,
+    LocallyConvex.Manifolds.Sec.instT2Space, LocallyConvex.Manifolds.Sec.isClosed_range_toPi,
+    LocallyConvex.Manifolds.Sec.isInducing_toTangent}
+  \leanok
+  \uses{def:tangent-bundle}
+  For $f \in C(K, N)$, $\Gamma_f = \{\tau \in C(K, \T N) : \pi \circ \tau = f\}$, with the
+  pointwise linear structure and the initial topology with respect to the fiber coordinates
+  $\tau \mapsto (x \mapsto \tau(x) \text{ in the chart } i) \in C(L, E)$, for charts $i$ of $N$ and
+  compact $L \subseteq K$ with $f(L)$ in the domain of $i$. It is a Hausdorff locally convex space,
+  its topology is the one induced by $C(K, \T N)$, and the fiber coordinates embed it as a closed
+  subspace of a product.
+\end{definition}
+
+\begin{proposition}[Charts of $C(K, N)$ {\cite[proof of Thm.~4.2.2]{GN26}}]
+  \label{prop:mapping-charts}
+  \lean{LocallyConvex.Manifolds.LocalAddition.chartSource,
+    LocallyConvex.Manifolds.LocalAddition.chartTarget, LocallyConvex.Manifolds.LocalAddition.chart,
+    LocallyConvex.Manifolds.LocalAddition.mem_chart_source,
+    LocallyConvex.Manifolds.LocalAddition.toTangent_chart,
+    LocallyConvex.Manifolds.LocalAddition.chart_symm_apply}
+  \leanok
+  \uses{def:gamma-f, def:local-addition}
+  The map $\varphi_f \colon O'_f \to O_f$, $g \mapsto \theta^{-1} \circ (f, g)$, from
+  $O'_f = \{g : (f, g)(K) \subseteq \theta(\Omega)\}$ (open in the compact-open topology) onto
+  $O_f = \Gamma_f \cap C(K, \Omega)$ (open in $\Gamma_f$) is a homeomorphism, with inverse
+  $\tau \mapsto \Sigma \circ \tau$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Postcomposition with maps that are continuous on open sets is continuous in the compact-open
+  topology ($K$ is Hausdorff), and $\Gamma_f$ carries the topology induced by $C(K, \T N)$.
+\end{proof}
+
+\begin{theorem}[$C(K, N)$ is a manifold {\cite[Thm.~4.2.2(a)--(c), $\ell = 0$]{GN26}}]
+  \label{thm:mapping-manifold}
+  \lean{LocallyConvex.Analysis.contDiffMBOn_pi,
+    LocallyConvex.Analysis.contDiffMBOn_of_isClosedEmbedding,
+    LocallyConvex.Analysis.restrictPieces, LocallyConvex.Analysis.isEmbedding_restrictPieces,
+    LocallyConvex.Analysis.isClosed_range_restrictPieces,
+    LocallyConvex.Manifolds.LocalAddition.Sec.contDiffMBOn_of_coordFun,
+    LocallyConvex.Manifolds.LocalAddition.transMap,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBOn_transMap,
+    LocallyConvex.Manifolds.LocalAddition.transition,
+    LocallyConvex.Manifolds.LocalAddition.contDiffMBOn_coordFun_transition_of_adapted,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBOn_transition,
+    LocallyConvex.Manifolds.VaryingAtlas, LocallyConvex.Manifolds.LocalAddition.mappingAtlas,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBMOn_eval_chart_symm}
+  \leanok
+  \uses{prop:mapping-charts, prop:prod-local-addition}
+  The charts $\varphi_f$, $f \in C(K, N)$, form an atlas of $C(K, N)$ with varying models
+  $\Gamma_f$ and smooth transition maps; the underlying topology is the compact-open topology,
+  and the point evaluations $g \mapsto g(x)$ are smooth.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  A map into $\Gamma_g$ is smooth if its fiber coordinates are, because these form a closed linear
+  embedding into a product. The coordinates over a compact set are determined by those over the
+  pieces of a finite cover on which $f$ and $g$ lie in charts $i$ and $j$ of $N$, again through a
+  closed embedding. Over such a piece, the transition map $\varphi_g \circ \varphi_f^{-1}$ is the
+  superposition operator $\gamma \mapsto h \circ \gamma$ of the smooth map
+  $h(y, z, v) = \theta^{-1}(j^{-1} z, \Sigma(i^{-1} y, v))$ (in the chart $j$), applied to a curve
+  that depends affinely on the section; superposition operators are smooth by
+  \cite[Prop.~1.7.1]{GN26} (formalized in lc-analysis). Glöckner and Neeb deduce the smoothness
+  from the exponential law for sections instead.
+\end{proof}
+
+\section{Manifolds of \texorpdfstring{$C^\ell$}{C\^{}l} maps}
+
+Let $M$ be a compact smooth manifold, $N$ a manifold with a local addition
+$\Sigma \colon \Omega \to N$, $\theta = (\pi, \Sigma)$, and $\ell \in \N_0 \cup \{\infty\}$.
+
+\begin{lemma}[Compact manifolds are finite-dimensional]
+  \label{lem:compact-finite-dim}
+  \lean{LocallyConvex.Manifolds.locallyCompactSpace_of_compactSpace,
+    LocallyConvex.Manifolds.finiteDimensional_of_compactSpace}
+  \leanok
+  If $M$ is nonempty and compact, its model is locally compact, hence finite-dimensional by
+  Riesz's theorem; so $M$ is modeled on some $\R^n$, and only $N$ may be infinite-dimensional.
+  The results below use only the local compactness of the model, inside the proofs (the case
+  $M = \emptyset$, where $C^\ell(M, N)$ is a point, is treated separately), so that their
+  statements carry only the hypothesis that $M$ is compact.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  A chart sends a compact neighborhood of a point onto a compact neighborhood in the model, and a
+  topological group with a compact neighborhood is locally compact.
+\end{proof}
+
+\begin{proposition}[Superposition operators on $C^r(U, E)$]
+  \label{prop:compLeftOn-smooth}
+  \lean{LocallyConvex.Analysis.restrictCompacts,
+    LocallyConvex.Analysis.isEmbedding_restrictCompacts,
+    LocallyConvex.Analysis.isClosed_range_restrictCompacts,
+    LocallyConvex.Analysis.ContDiffMBMap.compLeftOn,
+    LocallyConvex.Analysis.ContDiffMBMap.dMap_compLeftOn,
+    LocallyConvex.Analysis.ContDiffMBMap.contDiffMBOn_iteratedD_zero_compLeftOn,
+    LocallyConvex.Analysis.ContDiffMBMap.contDiffMBOn_compLeftOn}
+  \leanok
+  Let $Z$ be locally compact, $U \subseteq Z$ open, $r \in \N_0$, and $h \colon E \to F$ smooth on
+  an open set $O$. If $g \colon X \to C^r(U, E)$ is $C^k$ on an open set $W$ and
+  $g(w)(U) \subseteq O$ for $w \in W$, then $w \mapsto h \circ g(w) \in C^r(U, F)$ is $C^k$ on $W$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Induction on $r$. Since $C^r(U, F)$ is a closed subspace of $\prod_{j \le r} C(U \times Z^j, F)$
+  \cite[Lemma~1.7.15]{GN26}, it suffices to treat each $d^{(j)}$. For $j = 0$, restriction to the
+  compact subsets of $U$ (a closed embedding, $Z$ being locally compact) reduces the claim to
+  superposition operators on $C(C, E)$, $C$ compact, which are smooth
+  \cite[Prop.~1.7.1]{GN26}. For $j \ge 1$, $d^{(j)}(h \circ \gamma)$ depends continuously and
+  linearly on $d(h \circ \gamma) = dh \circ (\gamma \circ \mathrm{pr}_1, d\gamma)$, a superposition
+  by $dh$ on $C^{r-1}(U \times Z, E \times E)$, and the induction hypothesis applies. Glöckner
+  and Neeb obtain the smoothness they need from the exponential law
+  \cite[Prop.~4.1.34]{GN26} instead.
+\end{proof}
+
+\begin{lemma}[Restriction to open covers]
+  \label{lem:restrict-cover}
+  \lean{LocallyConvex.Analysis.ContDiffMBMap.restrictCLM,
+    LocallyConvex.Analysis.ContDiffMBMap.restrictCover,
+    LocallyConvex.Analysis.ContDiffMBMap.tendsto_of_tendsto_restrictCLM,
+    LocallyConvex.Analysis.ContDiffMBMap.isEmbedding_restrictCover,
+    LocallyConvex.Analysis.ContDiffMBMap.isClosed_range_restrictCover,
+    LocallyConvex.Analysis.ContDiffMBMap.contDiffMBOn_of_restrictCLM}
+  \leanok
+  For an open cover $(V_a)$ of $U$, the restrictions $C^r(U, F) \to \prod_a C^r(V_a, F)$ form a
+  linear topological embedding with closed range (compare \cite[Lemma~1.7.43, Lemma~4.1.9]{GN26}).
+\end{lemma}
+
+\begin{definition}[Jets on compact sets in charts; the topology of $C^\ell(M, N)$]
+  \label{def:jet-topology}
+  \lean{LocallyConvex.Manifolds.jetOn, LocallyConvex.Manifolds.jetOn_apply,
+    LocallyConvex.Manifolds.jetOn_mono, LocallyConvex.Manifolds.CkMap, LocallyConvex.Manifolds.CkMap.CompactIdx,
+    LocallyConvex.Manifolds.CkMap.CompactIdx.jet, LocallyConvex.Manifolds.CkMap.jetTopology,
+    LocallyConvex.Manifolds.CkMap.instTopologicalSpace,
+    LocallyConvex.Manifolds.CkMap.continuous_jetTopology_iff,
+    LocallyConvex.Manifolds.SmoothMap, LocallyConvex.Manifolds.SmoothMap.jetTopologySm,
+    LocallyConvex.Manifolds.SmoothMap.instTopologicalSpace}
+  \leanok
+  For charts $j$ of $M$ and $i$ of $N$, a compact set $K$ in the target of $j$ (no interior is
+  required) and $m \le \ell$, the \emph{$m$-jet on $K$} of $g \in C^\ell(M, N)$ is
+  $\dd^{(m)}(i \circ g \circ j^{-1})|_{K \times H^m} \in C(K \times H^m, E)$, defined on the open set
+  of maps with $g(j^{-1}(K))$ in the domain of $i$. The \emph{compact-open $C^\ell$ topology} of
+  $C^\ell(M, N)$, or \emph{jet topology}, is the coarsest topology finer than the compact-open
+  topology of $C(M, N)$ that makes all the jets continuous, with the compact-open topology on
+  $C(K \times H^m, E)$. A map into $C^\ell(M, N)$ is continuous if and only if it is continuous
+  into $C(M, N)$ and its jets are continuous where defined. For $\ell = \infty$, $C^\infty(M, N)$
+  carries the initial topology with respect to the inclusions into the $C^\ell(M, N)$
+  \cite[Remark~4.1.3(b)]{GN26}. This definition makes sense for every manifold $M$ (compact or
+  not) modeled on any Hausdorff locally convex space $H$; for Hausdorff $M$ it is the topology of
+  \cite[Def.~4.1.2]{GN26} (Theorem~\ref{thm:jet-topology-gn}).
+\end{definition}
+
+This is the weak (compact-open) $C^r$ topology of \cite[Ch.~2, \S1, pp.~34--35]{Hir76}, with the
+uniform bounds on the derivatives over $K$ replaced by the compact-open topology of
+$C(K \times H^m, E)$, as in the compact-open $C^k$ topology of \cite[Def.~1.7.10]{GN26} for maps on
+open sets.
+
+\begin{definition}[The chart topology]
+  \label{def:chart-topology}
+  \lean{LocallyConvex.Manifolds.CkMap.ChartIdx, LocallyConvex.Manifolds.CkMap.ChartIdx.rep,
+    LocallyConvex.Manifolds.CkMap.chartTopology, LocallyConvex.Manifolds.SmoothMap.chartTopologySm,
+    LocallyConvex.Manifolds.CkMap.continuous_of_rep,
+    LocallyConvex.Manifolds.CkMap.continuousOn_of_rep}
+  \leanok
+  \uses{def:jet-topology}
+  The \emph{chart topology} of $C^\ell(M, N)$ is the coarsest topology finer than the
+  compact-open topology for which the local representatives
+  $g \mapsto i \circ g \circ j^{-1} \in C^\ell(V, E)$ are continuous on the open sets
+  $\{g : g(j^{-1}(L)) \subseteq \mathrm{dom}\, i\}$, for charts $j$ of $M$, $i$ of $N$, compact
+  $L$ and open $V \subseteq L$; for $\ell = \infty$, the initial topology with respect to the finite
+  orders. It is not the topology of $C^\ell(M, N)$: if the model of $M$ is not locally compact,
+  compact sets have empty interior, every such $V$ is empty, and the chart topology collapses to
+  the compact-open $C^0$ topology.
+\end{definition}
+
+\begin{proposition}[The chart topology and the jet topology]
+  \label{prop:chart-jet}
+  \lean{LocallyConvex.Manifolds.CkMap.ChartIdx.jetOn_rep,
+    LocallyConvex.Manifolds.CkMap.jetTopology_le_chartTopology,
+    LocallyConvex.Manifolds.CkMap.chartTopology_le_jetTopology,
+    LocallyConvex.Manifolds.CkMap.chartTopology_eq_jetTopology,
+    LocallyConvex.Manifolds.CkMap.topology_eq_chartTopology,
+    LocallyConvex.Manifolds.CkMap.topology_eq_chartTopology_of_compactSpace,
+    LocallyConvex.Manifolds.SmoothMap.chartTopologySm_eq_jetTopologySm,
+    LocallyConvex.Manifolds.SmoothMap.topology_eq_chartTopologySm_of_compactSpace}
+  \leanok
+  \uses{def:jet-topology, def:chart-topology, lem:compact-finite-dim}
+  The jet topology is always finer than the chart topology. If the model of $M$ is locally
+  compact, in particular if $M$ is compact, the two topologies coincide,
+  $\ell \in \N_0 \cup \{\infty\}$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  On a compact set $K \subseteq V$ the jets of the local representative on $V$ are the jets of $g$
+  on $K$, and the compact-open topology of $C(V \times H^m, E)$ is determined by the compact
+  subsets of $V \times H^m$; this gives the first inclusion. Conversely, if the model is locally
+  compact, a compact set $K$ in the open domain of $i \circ g_0 \circ j^{-1}$ lies in the interior
+  $V$ of a compact set $L$ in that domain; for $g$ near $g_0$ the jets of $g$ on $K$ are
+  restrictions of the differentials of the local representative on $V$. A nonempty compact
+  manifold has a locally compact model (Lemma~\ref{lem:compact-finite-dim}).
+\end{proof}
+
+\begin{definition}[$\Gamma_f$ {\cite[4.1.30, Lemma~4.1.31]{GN26}}]
+  \label{def:gamma-f-ck}
+  \lean{LocallyConvex.Manifolds.chartDomOpens,
+    LocallyConvex.Manifolds.localCoord, LocallyConvex.Manifolds.sectionSubmoduleCk,
+    LocallyConvex.Manifolds.SecCk, LocallyConvex.Manifolds.SecCk.coordFun,
+    LocallyConvex.Manifolds.SecCk.toPi, LocallyConvex.Manifolds.SecCk.instLocallyConvexSpaceReal,
+    LocallyConvex.Manifolds.SecCk.instT2Space, LocallyConvex.Manifolds.SecCk.isClosed_range_toPi,
+    LocallyConvex.Manifolds.SecCk.contDiffMBOn_of_coordFun, LocallyConvex.Manifolds.SecCk.toSec,
+    LocallyConvex.Manifolds.SecSm, LocallyConvex.Manifolds.SecSm.isClosed_range_toPi}
+  \leanok
+  \uses{def:gamma-f, def:jet-topology}
+  The space $\Gamma_f$ of $C^\ell$ sections of $TN$ along $f$ carries the initial topology with
+  respect to the local representatives in charts; it is a Hausdorff locally convex space,
+  embedded as a closed subspace of a product of spaces $C^\ell(D, E)$. For $\ell = \infty$ it
+  carries the initial topology with respect to the finite orders \cite[Remark~4.1.3(b)]{GN26}.
+  Glöckner and Neeb define this topology through $C^\ell(M, TN)$; the chart description used here
+  corresponds to their Definition~4.1.16, Proposition~4.1.26 and the proof of
+  Proposition~4.1.34.
+\end{definition}
+
+\begin{theorem}[$C^\ell(M, N)$ is a manifold {\cite[Thm.~4.2.2(a)--(c)]{GN26}}]
+  \label{thm:mapping-manifold-ck}
+  \lean{LocallyConvex.Manifolds.LocalAddition.chartLocal,
+    LocallyConvex.Manifolds.LocalAddition.chartLocal_spec,
+    LocallyConvex.Manifolds.LocalAddition.invLocal,
+    LocallyConvex.Manifolds.LocalAddition.invLocal_spec,
+    LocallyConvex.Manifolds.LocalAddition.transMap_spec,
+    LocallyConvex.Manifolds.LocalAddition.continuousOn_chartFunCk,
+    LocallyConvex.Manifolds.LocalAddition.continuousOn_chartInvFunCk,
+    LocallyConvex.Manifolds.LocalAddition.chartCk,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBOn_transitionCk,
+    LocallyConvex.Manifolds.LocalAddition.mappingAtlasCk,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBMOn_eval_chartCk_symm,
+    LocallyConvex.Manifolds.LocalAddition.chartSm,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBOn_transitionSm,
+    LocallyConvex.Manifolds.LocalAddition.mappingAtlasSm,
+    LocallyConvex.Manifolds.LocalAddition.smoothMBMOn_eval_chartSm_symm}
+  \leanok
+  \uses{def:gamma-f-ck, prop:chart-jet, prop:compLeftOn-smooth, lem:restrict-cover,
+    thm:mapping-manifold}
+  The charts $\varphi_f \colon g \mapsto \theta^{-1} \circ (f, g)$, $f \in C^\ell(M, N)$, are
+  partial homeomorphisms for the compact-open $C^\ell$ topology onto open subsets of $\Gamma_f$,
+  with inverses $\tau \mapsto \Sigma \circ \tau$; they form an atlas of $C^\ell(M, N)$ with varying
+  models $\Gamma_f$ and smooth transition maps, and the point evaluations are smooth.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Near each point, $f$ and $g$ lie in charts $i$ and $j$ of $N$, and the local representative of
+  $\varphi_g \circ \varphi_f^{-1}$ is the superposition operator of the smooth map
+  $(y, z, v) \mapsto \theta^{-1}(j^{-1} z, \Sigma(i^{-1} y, v))$ applied to
+  $(i \circ f, j \circ g, \tau)$, which depends affinely on $\tau$
+  (Proposition~\ref{prop:compLeftOn-smooth}); Lemma~\ref{lem:restrict-cover} glues the local
+  statements. The continuity of the charts is proved the same way, over compact neighborhoods in
+  charts of $M$, in the chart topology, which is the topology of $C^\ell(M, N)$ for compact $M$
+  (Proposition~\ref{prop:chart-jet}). The case $\ell = \infty$ follows from the finite orders.
+\end{proof}
+
+\section{Smooth maps between atlases with varying models}
+
+\begin{definition}[$C^k$ maps for atlases with varying models {\cite[Def.~3.2.13]{GN26}}]
+  \label{def:varying-ck}
+  \lean{LocallyConvex.Manifolds.VaryingAtlas.ContMDiffOn,
+    LocallyConvex.Manifolds.VaryingAtlas.SmoothOn, LocallyConvex.Manifolds.VaryingAtlas.Smooth,
+    LocallyConvex.Manifolds.VaryingAtlas.ofChartedSpace}
+  \leanok
+  \uses{thm:mapping-manifold}
+  A map $f \colon X \to Y$ between spaces with atlases with varying models is $C^k$ on an open set
+  $U$ if it is continuous on $U$ and all its local representatives $\psi_j \circ f \circ
+  \varphi_i^{-1}$ are $C^k$ on their (open) domains. A manifold modeled on a single space $G$ is an
+  atlas with varying models through all the charts of its atlas.
+\end{definition}
+
+\begin{proposition}[Basic properties]
+  \label{prop:varying-ck-basic}
+  \lean{LocallyConvex.Manifolds.VaryingAtlas.contMDiffOn_of_local,
+    LocallyConvex.Manifolds.VaryingAtlas.contMDiffOn_iff_local,
+    LocallyConvex.Manifolds.VaryingAtlas.ContMDiffOn.mono,
+    LocallyConvex.Manifolds.VaryingAtlas.ContMDiffOn.congr,
+    LocallyConvex.Manifolds.VaryingAtlas.ContMDiffOn.comp,
+    LocallyConvex.Manifolds.VaryingAtlas.smoothOn_id,
+    LocallyConvex.Manifolds.VaryingAtlas.contMDiffOn_ofChartedSpace_iff,
+    LocallyConvex.Manifolds.VaryingAtlas.smoothOn_chart,
+    LocallyConvex.Manifolds.VaryingAtlas.smoothOn_chart_symm}
+  \leanok
+  \uses{def:varying-ck}
+  Being $C^k$ can be checked in one pair of charts around each point; $C^k$ maps compose, the
+  identity is smooth, and restrictions of $C^k$ maps to open subsets are $C^k$. For manifolds with a
+  single model these are the $C^k$ maps of Definition~\ref{def:contmdiff}. Charts are smooth,
+  with smooth inverses.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Near each point, a local representative in arbitrary charts is the composition of the given one
+  with transition maps, which are smooth.
+\end{proof}
+
+\begin{proposition}[Equivalent atlases]
+  \label{prop:varying-equivalent}
+  \lean{LocallyConvex.Manifolds.VaryingAtlas.Equivalent,
+    LocallyConvex.Manifolds.VaryingAtlas.Compatible,
+    LocallyConvex.Manifolds.VaryingAtlas.smooth_id_iff,
+    LocallyConvex.Manifolds.VaryingAtlas.equivalent_iff_compatible,
+    LocallyConvex.Manifolds.VaryingAtlas.union}
+  \leanok
+  \uses{prop:varying-ck-basic}
+  Two atlases with varying models on the same space define the same smooth structure (the identity
+  is smooth in both directions) if and only if all the transition maps between their charts are
+  smooth, that is, if and only if their union is an atlas.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  The local representatives of the identity are the transition maps.
+\end{proof}
+
+\begin{definition}[Tangent spaces and tangent maps]
+  \label{def:varying-tangent}
+  \lean{LocallyConvex.Manifolds.VaryingAtlas.TangentSpace,
+    LocallyConvex.Manifolds.VaryingAtlas.tangentCoordChange,
+    LocallyConvex.Manifolds.VaryingAtlas.tangentCoordChange_self,
+    LocallyConvex.Manifolds.VaryingAtlas.tangentCoordChange_comp,
+    LocallyConvex.Manifolds.VaryingAtlas.tangentCoordChangeEquiv,
+    LocallyConvex.Manifolds.VaryingAtlas.tangentMapAt,
+    LocallyConvex.Manifolds.VaryingAtlas.dMB_chart_eq_tangentMapAt}
+  \leanok
+  \uses{prop:varying-ck-basic}
+  The tangent space at $x$ is the model of the preferred chart at $x$; the derivatives of the
+  transition maps at the point are isomorphisms of topological vector spaces satisfying the
+  cocycle condition. The tangent map $T_x f$ of a $C^1$ map is the derivative of its local
+  representative in the preferred charts; in other charts it is conjugated by the changes of
+  tangent coordinates. (In infinite dimensions this kinematic tangent space need not agree with
+  the space of derivations.)
+\end{definition}
+
+\section{\texorpdfstring{$C^{k,\ell}$}{C\^{}\{k,l\}} maps on products of manifolds}
+
+\begin{proposition}[Local properties and the chain rule]
+  \label{prop:ckl-chain}
+  \lean{LocallyConvex.Analysis.ContDiffMBOn₂.mono, LocallyConvex.Analysis.ContDiffMBOn₂.of_local,
+    LocallyConvex.Analysis.ContDiffMBOn₂.exists_curry,
+    LocallyConvex.Analysis.contDiffMBOn₂_of_curry,
+    LocallyConvex.Analysis.ContDiffMBOn₂.comp_prodMap}
+  \leanok
+  \uses{prop:compLeftOn-smooth}
+  Being $C^{k,\ell}$ on products of open sets is a local property. If $f$ is $C^{k,\ell}$ on
+  $U \times V$, $\alpha$ is $C^k$, $\beta$ is $C^\ell$ and $\gamma$ is smooth (with the obvious
+  conditions on the images), and the second factor of the domain of $\beta$ is locally compact,
+  then $\gamma \circ f \circ (\alpha \times \beta)$ is $C^{k,\ell}$
+  (compare \cite[Props.~1.7.26, 1.7.28]{GN26}).
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  By the exponential law \cite[Thm.~1.7.30]{GN26}, $x \mapsto f(x, \cdot)$ is $C^k$ into
+  $C^\ell(V, F)$; pulling back by $\beta$ is continuous linear \cite[Prop.~1.7.11]{GN26},
+  superposition by $\gamma$ is smooth (Proposition~\ref{prop:compLeftOn-smooth}), and uncurrying
+  needs local compactness. Glöckner and Neeb use Faà di Bruno's formula instead.
+\end{proof}
+
+\begin{definition}[$C^{k,\ell}$ maps {\cite[Def.~3.5.24]{GN26}}]
+  \label{def:ckl-manifold}
+  \lean{LocallyConvex.Manifolds.localRep₂, LocallyConvex.Manifolds.IsChartBox,
+    LocallyConvex.Manifolds.ContMDiffMB₂, LocallyConvex.Manifolds.ContMDiffMB₂.continuous,
+    LocallyConvex.Manifolds.ContMDiffMB₂.contDiffMBOn₂}
+  \leanok
+  \uses{prop:ckl-chain, def:contmdiff, def:varying-ck}
+  Let $L$ carry an atlas with varying models (for instance a manifold)
+  \cite[Remark~3.5.28]{GN26}, and $M$, $N$ be manifolds without boundary (manifolds with rough
+  boundary are out of scope). A map $f \colon L \times M \to N$ is $C^{k,\ell}$ if around
+  each point there are charts $e$, $e'$, $c$ and open sets $U \ni e(x)$, $V \ni e'(y)$ with
+  $f(e^{-1}U \times e'^{-1} V) \subseteq \mathrm{dom}\, c$ and
+  $c \circ f \circ (e^{-1} \times e'^{-1})$ of class $C^{k,\ell}$ on $U \times V$. Such maps are
+  continuous, and, if the model of $M$ is locally compact, their local representatives on all such
+  boxes, in all charts, are $C^{k,\ell}$ \cite[Remark~3.5.26(a)]{GN26} (this holds when $M$ is
+  compact, Lemma~\ref{lem:compact-finite-dim}).
+\end{definition}
+
+\section{The exponential law for manifolds of mappings}
+
+\begin{theorem}[Exponential law {\cite[Thm.~4.2.2(a)]{GN26}}]
+  \label{thm:mapping-exp-law}
+  \lean{LocallyConvex.Manifolds.LocalAddition.contMDiffMB₂_of_contMDiffOn,
+    LocallyConvex.Manifolds.LocalAddition.continuous_of_contMDiffMB₂,
+    LocallyConvex.Manifolds.LocalAddition.contMDiffOn_of_contMDiffMB₂,
+    LocallyConvex.Manifolds.LocalAddition.contMDiffOn_mappingAtlasCk_iff,
+    LocallyConvex.Manifolds.LocalAddition.smooth_toCk,
+    LocallyConvex.Manifolds.LocalAddition.contMDiffOn_mappingAtlasSm_iff}
+  \leanok
+  \uses{thm:mapping-manifold-ck, def:ckl-manifold, prop:varying-ck-basic}
+  Let $M$ be compact (without boundary) and $N$ admit a local addition. For every space $L$ with
+  an atlas with varying models and every $k \in \N_0$, a map $g \colon L \to C^\ell(M, N)$ is
+  $C^k$ if and only if $g^\wedge \colon L \times M \to N$, $(x, y) \mapsto g(x)(y)$, is
+  $C^{k,\ell}$ (for $\ell = \infty$: $C^{k,\ell'}$ for every $\ell' \in \N_0$).
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Locally, $g^\wedge$ reads $(a, b) \mapsto c(\Sigma(\tau(a)(b)))$ with $\tau = \varphi_f \circ g$;
+  as a function of $a$ this is a superposition operator applied to a $C^k$ curve in a space of
+  $C^\ell$ maps, and uncurrying gives $C^{k,\ell}$. Conversely, the local representatives of
+  $\varphi_f \circ g$ are superposition operators applied to the curried local representatives
+  of $g^\wedge$, over a finite cover of $M$ by compact sets on which $g(x)$ stays in single charts
+  of $N$. Glöckner and Neeb argue through the exponential law for sections
+  \cite[Prop.~4.1.34]{GN26}. (Part (b) of \cite[Thm.~4.2.2]{GN26} holds by construction for the
+  chart description of the compact-open $C^\ell$ topology; its agreement with
+  \cite[Def.~4.1.2]{GN26} is Theorem~\ref{thm:mapping-topology-gn}.)
+\end{proof}
+
+\begin{corollary}[The evaluation map {\cite[Thm.~4.2.2(c)]{GN26}}]
+  \label{cor:mapping-eval}
+  \lean{LocallyConvex.Manifolds.ContMDiffMB₂.contMDiffOn_left,
+    LocallyConvex.Manifolds.LocalAddition.contMDiffMB₂_eval,
+    LocallyConvex.Manifolds.LocalAddition.smooth_eval,
+    LocallyConvex.Manifolds.LocalAddition.contMDiffMB₂_evalSm,
+    LocallyConvex.Manifolds.LocalAddition.smooth_evalSm}
+  \leanok
+  \uses{thm:mapping-exp-law}
+  The evaluation map $\varepsilon \colon C^\ell(M, N) \times M \to N$ is $C^{k,\ell}$ for every
+  $k$, and the point evaluations $\varepsilon_x$ are smooth.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Apply the exponential law to the identity; partial maps of $C^{k,\ell}$ maps are $C^k$.
+\end{proof}
+
+\begin{corollary}[Uniqueness {\cite[Thm.~4.2.2(a)]{GN26}}]
+  \label{cor:mapping-uniqueness}
+  \lean{LocallyConvex.Manifolds.LocalAddition.equivalent_mappingAtlasCk_of_expLaw,
+    LocallyConvex.Manifolds.LocalAddition.equivalent_mappingAtlasSm_of_expLaw}
+  \leanok
+  \uses{thm:mapping-exp-law, prop:varying-equivalent}
+  An atlas with varying models on $C^\ell(M, N)$ satisfying the exponential law defines the same
+  smooth structure as the atlas of the charts $\varphi_f$.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  Apply the exponential law to the identity in both directions: the evaluation map is
+  $C^{k,\ell}$ for both atlases.
+\end{proof}
+
+\begin{theorem}[Tangent spaces of $C^\ell(M, N)$ {\cite[Thm.~4.2.2(d)]{GN26}}]
+  \label{thm:mapping-tangent}
+  \lean{LocallyConvex.Manifolds.LocalAddition.chartCk_self,
+    LocallyConvex.Manifolds.LocalAddition.exists_smoothMBOn_chart_toFun,
+    LocallyConvex.Manifolds.LocalAddition.tangentMapAt_eval,
+    LocallyConvex.Manifolds.LocalAddition.tangentEquivSecCk,
+    LocallyConvex.Manifolds.LocalAddition.coe_tangentEquivSecCk,
+    LocallyConvex.Manifolds.LocalAddition.tangentMapAt_evalSm,
+    LocallyConvex.Manifolds.LocalAddition.tangentEquivSecSm,
+    LocallyConvex.Manifolds.LocalAddition.coe_tangentEquivSecSm,
+    LocallyConvex.Manifolds.LocalAddition.mappingAtlasCk_equivalent,
+    LocallyConvex.Manifolds.LocalAddition.mappingAtlasSm_equivalent,
+    LocallyConvex.Manifolds.LocalAddition.tangentEquivSecCkOf,
+    LocallyConvex.Manifolds.LocalAddition.coe_tangentEquivSecCkOf,
+    LocallyConvex.Manifolds.LocalAddition.tangentEquivSecSmOf,
+    LocallyConvex.Manifolds.LocalAddition.coe_tangentEquivSecSmOf}
+  \leanok
+  \uses{def:varying-tangent, cor:mapping-eval, cor:mapping-uniqueness, def:local-addition,
+    prop:normalize-local-addition}
+  For a local addition and $f \in C^\ell(M, N)$, the map
+  $\Theta \colon T_f C^\ell(M, N) \to \Gamma_f$, $v \mapsto (T_f \varepsilon_x(v))_{x \in M}$, is an
+  isomorphism of topological vector spaces. The smooth structure does not depend on the local
+  addition.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The chart $\varphi_f$ sends $f$ to the zero section, and in this chart $\varepsilon_x$ reads
+  $\tau \mapsto \Sigma(\tau(x))$; by the chain rule and the normalization (3.55),
+  $T_f \varepsilon_x(v) = v(x)$, so $\Theta$ is the identity of $\Gamma_f$, the model of the chart
+  at $f$, when the local addition is normalized. Glöckner and Neeb compute with geometric tangent
+  vectors and assume the local addition normalized, which is no loss of generality
+  (Proposition~\ref{prop:normalize-local-addition}). For an arbitrary local addition $\Sigma$, the
+  atlases of $\Sigma$ and of its normalization are compatible, and $\Theta$ is the change of
+  tangent coordinates between their charts at $f$; it is again $v \mapsto (T_f
+  \varepsilon_x(v))_x$, a formula that involves no chart of $C^\ell(M, N)$.
+\end{proof}
+
+\section{The compact-open \texorpdfstring{$C^\ell$}{C\^{}l} topology via iterated tangent maps}
+
+\begin{definition}[Iterated tangent bundles; {\cite[Def.~4.1.2]{GN26}}]
+  \label{def:gn-topology}
+  \lean{LocallyConvex.Manifolds.MBMfld, LocallyConvex.Manifolds.MBMfld.tangent,
+    LocallyConvex.Manifolds.MBMfld.iter, LocallyConvex.Manifolds.MBMfld.iterMap,
+    LocallyConvex.Manifolds.MBMfld.contMDiffMB_iterMap, LocallyConvex.Manifolds.MBMfld.iterMapC,
+    LocallyConvex.Manifolds.MBMfld.gnTopology, LocallyConvex.Manifolds.MBMfld.gnTopologySm,
+    LocallyConvex.Manifolds.MBMfld.gnTopology_succ, LocallyConvex.Manifolds.MBMfld.gnTopologySm_eq}
+  \leanok
+  \uses{def:tangent-map}
+  The iterated tangent bundles $T^j M$ and tangent maps $T^j f$ are defined recursively. The
+  compact-open $C^\ell$ topology on $C^\ell(M, N)$ is the initial topology with respect to
+  $f \mapsto T^j f \in C(T^j M, T^j N)$, $j \le \ell$, compact-open. It is initial with respect to
+  $f \mapsto f$ and $f \mapsto Tf \in C^{\ell-1}(TM, TN)$ (as in the proof of
+  \cite[Lemma~4.1.6]{GN26}), and for $\ell = \infty$ it is the projective limit of the finite
+  orders \cite[Remark~4.1.3(b)]{GN26}.
+\end{definition}
+
+\begin{proposition}[Lemma 4.1.6 for the chart topology {\cite[Lemma~4.1.6]{GN26}}]
+  \label{prop:chart-topology-succ}
+  \lean{LocallyConvex.Manifolds.exists_eq_tangentChart,
+    LocallyConvex.Manifolds.continuousOn_iteratedD_zero_rep,
+    LocallyConvex.Manifolds.continuous_toC_of_rep, LocallyConvex.Manifolds.tangentIdx_rep_apply,
+    LocallyConvex.Manifolds.continuous_of_tangentCk, LocallyConvex.Manifolds.continuous_tangentCk,
+    LocallyConvex.Manifolds.chartTopology_zero, LocallyConvex.Manifolds.chartTopology_succ}
+  \leanok
+  \uses{def:chart-topology, def:gn-topology, prop:compLeftOn-smooth, lem:restrict-cover}
+  If the model of $M$ is locally compact, the chart topology of $C^0(M, N)$ is the compact-open
+  topology, and that of $C^{\ell+1}(M, N)$ is initial with respect to $f \mapsto f \in C(M, N)$
+  and $f \mapsto Tf \in C^\ell(TM, TN)$ (chart topology). (The chart topology is meant for locally
+  compact models: otherwise it collapses to the $C^0$ topology.)
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  In self tangent charts, $d(\mathrm{rep}\,f)$ is a component of a local representative of $Tf$;
+  in general tangent charts the local representative of $Tf$ is $(F, dF)$ pulled back along a
+  smooth map and composed with a smooth map. Localizations use compact neighborhoods.
+\end{proof}
+
+\begin{theorem}[The chart topology and Definition 4.1.2 {\cite[Def.~4.1.2]{GN26}}]
+  \label{thm:mapping-topology-gn}
+  \lean{LocallyConvex.Manifolds.chartTopology_eq_gnTopology,
+    LocallyConvex.Manifolds.chartTopologySm_eq_gnTopologySm}
+  \leanok
+  \uses{prop:chart-topology-succ, def:gn-topology}
+  If the model of $M$ is locally compact, the chart topology of $C^\ell(M, N)$ is the compact-open
+  $C^\ell$ topology of \cite[Def.~4.1.2]{GN26}, for $\ell \in \N_0 \cup \{\infty\}$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Both topologies satisfy the recursion of \cite[Lemma~4.1.6]{GN26}; induction on $\ell$, and the
+  projective limit for $\ell = \infty$.
+\end{proof}
+
+
+\section{The jet topology and Definition 4.1.2}
+
+The topology of $C^\ell(M, N)$ is the jet topology (Definition~\ref{def:jet-topology}), which
+works for every Hausdorff locally convex model and every manifold $M$, compact or not. We compare
+it with the topology of \cite[Def.~4.1.2]{GN26}.
+
+\begin{lemma}[Localizing compact sets]
+  \label{lem:compact-localizable}
+  \lean{LocallyConvex.Manifolds.CompactLocalizable,
+    LocallyConvex.Manifolds.CompactLocalizable.of_locallyCompactSpace,
+    LocallyConvex.Manifolds.CompactLocalizable.of_r1Space,
+    LocallyConvex.Manifolds.MBMfld.t2Space_iter,
+    LocallyConvex.Manifolds.MBMfld.compactLocalizable_iter_of_t2Space,
+    LocallyConvex.Manifolds.MBMfld.compactLocalizable_iter_of_locallyCompactSpace}
+  \leanok
+  A space is \emph{compact-localizable} if every compact set is covered by finitely many compact
+  sets inside prescribed neighborhoods of its points. Hausdorff spaces and locally compact spaces
+  are compact-localizable. Tangent bundles of Hausdorff manifolds are Hausdorff, so the iterated
+  tangent bundles of a Hausdorff manifold, or of a manifold with a locally compact model, are
+  compact-localizable.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  For Hausdorff spaces this is the finite compact cover lemma used by Glöckner and Neeb
+  \cite[Lemma~A.6.11]{GN26}.
+\end{proof}
+
+\begin{theorem}[The jet topology is the compact-open $C^\ell$ topology {\cite[Def.~4.1.2]{GN26}}]
+  \label{thm:jet-topology-gn}
+  \lean{LocallyConvex.Manifolds.jetOn_succ, LocallyConvex.Manifolds.jetOn_dMB,
+    LocallyConvex.Manifolds.continuousOn_jetOn_of_isCompact,
+    LocallyConvex.Manifolds.tangentJetIdx_jet,
+    LocallyConvex.Manifolds.MBMfld.gnTopology_le_jetTopology,
+    LocallyConvex.Manifolds.MBMfld.jetTopology_le_gnTopology,
+    LocallyConvex.Manifolds.MBMfld.jetTopology_eq_gnTopology,
+    LocallyConvex.Manifolds.MBMfld.jetTopology_eq_gnTopology_of_locallyCompactSpace,
+    LocallyConvex.Manifolds.MBMfld.jetTopologySm_eq_gnTopologySm,
+    LocallyConvex.Manifolds.MBMfld.jetTopologySm_eq_gnTopologySm_of_locallyCompactSpace}
+  \leanok
+  \uses{def:jet-topology, def:gn-topology, lem:compact-localizable}
+  The compact-open $C^\ell$ topology of \cite[Def.~4.1.2]{GN26} is always finer than the jet
+  topology. For every Hausdorff manifold $M$, compact or not, modeled on any Hausdorff locally
+  convex space, and for every $M$ with a locally compact model, the two topologies coincide,
+  $\ell \in \N_0 \cup \{\infty\}$. In particular, for $M$ compact the topology underlying the
+  atlases of $C^\ell(M, N)$ and $C^\infty(M, N)$ is that of \cite[Def.~4.1.2]{GN26}
+  \cite[Thm.~4.2.2(b)]{GN26}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Induction on the order through the tangent map, as in the proof of \cite[Lemma~4.1.6]{GN26}. In
+  the tangent charts the local representative of $\T g$ is $(y, w) \mapsto (F(y), \dd F(y)\,w)$,
+  $F = i \circ g \circ j^{-1}$, and the jets of $\dd F$ and those of $F$ determine each other by
+  $\dd^{(m+1)}F(x, v_0, v) = \dd^{(m)}(\dd F)((x, v_0), (v, 0))$ \cite[(1.36)]{GN26} and the formula
+  for $\dd^{(m)}(\dd F)$, the identities behind \cite[Lemma~4.1.12]{GN26}. Continuity of the jets
+  of $\dd F$ on the non-compact set $K \times H$ is reduced to compact subsets. Recovering the
+  compact-open topology of $C(\T^n M, \T^n N)$ from compact sets inside charts needs
+  Lemma~\ref{lem:compact-localizable}; for non-Hausdorff manifolds with non-locally compact models
+  only one inclusion is proved. We do not claim these arguments are new.
+\end{proof}
+
+\begin{corollary}[The jet topology and the chart topology, via Definition 4.1.2]
+  \label{cor:jet-topology-chart}
+  \lean{LocallyConvex.Manifolds.MBMfld.jetTopology_eq_chartTopology}
+  \leanok
+  \uses{thm:jet-topology-gn, thm:mapping-topology-gn, prop:chart-jet}
+  If the model of $M$ is locally compact, the jet topology is the chart topology.
+\end{corollary}
+
+\begin{proof}
+  \leanok
+  This is Proposition~\ref{prop:chart-jet}; for a locally compact model it also follows from
+  Theorems~\ref{thm:jet-topology-gn} and~\ref{thm:mapping-topology-gn}, both topologies being that
+  of \cite[Def.~4.1.2]{GN26}.
+\end{proof}
+
+\begin{theorem}[Targets in any universe]
+  \label{thm:mapping-topology-ulift}
+  \lean{LocallyConvex.Manifolds.chartedSpaceULift,
+    LocallyConvex.Manifolds.mbManifoldULift,
+    LocallyConvex.Manifolds.CkMap.uliftHomeomorph,
+    LocallyConvex.Manifolds.SmoothMap.uliftHomeomorph,
+    LocallyConvex.Manifolds.MBMfld.iterMap_comp,
+    LocallyConvex.Manifolds.MBMfld.gnTopology_eq_induced,
+    LocallyConvex.Manifolds.MBMfld.gnTopologySm_eq_induced,
+    LocallyConvex.Manifolds.CkMap.gnTopology,
+    LocallyConvex.Manifolds.SmoothMap.gnTopologySm,
+    LocallyConvex.Manifolds.CkMap.gnTopology_eq,
+    LocallyConvex.Manifolds.SmoothMap.gnTopologySm_eq,
+    LocallyConvex.Manifolds.CkMap.jetTopology_eq_gnTopology,
+    LocallyConvex.Manifolds.CkMap.jetTopology_eq_gnTopology_of_locallyCompactSpace,
+    LocallyConvex.Manifolds.SmoothMap.jetTopologySm_eq_gnTopologySm,
+    LocallyConvex.Manifolds.SmoothMap.jetTopologySm_eq_gnTopologySm_of_locallyCompactSpace,
+    LocallyConvex.Manifolds.CkMap.topology_eq_gnTopology,
+    LocallyConvex.Manifolds.SmoothMap.topology_eq_gnTopologySm,
+    LocallyConvex.Manifolds.CkMap.chartTopology_eq_gnTopology,
+    LocallyConvex.Manifolds.SmoothMap.chartTopologySm_eq_gnTopologySm}
+  \leanok
+  \uses{thm:jet-topology-gn, def:gn-topology, def:jet-topology}
+  Theorems~\ref{thm:mapping-topology-gn} and~\ref{thm:jet-topology-gn} hold for a target $N$ in
+  any universe; only $M$ and the models share one universe. In particular, the topology of
+  $C^\ell(M, N)$ is that of \cite[Def.~4.1.2]{GN26}, $\ell \in \N_0 \cup \{\infty\}$, for every
+  Hausdorff $M$ \cite[Thm.~4.2.2(b)]{GN26}, and so is the chart topology when the model of $M$ is
+  locally compact. Moreover, \cite[Def.~4.1.2]{GN26} is natural in the target: a diffeomorphism
+  $\varphi \colon N \to N'$ induces a homeomorphism $f \mapsto \varphi \circ f$ between the
+  topologies of \cite[Def.~4.1.2]{GN26} on $C^\ell(M, N)$ and $C^\ell(M, N')$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The iterated tangent bundles run over bundled manifolds whose carriers live in the universe
+  $\max(u, v)$ of their tangent bundles, $u$ that of the models. A target $N$ in another universe
+  is replaced by $\mathrm{ULift}\, N$, a manifold with the charts of $N$; $f \mapsto
+  \mathrm{up} \circ f$ is a homeomorphism $C^\ell(M, N) \to C^\ell(M, \mathrm{ULift}\, N)$ for the
+  jet topologies, the jets in corresponding charts being equal. Naturality follows from the chain
+  rule $\T^j(\varphi \circ f) = \T^j\varphi \circ \T^j f$, with $\T^j\varphi$ a homeomorphism of
+  inverse $\T^j(\varphi^{-1})$; applied to $\mathrm{up} \colon N \to \mathrm{ULift}\, N$, it shows
+  that the transported topology is that of \cite[Def.~4.1.2]{GN26} whenever $N$ is itself a
+  carrier. We do not claim this argument is new.
+\end{proof}

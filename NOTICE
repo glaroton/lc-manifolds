@@ -1,0 +1,11 @@
+lc-manifolds
+Copyright 2026 glaroton (https://github.com/glaroton)
+
+This product is a formalization, in Lean 4 and Mathlib, of mathematics due to the authors cited
+in its source files and documentation. The Apache License 2.0 applies to the Lean code and the
+documentation of this repository; it does not claim, and cannot confer, any authorship of the
+mathematical results, which belong to their original authors.
+
+The Lean proofs were written by the AI assistant Claude (Anthropic) under the direction of
+@glaroton, who chose the program, the framework and the references and reviewed the
+results. Every proof is checked by Lean's kernel.

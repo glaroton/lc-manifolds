@@ -1,0 +1,216 @@
+\chapter{Flows of vector fields}
+\label{chap:flows}
+
+Integral curves and flows of smooth vector fields on manifolds modeled on Banach spaces:
+uniqueness, local flows, the maximal flow, the escape lemma and a completeness criterion, after
+Lang \cite[Ch.~IV]{Lan99} and \cite[\S2.5]{GN26}, and the real analytic case. Beyond Banach
+spaces even linear equations can have no solution, or more than one, so this chapter is
+restricted to Banach models.
+
+\section{Local flows on Banach manifolds}
+
+On manifolds modeled on locally convex spaces vector fields need not have local flows, nor unique
+integral curves \cite[Examples~2.4.2 and 2.4.3]{GN26}, so Theorem~\ref{thm:lie-flow} assumes a
+local flow. On Hausdorff manifolds modeled on Banach spaces it exists, and
+Theorem~\ref{thm:lie-flow} holds unconditionally.
+
+\begin{lemma}[Integral curves and chart changes]
+  \label{lem:integral-curve-chart}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.IsIntegralCurveOn,
+    LocallyConvex.Manifolds.SmoothVectorField.hasDerivAt_rep_of_chart}
+  \leanok
+  Let $M$ be modeled on a Banach space. If a curve $c$ is continuous at $t$ and
+  $(\varphi_i \circ c)'(t) = \tilde X_i(\varphi_i(c(t)))$ in one chart $i$ around $c(t)$, then the
+  same holds in every chart around $c(t)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The chain rule for the transition map, which is Fr\'echet differentiable, and the change of
+  charts law $\tilde X_j \circ \tau = \dd\tau \cdot \tilde X_i$ for $\tau = \varphi_j \circ
+  \varphi_i^{-1}$.
+\end{proof}
+
+\begin{theorem}[Uniqueness of integral curves {\cite[Theorem~IV.2.1]{Lan99}}]
+  \label{thm:integral-curve-uniqueness}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.IsIntegralCurveOn.eqOn}
+  \leanok
+  \uses{lem:integral-curve-chart}
+  Let $M$ be Hausdorff and modeled on a Banach space. Two integral curves of a smooth vector field
+  on an open connected set $I$ of times that agree at one instant agree on $I$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In a chart both curves solve $c' = \tilde X_i \circ c$, whose right hand side is locally
+  Lipschitz, so they agree near every instant where they meet; since $M$ is Hausdorff the set of
+  such instants is closed in $I$.
+\end{proof}
+
+\begin{theorem}[Local flows on Banach manifolds]
+  \label{thm:banach-local-flow-manifold}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.FlowBox,
+    LocallyConvex.Manifolds.SmoothVectorField.exists_flowBox,
+    LocallyConvex.Manifolds.SmoothVectorField.boxFlowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.boxFlow,
+    LocallyConvex.Manifolds.SmoothVectorField.isOpen_boxFlowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.ordConnected_boxFlowDomain_slice,
+    LocallyConvex.Manifolds.SmoothVectorField.isLocalFlow_boxFlow,
+    LocallyConvex.Manifolds.SmoothVectorField.smoothMBMOn_boxFlow,
+    LocallyConvex.Manifolds.SmoothVectorField.boxFlow_add}
+  \leanok
+  \uses{thm:integral-curve-uniqueness, thm:lie-flow}
+  Let $M$ be Hausdorff and modeled on a Banach space, and $X$ a smooth vector field. Around each
+  point there are $\varepsilon > 0$, an open set $V$ and a smooth map
+  $\varphi \colon (-\varepsilon, \varepsilon) \times V \to M$ whose curves $t \mapsto \varphi(t, x)$
+  are integral curves with $\varphi(0, x) = x$ (a \emph{flow box}). Gluing chosen flow boxes gives
+  an open set $\Omega \supseteq \{0\} \times M$ of $\mathbb{R} \times M$, whose slices
+  $\{t : (t, x) \in \Omega\}$ are intervals, and a smooth map $\mathrm{Fl} \colon \Omega \to M$
+  which is a local flow of $X$ in the sense of Theorem~\ref{thm:lie-flow}, with
+  $\mathrm{Fl}(s + t, x) = \mathrm{Fl}(s, \mathrm{Fl}(t, x))$ whenever $(t, x)$,
+  $(s, \mathrm{Fl}(t, x))$ and $(s + t, x)$ lie in $\Omega$
+  \cite[Corollary~2.5.21]{GN26}, \cite[Theorem~IV.2.2]{Lan99}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In a chart, the local flows of lc-analysis (Fr\'echet $\Ck{\infty}$ in time and initial value,
+  from the Picard--Lindel\"of theorem) give the flow boxes. By
+  Theorem~\ref{thm:integral-curve-uniqueness} two flow boxes agree where both are defined, so they
+  glue to $\mathrm{Fl}$ on the union $\Omega$ of the boxes. The group law holds because
+  $s \mapsto \mathrm{Fl}(s + t, x)$ and $s \mapsto \mathrm{Fl}(s, \mathrm{Fl}(t, x))$ are integral
+  curves on an interval containing $0$ and $s$ with the same initial value. Here $\Omega$ is not
+  the maximal domain; see Theorem~\ref{thm:maximal-flow}.
+\end{proof}
+
+\begin{theorem}[The maximal flow {\cite[Theorems~IV.2.2 and IV.2.6]{Lan99}, \cite[Theorem~2.5.18, Corollary~2.5.21]{GN26}}]
+  \label{thm:maximal-flow}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.IsIntegralCurveThrough,
+    LocallyConvex.Manifolds.SmoothVectorField.maxInterval,
+    LocallyConvex.Manifolds.SmoothVectorField.flowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.flow,
+    LocallyConvex.Manifolds.SmoothVectorField.isIntegralCurveThrough_flow,
+    LocallyConvex.Manifolds.SmoothVectorField.IsIntegralCurveThrough.subset_maxInterval,
+    LocallyConvex.Manifolds.SmoothVectorField.IsIntegralCurveThrough.flow_eq,
+    LocallyConvex.Manifolds.SmoothVectorField.maxInterval_flow,
+    LocallyConvex.Manifolds.SmoothVectorField.add_mem_flowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.flow_add,
+    LocallyConvex.Manifolds.SmoothVectorField.isOpen_flowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.smoothMBMOn_flow,
+    LocallyConvex.Manifolds.SmoothVectorField.isLocalFlow_flow,
+    LocallyConvex.Manifolds.SmoothVectorField.hasDirDerivAt_pullback_flow,
+    LocallyConvex.Manifolds.SmoothVectorField.boxFlowDomain_subset_flowDomain,
+    LocallyConvex.Manifolds.SmoothVectorField.boxFlow_eq_flow}
+  \leanok
+  \uses{thm:banach-local-flow-manifold, thm:integral-curve-uniqueness, thm:lie-flow}
+  Let $M$ be Hausdorff and modeled on a Banach space, and $X$ a smooth vector field. The integral
+  curves of $X$ through $x$ glue to a \emph{maximal integral curve} $t \mapsto \mathrm{Fl}(t, x)$,
+  defined on an open interval $J_x \ni 0$: every integral curve through $x$ on an open interval
+  $I \ni 0$ is its restriction to $I$. Let $D = \{(t, x) : t \in J_x\}$. Then:
+  \begin{enumerate}
+    \item (group law) if $t \in J_x$, then $J_{\mathrm{Fl}(t, x)} = J_x - t$, and
+      $\mathrm{Fl}(s + t, x) = \mathrm{Fl}(s, \mathrm{Fl}(t, x))$ whenever $(t, x) \in D$ and
+      $(s, \mathrm{Fl}(t, x)) \in D$, in which case $(s + t, x) \in D$;
+    \item $D$ is open in $\mathbb{R} \times M$ and $\mathrm{Fl}$ is smooth on $D$;
+    \item $\mathrm{Fl}$ is a local flow of $X$ on $D$, so
+      $\frac{\dd}{\dd t}\big|_{t=0} \mathrm{Fl}_t^*\omega = L_X\omega$
+      (Theorem~\ref{thm:lie-flow}) holds for it;
+    \item the flow of Theorem~\ref{thm:banach-local-flow-manifold} is the restriction of
+      $\mathrm{Fl}$ to its domain $\Omega \subseteq D$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Maximality and the group law follow from uniqueness, as in \cite[Theorem~IV.2.2]{Lan99}. For
+  openness and smoothness we follow \cite[Theorem~IV.2.6]{Lan99} and
+  \cite[Theorem~2.5.18]{GN26}: for a fixed $x_0$, the set of $t \in J_{x_0}$ around which $D$
+  contains a neighborhood of $(t, x_0)$ on which $\mathrm{Fl}$ is smooth is open, contains $0$,
+  and is closed in $J_{x_0}$, because near $t$ the flow is
+  $\mathrm{Fl}(\tau, x) = \varphi(\tau - t_1, \mathrm{Fl}(t_1, x))$ for a flow box $\varphi$ at
+  $\mathrm{Fl}(t, x_0)$ and $t_1$ close to $t$. No compactness argument is needed.
+\end{proof}
+
+\begin{theorem}[Escape lemma {\cite[Theorem~IV.2.3]{Lan99}}]
+  \label{thm:flow-escape}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.not_mapClusterPt_flow_of_lt_top,
+    LocallyConvex.Manifolds.SmoothVectorField.not_mapClusterPt_flow_of_bot_lt,
+    LocallyConvex.Manifolds.SmoothVectorField.eventually_flow_not_mem_of_isCompact,
+    LocallyConvex.Manifolds.SmoothVectorField.eventually_flow_not_mem_of_isCompact'}
+  \leanok
+  \uses{thm:maximal-flow}
+  If the forward maximal time $b = \sup J_x$ is finite, then $t \mapsto \mathrm{Fl}(t, x)$ has no
+  cluster point as $t \to b^-$; in particular it eventually leaves every compact set. The same
+  holds backwards.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  If $q$ were a cluster point, a flow box at $q$ with time $\varepsilon$ would extend the integral
+  curve beyond $b$ from a time $t_1 > b - \varepsilon$ at which the curve is in the box, against
+  maximality. Lang argues with sequences; since $M$ need not be first countable we use cluster
+  points of filters. We do not claim this argument is new.
+\end{proof}
+
+\begin{remark}[Hypotheses]
+  Completeness of the model gives the flow boxes and local uniqueness; on manifolds modeled on
+  Fr\'echet spaces smooth vector fields need neither have integral curves nor unique ones
+  \cite[Examples~2.4.2 and 2.4.3]{GN26}. The Hausdorff property is needed: on the line with two
+  origins the constant field $\partial/\partial t$ has two integral curves through $-1$ which
+  agree up to time $1$ and then split, so there is no maximal integral curve.
+\end{remark}
+
+\begin{theorem}[Real analytic maximal flows {\cite[Theorem~2.5.18(b), Corollary~2.5.21]{GN26}}]
+  \label{thm:maximal-flow-analytic}
+  \lean{LocallyConvex.Manifolds.realAnalyticMOn_coe_chart,
+    LocallyConvex.Manifolds.realAnalyticMOn_chart_symm,
+    LocallyConvex.Manifolds.SmoothVectorField.exists_flowBox_realAnalyticMOn,
+    LocallyConvex.Manifolds.SmoothVectorField.realAnalyticMOn_flow}
+  \leanok
+  \uses{thm:maximal-flow}
+  Let $M$ be a Hausdorff real analytic manifold modeled on a real Banach space and $X$ a vector
+  field whose local representatives in the charts of the atlas are real analytic. Then $X$ has
+  real analytic flow boxes around every point, and the maximal flow
+  $\mathrm{Fl} \colon D \to M$ is real analytic on its open domain $D \subseteq \mathbb{R} \times M$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The flow boxes are the real analytic local flows of the local representatives on Banach spaces
+  (lc-analysis, after \cite[Theorem~2.4.34]{GN26}), read in a chart; charts and their inverses are
+  real analytic. Then argue as for Theorem~\ref{thm:maximal-flow}, following
+  \cite[Theorem~2.5.18]{GN26}: the times $t \in J_{x_0}$ near which the flow is real analytic form
+  an open subset of $J_{x_0}$ containing $0$, closed in $J_{x_0}$ because near $t$ the flow is
+  $\mathrm{Fl}(\tau, x) = \varphi(\tau - t_1, \mathrm{Fl}(t_1, x))$ for a real analytic flow box
+  $\varphi$, and compositions of real analytic maps are real analytic.
+\end{proof}
+
+\begin{theorem}[Completeness criterion {\cite[Proposition~IV.2.5]{Lan99}}]
+  \label{thm:flow-complete}
+  \lean{LocallyConvex.Manifolds.SmoothVectorField.not_mapClusterPt_flow_of_notMem,
+    LocallyConvex.Manifolds.SmoothVectorField.Ioo_subset_maxInterval_of_norm_rep_le,
+    LocallyConvex.Manifolds.SmoothVectorField.flowDomain_eq_univ_of_forall_norm_rep_le}
+  \leanok
+  \uses{thm:maximal-flow, thm:flow-escape}
+  Let $X$ be a smooth vector field on a Hausdorff manifold $M$ modeled on a Banach space $E$, and
+  let $a > 0$ and $K$ be such that every $x \in M$ admits a chart $\varphi$ at $x$ whose target
+  contains the ball $B(\varphi(x), a)$, on which the local representative of $X$ is bounded by
+  $K$. Then $J_x \supseteq (-a/(K+1), a/(K+1))$ for every $x$, and the maximal flow of $X$ is
+  defined on all of $\mathbb{R} \times M$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  Fix $x$ and $\delta = a/(K+1)$. As long as the maximal curve stays in the ball, its
+  representative $\gamma = \varphi \circ \mathrm{Fl}(\cdot, x)$ is $K$-Lipschitz, so
+  $\|\gamma(t) - \varphi(x)\| \le K\delta < a$ for $|t| < \delta$. A connectedness argument on
+  $(-\delta, \delta)$ shows that the curve is defined and stays in the ball there: at a limit time
+  $t$ the representative is Cauchy, so it converges (here $E$ is complete) to a point of the ball,
+  whose preimage is a cluster point of the curve; by the escape lemma, $t \in J_x$. Then the group
+  law gives $J_x + (-\delta, \delta) \subseteq J_x$, so $J_x = \mathbb{R}$. Lang deduces the uniform
+  existence time from the local existence theorem with explicit constants
+  \cite[Proposition~IV.1.1]{Lan99}, which uses a Lipschitz constant and hence a bound on the
+  derivative of the local representative; this argument does not need it. We do not claim it is
+  new. The uniform radius $a$ cannot be dropped: the constant field $1$ on the interval $(0, 1)$
+  is bounded but not complete.
+\end{proof}

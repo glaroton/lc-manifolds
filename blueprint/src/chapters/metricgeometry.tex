@@ -1,0 +1,308 @@
+\chapter{Metric geometry}
+\label{chap:metric-spaces}
+
+Metric spaces in which the distance is the infimum of lengths of curves, after Gromov, as in
+Chapter~8 of \cite{Lar22}: the rectifiable distance, interior metric spaces, approximate midpoints,
+the metric Hopf--Rinow theorem, and their asymmetric counterparts. The lengths of curves are
+those of Mathlib, through the variation of a curve. Nothing in this chapter uses manifolds or the
+calculus; it is applied to Finsler manifolds in Chapter~\ref{chap:metrics}.
+
+\section{The rectifiable distance}
+\label{sec:ms-rectifiable}
+
+Let $(X, d)$ be a pseudo-metric space, with distances in $[0, \infty]$. The length of a continuous
+curve $\gamma \colon [a, b] \to X$ is the supremum of the sums
+$\sum_i d(\gamma(t_i), \gamma(t_{i+1}))$ over the partitions of $[a, b]$; in Mathlib this is the
+variation \texttt{eVariationOn}. Its basic properties are in Mathlib: refining a partition
+increases the sums, the length vanishes only for constant curves, it is additive under
+concatenation, invariant under monotone reparametrizations \cite[Obs.~8.1.1]{Lar22}, lower
+semicontinuous under uniform convergence \cite[Prop.~8.1.3]{Lar22}, and the arc length
+$t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar22}.
+
+\begin{definition}[The rectifiable distance]
+  \label{def:ms-length-dist}
+  \lean{LocallyConvex.Manifolds.RectPath, LocallyConvex.Manifolds.RectPath.length, LocallyConvex.Manifolds.RectPath.concat, LocallyConvex.Manifolds.RectPath.reverse, LocallyConvex.Manifolds.RectPath.length_concat, LocallyConvex.Manifolds.RectPath.length_reverse, LocallyConvex.Manifolds.lengthDist}
+  \leanok
+  The rectifiable distance $d_\ell(x, y)$ is the infimum of the lengths of the continuous curves
+  from $x$ to $y$, and $\infty$ if there is none.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:ms-length-dist}
+  \lean{LocallyConvex.Manifolds.lengthDist_self, LocallyConvex.Manifolds.lengthDist_comm, LocallyConvex.Manifolds.lengthDist_triangle, LocallyConvex.Manifolds.edist_le_lengthDist, LocallyConvex.Manifolds.LengthMetric, LocallyConvex.Manifolds.lipschitzWith_ofLength, LocallyConvex.Manifolds.continuous_ofLength}
+  \leanok
+  \uses{def:ms-length-dist}
+  $d_\ell$ is a pseudo-distance, and $d \leq d_\ell$. In particular the topology of $d_\ell$ is
+  finer than that of $d$ \cite[Obs.~8.1.7]{Lar22}.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Constant curves, reversed curves and concatenations give the three properties of a distance.
+  The trivial partition gives $d(x, y) \leq \ell(\gamma)$.
+\end{proof}
+
+\begin{lemma}[When the topologies agree]
+  \label{lem:ms-topologies}
+  \lean{LocallyConvex.Manifolds.continuous_toLength_iff}
+  \leanok
+  \uses{prop:ms-length-dist}
+  The topologies of $d$ and $d_\ell$ coincide if and only if, for every $x$ and every
+  $\varepsilon > 0$, the points close enough to $x$ can be joined to $x$ by curves of length
+  $< \varepsilon$ \cite[Lema~8.1.8]{Lar22}.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  This is the continuity of the identity $(X, d) \to (X, d_\ell)$, written with balls.
+\end{proof}
+
+\begin{definition}[Interior metric spaces]
+  \label{def:ms-interior}
+  \lean{LocallyConvex.Manifolds.IsInterior, LocallyConvex.Manifolds.IsInterior.exists_rectPath}
+  \leanok
+  \uses{def:ms-length-dist}
+  $(X, d)$ is an interior metric space (a length space) if $d = d_\ell$
+  \cite[\S8.1.1]{Lar22}.
+\end{definition}
+
+\begin{proposition}[Approximate midpoints]
+  \label{prop:ms-midpoints}
+  \lean{LocallyConvex.Manifolds.IsInterior.exists_approx_midpoint}
+  \leanok
+  \uses{def:ms-interior}
+  In an interior metric space, for all $x, y$ and $\varepsilon > 0$ there is $z$ with
+  $\max\{d(x, z), d(z, y)\} \leq \frac12 d(x, y) + \varepsilon$ \cite[Problema~8.III]{Lar22}.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Take a curve of length $< d(x, y) + 2\varepsilon$. By the continuity of the arc length and the
+  intermediate value theorem it has a point at half its length.
+\end{proof}
+
+\begin{theorem}[\texorpdfstring{\cite[Lema~8.1.10, Problemas~8.III--8.IV]{Lar22}}{Lema 8.1.10}]
+  \label{thm:ms-midpoints-iff}
+  \lean{LocallyConvex.Manifolds.HasApproxMidpoints, LocallyConvex.Manifolds.HasBallCondition, LocallyConvex.Manifolds.IsInterior.exists_dist_le_sub_sub, LocallyConvex.Manifolds.IsInterior.hasBallCondition, LocallyConvex.Manifolds.HasBallCondition.hasApproxMidpoints, LocallyConvex.Manifolds.HasApproxMidpoints.hasBallCondition, LocallyConvex.Manifolds.hasApproxMidpoints_iff_hasBallCondition, LocallyConvex.Manifolds.HasApproxMidpoints.exists_rectPath_length_le, LocallyConvex.Manifolds.isInterior_of_approx_midpoint, LocallyConvex.Manifolds.isInterior_iff_hasApproxMidpoints, LocallyConvex.Manifolds.isInterior_iff_hasBallCondition}
+  \leanok
+  \uses{prop:ms-midpoints}
+  An interior metric space satisfies the ball condition: for $r_1 + r_2 \leq d(x, y)$, the closed
+  balls $\bar B_{r_1}(x)$ and $\bar B_{r_2}(y)$ are at distance at most $d(x, y) - r_1 - r_2$. The
+  ball condition is equivalent to having approximate midpoints, and a complete space with
+  approximate midpoints is interior. So for complete spaces the three properties are equivalent.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The converse direction builds dyadic chains of approximate midpoints with steps at most
+  $(d(x, y) + \varepsilon)/2^n$, and the curve as the uniform limit of the corresponding step
+  functions, which exists by completeness and is $(d(x, y) + \varepsilon)$-Lipschitz. This replaces
+  the extension from dyadic rationals of \cite[Lema~8.1.9]{Lar22}.
+\end{proof}
+
+\section{The metric Hopf--Rinow theorem}
+\label{sec:ms-hopf-rinow}
+
+\begin{lemma}[Approximate intermediate points]
+  \label{lem:ms-intermediate}
+  \lean{LocallyConvex.Manifolds.IsInterior.exists_dist_le_add, LocallyConvex.Manifolds.IsInterior.exists_approx_intermediate, LocallyConvex.Manifolds.IsInterior.exists_mem_closedBall_near}
+  \leanok
+  \uses{prop:ms-midpoints}
+  In an interior metric space, for $a, b \geq 0$ with $a + b = d(x, y)$ and $\varepsilon > 0$
+  there is $z$ with $d(x, z) \leq a + \varepsilon$ and $d(z, y) \leq b + \varepsilon$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  As in Proposition~\ref{prop:ms-midpoints}, with the point at arc length $a$.
+\end{proof}
+
+\begin{lemma}[Lipschitz reparametrization]
+  \label{lem:ms-reparam}
+  \lean{LocallyConvex.Manifolds.RectPath.exists_lipschitz_reparam}
+  \leanok
+  \uses{def:ms-length-dist}
+  A curve of finite length $\ell$ can be reparametrized on $[0, 1]$ as an $\ell$-Lipschitz curve
+  \cite[Obs.~8.1.5, Cor.~8.1.6]{Lar22}.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  Compose with a right inverse of the normalized arc length; the curve is constant on the level
+  sets of the arc length.
+\end{proof}
+
+\begin{theorem}[\texorpdfstring{Hopf--Rinow \cite[Teorema~8.2.3]{Lar22}}{Hopf-Rinow}]
+  \label{thm:ms-hopf-rinow}
+  \lean{LocallyConvex.Manifolds.IsInterior.isCompact_closedBall_of_lt, LocallyConvex.Manifolds.IsInterior.exists_isCompact_closedBall_gt, LocallyConvex.Manifolds.IsInterior.isCompact_closedBall, LocallyConvex.Manifolds.IsInterior.properSpace, LocallyConvex.Manifolds.IsInterior.exists_rectPath_length_eq_of_isCompact, LocallyConvex.Manifolds.IsInterior.exists_rectPath_length_eq}
+  \leanok
+  \uses{lem:ms-intermediate, lem:ms-reparam}
+  Let $X$ be a complete interior metric space.
+  \begin{enumerate}
+    \item If $\bar B_r(x)$ is compact for all $0 < r < \rho$, then $\bar B_\rho(x)$ is compact.
+    \item If $X$ is locally compact, every closed ball is compact, and any two points are joined
+      by a shortest curve, of length equal to their distance.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  (1) By Lemma~\ref{lem:ms-intermediate} every point of $\bar B_\rho(x)$ is close to the compact
+  ball $\bar B_{\rho - \delta}(x)$, so $\bar B_\rho(x)$ is totally bounded, and it is complete.
+  (2) The supremum of the radii of compact balls cannot be finite: by (1) the ball of that radius
+  is compact, and a finite cover by balls with compact closure, together with a Lebesgue number,
+  gives a larger compact ball. For the shortest curves, reparametrize almost minimizing curves as
+  in Lemma~\ref{lem:ms-reparam}; they lie in a compact ball and are uniformly Lipschitz, and a
+  cluster point in the product topology (Tychonoff) is a Lipschitz curve of length at most the
+  distance. Here the formal proof departs from \cite{Lar22}, which uses Arzelà--Ascoli and the
+  lower semicontinuity of the length.
+\end{proof}
+
+\begin{definition}[Short geodesics, geodesic spaces]
+  \label{def:ms-geodesic}
+  \lean{LocallyConvex.Manifolds.IsShortGeodesic, LocallyConvex.Manifolds.IsShortGeodesic.continuousOn, LocallyConvex.Manifolds.IsShortGeodesic.eVariationOn_eq, LocallyConvex.Manifolds.IsGeodesicSpace}
+  \leanok
+  \uses{def:ms-interior}
+  $\gamma \colon [0, 1] \to X$ is a short geodesic of length $L$ if
+  $d(\gamma(s), \gamma(t)) = L |s - t|$; its length is $L$. $X$ is geodesic if it is interior and
+  any two points are joined by a short geodesic \cite[Def.~8.1.11]{Lar22}.
+\end{definition}
+
+\begin{proposition}
+  \label{prop:ms-subarcs}
+  \lean{LocallyConvex.Manifolds.RectPath.edist_eq_of_length_eq, LocallyConvex.Manifolds.RectPath.exists_isShortGeodesic, LocallyConvex.Manifolds.IsInterior.isGeodesicSpace}
+  \leanok
+  \uses{def:ms-geodesic, thm:ms-hopf-rinow, lem:ms-reparam}
+  The sub-arcs of a curve realizing the distance realize the distance \cite[Obs.~8.1.13]{Lar22};
+  normalized by arc length such a curve is a short geodesic. Hence a complete, locally compact
+  interior metric space is geodesic \cite[Teorema~8.2.3]{Lar22}.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Additivity of the length and the triangle inequality; for the normalization, the bounds
+  $d(\eta(s), \eta(t)) \leq L|s - t|$ and the triangle inequality through $\eta(s), \eta(t)$ give the
+  reverse inequality.
+\end{proof}
+
+\begin{remark}
+  \label{rem:ms-proper}
+  \lean{LocallyConvex.Manifolds.completeSpace_of_isCompact_closedBall}
+  \leanok
+  A space whose closed balls are compact is complete \cite[Obs.~8.2.4]{Lar22}. Being geodesic and
+  locally compact does not imply completeness: the interval $(0, 1)$.
+\end{remark}
+
+\begin{example}[McAlpin: no shortest curves in infinite dimension]
+  \label{ex:ms-mcalpin}
+  \lean{LocallyConvex.Manifolds.McAlpin.A, LocallyConvex.Manifolds.McAlpin.norm_A_eq_iff_mem_span, LocallyConvex.Manifolds.McAlpin.M, LocallyConvex.Manifolds.McAlpin.Arc, LocallyConvex.Manifolds.McAlpin.IsChain, LocallyConvex.Manifolds.McAlpin.pathDist, LocallyConvex.Manifolds.McAlpin.pathDist_le_pi, LocallyConvex.Manifolds.McAlpin.pi_le_chainLength_sphere, LocallyConvex.Manifolds.McAlpin.pi_lt_chainLength, LocallyConvex.Manifolds.McAlpin.pathDist_eq_pi, LocallyConvex.Manifolds.McAlpin.not_exists_shortest}
+  \leanok
+  Let $A$ be the diagonal operator on $\ell^2$ with $a_0 = 1$, $a_n = 1 + 2^{-n}$, and
+  $M = A(S)$, $S$ the unit sphere, with lengths measured by the norm of $\ell^2$. Then the distance
+  in $M$ between $e_0$ and $-e_0$ is $\pi$, but every piecewise $\Ck{1}$ curve in $M$ joining them
+  is strictly longer than $\pi$ \cite[Ejemplo~10.4.2]{Lar22}.
+\end{example}
+
+\begin{proof}
+  \leanok
+  The curves $A(\cos(\pi t) e_0 + \sin(\pi t) e_n)$ have length at most $\pi a_n \to \pi$. Every
+  curve on $S$ from $e_0$ to $-e_0$ has length at least $\pi$, by the triangle inequality for angles.
+  If $\beta = A\alpha$ is a curve in $M$, $\|\beta'\| = \|A\alpha'\| \geq \|\alpha'\|$, with equality
+  only when $\alpha' \in \R e_0$, which forces $\alpha$ to stay at $e_0$.
+\end{proof}
+
+In finite dimension this cannot happen: a complete Riemannian manifold has shortest curves
+\cite[Cor.~10.4.3]{Lar22}, and Corollary~\ref{cor:ms-finsler-hopf-rinow} gives the Finsler
+version.
+
+\section{Asymmetric distances}
+\label{sec:ms-asymmetric}
+
+For a non-reversible Finsler structure $d_b$ is not symmetric. Following Mennucci \cite{Men13},
+an asymmetric distance $b$ satisfies $b(x, x) = 0$ and the triangle inequality, and the topology is
+that of the symmetrized distance $\max\{b(x, y), b(y, x)\}$; forward and backward balls alone may
+generate different topologies \cite[Example~4.1]{Men13}. Lengths are forward lengths: suprema of
+$\sum b(\gamma(t_i), \gamma(t_{i+1}))$, which change under reversal of the curve
+\cite[Remark~3.5]{Men13}.
+
+\begin{definition}[Asymmetric distances and forward lengths]
+  \label{def:ms-asymm}
+  \lean{LocallyConvex.Manifolds.AsymmPseudoEMetricSpace, LocallyConvex.Manifolds.AsymmPseudoEMetricSpace.ofBDist, LocallyConvex.Manifolds.fwdVar, LocallyConvex.Manifolds.bwdVar, LocallyConvex.Manifolds.FwdPath, LocallyConvex.Manifolds.fwdLengthDist, LocallyConvex.Manifolds.IsFwdInterior}
+  \leanok
+  An asymmetric metric space carries $b$ and the topology of its symmetrization. The forward
+  length of a curve is its forward variation; $b_\ell$ is the infimum of forward lengths of
+  continuous curves, and $X$ is forward interior if $b_\ell = b$ (g-intrinsic in
+  \cite[Def.~3.16]{Men13}).
+\end{definition}
+
+\begin{theorem}[Forward lengths]
+  \label{thm:ms-fwd-length}
+  \lean{LocallyConvex.Manifolds.fwdVar.Icc_add_Icc, LocallyConvex.Manifolds.fwdVar.comp_eq_of_monotoneOn, LocallyConvex.Manifolds.fwdVar_comp_neg, LocallyConvex.Manifolds.fwdVar.continuousOn_Icc, LocallyConvex.Manifolds.fwdLengthDist_triangle, LocallyConvex.Manifolds.bdist_le_fwdLengthDist, LocallyConvex.Manifolds.IsFwdInterior.exists_bdist_le_add, LocallyConvex.Manifolds.FwdPath.exists_lipschitz_reparam}
+  \leanok
+  \uses{def:ms-asymm}
+  Forward lengths are additive and invariant under increasing reparametrizations; the running
+  length of a continuous curve of finite forward length is continuous \cite[Prop.~3.9]{Men13};
+  $b \leq b_\ell$ and $b_\ell$ satisfies the triangle inequality. Forward interior spaces have
+  approximate intermediate points, and curves of finite forward length admit forward Lipschitz
+  reparametrizations on $[0, 1]$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  The proofs of the symmetric case adapt, with care for the order of the arguments of $b$; the
+  continuity of the running length follows \cite[Appendix~B.2]{Men13}.
+\end{proof}
+
+\begin{theorem}[Shortest forward curves]
+  \label{thm:ms-fwd-hopf-rinow}
+  \lean{LocallyConvex.Manifolds.bdist_le_bdist_add_edist, LocallyConvex.Manifolds.continuous_bdist, LocallyConvex.Manifolds.IsFwdInterior.exists_fwdPath_length_eq_of_isCompact}
+  \leanok
+  \uses{thm:ms-fwd-length}
+  Let $X$ be a Hausdorff forward interior space, $b(x, y) < \infty$, with compact closed forward
+  ball $\{z : b(x, z) \leq b(x, y) + 1\}$ on which $b(w, z) \leq C\, b(z, w)$. Then there is a
+  continuous curve from $x$ to $y$ of forward length $b(x, y)$.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As in Theorem~\ref{thm:ms-hopf-rinow}, with forward Lipschitz reparametrizations. The bounded
+  asymmetry makes the limit curve Lipschitz for the symmetrized distance, hence continuous; without
+  it the limit need not be continuous \cite{Men13}.
+\end{proof}
+
+\begin{theorem}[Non-reversible Finsler structures]
+  \label{thm:ms-finsler-asymm}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.bdist_le_lengths, LocallyConvex.Manifolds.FinslerLengthStructure.fwdVar_le_length, LocallyConvex.Manifolds.FinslerLengthStructure.fwdArcPath, LocallyConvex.Manifolds.FinslerLengthStructure.fwdLengthDist_le_of_reach, LocallyConvex.Manifolds.FinslerLengthStructure.isFwdInterior, LocallyConvex.Manifolds.FinslerLengthStructure.length_reverse_le, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.reverse_le, LocallyConvex.Manifolds.FinslerLengthStructure.dist_comm_le, LocallyConvex.Manifolds.FinslerLengthStructure.t2Space_finslerSpace, LocallyConvex.Manifolds.FinslerLengthStructure.exists_fwdPath_length_eq}
+  \leanok
+  \uses{thm:ms-fwd-hopf-rinow, thm:ms-finsler-interior, thm:ms-bounded-below}
+  For any Finsler length structure, $\ell^+(\gamma) \leq L_b(\gamma)$ and $(M, d_b)$ is forward
+  interior. A reversibility constant $\mu_x(-v) \leq \lambda \mu_x(v)$ gives
+  $d_b(y, x) \leq \lambda d_b(x, y)$; if moreover $\mu$ is bounded below and the closed forward
+  ball is compact, there are shortest forward curves.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  As Theorem~\ref{thm:ms-finsler-interior}, with forward sums; reversed chains give the bound on
+  the asymmetry, and Lemma~\ref{thm:ms-bounded-below} makes $(M, d_b)$ Hausdorff.
+\end{proof}
+
+\begin{proposition}[Symmetrization]
+  \label{prop:ms-symm}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.symm, LocallyConvex.Manifolds.FinslerLengthStructure.symm_isReversible, LocallyConvex.Manifolds.FinslerLengthStructure.length_le_mul_of_le, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.mono_mul, LocallyConvex.Manifolds.FinslerLengthStructure.dist_le_mul_of_le, LocallyConvex.Manifolds.FinslerLengthStructure.dist_le_dist_symm, LocallyConvex.Manifolds.FinslerLengthStructure.dist_swap_le_dist_symm, LocallyConvex.Manifolds.FinslerLengthStructure.dist_symm_le, LocallyConvex.Manifolds.FinslerLengthStructure.homeomorphSymm}
+  \leanok
+  \uses{thm:ms-finsler-asymm}
+  $\mu_s(v) = \mu(v) + \mu(-v)$ is a reversible Finsler length structure, and
+  $\max\{d_b(x, y), d_b(y, x)\} \leq d_s(x, y)$. With a reversibility constant $\lambda$,
+  $d_s \leq (1 + \lambda) d_b$, and the identity is a homeomorphism between $(M, d_b)$ and
+  $(M, d_s)$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  Pointwise comparisons of the integrands pass to lengths of chains and to distances.
+\end{proof}
+
+So for the topology, bounded asymmetry reduces to the reversible case; lengths and shortest curves
+of $d_b$ and $d_s$ are, however, different, and without a reversibility constant the topology of
+$d_s$ may be strictly finer.
