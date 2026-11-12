@@ -248,7 +248,7 @@ namespaces of their own.
   geodesic on `(a, b)` with bounded speed and backward speed extends past both ends
   (`Connection.IsGeodesicOn.exists_extend_of_complete`).
 * [`LocallyConvexManifolds/Metric/FinslerExp.lean`](LocallyConvexManifolds/Metric/FinslerExp.lean):
-  Proposición 9.2.1 of *Estructuras* (p. 253), `1 ⇒ 2 ⇒ 3 ⇒ 4`. Under the same hypotheses, with
+  Proposición 9.2.1 of *Estructuras* (p. 257), `1 ⇒ 2 ⇒ 3 ⇒ 4`. Under the same hypotheses, with
   speeds bounded along every geodesic on a bounded interval (as for geodesics of constant speed),
   every maximal geodesic is defined on `ℝ` (`Connection.maxInterval_eq_univ_of_complete`), `D(exp) =
   TM` (`Connection.expDomain_eq_univ_of_complete`) and `Dom(exp_p) = T_pM`
@@ -1103,9 +1103,9 @@ distinction between the notions that coincide in finite dimension (flagged in ea
 * **[Hir76]** M. W. Hirsch, *Differential Topology*, Grad. Texts in Math. 33, Springer, 1976.
 * **[Lan99]** S. Lang, *Fundamentals of Differential Geometry*, Grad. Texts in Math. 191,
   Springer, 1999.
-* **[Lar24]** G. Larotonda, *Estructuras geométricas para las variedades de Banach*, 2nd ed.,
-  unpublished book manuscript, version of 11 September 2024,
-  [PDF at the author's page](https://mate.dm.uba.ar/~glaroton/Estructuras_v2.pdf).
+* **[Lar26]** G. Larotonda, *Estructuras geométricas para las variedades de Banach*, 2nd ed.,
+  unpublished book manuscript, version 3 of 15 August 2026,
+  [PDF at the author's page](https://mate.dm.uba.ar/~glaroton/Estructuras_v3.pdf).
 * The mathlib Community, *The Lean mathematical library*, CPP 2020, 367–381. This library uses
   Mathlib's `ChartedSpace`, `StructureGroupoid` and `OpenPartialHomeomorph`.
 

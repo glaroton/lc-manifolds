@@ -16,7 +16,7 @@ By local existence (`Connection.exists_isGeodesicOn`) and uniqueness
 (`Connection.IsGeodesicOn.eqOn`) of geodesics, the geodesics with initial velocity `v` glue to a
 **maximal geodesic** `γ_v`, defined on an open interval `J_v ∋ 0`. We follow [Lan99, Ch. IV §3]
 (Sprays, p. 96), [Lan99, Ch. IV §4] (The Flow of a Spray and the Exponential Map, p. 105),
-[Lan99, Ch. VIII §5] (p. 215) and [Lar24, §9.2].
+[Lan99, Ch. VIII §5] (p. 215) and [Lar26, §9.2].
 
 ## Main definitions
 
@@ -38,9 +38,9 @@ By local existence (`Connection.exists_isGeodesicOn`) and uniqueness
   geodesic with zero initial velocity is constant and defined on `ℝ`.
 * `Connection.smul_mem_expDomain_iff`, `Connection.exp_smul`: `tv ∈ D(exp)` if and only if
   `t ∈ J_v`, and then `exp(tv) = γ_v(t)`, so the maximal geodesic is `t ↦ exp(tv)`, as in
-  [Lar24].
+  [Lar26].
 * `Connection.expDomain_eq_univ_of_maxInterval_eq_univ`,
-  `Connection.exists_expDomainAt_eq_univ` (**[Lar24, Proposición 9.2.1], `2 ⇒ 3 ⇒ 4`**):
+  `Connection.exists_expDomainAt_eq_univ` (**[Lar26, Proposición 9.2.1], `2 ⇒ 3 ⇒ 4`**):
   if every maximal geodesic is defined on `ℝ` then `D(exp) = TM`, and then
   `Dom(exp_p) = T_pM` for some (indeed every) `p`. The implication `1 ⇒ 2` is in
   `LocallyConvexManifolds.Metric.FinslerExp`.
@@ -65,7 +65,7 @@ By local existence (`Connection.exists_isGeodesicOn`) and uniqueness
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section
@@ -388,20 +388,20 @@ theorem IsGeodesicThrough.exp_eq [T2Space M] {v : TangentBundle E M}
     v ∈ C.expDomain ∧ C.exp v = α 1 :=
   ⟨h.subset_maxInterval h1, h.maxGeodesic_eq h1⟩
 
-/-! ### [Lar24, Proposición 9.2.1], `2 ⇒ 3 ⇒ 4` -/
+/-! ### [Lar26, Proposición 9.2.1], `2 ⇒ 3 ⇒ 4` -/
 
-/-- **[Lar24, Proposición 9.2.1] (`2 ⇒ 3`)**: if every maximal geodesic is defined on `ℝ`, then
+/-- **[Lar26, Proposición 9.2.1] (`2 ⇒ 3`)**: if every maximal geodesic is defined on `ℝ`, then
 `M` is geodesically complete: `D(exp) = TM`. -/
 theorem expDomain_eq_univ_of_maxInterval_eq_univ (h : ∀ v : TangentBundle E M,
     C.maxInterval v = univ) : C.expDomain = univ :=
   eq_univ_of_forall fun v ↦ by simp [mem_expDomain, h v]
 
-/-- **[Lar24, Proposición 9.2.1] (`3 ⇒ 4`)**: if `D(exp) = TM`, then `Dom(exp_p) = T_pM` for every
+/-- **[Lar26, Proposición 9.2.1] (`3 ⇒ 4`)**: if `D(exp) = TM`, then `Dom(exp_p) = T_pM` for every
 `p`. -/
 theorem expDomainAt_eq_univ (h : C.expDomain = univ) (p : M) : C.expDomainAt p = univ :=
   eq_univ_of_forall fun w ↦ by simp [expDomainAt, h]
 
-/-- **[Lar24, Proposición 9.2.1] (`3 ⇒ 4`)**: if `M` is nonempty and `D(exp) = TM`, there is
+/-- **[Lar26, Proposición 9.2.1] (`3 ⇒ 4`)**: if `M` is nonempty and `D(exp) = TM`, there is
 `p ∈ M` with `Dom(exp_p) = T_pM`. -/
 theorem exists_expDomainAt_eq_univ [Nonempty M] (h : C.expDomain = univ) :
     ∃ p : M, C.expDomainAt p = univ :=

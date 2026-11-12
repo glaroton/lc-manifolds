@@ -14,7 +14,7 @@ public import LocallyConvexAnalysis.ODE.Quadratic
 Let `C` be a connection on a manifold modeled on a **Banach** space `E` (completeness is used by
 Picard–Lindelöf). In a chart the geodesic equation is the quadratic second order equation
 `c'' = Γ_c(c', c')`, so the results of `LocallyConvexAnalysis.ODE.Quadratic` give local existence
-and uniqueness of geodesics. We follow [Lan99, Ch. IV §3 and VIII] and [Lar24, §9.2].
+and uniqueness of geodesics. We follow [Lan99, Ch. IV §3 and VIII] and [Lar26, §9.2].
 
 ## Main results
 
@@ -35,7 +35,7 @@ through the origins are geodesics of the flat connection with the same initial d
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section

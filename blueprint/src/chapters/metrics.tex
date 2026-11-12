@@ -510,7 +510,7 @@ sign of $g$.
   $G(y + tu)(a + a', b) = G(y + tu)(a, b) + G(y + tu)(a', b)$, valid for small $t$.
 \end{proof}
 
-In the notation of \cite[Teorema 10.1.1]{Lar24}, where $G(y)(a, b) = \langle a, g(y) b\rangle$ and
+In the notation of \cite[Teorema 10.1.1]{Lar26}, where $G(y)(a, b) = \langle a, g(y) b\rangle$ and
 $\partial G(y)(z)(a, b) = \langle a, g_{*y,z}\, b\rangle$, the formula of the statement is
 $\langle F_y(v), g(y) z\rangle = -\langle g_{*y,v}\, v, z\rangle + \frac12 \langle g_{*y,z}\, v,
 v\rangle$, and the Koszul formula is its polarization; see also \cite[Ch.~VIII, Theorem 4.2, MS 1]{Lan99}, whose bilinear map $B_U$ is our $\Gamma$.
@@ -621,7 +621,7 @@ $t \in \T_p X$.
 \end{proof}
 
 No sign condition on $\beta$ is used: the computation is the one of the Riemannian case
-\cite[\S10.1.1]{Lar24}.
+\cite[\S10.1.1]{Lar26}.
 
 \begin{theorem}[The projector connection is the Levi-Civita connection]
   \label{thm:mt-projector-levi-civita}
@@ -722,7 +722,7 @@ Its distance $d_b$ (Definition~\ref{def:mt-dist}) is then a pseudo-distance, and
 pseudo-metric space; without reversibility $d_b$ is only a quasi-distance and the symmetric
 theory of the previous section does not apply as such.
 
-\begin{theorem}[\texorpdfstring{\cite[Prop.~9.1.2]{Lar24}}{Prop. 9.1.2}]
+\begin{theorem}[\texorpdfstring{\cite[Prop.~9.1.2]{Lar26}}{Prop. 9.1.2}]
   \label{thm:ms-finsler-interior}
   \lean{LocallyConvex.Manifolds.FinslerLengthStructure.FinslerSpace, LocallyConvex.Manifolds.FinslerLengthStructure.edist_le_abs_length, LocallyConvex.Manifolds.FinslerLengthStructure.continuous_toFinsler, LocallyConvex.Manifolds.FinslerLengthStructure.eVariationOn_le_length, LocallyConvex.Manifolds.FinslerLengthStructure.arcPath, LocallyConvex.Manifolds.FinslerLengthStructure.lengthDist_le_of_reach, LocallyConvex.Manifolds.FinslerLengthStructure.isInterior}
   \leanok
@@ -745,7 +745,7 @@ theory of the previous section does not apply as such.
 In this section the model $E$ is a normed space; from Lemma~\ref{lem:ms-exit} on, it is complete
 and $M$ is Hausdorff.
 
-\begin{definition}[\texorpdfstring{\cite[Def.~9.1.3, Obs.~9.1.4]{Lar24}}{Def. 9.1.3}]
+\begin{definition}[\texorpdfstring{\cite[Def.~9.1.3, Obs.~9.1.4]{Lar26}}{Def. 9.1.3}]
   \label{def:ms-bounded}
   \lean{LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedBelowOn, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedAboveOn, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedBelow, LocallyConvex.Manifolds.FinslerSeminormField.IsBoundedAbove, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded.isBoundedBelow, LocallyConvex.Manifolds.FinslerSeminormField.IsBounded.isBoundedAbove}
   \leanok
@@ -769,7 +769,7 @@ and $M$ is Hausdorff.
   \uses{def:ms-bounded}
   If $\mu$ is bounded below on $U$ with constant $C$ and $E$ is complete, a $\Ck{1}$ curve that
   stays in $U$ satisfies $\|\varphi(\gamma(t)) - \varphi(\gamma(s))\| \leq C L_b(\gamma|_{[s, t]})$
-  \cite[(9.2)]{Lar24}.
+  \cite[(9.2)]{Lar26}.
 \end{lemma}
 
 \begin{proof}
@@ -796,7 +796,7 @@ and $M$ is Hausdorff.
   is then inside the ball: a contradiction. Chains follow by induction.
 \end{proof}
 
-\begin{theorem}[\texorpdfstring{\cite[Lema~9.1.8]{Lar24}}{Lema 9.1.8}]
+\begin{theorem}[\texorpdfstring{\cite[Lema~9.1.8]{Lar26}}{Lema 9.1.8}]
   \label{thm:ms-bounded-below}
   \lean{LocallyConvex.Manifolds.FinslerLengthStructure.exists_chart_norm_le_dist, LocallyConvex.Manifolds.FinslerLengthStructure.eq_of_dist_eq_zero, LocallyConvex.Manifolds.FinslerLengthStructure.continuous_ofFinsler}
   \leanok
@@ -830,7 +830,7 @@ and $M$ is Hausdorff.
   $\mathbb{R} \times E_0$ with a reversible, nondegenerate Finsler metric, bounded above and below,
   such that the identity $(M, d_b) \to M$ is not continuous. This applies to $c_{00}$ with the
   $\ell^2$ norm. So the completeness of the model cannot be dropped from
-  Theorem~\ref{thm:ms-bounded-below} nor from Corolario~9.1.9 of \cite{Lar24}.
+  Theorem~\ref{thm:ms-bounded-below} nor from Corolario~9.1.9 of \cite{Lar26}.
 \end{theorem}
 
 \begin{proof}
@@ -856,9 +856,9 @@ and $M$ is Hausdorff.
   \leanok
   \uses{def:ms-bounded, thm:ms-bounded-below}
   If $\mu$ is bounded above with constant $m$, then $d_b(x, y) \leq \|\varphi(y) - \varphi(x)\| / m$
-  near each point \cite[(9.3)]{Lar24}, so the topology of $d_b$ is coarser than that of $M$. For a
+  near each point \cite[(9.3)]{Lar26}, so the topology of $d_b$ is coarser than that of $M$. For a
   strong Finsler manifold (reversible, complete model, $M$ Hausdorff) the identity is a
-  homeomorphism between $M$ and $(M, d_b)$ \cite[Cor.~9.1.9]{Lar24}.
+  homeomorphism between $M$ and $(M, d_b)$ \cite[Cor.~9.1.9]{Lar26}.
 \end{theorem}
 
 \begin{proof}
@@ -869,7 +869,7 @@ and $M$ is Hausdorff.
   Theorem~\ref{thm:ms-bounded-below}.
 \end{proof}
 
-\begin{lemma}[\texorpdfstring{\cite[Lema~9.1.6]{Lar24}}{Lema 9.1.6}]
+\begin{lemma}[\texorpdfstring{\cite[Lema~9.1.6]{Lar26}}{Lema 9.1.6}]
   \label{lem:ms-lipschitz}
   \lean{LocallyConvex.Manifolds.FinslerSeminormField.chartFun, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_tcc, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_smul, LocallyConvex.Manifolds.FinslerSeminormField.chartFun_zero, LocallyConvex.Manifolds.FinslerSeminormField.isBoundedAbove_of_lipschitz}
   \leanok
@@ -885,7 +885,7 @@ and $M$ is Hausdorff.
   for $q$ close to $p$.
 \end{proof}
 
-\begin{theorem}[\texorpdfstring{\cite[Teorema~9.1.5]{Lar24}}{Teorema 9.1.5}]
+\begin{theorem}[\texorpdfstring{\cite[Teorema~9.1.5]{Lar26}}{Teorema 9.1.5}]
   \label{thm:ms-finite-dim}
   \lean{LocallyConvex.Manifolds.tangentCoordChange_smul, LocallyConvex.Manifolds.FinslerMetric.isBounded_of_finiteDimensional}
   \leanok
@@ -900,7 +900,7 @@ and $M$ is Hausdorff.
   sphere. Homogeneity gives the bounds for every vector.
 \end{proof}
 
-\begin{corollary}[\texorpdfstring{Hopf--Rinow for Finsler manifolds \cite[Cor.~9.1.10]{Lar24}}{Hopf-Rinow for Finsler manifolds}]
+\begin{corollary}[\texorpdfstring{Hopf--Rinow for Finsler manifolds \cite[Cor.~9.1.10]{Lar26}}{Hopf-Rinow for Finsler manifolds}]
   \label{cor:ms-finsler-hopf-rinow}
   \lean{LocallyConvex.Manifolds.FinslerMetric.metricSpace, LocallyConvex.Manifolds.FinslerMetric.locallyCompactSpace, LocallyConvex.Manifolds.FinslerMetric.exists_rectPath_length_eq}
   \leanok
@@ -919,4 +919,4 @@ and $M$ is Hausdorff.
 \end{proof}
 
 Whether these shortest curves can be taken piecewise $\Ck{1}$ is a separate question
-\cite[Obs.~9.1.11]{Lar24}.
+\cite[Obs.~9.1.11]{Lar26}.

@@ -13,10 +13,10 @@ public import Mathlib.Analysis.Calculus.Deriv.Prod
 /-!
 # Lema 9.1.8 fails without completeness of the model
 
-[Lar24, Cap. 9, §9.1.2, Lema 9.1.8] (`FinslerLengthStructure.continuous_ofFinsler` in
+[Lar26, Cap. 9, §9.1.2, Lema 9.1.8] (`FinslerLengthStructure.continuous_ofFinsler` in
 `Metric/FinslerBounded.lean`) says that if a Finsler structure `μ` on a Hausdorff manifold modeled
 on a **Banach** space is bounded below, every open set of `M` is open for the Finsler distance
-`d_b`; by [Lar24, Corolario 9.1.9] (`FinslerLengthStructure.homeomorphFinsler`) a strong Finsler
+`d_b`; by [Lar26, Corolario 9.1.9] (`FinslerLengthStructure.homeomorphFinsler`) a strong Finsler
 structure (bounded above and below) induces the topology of `M`. The proof is an exit argument
 (`FinslerLengthStructure.reach_exit`): a curve that leaves the domain of a chart before its image
 leaves a ball would have, by completeness, a limit point inside the ball. We show that **the
@@ -80,7 +80,7 @@ the max norm (Mathlib's product norm) instead of `|σ| + ‖w‖`.
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section
@@ -585,7 +585,7 @@ theorem isBoundedAboveOn_a₂ :
     rw [inv_mul_le_iff₀ (by linarith)]
     nlinarith [norm_nonneg v]
 
-/-- `μ` is **bounded above and below** (a *strong* Finsler structure, [Lar24,
+/-- `μ` is **bounded above and below** (a *strong* Finsler structure, [Lar26,
 Observación 9.1.4]). -/
 theorem isBounded : (μ c).toFinslerSeminormField.IsBounded := by
   have hK := bound_nonneg (c := c)
@@ -1116,7 +1116,7 @@ end GluingCurve
 
 /-! ### The main theorems -/
 
-/-- **Lema 9.1.8 and Corolario 9.1.9 of [Lar24] fail without completeness.** For every
+/-- **Lema 9.1.8 and Corolario 9.1.9 of [Lar26] fail without completeness.** For every
 incomplete normed space `E₀` there are a Hausdorff manifold `M` modeled on `ℝ × E₀` and a
 reversible Finsler metric `μ` on `M`, whose seminorms are norms, which is bounded above and below
 (a *strong* Finsler structure), and such that the identity `(M, d_b) → M` is not continuous.

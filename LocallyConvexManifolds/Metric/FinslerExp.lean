@@ -11,7 +11,7 @@ public import LocallyConvexManifolds.Metric.FinslerGeodesics
 /-!
 # Complete Finsler manifolds are geodesically complete
 
-[Lar24, Cap. 9, §9.2 *Variedades de Finsler con spray*, Proposición 9.2.1 (p. 253)] states that,
+[Lar26, Cap. 9, §9.2 *Variedades de Finsler con spray*, Proposición 9.2.1 (p. 257)] states that,
 for a strong Finsler manifold `M` with spray, each of the following assertions implies the next:
 
 1. `(M, d_b)` is complete;
@@ -37,7 +37,7 @@ and the extension would be a geodesic with initial velocity `v` on an interval r
 `b`, against maximality. Boundedness below reduces to boundedness above through
 `J_{-v} = -J_v`. We do not claim this argument is new.
 
-## Hypotheses, compared with [Lar24]
+## Hypotheses, compared with [Lar26]
 
 The hypotheses are those of `Connection.IsGeodesicOn.exists_extend_of_complete`, whose docstring
 compares them with the book in detail:
@@ -73,13 +73,13 @@ compares them with the book in detail:
   ellipsoid `M = A(S)` of a Hilbert space, image of the unit sphere by
   `A = diag(1, 1 + 2⁻¹, 1 + 2⁻², …)`, a complete Riemannian Hilbert manifold, `e₀` and `-e₀` are at
   distance `π` but every curve joining them is strictly longer ([McA65], as presented
-  in [Lar24, Ejemplo 10.4.2, pp. 297–298]).
+  in [Lar26, Ejemplo 10.4.2, pp. 301–302]).
 
 ## References
 
 * [C. J. Atkin, *The Hopf–Rinow theorem is false in infinite dimensions*][Atk75]
 * [I. Ekeland, *The Hopf–Rinow theorem in infinite dimension*][Eke78]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [J. McAlpin, *Infinite dimensional manifolds and Morse theory*][McA65]
 -/
 
@@ -151,7 +151,7 @@ theorem not_bddAbove_maxInterval_of_complete (hb : μ.toFinslerSeminormField.IsB
   have := le_csSup hbdd hmem
   linarith
 
-/-- **Proposición 9.2.1 (`1 ⇒ 2`)** ([Lar24, §9.2, p. 253]). Let `M` be a Hausdorff manifold modeled
+/-- **Proposición 9.2.1 (`1 ⇒ 2`)** ([Lar26, §9.2, p. 257]). Let `M` be a Hausdorff manifold modeled
 on a Banach space, with a connection and a Finsler length structure `μ` bounded below, such that
 `(M, d_b)` is complete (for the symmetrized distance). Assume that every geodesic on a bounded open
 interval has bounded speed `μ(α̇)` and bounded backward speed `μ(-α̇)` there (as when geodesics have

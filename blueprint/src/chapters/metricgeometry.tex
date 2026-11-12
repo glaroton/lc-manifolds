@@ -2,7 +2,7 @@
 \label{chap:metric-spaces}
 
 Metric spaces in which the distance is the infimum of lengths of curves, after Gromov, as in
-Chapter~8 of \cite{Lar24}: the rectifiable distance, interior metric spaces, approximate midpoints,
+Chapter~8 of \cite{Lar26}: the rectifiable distance, interior metric spaces, approximate midpoints,
 the metric Hopf--Rinow theorem, and their asymmetric counterparts. The lengths of curves are
 those of Mathlib, through the variation of a curve. Nothing in this chapter uses manifolds or the
 calculus; it is applied to Finsler manifolds in Chapter~\ref{chap:metrics}.
@@ -15,9 +15,9 @@ curve $\gamma \colon [a, b] \to X$ is the supremum of the sums
 $\sum_i d(\gamma(t_i), \gamma(t_{i+1}))$ over the partitions of $[a, b]$; in Mathlib this is the
 variation \texttt{eVariationOn}. Its basic properties are in Mathlib: refining a partition
 increases the sums, the length vanishes only for constant curves, it is additive under
-concatenation, invariant under monotone reparametrizations \cite[Obs.~8.1.1]{Lar24}, lower
-semicontinuous under uniform convergence \cite[Prop.~8.1.3]{Lar24}, and the arc length
-$t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
+concatenation, invariant under monotone reparametrizations \cite[Obs.~8.1.1]{Lar26}, lower
+semicontinuous under uniform convergence \cite[Prop.~8.1.3]{Lar26}, and the arc length
+$t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar26}.
 
 \begin{definition}[The rectifiable distance]
   \label{def:ms-length-dist}
@@ -33,7 +33,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \leanok
   \uses{def:ms-length-dist}
   $d_\ell$ is a pseudo-distance, and $d \leq d_\ell$. In particular the topology of $d_\ell$ is
-  finer than that of $d$ \cite[Obs.~8.1.7]{Lar24}.
+  finer than that of $d$ \cite[Obs.~8.1.7]{Lar26}.
 \end{proposition}
 
 \begin{proof}
@@ -49,7 +49,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \uses{prop:ms-length-dist}
   The topologies of $d$ and $d_\ell$ coincide if and only if, for every $x$ and every
   $\varepsilon > 0$, the points close enough to $x$ can be joined to $x$ by curves of length
-  $< \varepsilon$ \cite[Lema~8.1.8]{Lar24}.
+  $< \varepsilon$ \cite[Lema~8.1.8]{Lar26}.
 \end{lemma}
 
 \begin{proof}
@@ -63,7 +63,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \leanok
   \uses{def:ms-length-dist}
   $(X, d)$ is an interior metric space (a length space) if $d = d_\ell$
-  \cite[\S8.1.1]{Lar24}.
+  \cite[\S8.1.1]{Lar26}.
 \end{definition}
 
 \begin{proposition}[Approximate midpoints]
@@ -72,7 +72,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \leanok
   \uses{def:ms-interior}
   In an interior metric space, for all $x, y$ and $\varepsilon > 0$ there is $z$ with
-  $\max\{d(x, z), d(z, y)\} \leq \frac12 d(x, y) + \varepsilon$ \cite[Problema~8.III]{Lar24}.
+  $\max\{d(x, z), d(z, y)\} \leq \frac12 d(x, y) + \varepsilon$ \cite[Problema~8.III]{Lar26}.
 \end{proposition}
 
 \begin{proof}
@@ -81,7 +81,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   intermediate value theorem it has a point at half its length.
 \end{proof}
 
-\begin{theorem}[\texorpdfstring{\cite[Lema~8.1.10, Problemas~8.III--8.IV]{Lar24}}{Lema 8.1.10}]
+\begin{theorem}[\texorpdfstring{\cite[Lema~8.1.10, Problemas~8.III--8.IV]{Lar26}}{Lema 8.1.10}]
   \label{thm:ms-midpoints-iff}
   \lean{LocallyConvex.Manifolds.HasApproxMidpoints, LocallyConvex.Manifolds.HasBallCondition, LocallyConvex.Manifolds.IsInterior.exists_dist_le_sub_sub, LocallyConvex.Manifolds.IsInterior.hasBallCondition, LocallyConvex.Manifolds.HasBallCondition.hasApproxMidpoints, LocallyConvex.Manifolds.HasApproxMidpoints.hasBallCondition, LocallyConvex.Manifolds.hasApproxMidpoints_iff_hasBallCondition, LocallyConvex.Manifolds.HasApproxMidpoints.exists_rectPath_length_le, LocallyConvex.Manifolds.isInterior_of_approx_midpoint, LocallyConvex.Manifolds.isInterior_iff_hasApproxMidpoints, LocallyConvex.Manifolds.isInterior_iff_hasBallCondition}
   \leanok
@@ -97,7 +97,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   The converse direction builds dyadic chains of approximate midpoints with steps at most
   $(d(x, y) + \varepsilon)/2^n$, and the curve as the uniform limit of the corresponding step
   functions, which exists by completeness and is $(d(x, y) + \varepsilon)$-Lipschitz. This replaces
-  the extension from dyadic rationals of \cite[Lema~8.1.9]{Lar24}.
+  the extension from dyadic rationals of \cite[Lema~8.1.9]{Lar26}.
 \end{proof}
 
 \section{The metric Hopf--Rinow theorem}
@@ -123,7 +123,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \leanok
   \uses{def:ms-length-dist}
   A curve of finite length $\ell$ can be reparametrized on $[0, 1]$ as an $\ell$-Lipschitz curve
-  \cite[Obs.~8.1.5, Cor.~8.1.6]{Lar24}.
+  \cite[Obs.~8.1.5, Cor.~8.1.6]{Lar26}.
 \end{lemma}
 
 \begin{proof}
@@ -132,7 +132,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   sets of the arc length.
 \end{proof}
 
-\begin{theorem}[\texorpdfstring{Hopf--Rinow \cite[Teorema~8.2.3]{Lar24}}{Hopf-Rinow}]
+\begin{theorem}[\texorpdfstring{Hopf--Rinow \cite[Teorema~8.2.3]{Lar26}}{Hopf-Rinow}]
   \label{thm:ms-hopf-rinow}
   \lean{LocallyConvex.Manifolds.IsInterior.isCompact_closedBall_of_lt, LocallyConvex.Manifolds.IsInterior.exists_isCompact_closedBall_gt, LocallyConvex.Manifolds.IsInterior.isCompact_closedBall, LocallyConvex.Manifolds.IsInterior.properSpace, LocallyConvex.Manifolds.IsInterior.exists_rectPath_length_eq_of_isCompact, LocallyConvex.Manifolds.IsInterior.exists_rectPath_length_eq}
   \leanok
@@ -154,7 +154,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   gives a larger compact ball. For the shortest curves, reparametrize almost minimizing curves as
   in Lemma~\ref{lem:ms-reparam}; they lie in a compact ball and are uniformly Lipschitz, and a
   cluster point in the product topology (Tychonoff) is a Lipschitz curve of length at most the
-  distance. Here the formal proof departs from \cite{Lar24}, which uses Arzelà--Ascoli and the
+  distance. Here the formal proof departs from \cite{Lar26}, which uses Arzelà--Ascoli and the
   lower semicontinuity of the length.
 \end{proof}
 
@@ -165,7 +165,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \uses{def:ms-interior}
   $\gamma \colon [0, 1] \to X$ is a short geodesic of length $L$ if
   $d(\gamma(s), \gamma(t)) = L |s - t|$; its length is $L$. $X$ is geodesic if it is interior and
-  any two points are joined by a short geodesic \cite[Def.~8.1.11]{Lar24}.
+  any two points are joined by a short geodesic \cite[Def.~8.1.11]{Lar26}.
 \end{definition}
 
 \begin{proposition}
@@ -173,9 +173,9 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \lean{LocallyConvex.Manifolds.RectPath.edist_eq_of_length_eq, LocallyConvex.Manifolds.RectPath.exists_isShortGeodesic, LocallyConvex.Manifolds.IsInterior.isGeodesicSpace}
   \leanok
   \uses{def:ms-geodesic, thm:ms-hopf-rinow, lem:ms-reparam}
-  The sub-arcs of a curve realizing the distance realize the distance \cite[Obs.~8.1.13]{Lar24};
+  The sub-arcs of a curve realizing the distance realize the distance \cite[Obs.~8.1.13]{Lar26};
   normalized by arc length such a curve is a short geodesic. Hence a complete, locally compact
-  interior metric space is geodesic \cite[Teorema~8.2.3]{Lar24}.
+  interior metric space is geodesic \cite[Teorema~8.2.3]{Lar26}.
 \end{proposition}
 
 \begin{proof}
@@ -189,7 +189,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   \label{rem:ms-proper}
   \lean{LocallyConvex.Manifolds.completeSpace_of_isCompact_closedBall}
   \leanok
-  A space whose closed balls are compact is complete \cite[Obs.~8.2.4]{Lar24}. Being geodesic and
+  A space whose closed balls are compact is complete \cite[Obs.~8.2.4]{Lar26}. Being geodesic and
   locally compact does not imply completeness: the interval $(0, 1)$.
 \end{remark}
 
@@ -200,7 +200,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
   Let $A$ be the diagonal operator on $\ell^2$ with $a_0 = 1$, $a_n = 1 + 2^{-n}$, and
   $M = A(S)$, $S$ the unit sphere, with lengths measured by the norm of $\ell^2$. Then the distance
   in $M$ between $e_0$ and $-e_0$ is $\pi$, but every piecewise $\Ck{1}$ curve in $M$ joining them
-  is strictly longer than $\pi$ \cite[Ejemplo~10.4.2]{Lar24}.
+  is strictly longer than $\pi$ \cite[Ejemplo~10.4.2]{Lar26}.
 \end{example}
 
 \begin{proof}
@@ -212,7 +212,7 @@ $t \mapsto \ell(\gamma|_{[a, t]})$ is continuous \cite[Lema~8.1.4]{Lar24}.
 \end{proof}
 
 In finite dimension this cannot happen: a complete Riemannian manifold has shortest curves
-\cite[Cor.~10.4.3]{Lar24}, and Corollary~\ref{cor:ms-finsler-hopf-rinow} gives the Finsler
+\cite[Cor.~10.4.3]{Lar26}, and Corollary~\ref{cor:ms-finsler-hopf-rinow} gives the Finsler
 version.
 
 \section{Asymmetric distances}

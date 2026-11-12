@@ -17,7 +17,7 @@ the change of charts law
 which is the change of charts law of the double tangent bundle restricted to the points
 `(x, v; v, w)` (`Spray`). Geodesics are the curves with `α̈ = f(α, α̇)` in charts; their existence
 is not assumed (it needs ODE theory, not available in locally convex spaces). We follow
-[Lan99, §IV.3 and §VIII.2] and [Lar24, Cap. 6].
+[Lan99, §IV.3 and §VIII.2] and [Lar26, Cap. 6].
 
 A spray is quadratic if `fᵢ(x, s v) = s² fᵢ(x, v)` (`Spray.IsQuadratic`).
 
@@ -41,7 +41,7 @@ We show ([Lan99, Prop. IV.3.2 and §VIII.2]):
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section

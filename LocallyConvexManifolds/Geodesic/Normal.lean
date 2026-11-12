@@ -13,12 +13,12 @@ public import LocallyConvexManifolds.Geodesic.GeodesicSpray
 Let `C` be a connection on a Hausdorff manifold `M` modeled on a Banach space `E`, with exponential
 map `exp` defined on the open set `D(exp) ⊆ TM` (`LocallyConvexManifolds.Geodesic.GeodesicSpray`).
 We follow [Lan99, Ch. IV §4, Theorem 4.1 (p. 108)], [Lan99, Ch. VIII §5, Proposition 5.1 (p. 215)
-and Corollary 5.2 (p. 216)] and [Lar24, §6.2, Observación 6.2.2 (p. 157), §6.2.1 and
-Teorema 6.2.3 (p. 158)].
+and Corollary 5.2 (p. 216)] and [Lar26, §6.2, Observación 6.2.2 (p. 161), §6.2.1 and
+Teorema 6.2.3 (p. 162)].
 
 ## Main results
 
-* `Connection.hasFDerivAt_expAt_zero` (**[Lan99, Theorem IV.4.1]; [Lar24, Observación
+* `Connection.hasFDerivAt_expAt_zero` (**[Lan99, Theorem IV.4.1]; [Lar26, Observación
   6.2.2]**): `d(exp_p)(0_p) = id`. Read in the preferred chart `φ` at `p` (which identifies
   `T_pM` with `E`), the derivative at `0` of `w ↦ φ(exp_p w)` is the identity. The proof is
   Lang's: `exp_p(t w) = γ_w(t)` (`Connection.exp_smul`) and `γ_w'(0) = w`.
@@ -28,13 +28,13 @@ Teorema 6.2.3 (p. 158)].
   `p`.
 * `Connection.hasFDerivAt_expChart`, `Connection.exists_expChart_openPartialHomeomorph`,
   `Connection.exists_expPair_openPartialHomeomorph` (**[Lan99, Proposition VIII.5.1];
-  [Lar24, §6.2.1]**): the map `G(v) = (π v, exp v)`, `TM → M × M`, has differential
+  [Lar26, §6.2.1]**): the map `G(v) = (π v, exp v)`, `TM → M × M`, has differential
   `(a, b) ↦ (a, a + b)` at `0_p` in charts, hence is a local diffeomorphism at `0_p`.
-* `Connection.exists_expPair_normal` (**[Lar24, Teorema 6.2.3 (1)];
+* `Connection.exists_expPair_normal` (**[Lar26, Teorema 6.2.3 (1)];
   [Lan99, Corollary VIII.5.2 (1)]**): there is an open `W ∋ p` with `W × W ⊆ G(V)`; any two
   points of `W` are joined by a unique geodesic `t ↦ exp(t v)` with `v ∈ V`, and `v` depends
   smoothly on the endpoints.
-* `Connection.exists_uniformlyNormal` (**[Lar24, Teorema 6.2.3 (2)];
+* `Connection.exists_uniformlyNormal` (**[Lar26, Teorema 6.2.3 (2)];
   [Lan99, Corollary VIII.5.2 (2)]**): uniformly normal neighbourhoods. There are an open `W ∋ p`
   and `r > 0` such that for every `q ∈ W`, `exp_q` is defined on the ball of radius `r` of `T_qM`
   (read in the chart of `TM` over the chart `φ` at `p`) and maps it diffeomorphically onto an
@@ -61,11 +61,11 @@ product preserving the first coordinate.
   `(φ q, u)` is `T⁻¹(φ q, u)`, and the ball `B_r(0)` is a ball of `E` in these coordinates. This
   is how Lang states [Lan99, Corollary VIII.5.2 (2)] ("the open set in `T_xX` represented by
   `(x, E(ε))`").
-* [Lar24, Teorema 6.2.3 (2)] also asserts the same for every `r ≤ R` and that the geodesic
+* [Lar26, Teorema 6.2.3 (2)] also asserts the same for every `r ≤ R` and that the geodesic
   joining two points of `W` stays in `U_R(x)`; we formalize the case `r = R` (smaller radii follow
   by restricting the diffeomorphism) and do not formalize the localization of the geodesic.
   Lang writes the Jacobian of `G` as `[[id, id], [0, id]]`; in the coordinates `(x, u)` used here
-  it is `[[id, 0], [id, id]]`, as in [Lar24].
+  it is `[[id, 0], [id, id]]`, as in [Lar26].
 * Infinite-dimensional subtleties. `M` need not be locally compact, so the uniform radius cannot
   come from a compactness argument over a closed neighbourhood of `p`. It comes from the inverse
   function theorem applied to `G` at the single point `0_p`: the source of the local inverse is a
@@ -79,7 +79,7 @@ product preserving the first coordinate.
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section
@@ -364,7 +364,7 @@ theorem contDiffOn_chart_expAt (p : M) :
   simp [Function.comp_def, expChart_prefChart]
 
 /-- **The differential of `exp_p` at `0` is the identity** ([Lan99, Ch. IV §4,
-Theorem 4.1, p. 108]; [Lar24, Observación 6.2.2, p. 157]): read in the preferred chart
+Theorem 4.1, p. 108]; [Lar26, Observación 6.2.2, p. 161]): read in the preferred chart
 `φ` at `p`, the derivative at `0` of `w ↦ φ(exp_p w)` is the identity of `T_pM = E`. -/
 theorem hasFDerivAt_expAt_zero (p : M) :
     HasFDerivAt (fun w ↦ chartAt E p (C.expAt p w)) (ContinuousLinearMap.id ℝ E) 0 := by
@@ -394,7 +394,7 @@ theorem hasFDerivAt_expAt_zero (p : M) :
   rwa [hid] at hd
 
 /-- **`exp_p` is a local diffeomorphism at `0`** ([Lan99, Ch. IV §4, Theorem 4.1,
-p. 108]; [Lar24, Observación 6.2.2, p. 157]). There is a partial homeomorphism `e`
+p. 108]; [Lar26, Observación 6.2.2, p. 161]). There is a partial homeomorphism `e`
 from an open neighbourhood of `0` in `T_pM = E`, contained in `D(exp_p)`, onto an open
 neighbourhood of `p` in `M`, which agrees with `exp_p` on its source and is smooth with smooth
 inverse. -/
@@ -460,7 +460,7 @@ theorem expChart_zero (p : M) {x : E} (hx : x ∈ (chartAt E p).target) :
   rw [expAt_zero, φ.right_inv hx]
 
 /-- **The differential of `G(v) = (π v, exp v)` at `0_p`** ([Lan99, Ch. VIII §5,
-Proposition 5.1, p. 215]; [Lar24, §6.2.1, p. 158]): in charts it is
+Proposition 5.1, p. 215]; [Lar26, §6.2.1, p. 162]): in charts it is
 `(a, b) ↦ (a, a + b)`, the matrix `[[id, 0], [id, id]]`. The first column comes from `G(x, 0) =
 (x, x)`, the second from `d(exp_p)(0) = id`. -/
 theorem hasFDerivAt_expChart (p : M) :
@@ -507,7 +507,7 @@ theorem hasFDerivAt_expChart (p : M) :
   exact hF
 
 /-- **`G(v) = (π v, exp v)` is a local diffeomorphism at `0_p`, in charts**
-([Lan99, Ch. VIII §5, Proposition 5.1, p. 215]; [Lar24, §6.2.1, p. 158]). -/
+([Lan99, Ch. VIII §5, Proposition 5.1, p. 215]; [Lar26, §6.2.1, p. 162]). -/
 theorem exists_expChart_openPartialHomeomorph (p : M) :
     ∃ Ψ : OpenPartialHomeomorph (E × E) (E × E), (chartAt E p p, (0 : E)) ∈ Ψ.source ∧
       Ψ.source ⊆ C.expChartDomain p ∧ ⇑Ψ = C.expChart p ∧
@@ -516,7 +516,7 @@ theorem exists_expChart_openPartialHomeomorph (p : M) :
     (C.prefChart_zero_mem_expChartDomain p) (C.hasFDerivAt_expChart p)
 
 /-- **`G(v) = (π v, exp v)` is a local diffeomorphism `TM → M × M` at `0_p`**
-([Lan99, Ch. VIII §5, Proposition 5.1, p. 215]; [Lar24, §6.2.1, p. 158]). There is a
+([Lan99, Ch. VIII §5, Proposition 5.1, p. 215]; [Lar26, §6.2.1, p. 162]). There is a
 partial homeomorphism `Φ` from an open neighbourhood of `0_p` in `TM`, contained in `D(exp)`,
 onto an open neighbourhood of `(p, p)` in `M × M`, with `Φ v = (π v, exp v)` on its source, smooth
 with smooth inverse. -/
@@ -600,7 +600,7 @@ theorem exists_expPair_openPartialHomeomorph (p : M) :
     rfl
 
 /-- **Normal neighbourhoods: points of `W` are joined by a unique short geodesic**
-([Lar24, Teorema 6.2.3 (1), p. 158]; [Lan99, Ch. VIII §5, Corollary 5.2 (1), p. 216]).
+([Lar26, Teorema 6.2.3 (1), p. 162]; [Lan99, Ch. VIII §5, Corollary 5.2 (1), p. 216]).
 With `Φ = (π, exp)` as in `Connection.exists_expPair_openPartialHomeomorph`, there is an open
 neighbourhood `W` of `p` with `W × W ⊆ Φ(V)`, `V` the source of `Φ`. Hence for `x, y ∈ W` there is
 exactly one `v ∈ V` over `x` with `exp v = y`, i.e. exactly one geodesic `t ↦ exp(t v)`,
@@ -632,7 +632,7 @@ theorem exists_expPair_normal (p : M) :
   refine Φ.injOn hv hsrc ?_
   rw [hval _ hv, hval _ hsrc, hvx, hvy, hΦ.1, hΦ.2]
 
-/-- **Uniformly normal neighbourhoods** ([Lar24, Teorema 6.2.3 (2), p. 158];
+/-- **Uniformly normal neighbourhoods** ([Lar26, Teorema 6.2.3 (2), p. 162];
 [Lan99, Ch. VIII §5, Corollary 5.2 (2), p. 216]). Let `φ` be the preferred chart at
 `p` and read tangent vectors in the chart of `TM` over `φ`: the vector of `T_qM` with coordinates
 `(φ q, u)` is `T⁻¹(φ q, u)`. There are an open neighbourhood `W ⊆ dom φ` of `p` and a radius

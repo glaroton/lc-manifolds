@@ -17,7 +17,7 @@ with Fréchet derivatives: in a chart `i`, a curve `c = φᵢ ∘ α` is a geode
 chart (`geodesicEq_comp`): if `c` solves it in the chart `i`, then `τ ∘ c` solves it in the chart
 `j`, `τ = φⱼ ∘ φᵢ⁻¹`. The computation is `(τ ∘ c)'' = D²τ(c', c') + Dτ(c'')`, combined with the
 change of charts law of the symbols, `Γⱼ(τ y)(Dτ a, Dτ b) = Dτ Γᵢ(y)(a, b) + D²τ(a, b)`. We follow
-[Lan99, Ch. IV and VIII] and [Lar24, Cap. 6].
+[Lan99, Ch. IV and VIII] and [Lar26, Cap. 6].
 
 ## Main definitions
 
@@ -38,7 +38,7 @@ derivatives (`dMB_eq_fderiv`, `dMB_dMB_eq_fderiv_fderiv`, in lc-analysis [LCA]).
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 

@@ -17,14 +17,14 @@ Finsler metric `μ` whose seminorms are norms, and assume that `d_b` is finite (
 is connected by piecewise `C¹` paths). Then:
 
 * `d_b` is a distance (`FinslerMetric.metricSpace`), since `μ` is bounded below
-  ([Lar24, Teorema 9.1.5], [Lar24, Lema 9.1.8]);
-* `(M, d_b)` is locally compact, since it is homeomorphic to `M` ([Lar24, Corolario 9.1.9]);
-* `(M, d_b)` is an interior metric space ([Lar24, Proposición 9.1.2]).
+  ([Lar26, Teorema 9.1.5], [Lar26, Lema 9.1.8]);
+* `(M, d_b)` is locally compact, since it is homeomorphic to `M` ([Lar26, Corolario 9.1.9]);
+* `(M, d_b)` is an interior metric space ([Lar26, Proposición 9.1.2]).
 
-So if `(M, d_b)` is complete, the metric Hopf–Rinow theorem ([Lar24, Teorema 8.2.3]) gives
+So if `(M, d_b)` is complete, the metric Hopf–Rinow theorem ([Lar26, Teorema 8.2.3]) gives
 **shortest curves**: any two points are joined by a continuous curve whose length is their
-distance ([Lar24, Corolario 9.1.10]). These curves are continuous for `d_b`; whether they can be
-taken piecewise `C¹` is a separate question ([Lar24, Observación 9.1.11]).
+distance ([Lar26, Corolario 9.1.10]). These curves are continuous for `d_b`; whether they can be
+taken piecewise `C¹` is a separate question ([Lar26, Observación 9.1.11]).
 
 **Non-reversible structures.** For a Finsler structure bounded below with a reversibility constant
 `λ` (`μ_x(-v) ≤ λ μ_x(v)`), `(M, d_b)` is a Hausdorff, forward-interior asymmetric metric space with
@@ -38,7 +38,7 @@ bounded asymmetry, and compactness of the closed forward ball gives a curve of f
 ## Main results
 
 * `FinslerMetric.locallyCompactSpace`: `(M, d_b)` is locally compact.
-* `FinslerMetric.exists_rectPath_length_eq` ([Lar24, Corolario 9.1.10], Hopf–Rinow): if
+* `FinslerMetric.exists_rectPath_length_eq` ([Lar26, Corolario 9.1.10], Hopf–Rinow): if
   `(M, d_b)` is complete, any two points are joined by a continuous curve of length `d_b(x, y)`.
 * `FinslerLengthStructure.t2Space_finslerSpace`: if `μ` is bounded below, `(M, d_b)` is
   Hausdorff.
@@ -47,7 +47,7 @@ bounded asymmetry, and compactness of the closed forward ball gives a curve of f
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section

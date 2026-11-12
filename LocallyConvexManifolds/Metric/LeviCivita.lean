@@ -24,7 +24,7 @@ point, in the direction `u`. With the convention `∇_X Y = dỸ · X̃ − Γ(X
 
 The sources are [Lan99, Ch. VIII, §4, Theorem 4.1] (metric derivative) and [Lan99, Ch. VIII, §4,
 Theorem 4.2], condition MS 1 (metric spray), for pseudo-Riemannian metrics in Lang's sense;
-[Lar24, §10.1, Teorema 10.1.1] (metric spray, pseudo-Riemannian case); and [Sch23, §4.3]:
+[Lar26, §10.1, Teorema 10.1.1] (metric spray, pseudo-Riemannian case); and [Sch23, §4.3]:
 Definition 4.21 (metric spray, p. 92), Example 4.22 (a weak Riemannian metric on `ℓ²` without
 metric spray, p. 93), Definition 4.29 (metric derivative, p. 97).
 
@@ -45,7 +45,7 @@ metric spray, p. 93), Definition 4.29 (metric derivative, p. 97).
   weak pseudo-Riemannian metrics of arbitrary index (`WeakPseudoRiemannianMetric.covDeriv_eq`).
 * `Connection.isMetric_iff_spray`: **the metric spray.** A symmetric connection is metric if and
   only if its spray `F(v) = Γ(v, v)` satisfies, in every chart,
-  `G(F(v), z) = −∂G(v)(v, z) + ½ ∂G(z)(v, v)` ([Lar24, Teorema 10.1.1, formulas (10.3)–(10.4)]). The
+  `G(F(v), z) = −∂G(v)(v, z) + ½ ∂G(z)(v, v)` ([Lar26, Teorema 10.1.1, formulas (10.3)–(10.4)]). The
   symbols are recovered from the spray by polarization (`koszul_of_spray`); the additivity of
   `∂G(y)` in each argument, needed for this, is `SymmBilinField.localDeriv_add_left` and its
   companions.
@@ -67,7 +67,7 @@ theorem: existence is a property of the metric at hand, to be checked in example
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*][Sch23]
 -/
 
@@ -138,7 +138,7 @@ theorem exists_symm_compatible_iff {B : E → E → ℝ} {D : E → E → E → 
 
 omit [AddCommGroup E] in
 /-- On the diagonal, the Koszul expression is the **metric spray**:
-`koszul(v, v, z) = −D(v)(v, z) + ½ D(z)(v, v)` ([Lar24, Teorema 10.1.1, formula (10.3)]). -/
+`koszul(v, v, z) = −D(v)(v, z) + ½ D(z)(v, v)` ([Lar26, Teorema 10.1.1, formula (10.3)]). -/
 theorem koszul_diag (D : E → E → E → ℝ) (v z : E) :
     koszul D v v z = -D v v z + D z v v / 2 := by
   simp only [koszul]
@@ -156,7 +156,7 @@ theorem compatible_of_koszul {B : E → E → ℝ} {D : E → E → E → ℝ} {
 /-- **Polarization: the spray determines the Koszul formula.** If `Γ` is symmetric and
 additive, `B` and `D` are additive in each argument and `D` is symmetric in its last two, and the
 spray `v ↦ Γ(v, v)` satisfies `B(Γ(v, v), z) = −D(v)(v, z) + ½ D(z)(v, v)`, then `Γ` satisfies
-the Koszul formula ([Lar24, formula (10.4)]). -/
+the Koszul formula ([Lar26, formula (10.4)]). -/
 theorem koszul_of_spray {B : E → E → ℝ} {D : E → E → E → ℝ} {Γ : E → E → E}
     (hBadd : ∀ c c' b, B (c + c') b = B c b + B c' b)
     (hΓ : ∀ u a, Γ u a = Γ a u)
@@ -384,11 +384,11 @@ theorem koszul_represented (hC : C.IsSymmetric) (hm : C.IsMetric g) (i : atlas E
     ∃ c, ∀ b, g.localForm i y c b = LocallyConvex.Manifolds.koszul (g.localDeriv i y) u a b :=
   ⟨C.Γ i y u a, koszul hC hm i hy u a⟩
 
-/-- **The metric spray** ([Lar24, Teorema 10.1.1, formula (10.3)]; [Lan99, Ch. VIII, Theorem 4.2,
+/-- **The metric spray** ([Lar26, Teorema 10.1.1, formula (10.3)]; [Lan99, Ch. VIII, Theorem 4.2,
 MS 1]). A symmetric connection is metric for `g` if and only if, in every
 chart, its spray `v ↦ Γ(y)(v, v)` satisfies
 `G(y)(Γ(y)(v, v), z) = −∂G(y)(v)(v, z) + ½ ∂G(y)(z)(v, v)`.
-In the notation of [Lar24], `G(y)(a, b) = ⟨a, g(y) b⟩` and
+In the notation of [Lar26], `G(y)(a, b) = ⟨a, g(y) b⟩` and
 `∂G(y)(z)(a, b) = ⟨a, g*_{y,z} b⟩`, and this is `⟨F_y(v), g(y) z⟩ = −⟨g*_{y,v} v, z⟩ +
 ½ ⟨g*_{y,z} v, v⟩`. The symbols are recovered from the spray by polarization, which is the
 Koszul formula (formula (10.4) there). No nondegeneracy is needed for this equivalence. -/

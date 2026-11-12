@@ -11,7 +11,7 @@ public import LocallyConvexManifolds.Manifold.ContMDiff
 # Embedded submanifolds
 
 A subset `N` of a manifold `M` modeled on `E` is a submanifold modeled on a closed subspace
-`S ⊆ E` ([GN26, Definition 3.1.10]; see also [Lar24, Cap. 2], *subvariedad embebida*) if every
+`S ⊆ E` ([GN26, Definition 3.1.10]; see also [Lar26, Cap. 2], *subvariedad embebida*) if every
 point of `N` lies in a chart `φ` of the maximal atlas with `φ(U ∩ N) = φ(U) ∩ S`. Then `N` is a
 manifold modeled on `S` (`IsEmbeddedSubmanifold.mbManifold`) and the inclusion is smooth. The
 calculus fact behind the construction is `ContDiffMBOn.codRestrict` ([LCA]): a `C^k` map with
@@ -52,7 +52,7 @@ values in a closed subspace `T` is `C^k` as a map into `T` ([GN26, Lemma 1.3.19]
 ## References
 
 * [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 

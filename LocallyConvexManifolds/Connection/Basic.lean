@@ -16,7 +16,7 @@ law
 `Γⱼ(τ x)(dτₓ u, dτₓ v) = dτₓ Γᵢ(x)(u, v) + d²τₓ(u, v)`,
 where `τ = j ∘ i⁻¹` (`Connection`). The symbols are not tensorial: they transform affinely, with
 the second derivative of the transition map. We follow [Lan99, §§IV.3, VIII.1–2, IX.1] and
-[Lar24, Cap. 6]. Conventions: the first argument of `Γ` is the direction in which the base point
+[Lar26, Cap. 6]. Conventions: the first argument of `Γ` is the direction in which the base point
 moves, and
 
 * the covariant derivative is `∇_X Y = dỸ · X̃ − Γ(X̃, Ỹ)` in a chart (`Connection.covDeriv`);
@@ -53,7 +53,7 @@ available in locally convex spaces) is not assumed anywhere.
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section

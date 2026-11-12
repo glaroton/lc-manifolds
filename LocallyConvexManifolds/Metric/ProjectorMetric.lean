@@ -22,7 +22,7 @@ embedded submanifold with a field of projectors `P` onto its tangent spaces
 `P` is **`β`-orthogonal** if `β(P_p w, t) = β(w, t)` for every `w ∈ F` and every tangent vector
 `t ∈ T_p X`; that is, `ker P_p` is `β`-orthogonal to `T_p X`.
 
-The sources are [Lar24, §6.6 (Teorema 6.6.1, "derivar y proyectar")] and [Lar24, §10.1.1] (the
+The sources are [Lar26, §6.6 (Teorema 6.6.1, "derivar y proyectar")] and [Lar26, §10.1.1] (the
 Levi-Civita derivative of a submanifold), and [Bog74, Theorem V.3.4 and Example V.3.3]
 (ortho-complemented subspaces of Krein spaces).
 
@@ -68,7 +68,7 @@ that chart (`bilinLocalRep_inducedFun`). This gives:
 ## The indefinite case
 
 For an inner product every closed subspace of a Hilbert space has an orthogonal projector, and
-the theory above is that of [Lar24, §10.1.1]. For an indefinite `β` this is no longer so,
+the theory above is that of [Lar26, §10.1.1]. For an indefinite `β` this is no longer so,
 and `nondegenerate_of_orthogonal` shows the first obstruction: a **degenerate** tangent space
 `T_p X` (one containing a nonzero vector orthogonal to all of `T_p X`, as for the lightlike
 hypersurfaces of a Lorentzian space) admits no `β`-orthogonal projector, and the
@@ -88,7 +88,7 @@ ortho-complemented tangent spaces, which are Krein spaces, and continuous projec
 ## References
 
 * [J. Bognár, *Indefinite Inner Product Spaces*][Bog74]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 

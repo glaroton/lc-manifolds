@@ -12,10 +12,10 @@ public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
 /-!
 # Bounded Finsler structures: the distance and the topology of the manifold
 
-This file follows [Lar24, Cap. 9, §9.1.2]: Definición 9.1.3, Observación 9.1.4, Lema 9.1.8
+This file follows [Lar26, Cap. 9, §9.1.2]: Definición 9.1.3, Observación 9.1.4, Lema 9.1.8
 (adapted from H. Upmeier) and Corolario 9.1.9.
 
-In this file the model `E` is a **normed space**: the conditions of [Lar24, §9.1.2] compare `μ`
+In this file the model `E` is a **normed space**: the conditions of [Lar26, §9.1.2] compare `μ`
 with the norm of the model. A Finsler structure `μ` is **bounded below** at `p` (*acotada
 inferiormente*) if there are a chart `φ` around `p` and `C > 0` with `‖φ_{*x} v‖ ≤ C μ_x(v)` for
 `x` in the domain of `φ` (`FinslerSeminormField.IsBoundedBelowOn`), and **bounded above**
@@ -24,17 +24,17 @@ inferiormente*) if there are a chart `φ` around `p` and `C > 0` with `‖φ_{*x
 **A word of caution on locally convex models.** If the model is not normable, no Finsler norm
 `μ_x` (a norm on `T_x M`) can be bounded above and below by a norm inducing its topology: the
 topology of `E` would be a norm topology. So the "strong" Finsler manifolds of
-[Lar24, Observación 9.1.4] are a phenomenon of normed models; this is Palais' setting.
+[Lar26, Observación 9.1.4] are a phenomenon of normed models; this is Palais' setting.
 
 ## Main definitions
 
 * `FinslerSeminormField.IsBoundedBelowOn`, `FinslerSeminormField.IsBoundedAboveOn`: `μ` is
-  bounded below (above) on a chart, with a given constant ([Lar24, Definición 9.1.3]).
+  bounded below (above) on a chart, with a given constant ([Lar26, Definición 9.1.3]).
 * `FinslerSeminormField.IsBoundedBelow`, `FinslerSeminormField.IsBoundedAbove`: `μ` is bounded
   below (above) around every point; bounded above is a *weak Finsler manifold*
-  ([Lar24, Observación 9.1.4]).
+  ([Lar26, Observación 9.1.4]).
 * `FinslerSeminormField.IsBounded`: `μ` is bounded above and below, a *strong Finsler manifold*
-  ([Lar24, Observación 9.1.4]).
+  ([Lar26, Observación 9.1.4]).
 * `FinslerLengthStructure.homeomorphFinsler`: for a strong Finsler manifold, the identity as a
   homeomorphism `M ≃ₜ (M, d_b)`.
 
@@ -43,7 +43,7 @@ topology of `E` would be a norm topology. So the "strong" Finsler manifolds of
 * `FinslerLengthStructure.norm_chart_sub_le`: if `μ` is bounded below on a chart `φ` with
   constant `C`, a `C¹` curve that stays in the domain of `φ` satisfies
   `‖φ(γ t) − φ(γ s)‖ ≤ C L_b(γ|[s, t])`. This is the integrated form of the bound
-  ([Lar24, (9.2)]). It needs no completeness of the model: it is the mean value inequality with
+  ([Lar26, (9.2)]). It needs no completeness of the model: it is the mean value inequality with
   a boundary function, valid in any normed space.
 * `FinslerLengthStructure.arc_exit`, `FinslerLengthStructure.reach_exit`: **leaving a chart
   costs length.** If `B̄(φ x₀, r) ⊆ φ(U)` and a chain of `C¹` arcs starts at `x₀`, then either
@@ -51,7 +51,7 @@ topology of `E` would be a norm topology. So the "strong" Finsler manifolds of
   is **complete** and `M` is **Hausdorff**: a curve that leaves `U` before its image leaves the
   ball would have, by completeness, a limit point inside the ball, hence (by Hausdorff) inside
   `U`. **Completeness is necessary.** Without it the limit of `φ(γ t)` may lie in the completion
-  of `E` only, and [Lar24, Lema 9.1.8] and [Lar24, Corolario 9.1.9] fail, even for strong Finsler
+  of `E` only, and [Lar26, Lema 9.1.8] and [Lar26, Corolario 9.1.9] fail, even for strong Finsler
   structures on Hausdorff manifolds. Glue two copies of `E = ℝ × E₀`, with `E₀` incomplete (for
   instance `c₀₀` with the `ℓ²` norm), along `{s < 1}` by `τ(s, v) = (s, v + c(s))`, where `c` is
   a smooth curve with `c' → 0` and no limit in `E₀` as `s → 1⁻`. The result is Hausdorff, the
@@ -63,26 +63,26 @@ topology of `E` would be a norm topology. So the "strong" Finsler manifolds of
   (`IncompleteFinsler.exists_not_continuous_ofFinsler`, `IncompleteFinsler.Glued.not_reach_exit`).
   The length `d_b` itself does not depend on completeness. We found no source for this
   counterexample; we do not claim it is new.
-* `FinslerLengthStructure.exists_chart_norm_le_dist` ([Lar24, Lema 9.1.8]): near `x₀`,
+* `FinslerLengthStructure.exists_chart_norm_le_dist` ([Lar26, Lema 9.1.8]): near `x₀`,
   `‖φ y − φ x₀‖ ≤ C d_b(x₀, y)`, and the points at small `d_b`-distance from `x₀` lie in `U`;
 * `FinslerLengthStructure.eq_of_dist_eq_zero`: if `μ` is bounded below, `d_b(x, y) = 0` forces
   `x = y`;
-* `FinslerLengthStructure.continuous_ofFinsler` ([Lar24, Lema 9.1.8]): every open set of `M` is
+* `FinslerLengthStructure.continuous_ofFinsler` ([Lar26, Lema 9.1.8]): every open set of `M` is
   open for `d_b`;
 * `FinslerLengthStructure.dist_le_norm_chart`,
-  `FinslerLengthStructure.continuous_toFinsler_of_isBoundedAbove` ([Lar24, (9.3)]): if `μ` is
+  `FinslerLengthStructure.continuous_toFinsler_of_isBoundedAbove` ([Lar26, (9.3)]): if `μ` is
   bounded above, `d_b(x, y) ≤ ‖φ y − φ x‖ / m` near each point, so the topology of `d_b` is
   coarser than that of `M` (a weak Finsler manifold);
-* `FinslerLengthStructure.homeomorphFinsler` ([Lar24, Corolario 9.1.9]): for a strong Finsler
+* `FinslerLengthStructure.homeomorphFinsler` ([Lar26, Corolario 9.1.9]): for a strong Finsler
   manifold (bounded above and below) the identity is a homeomorphism `M ≃ₜ (M, d_b)`;
-* `FinslerMetric.isBounded_of_finiteDimensional` ([Lar24, Teorema 9.1.5]): in finite dimension
+* `FinslerMetric.isBounded_of_finiteDimensional` ([Lar26, Teorema 9.1.5]): in finite dimension
   every Finsler metric whose seminorms are norms is strong.
-* `FinslerSeminormField.isBoundedAbove_of_lipschitz` ([Lar24, Lema 9.1.6]): a Finsler structure
+* `FinslerSeminormField.isBoundedAbove_of_lipschitz` ([Lar26, Lema 9.1.6]): a Finsler structure
   which is locally Lipschitz in charts is bounded above (a weak Finsler manifold).
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section
@@ -147,7 +147,7 @@ namespace FinslerLengthStructure
 
 variable (μ : FinslerLengthStructure E M)
 
-/-- **The integrated bound** ([Lar24, (9.2)]): if `μ` is bounded below on the chart `i`
+/-- **The integrated bound** ([Lar26, (9.2)]): if `μ` is bounded below on the chart `i`
 with constant `C`, a `C¹` curve which stays in the domain of `i` on `[s, t]` satisfies
 `‖φ(γ t) − φ(γ s)‖ ≤ C L_b(γ|[s, t])`. -/
 theorem norm_chart_sub_le {i : atlas E M} {U : Set M} {C : ℝ}
@@ -432,14 +432,14 @@ theorem continuous_ofFinsler (hb : μ.toFinslerSeminormField.IsBoundedBelow) :
   have := hεU hyU
   rwa [mem_preimage, i.1.left_inv hy] at this
 
-/-! ### Upper bounds: segments in a chart ([Lar24, (9.3)]) -/
+/-! ### Upper bounds: segments in a chart ([Lar26, (9.3)]) -/
 
 section Upper
 
 variable {i : atlas E M} {m : ℝ}
 
 omit [CompleteSpace E] [T2Space M] in
-/-- **The distance is bounded by the chart distance** ([Lar24, (9.3)]): if `μ` is bounded
+/-- **The distance is bounded by the chart distance** ([Lar26, (9.3)]): if `μ` is bounded
 above on the chart `i` with constant `m > 0`, and the segment from `φ x` to `φ y` lies in
 `φ(U)`, then `d_b(x, y) ≤ ‖φ y − φ x‖ / m`. The segment is reparametrized by
 `Real.smoothTransition`, so that it is a `C¹` curve defined on all of `ℝ`. -/
@@ -516,7 +516,7 @@ theorem dist_le_norm_chart {U : Set M} (hm : μ.toFinslerSeminormField.IsBounded
 
 omit [CompleteSpace E] [T2Space M] in
 /-- **For a weak Finsler manifold the topology of `d_b` is coarser than that of `M`**
-([Lar24, (9.3)]): if `μ` is bounded above, the identity `M → (M, d_b)` is
+([Lar26, (9.3)]): if `μ` is bounded above, the identity `M → (M, d_b)` is
 continuous. -/
 theorem continuous_toFinsler_of_isBoundedAbove (ha : μ.toFinslerSeminormField.IsBoundedAbove) :
     Continuous μ.toFinsler := by

@@ -10,7 +10,7 @@ public import LocallyConvexManifolds.VectorField.Basic
 /-!
 # The double tangent bundle
 
-The double tangent bundle `TTM` is the tangent bundle of `TM` ([Lar24, Cap. 5]; [Lan99, §IV.3]).
+The double tangent bundle `TTM` is the tangent bundle of `TM` ([Lar26, Cap. 5]; [Lan99, §IV.3]).
 A chart `i` of `M` gives a chart `ψᵢ` of `TM` and a chart `Ψᵢ` of `TTM`, in which points are
 written `((x, v), (u, w))`: `(x, v)` is the base point in `TM` and `(u, w)` the tangent vector at
 it.
@@ -38,7 +38,7 @@ Since `d²τₓ(u, v)` is symmetric in `(u, v)` (Schwarz), the canonical flip
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 -/
 
 @[expose] public section

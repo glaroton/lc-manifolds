@@ -12,21 +12,21 @@ public import Mathlib.Topology.Order.IntermediateValue
 /-!
 # The rectifiable distance and interior metric spaces
 
-This file follows [Lar24, Cap. 8, §8.1], which follows Gromov [Gro99].
+This file follows [Lar26, Cap. 8, §8.1], which follows Gromov [Gro99].
 
 Let `(X, d)` be a pseudo-(extended) metric space. The **length** of a continuous curve
 `γ : [a, b] → X` is the supremum over the partitions `a = t₀ ≤ ⋯ ≤ tₙ₊₁ = b` of
 `Σ d(γ tᵢ, γ tᵢ₊₁)`; in Mathlib this is `eVariationOn γ (Icc a b)`, with values in `[0, ∞]`.
-The basic properties listed in [Lar24, §8.1] are in Mathlib:
+The basic properties listed in [Lar26, §8.1] are in Mathlib:
 
 * refining a partition increases the sums, and `ℓ(γ) = 0` iff `γ` is constant
   (`eVariationOn.eq_zero_iff`);
 * additivity under concatenation (`eVariationOn.Icc_add_Icc`);
-* invariance under monotone reparametrizations ([Lar24, Observación 8.1.1],
+* invariance under monotone reparametrizations ([Lar26, Observación 8.1.1],
   `eVariationOn.comp_eq_of_monotoneOn`);
-* lower semicontinuity under uniform convergence ([Lar24, Proposición 8.1.3],
+* lower semicontinuity under uniform convergence ([Lar26, Proposición 8.1.3],
   `eVariationOn.lowerSemicontinuous_uniformOn`);
-* continuity of the arc length `t ↦ ℓ(γ|[a, t])` ([Lar24, Lema 8.1.4],
+* continuity of the arc length `t ↦ ℓ(γ|[a, t])` ([Lar26, Lema 8.1.4],
   `variationOnFromTo.continuousAt_variationOnFromTo_iff`).
 
 ## Main definitions
@@ -41,16 +41,16 @@ The basic properties listed in [Lar24, §8.1] are in Mathlib:
 ## Main results
 
 * `lengthDist_self`, `lengthDist_comm`, `lengthDist_triangle`: `d_ℓ` is a pseudo-(extended)
-  metric; and `d ≤ d_ℓ` (`edist_le_lengthDist`, [Lar24, Observación 8.1.7]);
+  metric; and `d ≤ d_ℓ` (`edist_le_lengthDist`, [Lar26, Observación 8.1.7]);
 * `continuous_ofLength`: the identity `LengthMetric X → X` is `1`-Lipschitz, so the topology of
   `d_ℓ` is finer; the two topologies agree iff every point can be joined to all nearby points by
-  curves of small length (`continuous_toLength_iff`, [Lar24, Lema 8.1.8]);
+  curves of small length (`continuous_toLength_iff`, [Lar26, Lema 8.1.8]);
 * `IsInterior.exists_approx_midpoint`: interior spaces have approximate midpoints
-  ([Lar24, Problema 8.III]).
+  ([Lar26, Problema 8.III]).
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar26]
 * [M. Gromov, *Metric Structures for Riemannian and Non-Riemannian Spaces*][Gro99]
 -/
 
@@ -156,7 +156,7 @@ def concat (p : RectPath x y) (q : RectPath y z) : RectPath x z where
     · simp only [h, ite_false]
       rw [show p.b + (q.b - q.a) + (q.a - p.b) = q.b by ring, q.target]
 
-/-- **Lengths add under concatenation** ([Lar24, §8.1, property 3]). -/
+/-- **Lengths add under concatenation** ([Lar26, §8.1, property 3]). -/
 theorem length_concat (p : RectPath x y) (q : RectPath y z) :
     (p.concat q).length = p.length + q.length := by
   set f := (p.concat q).toFun
@@ -186,7 +186,7 @@ end RectPath
 /-! ### The rectifiable distance -/
 
 /-- The **rectifiable distance** `d_ℓ(x, y)`: the infimum of the lengths of the continuous curves
-from `x` to `y`, and `∞` if there is none ([Lar24, §8.1]). -/
+from `x` to `y`, and `∞` if there is none ([Lar26, §8.1]). -/
 def lengthDist (x y : X) : ℝ≥0∞ := ⨅ p : RectPath x y, p.length
 
 theorem lengthDist_le {x y : X} (p : RectPath x y) : lengthDist x y ≤ p.length :=
@@ -252,7 +252,7 @@ theorem continuous_toLength_iff :
 
 /-- A pseudo-(extended) metric space is an **interior metric space** (a length space) if the
 distance between two points is the infimum of the lengths of the continuous curves joining them
-([Lar24, §8.1.1]). -/
+([Lar26, §8.1.1]). -/
 def IsInterior (X : Type*) [PseudoEMetricSpace X] : Prop := ∀ x y : X, lengthDist x y = edist x y
 
 /-- In an interior metric space, curves of length arbitrarily close to the distance exist. -/
@@ -267,8 +267,8 @@ section Metric
 
 variable {X : Type*} [PseudoMetricSpace X]
 
-/-- **Interior metric spaces have approximate midpoints** ([Lar24, Problema 8.III], a
-consequence of [Lar24, Lema 8.1.10]): for every `x, y` and `ε > 0` there is `z` with
+/-- **Interior metric spaces have approximate midpoints** ([Lar26, Problema 8.III], a
+consequence of [Lar26, Lema 8.1.10]): for every `x, y` and `ε > 0` there is `z` with
 `max (d(x, z), d(z, y)) ≤ d(x, y) / 2 + ε`. Take a curve of length `< d(x, y) + 2ε` and its point
 at half the length, which exists by the continuity of the arc length (Lema 8.1.4). -/
 theorem IsInterior.exists_approx_midpoint (h : IsInterior X) (x y : X) {ε : ℝ} (hε : 0 < ε) :
