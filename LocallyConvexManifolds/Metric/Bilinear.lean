@@ -10,19 +10,41 @@ public import LocallyConvexManifolds.Metric.Finsler
 /-!
 # Weak Riemannian, Lorentzian and pseudo-Riemannian metrics
 
-References: A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*,
-Cambridge University Press (2023), §4.1, Definition 4.1 (p. 80; weak and strong Riemannian
-metrics);
-S. Lang, *Fundamentals of Differential Geometry*, Ch. VII; J. Bognár, *Indefinite Inner Product
-Spaces*, Springer (1974): §I.11 (fundamental decompositions), Lemma II.10.2 (rank of positivity
-and negativity), Corollary IV.7.4 (intrinsic dimension), §V.1 (Krein spaces).
-
 All the metrics of this file are fields of **symmetric bilinear forms** `g_x` on the tangent
-spaces, smooth in charts (`SymmBilinField`). They are organized by their signature.
+spaces, smooth in charts (`SymmBilinField`). They are organized by their signature. Riemannian
+metrics follow [Sch23, §4.1, Definition 4.1 (p. 80)] (weak and strong Riemannian metrics) and
+[Lan99, Ch. VII]; indefinite forms follow [Bog74]: §I.11 (fundamental decompositions),
+Lemma II.10.2 (rank of positivity and negativity), Corollary IV.7.4 (intrinsic dimension) and
+§V.1 (Krein spaces).
+
+## Main definitions
+
+* `SymmBilinField`: a field of symmetric bilinear forms on the tangent spaces, smooth in charts.
+* `FundamentalDecomposition`: a `B`-orthogonal splitting `E = E₊ ⊕ E₋` by a continuous projection,
+  with `B` positive definite on `E₊` and negative definite on `E₋`;
+  `FundamentalDecomposition.ofTimelike` builds one from a timelike vector.
+* `WeakRiemannianMetric`: a field of positive definite forms ([Sch23, Definition 4.1]);
+  `WeakRiemannianMetric.IsStrongAt`: the metric is strong at a point.
+* `WeakRiemannianMetric.toFinslerMetric`: the Finsler metric `μ_x(v) = √(g_x(v, v))`.
+* `WeakPseudoRiemannianMetric`: a field of forms with a fundamental decomposition of each tangent
+  space, and `WeakPseudoRiemannianMetric.index`, its index at a point.
+* `WeakLorentzianMetric`: a weak pseudo-Riemannian metric of index `1`.
+
+## Main results
+
+* `FundamentalDecomposition.rank_neg_eq`: the index does not depend on the fundamental
+  decomposition.
+* `FundamentalDecomposition.nondegenerate`: a form with a fundamental decomposition is weakly
+  nondegenerate.
+* `WeakRiemannianMetric.toFinslerMetric_isReversible`,
+  `WeakRiemannianMetric.toFinslerMetric_isNondegenerate`: the Finsler metric of a weak Riemannian
+  metric is reversible and nondegenerate.
+* `WeakRiemannianMetric.index_eq_zero`: a weak Riemannian metric is a weak pseudo-Riemannian
+  metric of index `0`.
 
 ## Riemannian metrics
 
-A **weak Riemannian metric** (`WeakRiemannianMetric`, Schmeding, Definition 4.1) is a field of
+A **weak Riemannian metric** (`WeakRiemannianMetric`, [Sch23, Definition 4.1]) is a field of
 positive definite forms. "Weak" refers to the **topology of the fibers**: `g_x` is continuous
 on `T_x M`, but the norm `√(g_x(v, v))` may induce a strictly coarser topology than the one of
 the model. It is **strong** (`WeakRiemannianMetric.IsStrongAt`) when both topologies agree.
@@ -45,11 +67,12 @@ definite on `E₊` and negative definite on `E₋`. The **index** is the dimensi
 * The index does not depend on the decomposition (`FundamentalDecomposition.rank_neg_eq`). This
   holds for the *algebraic* dimension and in complete generality: a negative definite subspace
   meets `E₊` only at `0`, so the projection onto `E₋` along `E₊` is injective on it.
-* For finite index this is Bognár, Lemma II.10.2, where `dim E₋` is called the *rank of
+* For finite index this is [Bog74, Lemma II.10.2], where `dim E₋` is called the *rank of
   negativity*. For infinite index, Bognár measures `E₋` instead by its *intrinsic* dimension, the
-  dimension in the topology of a Hilbert majorant, and proves its invariance (Corollary IV.7.4);
-  that version needs the majorant and is not formalized here. The two dimensions differ in
-  general (the algebraic dimension of an infinite-dimensional Banach space is uncountable).
+  dimension in the topology of a Hilbert majorant, and proves its invariance
+  ([Bog74, Corollary IV.7.4]); that version needs the majorant and is not formalized here. The
+  two dimensions differ in general (the algebraic dimension of an infinite-dimensional Banach
+  space is uncountable).
 
 ## Lorentzian and pseudo-Riemannian metrics
 
@@ -75,6 +98,12 @@ here.
 constant, whether fundamental decompositions can be chosen continuously in `x`, and the
 Krein-space conditions (completeness of `(E₊, g)` and `(E₋, -g)`, topology given by the majorant
 `g(P₊ ·, P₊ ·) - g(P₋ ·, P₋ ·)`).
+
+## References
+
+* [J. Bognár, *Indefinite Inner Product Spaces*][Bog74]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*][Sch23]
 -/
 
 @[expose] public section
@@ -391,7 +420,7 @@ end SymmBilinField
 /-! ### Riemannian metrics -/
 
 variable (E M) in
-/-- A **weak Riemannian metric** (Schmeding, Definition 4.1): a smooth field of positive definite
+/-- A **weak Riemannian metric** ([Sch23, Definition 4.1]): a smooth field of positive definite
 symmetric bilinear forms. "Weak": the norm `√(g_x(v, v))` need not induce the topology of the
 model; see `WeakRiemannianMetric.IsStrongAt`. -/
 structure WeakRiemannianMetric extends SymmBilinField E M where
@@ -408,8 +437,8 @@ theorem nonneg (x : M) (v : E) : 0 ≤ g.toFun x v v := by
   · simp [hv]
   · exact (g.pos_def' x v hv).le
 
-/-- `g` is **strong** at `x` (Schmeding, Definition 4.1(c)) if the sets `{v | g_x(v, v) < ε}` form a
-basis of neighborhoods of `0` in `T_x M`: the norm of `g_x` induces the topology of the model.
+/-- `g` is **strong** at `x` ([Sch23, Definition 4.1(c)]) if the sets `{v | g_x(v, v) < ε}` form
+a basis of neighborhoods of `0` in `T_x M`: the norm of `g_x` induces the topology of the model.
 This forces the model to be a pre-Hilbert space. -/
 def IsStrongAt (x : M) : Prop :=
   (𝓝 (0 : E)).HasBasis (fun ε : ℝ ↦ 0 < ε) fun ε ↦ {v | g.toFun x v v < ε}

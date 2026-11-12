@@ -11,9 +11,8 @@ public import LocallyConvexManifolds.MappingSpace.Ck
 /-!
 # The exponential law for manifolds of mappings
 
-Let `M` be a compact manifold modeled on `H`, `N` a manifold with a local
-addition, and `ℓ ∈ ℕ ∪ {∞}`. We prove the exponential law of H. Glöckner, K.-H. Neeb,
-*Infinite-Dimensional Lie Groups* (arXiv:2602.12362), Theorem 4.2.2(a), for the atlases
+Let `M` be a compact manifold modeled on `H`, `N` a manifold with a local addition, and
+`ℓ ∈ ℕ ∪ {∞}`. We prove the exponential law of [GN26, Theorem 4.2.2(a)], for the atlases
 `LocalAddition.mappingAtlasCk` and `LocalAddition.mappingAtlasSm` of `C^ℓ(M, N)`: for every space
 `L` with an atlas with varying models `B` (a manifold of the library through
 `VaryingAtlas.ofChartedSpace`, or a manifold of mappings), a map `g : L → C^ℓ(M, N)` is `C^k` if
@@ -27,10 +26,10 @@ characterizes the smooth structure.
 * `LocalAddition.equivalent_mappingAtlasCk_of_expLaw`,
   `LocalAddition.equivalent_mappingAtlasSm_of_expLaw`: **uniqueness**, an atlas on `C^ℓ(M, N)`
   satisfying the exponential law defines the same smooth structure (`VaryingAtlas.Equivalent`).
-* `LocalAddition.contMDiffMB₂_eval`, `LocalAddition.contMDiffMB₂_evalSm`: **Theorem 4.2.2(c)**,
-  the evaluation map `ε : C^ℓ(M, N) × M → N` is `C^{k,ℓ}` for every `k` (the law applied to the
-  identity); `LocalAddition.smooth_eval`, `LocalAddition.smooth_evalSm`: the point evaluations
-  `ε_x` are smooth.
+* `LocalAddition.contMDiffMB₂_eval`, `LocalAddition.contMDiffMB₂_evalSm`:
+  **[GN26, Theorem 4.2.2(c)]**, the evaluation map `ε : C^ℓ(M, N) × M → N` is `C^{k,ℓ}` for every
+  `k` (the law applied to the identity); `LocalAddition.smooth_eval`, `LocalAddition.smooth_evalSm`:
+  the point evaluations `ε_x` are smooth.
 * `LocalAddition.continuous_of_contMDiffMB₂`: if `g^∧` is `C^{k,ℓ}`, `g` is continuous for the
   compact-open `C^ℓ` topology. `LocalAddition.smooth_toCk`: `C^∞(M, N) → C^ℓ(M, N)` is smooth.
 
@@ -40,19 +39,19 @@ characterizes the smooth structure.
   `(a, b) ↦ c(Σ(τ(a)(b)))` with `τ = φ_f ∘ g` (`f = g(x₀)`), the composition of the smooth map
   `LocalAddition.invLocal` with the evaluation of `τ`; as a function of `a`, it is a superposition
   operator applied to a `C^k` curve in `C^ℓ(V, E × E)`, hence `C^k`
-  (`ContDiffMBMap.contDiffMBOn_compLeftOn`), and uncurrying (Theorem 1.7.30) gives `C^{k,ℓ}`.
-  Conversely, the local representatives of `φ_f ∘ g` are superposition operators by
+  (`ContDiffMBMap.contDiffMBOn_compLeftOn`), and uncurrying ([GN26, Theorem 1.7.30]) gives
+  `C^{k,ℓ}`. Conversely, the local representatives of `φ_f ∘ g` are superposition operators by
   `LocalAddition.chartLocal` applied to the curried local representatives of `g^∧`, over a finite
   cover of `M` by compact sets on which `g(x)` stays in single charts of `N` for `x` near `x₁`.
-  Glöckner–Neeb argue through the exponential law for sections (Proposition 4.1.34) and the
-  smoothness of the evaluation map (Proposition 4.1.32). We do not claim these arguments are new.
-* **Local compactness.** If `M` is nonempty and compact, its model `H` is locally compact
+  Glöckner–Neeb argue through the exponential law for sections ([GN26, Proposition 4.1.34]) and the
+  smoothness of the evaluation map ([GN26, Proposition 4.1.32]). We do not claim these arguments are
+  new. * **Local compactness.** If `M` is nonempty and compact, its model `H` is locally compact
   (`locallyCompactSpace_of_compactSpace`), hence finite-dimensional by Riesz's theorem
   (`finiteDimensional_of_compactSpace`): `M` is modeled on some `ℝⁿ`, and only the target `N` may be
   infinite-dimensional. The proofs use only the local compactness of `H` (for uncurrying,
-  Theorem 1.7.30(a), and for superposition operators); it is derived inside the proofs, after
-  disposing of the trivial case `M = ∅` (where `C^ℓ(M, N)` and `Γ_f` are points), so that the public
-  statements carry only Glöckner–Neeb's hypotheses on `M` (compact, Hausdorff).
+  [GN26, Theorem 1.7.30(a)], and for superposition operators); it is derived inside the proofs,
+  after disposing of the trivial case `M = ∅` (where `C^ℓ(M, N)` and `Γ_f` are points), so that the
+  public statements carry only Glöckner–Neeb's hypotheses on `M` (compact, Hausdorff).
   Inside the proofs, it is used for uncurrying, for the chart independence of `C^{k,ℓ}` maps and
   for the superposition operators.
 * **Uniqueness.** It is stated for atlases on `C^ℓ(M, N)` indexed by a type in the universe of
@@ -60,13 +59,17 @@ characterizes the smooth structure.
   `C^ℓ(M, N)` itself, which is all that its proof uses (the law is applied to the identity in both
   directions).
 * Manifolds with rough boundary (for `L` or `M`), which Glöckner–Neeb allow, are out of scope.
-* **Theorem 4.2.2(b).** The topology of `C^ℓ(M, N)` underlying the atlas is the compact-open
+* **[GN26, Theorem 4.2.2(b)].** The topology of `C^ℓ(M, N)` underlying the atlas is the compact-open
   `C^ℓ` topology `CkMap.instTopologicalSpace`, the jet topology (the charts are partial
   homeomorphisms for it); for compact `M` it is the chart topology
   (`CkMap.topology_eq_chartTopology_of_compactSpace`), in which `continuous_of_contMDiffMB₂` is
-  proved. Its agreement with the topology of Glöckner–Neeb, Definition 4.1.2, defined through the
+  proved. Its agreement with the topology of [GN26, Definition 4.1.2], defined through the
   iterated tangent maps `T^j g`, is `CkMap.topology_eq_gnTopology`
   (`MappingSpace/TopologyULift.lean`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -95,7 +98,7 @@ variable {H : Type u} [AddCommGroup H] [Module ℝ H] [TopologicalSpace H] [IsTo
 
 namespace LocalAddition
 
-/-- **Exponential law, first half** (Glöckner–Neeb, Theorem 4.2.2(a)): if `g : L → C^ℓ(M, N)` is
+/-- **Exponential law, first half** ([GN26, Theorem 4.2.2(a)]): if `g : L → C^ℓ(M, N)` is
 `C^k`, then `g^∧ : L × M → N`, `(x, y) ↦ g(x)(y)`, is `C^{k,ℓ}`. -/
 theorem contMDiffMB₂_of_contMDiffOn {k : ℕ} {g : L → CkMap H E ℓ M N}
     (hg : B.ContMDiffOn A.mappingAtlasCk k g univ) :
@@ -235,7 +238,7 @@ theorem continuous_of_contMDiffMB₂ {k : ℕ} {g : L → CkMap H E ℓ M N}
     rw [φ.left_inv hx.1]
   · rw [ContDiffMBMap.apply_of_notMem _ hv, ContDiffMBMap.apply_of_notMem _ hv]
 
-/-- **Exponential law, second half** (Glöckner–Neeb, Theorem 4.2.2(a)): if
+/-- **Exponential law, second half** ([GN26, Theorem 4.2.2(a)]): if
 `g^∧ : L × M → N`, `(x, y) ↦ g(x)(y)`, is `C^{k,ℓ}`, then `g : L → C^ℓ(M, N)` is `C^k`. -/
 theorem contMDiffOn_of_contMDiffMB₂ {k : ℕ} {g : L → CkMap H E ℓ M N}
     (hg : ContMDiffMB₂ H E B k ℓ (fun p ↦ g p.1 p.2)) :
@@ -334,7 +337,7 @@ theorem contMDiffOn_of_contMDiffMB₂ {k : ℕ} {g : L → CkMap H E ℓ M N}
     exact (hspec u hu v hv).2
   · rw [ContDiffMBMap.apply_of_notMem _ hv, ContDiffMBMap.apply_of_notMem _ hv]
 
-/-- **The exponential law for `C^ℓ(M, N)`** (Glöckner–Neeb, Theorem 4.2.2(a), finite `ℓ`): for
+/-- **The exponential law for `C^ℓ(M, N)`** ([GN26, Theorem 4.2.2(a)], finite `ℓ`): for
 every space `L` with an atlas with varying models (in particular every manifold) and every
 `k ∈ ℕ`, a map `g : L → C^ℓ(M, N)` is `C^k` if and only if `g^∧ : L × M → N`,
 `(x, y) ↦ g(x)(y)`, is `C^{k,ℓ}`. -/
@@ -342,7 +345,7 @@ theorem contMDiffOn_mappingAtlasCk_iff {k : ℕ} {g : L → CkMap H E ℓ M N} :
     B.ContMDiffOn A.mappingAtlasCk k g univ ↔ ContMDiffMB₂ H E B k ℓ (fun p ↦ g p.1 p.2) :=
   ⟨A.contMDiffMB₂_of_contMDiffOn, A.contMDiffOn_of_contMDiffMB₂⟩
 
-/-- **Uniqueness of the manifold structure** (Glöckner–Neeb, Theorem 4.2.2(a)): an atlas with
+/-- **Uniqueness of the manifold structure** ([GN26, Theorem 4.2.2(a)]): an atlas with
 varying models `A'` on `C^ℓ(M, N)` for which the exponential law holds (for atlases on
 `C^ℓ(M, N)` itself, which is all the proof uses) defines the same smooth structure as the atlas
 `φ_f`. As in Glöckner–Neeb, the law is applied to the identity in both directions: the
@@ -386,7 +389,7 @@ theorem smooth_toCk (ℓ' : ℕ) :
     rw [A.toCk_chartInvFunSm f₀ τ ℓ']
     exact ((A.chartCk (SmoothMap.toCk ℓ' f₀)).right_inv hτ').symm
 
-/-- **The exponential law for `C^∞(M, N)`** (Glöckner–Neeb, Theorem 4.2.2(a), `ℓ = ∞`): a map
+/-- **The exponential law for `C^∞(M, N)`** ([GN26, Theorem 4.2.2(a)], `ℓ = ∞`): a map
 `g : L → C^∞(M, N)` is `C^k` if and only if `g^∧` is `C^{k,ℓ}` for every `ℓ ∈ ℕ`. -/
 theorem contMDiffOn_mappingAtlasSm_iff {k : ℕ} {g : L → SmoothMap H E M N} :
     B.ContMDiffOn A.mappingAtlasSm k g univ ↔
@@ -419,7 +422,7 @@ theorem contMDiffOn_mappingAtlasSm_iff {k : ℕ} {g : L → SmoothMap H E M N} :
       refine ContDiffMBOn.congr_of_isOpen hO (fun z _ ↦ ?_) h
       exact (A.toCkCLM_chartFunSm f (g (φ.symm z)) ℓ').symm
 
-/-- **Uniqueness of the manifold structure on `C^∞(M, N)`** (Glöckner–Neeb, Theorem 4.2.2(a),
+/-- **Uniqueness of the manifold structure on `C^∞(M, N)`** ([GN26, Theorem 4.2.2(a)],
 `ℓ = ∞`): an atlas with varying models on `C^∞(M, N)` satisfying the exponential law defines the
 same smooth structure as the atlas `φ_f`. -/
 theorem equivalent_mappingAtlasSm_of_expLaw
@@ -434,26 +437,26 @@ theorem equivalent_mappingAtlasSm_of_expLaw
 
 /-! ### The evaluation map -/
 
-/-- **The evaluation map is `C^{∞,ℓ}`** (Glöckner–Neeb, Theorem 4.2.2(c)):
+/-- **The evaluation map is `C^{∞,ℓ}`** ([GN26, Theorem 4.2.2(c)]):
 `ε : C^ℓ(M, N) × M → N`, `(f, x) ↦ f(x)`, is `C^{k,ℓ}` for every `k`. This is the exponential
 law applied to the identity. -/
 theorem contMDiffMB₂_eval (k : ℕ) :
     ContMDiffMB₂ H E A.mappingAtlasCk k ℓ (fun p : CkMap H E ℓ M N × M ↦ p.1 p.2) :=
   A.contMDiffMB₂_of_contMDiffOn (g := id) (A.mappingAtlasCk.smoothOn_id univ k)
 
-/-- **Point evaluations are smooth** (Glöckner–Neeb, Theorem 4.2.2(c)): `ε_x : f ↦ f(x)` is a
+/-- **Point evaluations are smooth** ([GN26, Theorem 4.2.2(c)]): `ε_x : f ↦ f(x)` is a
 smooth map `C^ℓ(M, N) → N`. -/
 theorem smooth_eval (x : M) :
     A.mappingAtlasCk.Smooth (VaryingAtlas.ofChartedSpace E N) (fun f : CkMap H E ℓ M N ↦ f x) :=
   fun k ↦ (A.contMDiffMB₂_eval k).contMDiffOn_left x
 
-/-- **The evaluation map is `C^{∞,∞}`** (Glöckner–Neeb, Theorem 4.2.2(c), `ℓ = ∞`):
+/-- **The evaluation map is `C^{∞,∞}`** ([GN26, Theorem 4.2.2(c)], `ℓ = ∞`):
 `ε : C^∞(M, N) × M → N` is `C^{k,ℓ}` for all `k`, `ℓ`. -/
 theorem contMDiffMB₂_evalSm (k ℓ' : ℕ) :
     ContMDiffMB₂ H E A.mappingAtlasSm k ℓ' (fun p : SmoothMap H E M N × M ↦ p.1 p.2) :=
   (A.contMDiffOn_mappingAtlasSm_iff (g := id)).1 (A.mappingAtlasSm.smoothOn_id univ k) ℓ'
 
-/-- **Point evaluations are smooth** on `C^∞(M, N)` (Glöckner–Neeb, Theorem 4.2.2(c)). -/
+/-- **Point evaluations are smooth** on `C^∞(M, N)` ([GN26, Theorem 4.2.2(c)]). -/
 theorem smooth_evalSm (x : M) :
     A.mappingAtlasSm.Smooth (VaryingAtlas.ofChartedSpace E N) (fun f : SmoothMap H E M N ↦ f x) :=
   fun k ↦ (A.contMDiffMB₂_evalSm k 0).contMDiffOn_left x

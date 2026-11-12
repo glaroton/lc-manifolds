@@ -10,13 +10,10 @@ public import LocallyConvexManifolds.Tangent.Map
 /-!
 # Vector fields and the Lie bracket
 
-Reference: K.-H. Neeb, *Towards a Lie theory of locally convex groups*, §I.3; H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Ch. 3; S. Lang, *Fundamentals of Differential
-Geometry*, §V.1.
-
-A vector field on `M` is a section `X : M → TM` of the tangent bundle. In a chart `i` it has a
-local representative `X̃ᵢ : i(U) → E`, and on chart overlaps `X̃ⱼ ∘ τ = dτ(·) X̃ᵢ(·)` for the
-transition map `τ = j ∘ i⁻¹` (`localRep_transition`).
+A vector field on `M` is a section `X : M → TM` of the tangent bundle ([Nee06, §I.3];
+[GN26, Ch. 3]; [Lan99, §V.1]). In a chart `i` it has a local representative `X̃ᵢ : i(U) → E`,
+and on chart overlaps `X̃ⱼ ∘ τ = dτ(·) X̃ᵢ(·)` for the transition map `τ = j ∘ i⁻¹`
+(`localRep_transition`).
 
 The Lie bracket is defined in the preferred chart at each point by the local formula
 `[X, Y]~ = dỸ · X̃ − dX̃ · Ỹ`. In infinite dimensions vector fields need not have flows, so the
@@ -24,6 +21,29 @@ usual proof that this does not depend on the chart (through the Lie derivative a
 is not available. We prove it directly (`localRep_lieBracket`): differentiating
 `X̃ⱼ ∘ τ = dτ · X̃ᵢ` produces the second derivative `d²τ(X̃ᵢ, Ỹᵢ)`, which cancels in the bracket by
 the symmetry of second derivatives.
+
+## Main definitions
+
+* `localBracket X Y`: the local bracket `dY · X − dX · Y` of maps `E → E`.
+* `IsVectorField X`: `X : M → TM` is a section of the tangent bundle; `localRep i X`: its local
+  representative in the chart `i`.
+* `lieBracket X Y`: the Lie bracket of vector fields.
+* `IsRelated f X X'`: `X` and `X'` are `f`-related, `Tf ∘ X = X' ∘ f`.
+
+## Main results
+
+* `localRep_transition`: the local representatives transform by the derivatives of the
+  transition maps.
+* `localRep_lieBracket`: the bracket does not depend on the chart.
+* `lieBracket_swap`, `lieBracket_jacobi`: antisymmetry and the Jacobi identity.
+* `contMDiffMB_lieBracket`: if `X` and `Y` are `C^(k+1)`, then `[X, Y]` is `C^k`.
+* `lieBracket_related`: brackets of related fields are related ([Lan99, §V.1]).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section
@@ -278,7 +298,6 @@ theorem lieBracket_swap (X Y : M → TangentBundle E M) (x : M) :
 omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   [MBManifold E M] in
 theorem ContMDiffMB.of_le' {F : Type u} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
-    [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F]
     {N : Type*} [TopologicalSpace N] [ChartedSpace F N] {k l : ℕ} {f : M → N}
     (hf : ContMDiffMB E F k f) (hlk : l ≤ k) : ContMDiffMB E F l f :=
   ⟨hf.1, fun x hx ↦ (hf.2 x hx).of_le hlk⟩
@@ -416,7 +435,7 @@ theorem localRep_related {f : M → N} (hf : ContMDiffMB E F 1 f) {X : M → Tan
   unfold localRep
   rw [e1, hrep, hXq]
 
-/-- **Brackets of related fields are related** (Lang, §V.1): if `X, Y` are `f`-related
+/-- **Brackets of related fields are related** [Lan99, §V.1]: if `X, Y` are `f`-related
 to `X', Y'`, then `[X, Y]` is `f`-related to `[X', Y']`. -/
 theorem lieBracket_related {f : M → N} (hf : ContMDiffMB E F 2 f)
     {X Y : M → TangentBundle E M} {X' Y' : N → TangentBundle F N} (hXv : IsVectorField X)

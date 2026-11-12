@@ -18,20 +18,34 @@ coordinate changes `A ↦ g₂(x) ∘ A ∘ g₁(x)⁻¹` (`homCore`). The dual 
 `V' = Hom(V, ℝ)` (`dualCore`), and for a normed model `E` the cotangent bundle is
 `T*M = (TM)'` (`cotangentCore`).
 
+## Main definitions
+
+* `homCore`: the bundle `Hom(V₁, V₂)`.
+* `trivialCore`: the trivial bundle.
+* `dualCore`: the dual bundle `V' = Hom(V, ℝ)`.
+* `cotangentCore`: the cotangent bundle `T*M = (TM)'`, for a normed model `E`.
+
+## Implementation notes
+
 **The infinite-dimensional subtleties.**
 * If a fiber is not normable, `L(F₁, F₂)` carries no vector topology for which the evaluation
-  is continuous (Maissen, Math. Ann. 151 (1963), Satz 1 and its footnote), so
-  `Hom(V₁, V₂)` and `V'` are not available in this generality.
-  Lempert (J. Amer. Math. Soc. 11 (1998), §2, p. 488) notes the same restriction: `Hom(V₁, V₂)`
-  is a vector bundle only when the fibers of `V₁` are normable.
+  is continuous ([Mai63, Satz 1 and its footnote]), so `Hom(V₁, V₂)` and `V'` are not available
+  in this generality. [Lem98, §2, p. 488] notes the same restriction: `Hom(V₁, V₂)` is a vector
+  bundle only when the fibers of `V₁` are normable.
 * Even for normed fibers, the smoothness of the coordinate changes of `Hom(V₁, V₂)` is not
   formal: the coordinate changes of `V₁`, `V₂` are only assumed jointly smooth,
   `(y, ξ) ↦ g(y) ξ`, and we need `y ↦ g(y)` to be smooth for the **operator norm**. This is
-  `contDiffMBOn_of_unc_clm` in lc-analysis, which holds for any locally convex base `E`.
+  `contDiffMBOn_of_unc_clm` in lc-analysis [LCA], which holds for any locally convex base `E`.
 * For a normed model `E`, `T*M` has fiber `E'`; it is a vector bundle in this sense with no
   completeness or reflexivity assumption.
 
 No completeness is assumed.
+
+## References
+
+* [L. Lempert, *The Dolbeault complex in infinite dimensions I*][Lem98]
+* [B. Maissen, *Über Topologien im Endomorphismenraum eines topologischen Vektorraumes*][Mai63]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

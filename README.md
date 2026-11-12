@@ -371,7 +371,7 @@ namespaces of their own.
   (`isSplitSubmanifold_unitary`, `isSplitSubmanifold_unitary_clm`), with explicit Cayley slice
   charts `a ↦ (a - 1)(a + 1)⁻¹` and no inverse function theorem; `T_p U = p · 𝔲`
   (`tangentSpace_unitary`). The projectors `E_p w = (w - p w* p) / 2` form a field of projectors
-  (`projectorField_unitary`); its geodesics satisfy `α̈ = α α̈* α` (`isGeodesic_unitary_iff`), and
+  (`unitaryProjectorField`); its geodesics satisfy `α̈ = α α̈* α` (`isGeodesic_unitary_iff`), and
   the curves `t ↦ p exp(t X)` are geodesics (`isGeodesic_expCurve`).
 * [`LocallyConvexManifolds/Examples/PeriodicSmooth.lean`](LocallyConvexManifolds/Examples/PeriodicSmooth.lean):
   the space `C^∞_per` of smooth `1`-periodic functions, with the topology of uniform convergence of

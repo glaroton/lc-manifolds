@@ -21,8 +21,8 @@ the topology of the seminorms
   `p_k(u) = sup_x |u^{(k)}(x)|`,   `k ∈ ℕ`.
 
 It is a **Fréchet space**: locally convex, Hausdorff, metrizable and complete
-(`CInfPer.instCompleteSpace`, `CInfPer.instMetrizableSpace`). It is not normable, and it is the
-model space of the group `Diff⁺(S¹)` (see `LocallyConvexManifolds.Examples.DiffCircle`).
+(the instances `CompleteSpace CInfPer` and `MetrizableSpace CInfPer`). It is not normable, and
+it is the model space of the group `Diff⁺(S¹)` (see `LocallyConvexManifolds.Examples.DiffCircle`).
 
 **Construction.** The topology (and the uniform structure) is induced by the linear embedding
 
@@ -33,10 +33,17 @@ structure is inherited from the product, except completeness, which amounts to t
 being closed: if `u_n^{(k)} → g_k` uniformly for every `k`, then `g_0` is smooth and periodic with
 `g_0^{(k)} = g_k` (`CInfPer.isClosed_range_J`, via the theorem on uniform limits of derivatives).
 
-Main results:
+## Main definitions
+
+* `CInfPer`: the space `C^∞_per`.
+* `CInfPer.J`: the embedding `u ↦ (u, u', u'', …)` into `∏_k BC(ℝ)`.
+* `CInfPer.seminorm`: the seminorms `p_k`.
+
+## Main results
 
 * `CInfPer.tendsto_iff`: convergence in `C^∞_per` is uniform convergence of every derivative;
-* `CInfPer.seminorm`: the seminorms `p_k`, with `norm_iteratedDeriv_le_seminorm`;
+* `CInfPer.norm_iteratedDeriv_le_seminorm`: `|u^{(k)}(x)| ≤ p_k(u)`;
+* `CInfPer.isClosed_range_J`: the range of `J` is closed;
 * instances: `IsTopologicalAddGroup`, `ContinuousSMul ℝ`, `LocallyConvexSpace ℝ`, `T2Space`,
   `MetrizableSpace`, `CompleteSpace`.
 -/

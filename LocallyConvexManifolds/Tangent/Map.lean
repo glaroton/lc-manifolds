@@ -10,13 +10,16 @@ public import LocallyConvexManifolds.Tangent.Bundle
 /-!
 # The tangent map
 
-Reference: K.-H. Neeb, *Towards a Lie theory of locally convex groups*, §I.3; H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Ch. 3.
-
 For a `C^1` map `f : M → N` between manifolds modeled on `E` and `F`, the tangent map
 `Tf : TM → TN` sends a tangent vector `v` at `x`, written in the preferred chart `c` at `x`, to
-the vector `d(c' ∘ f ∘ c⁻¹)(c x) v` at `f x`, written in the preferred chart `c'` at `f x`. We
-show:
+the vector `d(c' ∘ f ∘ c⁻¹)(c x) v` at `f x`, written in the preferred chart `c'` at `f x`
+([Nee06, §I.3]; [GN26, Ch. 3]).
+
+## Main definitions
+
+* `tangentMap f`: the tangent map `Tf : TM → TN`.
+
+## Main results
 
 * `dMB_chart_comp`, `dMB_comp_chart`: derivatives of local representatives transform under
   changes of charts by the derivatives of the transition maps (the chain rule);
@@ -24,6 +27,11 @@ show:
   `(y, w) ↦ (h y, dh(y) w)`, where `h` is the local representative of `f`;
 * `ContMDiffMB.tangentMap`: if `f` is `C^(k+1)`, then `Tf` is `C^k`;
 * `tangentMap_comp`, `tangentMap_id`: functoriality, `T(g ∘ f) = Tg ∘ Tf` and `T id = id`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section

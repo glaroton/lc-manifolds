@@ -31,11 +31,11 @@ set `{a | a + 1 invertible}`,
 `φ(a)` is skew-adjoint. This equivalence is pure algebra: no spectral theory is needed. Charts at
 other points `p ∈ U(A)` are obtained by composing with the left translation `a ↦ p* a`.
 
-Main results:
+## Main results
 
 * `isSplitSubmanifold_unitary`: `U(A)` is a split submanifold of `A` modeled on `𝔲(A)`;
 * `tangentSpace_unitary`: `T_p U(A) = {w | p* w ∈ 𝔲(A)} = p · 𝔲(A)`;
-* `projectorField_unitary`: the projectors `E_p w = (w - p w* p) / 2` onto `T_p U(A)` form a
+* `unitaryProjectorField`: the projectors `E_p w = (w - p w* p) / 2` onto `T_p U(A)` form a
   field of projectors;
 * `isGeodesic_unitary_iff`: for the connection they define, a curve is a geodesic iff
   `α̈ = α α̈* α`;
@@ -396,7 +396,7 @@ theorem star_mul_unitaryProj {p : A} (hp : p ∈ unitary A) (w : A) :
 
 /-- **The projectors `E_p w = (w - p w* p) / 2` form a field of projectors** onto the tangent
 spaces of `U(A)`. -/
-def projectorField_unitary : ProjectorField (isSplitSubmanifold_unitary (A := A)).1 where
+def unitaryProjectorField : ProjectorField (isSplitSubmanifold_unitary (A := A)).1 where
   E p w := unitaryProj p w
   map_add p w w' := by
     simp only [unitaryProj, star_add, mul_add, add_mul, smul_sub, smul_add]; abel
@@ -449,7 +449,7 @@ of the projector field iff `α̈ = α α̈* α`. -/
 theorem isGeodesic_unitary_iff {α : ℝ → unitary A} (hα : SmoothMBOn (Subtype.val ∘ α) univ) :
     letI := (isSplitSubmanifold_unitary (A := A)).1.chartedSpace
     haveI := (isSplitSubmanifold_unitary (A := A)).1.mbManifold
-    (projectorField_unitary (A := A)).connection.IsGeodesic α ↔
+    (unitaryProjectorField (A := A)).connection.IsGeodesic α ↔
       ∀ t, dMB (fun s ↦ dMB (Subtype.val ∘ α) (s, 1)) (t, 1) =
         (α t : A) * star (dMB (fun s ↦ dMB (Subtype.val ∘ α) (s, 1)) (t, 1)) * α t := by
   let := (isSplitSubmanifold_unitary (A := A)).1.chartedSpace
@@ -479,7 +479,7 @@ def expCurve (p : unitary A) {X : A} (hX : X ∈ skewAdjoint A) : ℝ → unitar
 theorem isGeodesic_expCurve (p : unitary A) {X : A} (hX : X ∈ skewAdjoint A) :
     letI := (isSplitSubmanifold_unitary (A := A)).1.chartedSpace
     haveI := (isSplitSubmanifold_unitary (A := A)).1.mbManifold
-    (projectorField_unitary (A := A)).connection.IsGeodesic (expCurve p hX) := by
+    (unitaryProjectorField (A := A)).connection.IsGeodesic (expCurve p hX) := by
   let +nondep : NormedAlgebra ℚ A := NormedAlgebra.restrictScalars ℚ ℝ A
   have hval : Subtype.val ∘ expCurve p hX = fun t : ℝ ↦ (p : A) * NormedSpace.exp (t • X) := rfl
   have hd : ∀ t : ℝ, HasDerivAt (fun t : ℝ ↦ (p : A) * NormedSpace.exp (t • X))

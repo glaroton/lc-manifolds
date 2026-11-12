@@ -15,32 +15,39 @@ public import LocallyConvexAnalysis.ODE.Flow
 
 On manifolds modeled on locally convex spaces vector fields need not have flows, so
 `LocallyConvexManifolds.Flow.LieDerivative` takes a local flow (`IsLocalFlow`) as a hypothesis. On a
-Hausdorff manifold modeled on a **Banach** space every smooth vector field has one. We prove:
-
-* `SmoothVectorField.IsIntegralCurveOn`: integral curves, read in every chart. By the chart change
-  lemma for velocities (`SmoothVectorField.hasDerivAt_rep_of_chart`) it suffices to check the
-  equation in one chart at each instant (`SmoothVectorField.isIntegralCurveOn_of_exists_chart`).
-* `SmoothVectorField.IsIntegralCurveOn.eqOn` (**uniqueness**): on a Hausdorff manifold, two
-  integral curves on an open connected set of times that agree at one instant agree everywhere.
-* `SmoothVectorField.exists_flowBox` (**flow boxes**): around each point there are `ε > 0`, an
-  open set `V` and a smooth `φ : (-ε, ε) × V → M` whose curves `t ↦ φ(t, x)` are integral curves
-  with `φ(0, x) = x`. This transports the local flows of `LocallyConvexAnalysis.ODE.Flow` through
-  a chart.
-* `SmoothVectorField.boxFlow`, `SmoothVectorField.boxFlowDomain`: the chosen flow boxes glued by
-  uniqueness. `SmoothVectorField.isLocalFlow_boxFlow` (**existence of local flows**): `boxFlow`
-  is a local flow of `X` on the open set `boxFlowDomain ⊇ {0} × M` in the sense of `IsLocalFlow`;
-  it is smooth (`SmoothVectorField.smoothMBMOn_boxFlow`), its curves are integral curves on
-  intervals (`SmoothVectorField.isIntegralCurveOn_boxFlow`,
-  `SmoothVectorField.ordConnected_boxFlowDomain_slice`), and it satisfies the **group law**
-  `Fl(s + t, x) = Fl(s, Fl(t, x))` where both sides are defined (`SmoothVectorField.boxFlow_add`).
+Hausdorff manifold modeled on a **Banach** space every smooth vector field has one.
 
 The **maximal flow** `SmoothVectorField.flow` on its open domain `SmoothVectorField.flowDomain`,
 which is the main API, is built in `LocallyConvexManifolds.Flow.Maximal` from the flow boxes of this
 file; there `boxFlow` is shown to be its restriction to `boxFlowDomain`.
 
-References: S. Lang, *Fundamentals of Differential Geometry*, Springer GTM 191 (1999),
-Ch. IV, §2, Theorem 2.1 (p. 90, uniqueness) and Theorem 2.2 (p. 91, group law); H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Corollary 2.5.21 (p. 222).
+## Main definitions
+
+* `SmoothVectorField.IsIntegralCurveOn`: integral curves, read in every chart.
+* `SmoothVectorField.FlowBox`: flow boxes around a point.
+* `SmoothVectorField.boxFlow`, `SmoothVectorField.boxFlowDomain`: the chosen flow boxes glued by
+  uniqueness.
+
+## Main results
+
+* `SmoothVectorField.isIntegralCurveOn_of_exists_chart`: by the chart change lemma for velocities
+  (`SmoothVectorField.hasDerivAt_rep_of_chart`) it suffices to check the equation of an integral
+  curve in one chart at each instant.
+* `SmoothVectorField.IsIntegralCurveOn.eqOn` (**uniqueness**, [Lan99, Ch. IV, §2, Theorem 2.1,
+  p. 90]): on a Hausdorff manifold, two integral curves on an open connected set of times that
+  agree at one instant agree everywhere.
+* `SmoothVectorField.exists_flowBox` (**flow boxes**): around each point there are `ε > 0`, an
+  open set `V` and a smooth `φ : (-ε, ε) × V → M` whose curves `t ↦ φ(t, x)` are integral curves
+  with `φ(0, x) = x`. This transports the local flows of `LocallyConvexAnalysis.ODE.Flow` through
+  a chart.
+* `SmoothVectorField.isLocalFlow_boxFlow` (**existence of local flows**, compare
+  [GN26, Corollary 2.5.21, p. 222]): `boxFlow` is a local flow of `X` on the open set
+  `boxFlowDomain ⊇ {0} × M` in the sense of `IsLocalFlow`; it is smooth
+  (`SmoothVectorField.smoothMBMOn_boxFlow`), its curves are integral curves on intervals
+  (`SmoothVectorField.isIntegralCurveOn_boxFlow`,
+  `SmoothVectorField.ordConnected_boxFlowDomain_slice`), and it satisfies the **group law**
+  `Fl(s + t, x) = Fl(s, Fl(t, x))` where both sides are defined
+  (`SmoothVectorField.boxFlow_add`, [Lan99, Ch. IV, §2, Theorem 2.2, p. 91]).
 
 ## Implementation notes
 
@@ -49,7 +56,12 @@ K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Corollary 2.5.21 (p. 222).
 * `E` is a Banach space (`[CompleteSpace E]`, for the local flows of `ODEFlow`) and `M` is
   Hausdorff (for the uniqueness of integral curves, which fails on the line with two origins).
 * On manifolds modeled on Fréchet or general locally convex spaces smooth vector fields need not
-  have local flows, nor unique integral curves (Glöckner–Neeb, Examples 2.4.2 and 2.4.3).
+  have local flows, nor unique integral curves [GN26, Examples 2.4.2 and 2.4.3].
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
 -/
 
 @[expose] public section
@@ -146,7 +158,7 @@ theorem contDiffOn_rep (X : SmoothVectorField E M) (i : atlas E M) :
     (by exact_mod_cast le_top)
 
 /-- Local uniqueness: two integral curves on an open set that meet at `t` agree near `t`. -/
-theorem IsIntegralCurveOn.eventuallyEq [CompleteSpace E] {c₁ c₂ : ℝ → M} {I : Set ℝ}
+theorem IsIntegralCurveOn.eventuallyEq {c₁ c₂ : ℝ → M} {I : Set ℝ}
     (hI : IsOpen I) (h₁ : X.IsIntegralCurveOn c₁ I) (h₂ : X.IsIntegralCurveOn c₂ I) {t : ℝ}
     (ht : t ∈ I) (heq : c₁ t = c₂ t) : c₁ =ᶠ[𝓝 t] c₂ := by
   set i : atlas E M := ⟨chartAt E (c₁ t), chart_mem_atlas E _⟩
@@ -170,8 +182,8 @@ theorem IsIntegralCurveOn.eventuallyEq [CompleteSpace E] {c₁ c₂ : ℝ → M}
 
 /-- **Uniqueness of integral curves.** On a Hausdorff manifold modeled on a Banach space, two
 integral curves of a smooth vector field on an open connected set `I` of times that agree at one
-instant agree on `I` (compare Lang, *Fundamentals of Differential Geometry*, Theorem IV.2.1). -/
-theorem IsIntegralCurveOn.eqOn [CompleteSpace E] [T2Space M] {c₁ c₂ : ℝ → M} {I : Set ℝ}
+instant agree on `I` (compare [Lan99, Theorem IV.2.1]). -/
+theorem IsIntegralCurveOn.eqOn [T2Space M] {c₁ c₂ : ℝ → M} {I : Set ℝ}
     (hI : IsOpen I) (hI' : IsPreconnected I) (h₁ : X.IsIntegralCurveOn c₁ I)
     (h₂ : X.IsIntegralCurveOn c₂ I) {t₀ : ℝ} (ht₀ : t₀ ∈ I) (heq : c₁ t₀ = c₂ t₀) :
     EqOn c₁ c₂ I := by
@@ -282,7 +294,7 @@ theorem FlowBox.isOpen_box {x : M} (B : X.FlowBox x) : IsOpen B.box :=
   isOpen_Ioo.prod B.isOpen
 
 /-- Two flow boxes agree where both are defined. -/
-theorem FlowBox.φ_eq [CompleteSpace E] [T2Space M] {x₁ x₂ : M} (B₁ : X.FlowBox x₁)
+theorem FlowBox.φ_eq [T2Space M] {x₁ x₂ : M} (B₁ : X.FlowBox x₁)
     (B₂ : X.FlowBox x₂) {p : ℝ × M} (h₁ : p ∈ B₁.box) (h₂ : p ∈ B₂.box) : B₁.φ p = B₂.φ p := by
   set m := min B₁.ε B₂.ε
   have hI₁ : Ioo (-m) m ⊆ Ioo (-B₁.ε) B₁.ε :=
@@ -383,7 +395,7 @@ theorem isOpen_boxFlowDomain_slice (x : M) : IsOpen {t | (t, x) ∈ X.boxFlowDom
 
 /-- **Existence of local flows on Banach manifolds.** Every smooth vector field on a Hausdorff
 manifold modeled on a Banach space has a local flow in the sense of `IsLocalFlow`: `X.boxFlow` on
-the open set `X.boxFlowDomain ⊇ {0} × M` (compare Glöckner–Neeb, Corollary 2.5.21). -/
+the open set `X.boxFlowDomain ⊇ {0} × M` (compare [GN26, Corollary 2.5.21]). -/
 theorem isLocalFlow_boxFlow [T2Space M] : IsLocalFlow X X.boxFlow X.boxFlowDomain where
   isOpen := X.isOpen_boxFlowDomain
   zero_mem := X.zero_mem_boxFlowDomain
@@ -396,8 +408,7 @@ theorem isLocalFlow_boxFlow [T2Space M] : IsLocalFlow X X.boxFlow X.boxFlowDomai
     exact h
 
 /-- **The group law** `Fl(s + t, x) = Fl(s, Fl(t, x))`, whenever `(t, x)`, `(s, Fl(t, x))` and
-`(s + t, x)` lie in the domain of the flow (compare Lang, *Fundamentals of Differential
-Geometry*, Theorem IV.2.2). -/
+`(s + t, x)` lie in the domain of the flow (compare [Lan99, Theorem IV.2.2]). -/
 theorem boxFlow_add [T2Space M] {x : M} {s t : ℝ} (ht : (t, x) ∈ X.boxFlowDomain)
     (hs : (s, X.boxFlow (t, x)) ∈ X.boxFlowDomain) (hst : (s + t, x) ∈ X.boxFlowDomain) :
     X.boxFlow (s + t, x) = X.boxFlow (s, X.boxFlow (t, x)) := by

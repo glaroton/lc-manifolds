@@ -10,20 +10,37 @@ public import LocallyConvexManifolds.VectorField.Basic
 /-!
 # Vector fields acting on functions
 
-Reference: S. Lang, *Fundamentals of Differential Geometry*, §V.1; K.-H. Neeb, *Towards a Lie
-theory of locally convex groups*, §I.3.
-
 A vector field `X` acts on `C^1` functions `φ : M → ℝ` by `X(φ)(x) = dφ(x) X(x)`, computed in a
-chart: `X(φ)(x) = d(φ ∘ c⁻¹)(c x) X̃(c x)`. We show that this does not depend on the chart
-(`vfDeriv_chart`) and the Leibniz rule `X(φψ) = X(φ) ψ + φ X(ψ)`.
+chart: `X(φ)(x) = d(φ ∘ c⁻¹)(c x) X̃(c x)` ([Lan99, §V.1]; [Nee06, §I.3]).
 
 Smooth bump functions need not exist on manifolds modeled on locally convex spaces, so vector
 fields are not determined by their action on *global* functions in general; they are determined
 by their action on functions defined on chart domains, such as `λ ∘ c` for continuous linear
 functionals `λ` (Hahn–Banach).
 
+## Main definitions
+
+* `IsCkFunction k φ`: `φ : M → ℝ` is `C^k`, through its local representatives.
+* `vfDeriv X φ`: the derivative `X(φ)` of `φ` along `X`.
+* `smulField φ Y`: the vector field `φ Y`.
+
+## Main results
+
+* `vfDeriv_chart`: `X(φ)` does not depend on the chart.
+* `vfDeriv_mul`: the Leibniz rule `X(φψ) = X(φ) ψ + φ X(ψ)`.
+* `lieBracket_smulField`: the Leibniz rule `[X, φ Y] = X(φ) Y + φ [X, Y]`.
+* `eq_of_vfDeriv_clm_comp_chart`: vector fields are determined by their action on the local
+  functions `λ ∘ c`.
+
+## Implementation notes
+
 Functions `φ : M → ℝ` are treated through their local representatives `φ ∘ i⁻¹` in the charts of
 the atlas (`IsCkFunction`), since `ℝ` is not a model space in the universe of `E`.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section

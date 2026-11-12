@@ -22,14 +22,11 @@ Let `M` be a manifold modeled on a Banach space `E` and `ω` a closed real `2`-f
 modeled on a Banach space is locally isomorphic to a constant form on its model
 (`SymplecticForm.IsStrong.exists_darboux_chart`).
 
-References: A. Weinstein, *Symplectic structures on Banach manifolds*, Bull. Amer. Math. Soc. 75
-(1969), 1040–1041, §1, Theorem (p. 1040); S. Lang, *Fundamentals of Differential Geometry*,
-GTM 191, Springer (1999), Ch. V, §8, Theorem 8.1 (pp. 152–153), where "non-singular" means
-strongly nondegenerate (§V.6, p. 145). Both follow J. Moser (*On the volume elements on a
-manifold*, Trans. Amer. Math. Soc. 120 (1965), 286–294, §4, Theorem 2 and its proof, pp. 292–294,
-where Darboux's theorem is mentioned as an application, p. 294). See also A. Weinstein,
-*Symplectic manifolds and their Lagrangian submanifolds*, Adv. Math. 6 (1971), 329–346,
-Theorem 4.1 (p. 333) and Corollary 4.2 (p. 334), for local manifold pairs.
+The theorem is [Wei69, §1, Theorem (p. 1040)] and [Lan99, Ch. V, §8, Theorem 8.1 (pp. 152–153)],
+where "non-singular" means strongly nondegenerate ([Lan99, §V.6, p. 145]). Both follow
+[Mos65, §4, Theorem 2 and its proof, pp. 292–294], where Darboux's theorem is mentioned as an
+application (p. 294). See also [Wei71, Theorem 4.1 (p. 333) and Corollary 4.2 (p. 334)], for
+local manifold pairs.
 
 ## Main results
 
@@ -58,7 +55,7 @@ Put `Ω₀ = Ω(p)`, `Θ = Ω - Ω₀` and `Ωₜ = Ω₀ + tΘ`.
 
 1. *Primitive.* On a ball `B` around `p`, `Θ = dα` with `α(p) = 0` and `dα(p) = 0`
    (`Darboux.exists_primitive`). The Poincaré lemma for star-shaped open sets
-   (`DifferentialForm.IsClosed.isExact_of_starConvex`, Glöckner–Neeb, Corollary 3.6.29) gives a
+   (`DifferentialForm.IsClosed.isExact_of_starConvex`, [GN26, Corollary 3.6.29]) gives a
    primitive `η` on the manifold `B`; we read it as a smooth map `B → E'` and subtract the closed
    affine form `η(p) + dη(p)(y - p)` (`dη(p)` is symmetric because `Θ(p) = 0`).
 2. *Moser's vector field.* `Wₜ = {y ∈ B | Ωₜ(y) is invertible}` is open, and contains `p` for all
@@ -86,21 +83,23 @@ Put `Ω₀ = Ω(p)`, `Θ = Ω - Ω₀` and `Ωₜ = Ω₀ + tΘ`.
    flow `Fl` of the suspended field `(1, Xₜ)`; `exists_flow_of_stationary` records this, together
    with the real analyticity of the flow when `Xₜ` is real analytic.
 
-## Infinite-dimensional subtleties
+## Implementation notes
+
+**Infinite-dimensional subtleties.**
 
 * **Strong nondegeneracy** is used exactly once, to define `Xₜ`: `α(y)` must lie in the range of
   `Ωₜ(y)^♭`. With completeness, the open mapping theorem turns the bijection `Ω₀ : E → E'` into a
   topological isomorphism, and invertible operators form an open set for the operator norm. It is
   only needed at the point `x₀` itself. For weakly nondegenerate forms the theorem fails, even on
-  Hilbert space: J. E. Marsden, *Darboux's theorem fails for weak symplectic forms*, Proc. Amer.
-  Math. Soc. 32 (1972), 590–592, Proposition (p. 591). Marsden's example is formalized in
-  lc-analysis (`Counterexamples.Marsden.no_darboux_chart`, in `Counterexamples/WeakDarboux.lean`).
+  Hilbert space: [Mar72, Proposition (p. 591)]. Marsden's example is formalized in
+  lc-analysis [LCA] (`Counterexamples.Marsden.no_darboux_chart`, in
+  `Counterexamples/WeakDarboux.lean`).
 * **Reflexivity** is not a hypothesis but a consequence: a Banach space carrying a strongly
   nondegenerate skew form is reflexive (`surjective_inclusionInDoubleDual_of_skew`), so
   `ℓ¹` or `c₀` are never models of strong symplectic manifolds.
 * **The operator norm.** Openness of invertibles needs `y ↦ Ω(y)` continuous into `L(E, E')` with
   the operator norm, which is stronger than smoothness of `(y, u, v) ↦ Ω(y)(u, v)`. On a normed
-  model it follows from the latter (lc-analysis, `contDiffMBOn_of_unc_clm`, applied twice in
+  model it follows from the latter ([LCA], `contDiffMBOn_of_unc_clm`, applied twice in
   `DifferentialForm.exists_darboux_chart`). On non-normable locally convex models there is no
   vector topology on `L(E, E')` for which evaluation is continuous, and strong symplectic forms
   behave differently (see the module docstring of `LocallyConvexManifolds.Symplectic.Basic`);
@@ -115,7 +114,7 @@ Put `Ω₀ = Ω(p)`, `Θ = Ω - Ω₀` and `Ωₜ = Ω₀ + tΘ`.
 * **No Hausdorff hypothesis on `M`**: the flows live in the open set `W ⊆ ℝ × E`, which is
   Hausdorff, and the argument takes place in one chart.
 
-## Implementation notes
+**Design choices.**
 
 * We do not use the Lie derivative of `LocallyConvexManifolds.DifferentialForm.LieDerivative` or the
   formula `d/dt|₀ (Fl_t)* ω = L_X ω` of `LocallyConvexManifolds.Flow.Maximal`, which concern
@@ -130,6 +129,16 @@ Put `Ω₀ = Ω(p)`, `Θ = Ω - Ω₀` and `Ωₜ = Ω₀ + tΘ`.
   `D = E'`.
 * Real-valued forms require models in `Type`, since the value space of a form lives in the
   universe of the model.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
+* [J. E. Marsden, *Darboux's theorem fails for weak symplectic forms*][Mar72]
+* [J. Moser, *On the volume elements on a manifold*][Mos65]
+* [A. Weinstein, *Symplectic structures on Banach manifolds*][Wei69]
+* [A. Weinstein, *Symplectic manifolds and their Lagrangian submanifolds*][Wei71]
 -/
 
 @[expose] public section
@@ -186,8 +195,8 @@ end OpensField
 
 /-- The value `ωₓ : Eⁿ → ℝ` of a smooth form at a point is continuous. -/
 theorem DifferentialForm.continuous_apply {E : Type} [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E]
-    [T2Space E] {M : Type} [TopologicalSpace M] [ChartedSpace E M] [MBManifold E M] {n : ℕ}
+    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    [T2Space E] {M : Type} [TopologicalSpace M] [ChartedSpace E M] {n : ℕ}
     (β : DifferentialForm E M ℝ n) (x : M) : Continuous (β x) := by
   have h := ((β.smooth' (prefChart x)) 0).continuousOn
   have hy : chartAt E x x ∈ (prefChart (E := E) x).1.target :=
@@ -454,7 +463,7 @@ ball `B` around `p` with `Θ(p) = 0`. Then `Θ = dα` on `B` for a smooth `α : 
 `α(p) = 0` and `dα(p) = 0`.
 
 The primitive comes from the Poincaré lemma on the star-shaped manifold `B`
-(`DifferentialForm.IsClosed.isExact_of_starConvex`, Glöckner–Neeb, Corollary 3.6.29); it is
+(`DifferentialForm.IsClosed.isExact_of_starConvex`, [GN26, Corollary 3.6.29]); it is
 smooth for the operator norm by `contDiffMBOn_of_unc_clm`. Subtracting the affine form
 `α(p) + dα(p)(y - p)`, which is closed because `Θ(p) = 0`, normalizes it. -/
 theorem exists_primitive (ev : D ≃L[ℝ] (E →L[ℝ] ℝ)) {Θ : E → E →L[ℝ] D} {p : E} {r : ℝ}
@@ -972,7 +981,7 @@ theorem exists_darboux_local' [CompleteSpace E] [CompleteSpace D] (ev : D ≃L[�
     hclosed hp hstrong hr hrU hα hαp hdαp hdα
   exact ⟨ψ, h1, h2, h3, h4, h5, h6, h7, h8⟩
 
-/-- **The local Darboux theorem** (Weinstein 1969, §1, Theorem; Lang, Theorem V.8.1). Let `E` be a
+/-- **The local Darboux theorem** ([Wei69, §1, Theorem]; [Lan99, Theorem V.8.1]). Let `E` be a
 Banach space, `U ⊆ E` open and `Ω : U → L(E, L(E, ℝ))` smooth for the operator norm, with
 `Ω(y)` skew-symmetric and closed: `∂ᵤΩ(v, w) - ∂ᵥΩ(u, w) + ∂_wΩ(u, v) = 0`. If `Ω(p)` is
 **strongly nondegenerate** (`Ω(p) : E → E'` is bijective), there is a diffeomorphism `ψ` between
@@ -1235,8 +1244,8 @@ theorem DifferentialForm.exists_darboux_chart [CompleteSpace E] (ω : Differenti
     Darboux.exists_darboux_local (chartAt E x₀).open_target hΩs hskew hclosed hpT hstrong
   exact ⟨_, ω.darboux_chart_of_local x₀ hΩ hpψ hψp hDψp hψs hψs' hψpull hΩp⟩
 
-/-- **The Darboux theorem for strong symplectic forms on Banach manifolds** (Weinstein 1969; Lang,
-*Fundamentals of Differential Geometry*, Theorem V.8.1): every point of a manifold modeled on a
+/-- **The Darboux theorem for strong symplectic forms on Banach manifolds**
+([Wei69]; [Lan99, Theorem V.8.1]): every point of a manifold modeled on a
 Banach space and carrying a strong symplectic form `ω` lies in a chart of the smooth structure in
 which `ω` has constant coefficients, equal to `ω_{x₀}`. -/
 theorem SymplecticForm.IsStrong.exists_darboux_chart [CompleteSpace E] {ω : SymplecticForm E M}

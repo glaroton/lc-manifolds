@@ -25,15 +25,26 @@ The covariant derivative of a section is `∇_X s = ds · X − Γ(X, s)` in a t
 R(X, Y) s` (`localCovDerivB_curv`), where `R = Ω` is the curvature form of
 `LocallyConvexManifolds.Connection.Form`.
 
+## Main definitions
+
+* `localCovDerivB`: the covariant derivative of a section in a trivialization.
+* `BundleConnection`: connections on a vector bundle, given by their symbols in each
+  trivialization.
+* `Connection.toBundleConnection`: a connection on `M` as a connection on the tangent bundle.
+
 ## Main results
 
+* `localCovDerivB_transition`, `localCovDerivB_curv`: the covariant derivative transforms
+  covariantly, and the local curvature formula.
 * `curvature_gauge` (local) and `BundleConnection.curvLoc_transition`: **the curvature is a
   tensor**, `Ωⱼ(τ y)(dτ u, dτ v)(g ξ) = g Ωᵢ(y)(u, v) ξ`. In contrast with the connection form,
   the inhomogeneous terms cancel. The proof evaluates the curvature formula on constant fields and
   sections in the chart `i` and on their images in the chart `j`, so it uses neither partitions of
-  unity nor bump functions, which need not exist on locally convex manifolds;
-* `BundleConnection.dLoc_curvLoc`: the second Bianchi identity in every trivialization;
-* `Connection.curvLoc_transition`: the curvature of a connection on `M` is a tensor.
+  unity nor bump functions, which need not exist on locally convex manifolds.
+* `BundleConnection.dLoc_curvLoc`: the second Bianchi identity in every trivialization.
+* `Connection.localCurv_transition`: the curvature of a connection on `M` is a tensor.
+
+## Implementation notes
 
 No completeness of `E` or `F` is assumed.
 -/

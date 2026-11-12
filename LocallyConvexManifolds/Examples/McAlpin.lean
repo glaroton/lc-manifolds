@@ -14,9 +14,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 /-!
 # McAlpin's example: a complete Riemannian manifold without shortest curves
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Ejemplo 10.4.2,
-taken from J. McAlpin, *Infinite dimensional manifolds and Morse theory*, PhD thesis, Columbia
-University, 1965.
+This is [Lar22, Ejemplo 10.4.2], taken from McAlpin's thesis [McA65].
 
 Let `H = ℓ²(ℕ)` (real), with standard basis `eₙ` (`e n`), and let `A` be the diagonal operator
 `A eₙ = aₙ eₙ` with `a₀ = 1` and `aₙ = 1 + 2⁻ⁿ` for `n ≥ 1`. Let `S` be the unit sphere and
@@ -28,33 +26,53 @@ measured with the norm of `H`: this is the Riemannian metric of `M` as a submani
 Curves are chains of `C¹` arcs (`Arc`, `IsChain`): an arc is a `C¹` map `γ : ℝ → H` looked at on
 an interval `[t₀, t₁]`, of length `∫_{t₀}^{t₁} ‖γ'‖` (`Arc.length`); arcs which are `C¹` only on
 `[t₀, t₁]` can be extended to `ℝ`, so asking `γ` to be `C¹` on all of `ℝ` is no restriction.
-The distance `d_M` (`pathDist M`) is the infimum of the lengths of the chains in `M`. We prove:
+The distance `d_M` (`pathDist M`) is the infimum of the lengths of the chains in `M`.
 
-* `norm_le_norm_A`, `norm_A_eq_iff_mem_span`, `Aequiv`: `‖v‖ ≤ ‖A v‖`, with equality if and only if
-  `v ∈ span{e₀}`, and `A` is an isomorphism with inverse `Ainv`, the diagonal operator `aₙ⁻¹`;
-* `angle_le_chainLength_sphere`, `pi_le_chainLength_sphere`: a chain on `S` from `x` to `y` has
-  length at least `angle x y`; in particular, any chain on `S` from `e₀` to `-e₀` has length
-  `≥ π`. The proof compares `t ↦ angle (γ t₀) (γ t)` with `t ↦ ∫_{t₀}^t ‖γ'‖` through their right
-  Dini derivatives, using the triangle inequality for angles and the estimate
-  `angle u v ≤ ‖u - v‖ + 2 ‖u - v‖²` for unit vectors (`angle_le_norm_sub`);
-* `pi_lt_chainLength`: **every chain in `M` from `e₀` to `-e₀` has length `> π`**. If `β` is an
-  arc of `M` and `α = A⁻¹ β`, then `‖β'‖ = ‖A α'‖ ≥ ‖α'‖`. Where equality of lengths holds,
-  `α' ∈ span{e₀}`, so `α` stays on the line through `e₀` and, being continuous on `S`, it is
-  constant (`Arc.stop_eq_of_length_le`); hence some arc is strictly longer than its preimage,
-  whose chain has length `≥ π`;
-* `pathDist_le_pi`: the arcs `βₙ = A αₙ`, `αₙ(t) = cos(πt) e₀ + sin(πt) eₙ`, have length
-  `≤ π aₙ → π`;
-* `pathDist_eq_pi`, `not_exists_shortest`: **`d_M(e₀, -e₀) = π`, and no chain in `M` joining
-  `e₀` and `-e₀` has length `π`**.
-
-The completeness of `M` is not formalized here (only the geometric statements above are).
 In finite dimension this cannot happen: on a connected, finite-dimensional Riemannian manifold
 which is complete as a metric space, any two points are joined by a shortest geodesic
-(Hopf–Rinow, *Estructuras*, Corolario 10.4.3; see
+(Hopf–Rinow, [Lar22, Corolario 10.4.3]; see
 `LocallyConvexManifolds/Metric/FinslerHopfRinow.lean` for the Finsler version). In McAlpin's example
 the infimum is approached by the arcs `βₙ`, which run along the directions `eₙ` where `A` is closer
 and closer to an isometry, but never attained, since the only direction where `A` is an isometry is
 `e₀` itself.
+
+## Main definitions
+
+* `McAlpin.A`, `McAlpin.Ainv`, `McAlpin.Aequiv`: the diagonal operator `A`, its inverse, and `A`
+  as an isomorphism.
+* `McAlpin.M`: the ellipsoid `A(S)`.
+* `McAlpin.Arc`, `McAlpin.Arc.length`, `McAlpin.IsChain`: `C¹` arcs, their lengths, and chains of
+  arcs.
+* `McAlpin.pathDist`: the infimum of the lengths of the chains in a set.
+
+## Main results
+
+* `McAlpin.norm_le_norm_A`, `McAlpin.norm_A_eq_iff_mem_span`: `‖v‖ ≤ ‖A v‖`, with equality if and
+  only if `v ∈ span{e₀}`, and `A` is an isomorphism with inverse `Ainv`, the diagonal operator
+  `aₙ⁻¹`;
+* `McAlpin.angle_le_chainLength_sphere`, `McAlpin.pi_le_chainLength_sphere`: a chain on `S` from
+  `x` to `y` has length at least `angle x y`; in particular, any chain on `S` from `e₀` to `-e₀`
+  has length `≥ π`. The proof compares `t ↦ angle (γ t₀) (γ t)` with `t ↦ ∫_{t₀}^t ‖γ'‖` through
+  their right Dini derivatives, using the triangle inequality for angles and the estimate
+  `angle u v ≤ ‖u - v‖ + 2 ‖u - v‖²` for unit vectors (`angle_le_norm_sub`);
+* `McAlpin.pi_lt_chainLength`: **every chain in `M` from `e₀` to `-e₀` has length `> π`**. If `β`
+  is an arc of `M` and `α = A⁻¹ β`, then `‖β'‖ = ‖A α'‖ ≥ ‖α'‖`. Where equality of lengths holds,
+  `α' ∈ span{e₀}`, so `α` stays on the line through `e₀` and, being continuous on `S`, it is
+  constant (`Arc.stop_eq_of_length_le`); hence some arc is strictly longer than its preimage,
+  whose chain has length `≥ π`;
+* `McAlpin.pathDist_le_pi`: the arcs `βₙ = A αₙ`, `αₙ(t) = cos(πt) e₀ + sin(πt) eₙ`, have length
+  `≤ π aₙ → π`;
+* `McAlpin.pathDist_eq_pi`, `McAlpin.not_exists_shortest`: **`d_M(e₀, -e₀) = π`, and no chain in
+  `M` joining `e₀` and `-e₀` has length `π`**.
+
+## Implementation notes
+
+The completeness of `M` is not formalized here (only the geometric statements above are).
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [J. McAlpin, *Infinite dimensional manifolds and Morse theory*][McA65]
 -/
 
 @[expose] public section
@@ -656,7 +674,7 @@ theorem pathDist_le_pi : pathDist M (e 0) (-e 0) ≤ ENNReal.ofReal π := by
   refine (iInf₂_le [β n] (isChain_β hn)).trans (ENNReal.ofReal_le_ofReal ?_)
   simpa using length_β_le hn
 
-/-- **McAlpin's example** (Larotonda, *Estructuras geométricas*, Ejemplo 10.4.2):
+/-- **McAlpin's example** ([Lar22, Ejemplo 10.4.2]):
 `d_M(e₀, -e₀) = π`. -/
 theorem pathDist_eq_pi : pathDist M (e 0) (-e 0) = ENNReal.ofReal π :=
   le_antisymm pathDist_le_pi <| le_iInf₂ fun _ h ↦ ENNReal.ofReal_le_ofReal (pi_lt_chainLength h).le

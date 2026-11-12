@@ -13,25 +13,30 @@ public import LocallyConvexManifolds.LocalAddition.Basic
 /-!
 # The manifold of continuous maps from a compact space
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-4.1.30, Lemma 4.1.31 and Theorem 4.2.2, in the case `ℓ = 0`.
-
 Let `K` be a compact Hausdorff space and `N` a manifold modeled on a Hausdorff locally convex
 space `E`, with a local addition `Σ : Ω → N`, `θ = (π, Σ) : Ω → θ(Ω) ⊆ N × N`. Then `C(K, N)`, with
 the compact-open topology, is a smooth manifold modeled on the spaces
-`Γ_f = {τ ∈ C(K, TN) : π ∘ τ = f}`:
+`Γ_f = {τ ∈ C(K, TN) : π ∘ τ = f}`. This is [GN26, 4.1.30, Lemma 4.1.31 and Theorem 4.2.2] in the
+case `ℓ = 0`.
 
-* `Sec E f` is the space `Γ_f`. Its topology is the initial topology with respect to the fiber
+## Main definitions
+
+* `Sec E f`: the space `Γ_f`. Its topology is the initial topology with respect to the fiber
   coordinates `τ ↦ (x ↦ τ(x) in the chart i) ∈ C(L, E)`, for charts `i` of `N` and compact sets
   `L ⊆ K` with `f(L)` in the domain of `i`. It is a Hausdorff locally convex space
-  (Lemma 4.1.31), and it carries the topology induced by `C(K, TN)` (`Sec.isInducing_toTangent`).
+  ([GN26, Lemma 4.1.31]).
 * `LocalAddition.chart f : C(K, N) ⊇ O'_f → O_f ⊆ Γ_f`, `g ↦ θ⁻¹ ∘ (f, g)`, with inverse
   `τ ↦ Σ ∘ τ`, where `O'_f = {g : (f, g)(K) ⊆ θ(Ω)}` and `O_f = Γ_f ∩ C(K, Ω)`.
-* `LocalAddition.smoothMBOn_transition`: the transition maps `φ_g ∘ φ_f⁻¹` are smooth.
+* `VaryingAtlas`: an atlas whose charts have their own model spaces, with smooth transition maps.
 * `LocalAddition.mappingAtlas`: the charts form an atlas of `C(K, N)` with varying models
-  (`VaryingAtlas`) and smooth transitions (Theorem 4.2.2(a), (b) for `ℓ = 0`).
+  (`VaryingAtlas`) and smooth transitions ([GN26, Theorem 4.2.2(a), (b)] for `ℓ = 0`).
+
+## Main results
+
+* `Sec.isInducing_toTangent`: `Γ_f` carries the topology induced by `C(K, TN)`.
+* `LocalAddition.smoothMBOn_transition`: the transition maps `φ_g ∘ φ_f⁻¹` are smooth.
 * `LocalAddition.smoothMBMOn_eval_chart_symm`: the point evaluations are smooth
-  (Theorem 4.2.2(c), `ℓ = 0`).
+  ([GN26, Theorem 4.2.2(c)], `ℓ = 0`).
 
 ## Implementation notes
 
@@ -40,21 +45,25 @@ the compact-open topology, is a smooth manifold modeled on the spaces
   whose charts have their own model spaces, with smooth transition maps.
 * **The space `Γ_f`.** Sections are written in the fiber coordinates of `TN` (in this library the
   fibers of `TN` are copies of `E`), so `Γ_f` is a submodule of `K → E`. Glöckner–Neeb identify
-  `Γ_f` with the space of sections of the pullback bundle `f*(TN)` (Lemma 4.1.31); here the
+  `Γ_f` with the space of sections of the pullback bundle `f*(TN)` ([GN26, Lemma 4.1.31]); here the
   locally convex topology is defined directly by the fiber coordinates over compact sets, and
   shown to coincide with the topology induced by `C(K, TN)`.
-* **Smoothness of the transition maps.** Glöckner–Neeb deduce it from Proposition 4.1.34 (the
-  exponential law for sections). Here: the fiber coordinates of `Γ_g` form a closed linear
+* **Smoothness of the transition maps.** Glöckner–Neeb deduce it from [GN26, Proposition 4.1.34]
+  (the exponential law for sections). Here: the fiber coordinates of `Γ_g` form a closed linear
   embedding into a product (`Sec.isClosed_range_toPi`), so a map into `Γ_g` is smooth as soon as
   its coordinates are (`LocalAddition.Sec.contDiffMBOn_of_coordFun`, using `contDiffMBOn_pi` and
   `contDiffMBOn_of_isClosedEmbedding`, in lc-analysis); the coordinates over a compact set are
   determined by those over the pieces of a finite cover adapted to charts of `N`
   (`restrictPieces`, in lc-analysis); and over
   such a piece the transition map is the superposition operator of a smooth map
-  (`transMap`), smooth by Glöckner–Neeb, Proposition 1.7.1 (`smoothMBOn_pushforward` in
+  (`transMap`), smooth by [GN26, Proposition 1.7.1] (`smoothMBOn_pushforward` in
   lc-analysis). We do not claim these arguments are new.
 * Only the case `ℓ = 0` (continuous maps) is treated here; `K` lives in the universe of `E`. The
   cases `ℓ ≥ 1` are in `LocallyConvexManifolds.MappingSpace.Ck`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -223,8 +232,8 @@ def sectionSubmodule (f : C(K, N)) : Submodule ℝ (K → E) where
     simpa using continuous_section_linearCombination f hu hu c 0
 
 variable (E) in
-/-- **The space `Γ_f`** of continuous sections of `TN` along `f : K → N` (Glöckner–Neeb, 4.1.30
-and 4.2.1 for `ℓ = 0`), written in the fiber coordinates of `TN`. Its topology, defined below,
+/-- **The space `Γ_f`** of continuous sections of `TN` along `f : K → N` ([GN26, 4.1.30
+and 4.2.1] for `ℓ = 0`), written in the fiber coordinates of `TN`. Its topology, defined below,
 is the initial topology with respect to the fiber coordinates in the charts of `N` over compact
 subsets of `K`; it coincides with the topology induced by `C(K, TN)`
 (`Sec.isInducing_toTangent`). -/
@@ -399,13 +408,13 @@ instance : TopologicalSpace (Sec E f) := .induced toPi inferInstance
 theorem isEmbedding_toPi : Topology.IsEmbedding (toPi (E := E) (f := f)) :=
   ⟨⟨rfl⟩, toPi_injective⟩
 
-/-- `Γ_f` is a topological vector space (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is a topological vector space ([GN26, Lemma 4.1.31]). -/
 instance : IsTopologicalAddGroup (Sec E f) := isTopologicalAddGroup_induced toPi
 
-/-- `Γ_f` is a topological vector space (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is a topological vector space ([GN26, Lemma 4.1.31]). -/
 instance : ContinuousSMul ℝ (Sec E f) := continuousSMul_induced toPi
 
-/-- `Γ_f` is locally convex (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is locally convex ([GN26, Lemma 4.1.31]). -/
 instance : LocallyConvexSpace ℝ (Sec E f) := LocallyConvexSpace.induced toPi
 
 /-- `Γ_f` is Hausdorff. -/
@@ -481,7 +490,7 @@ theorem continuous_toTangent : Continuous (toTangent (E := E) (f := f)) := by
       fun q ↦ rfl
   exact hcont.continuousAt hS
 
-/-- **`Γ_f` carries the topology induced by `C(K, TN)`** (Glöckner–Neeb, 4.1.30, `ℓ = 0`). -/
+/-- **`Γ_f` carries the topology induced by `C(K, TN)`** ([GN26, 4.1.30], `ℓ = 0`). -/
 theorem isInducing_toTangent : Topology.IsInducing (toTangent (E := E) (f := f)) := by
   refine (Topology.isInducing_iff _).2 (le_antisymm
     (continuous_iff_le_induced.1 continuous_toTangent) ?_)
@@ -536,9 +545,8 @@ theorem SmoothMBMOn.mono_of_isOpen {H' : Type u} [AddCommGroup H'] [Module ℝ H
 omit [MBManifold H M] in
 /-- `C^k` maps only depend on their values on the open set. -/
 theorem ContMDiffMBOn.congr_of_isOpen {H' : Type u} [AddCommGroup H'] [Module ℝ H']
-    [TopologicalSpace H'] [IsTopologicalAddGroup H'] [ContinuousSMul ℝ H']
-    [LocallyConvexSpace ℝ H'] [T2Space H'] {M' : Type*} [TopologicalSpace M']
-    [ChartedSpace H' M'] [MBManifold H' M'] {k : ℕ} {f g : M → M'} {U : Set M}
+    [TopologicalSpace H'] [T2Space H'] {M' : Type*} [TopologicalSpace M']
+    [ChartedSpace H' M'] {k : ℕ} {f g : M → M'} {U : Set M}
     (hf : ContMDiffMBOn (E := H) (F := H') k f U) (hU : IsOpen U) (heq : EqOn f g U) :
     ContMDiffMBOn (E := H) (F := H') k g U := by
   refine ⟨hf.1.congr fun x hx ↦ (heq hx).symm, fun x hx ↦ ?_⟩
@@ -556,9 +564,8 @@ theorem ContMDiffMBOn.congr_of_isOpen {H' : Type u} [AddCommGroup H'] [Module �
 omit [MBManifold H M] in
 /-- Smooth maps only depend on their values on the open set. -/
 theorem SmoothMBMOn.congr_of_isOpen {H' : Type u} [AddCommGroup H'] [Module ℝ H']
-    [TopologicalSpace H'] [IsTopologicalAddGroup H'] [ContinuousSMul ℝ H']
-    [LocallyConvexSpace ℝ H'] [T2Space H'] {M' : Type*} [TopologicalSpace M']
-    [ChartedSpace H' M'] [MBManifold H' M'] {f g : M → M'} {U : Set M}
+    [TopologicalSpace H'] [T2Space H'] {M' : Type*} [TopologicalSpace M']
+    [ChartedSpace H' M'] {f g : M → M'} {U : Set M}
     (hf : SmoothMBMOn H H' f U) (hU : IsOpen U) (heq : EqOn f g U) : SmoothMBMOn H H' g U :=
   fun k ↦ (hf k).congr_of_isOpen hU heq
 
@@ -620,8 +627,8 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTo
 
 namespace LocalAddition
 
-/-- The domain `O'_f = {g : (f, g)(K) ⊆ θ(Ω)}` of the chart at `f` (Glöckner–Neeb, proof of
-Theorem 4.2.2). -/
+/-- The domain `O'_f = {g : (f, g)(K) ⊆ θ(Ω)}` of the chart at `f` ([GN26, proof of
+Theorem 4.2.2]). -/
 def chartSource (f : C(K, N)) : Set C(K, N) :=
   {g | ∀ x, (f x, g x) ∈ A.toOpenPartialHomeomorph.target}
 
@@ -666,7 +673,7 @@ def chartInvFun (f : C(K, N)) (u : Sec E f) (hu : u ∈ A.chartTarget f) : C(K, 
     (continuous_snd.comp_continuousOn A.toOpenPartialHomeomorph.continuousOn) (Sec.toTangent u) hu
 
 open scoped Classical in
-/-- **The chart of `C(K, N)` at `f`** (Glöckner–Neeb, proof of Theorem 4.2.2):
+/-- **The chart of `C(K, N)` at `f`** ([GN26, proof of Theorem 4.2.2]):
 `φ_f : O'_f → O_f ⊆ Γ_f`, `g ↦ θ⁻¹ ∘ (f, g)`, with inverse `τ ↦ Σ ∘ τ`. It is modeled on `Γ_f`. -/
 def chart (f : C(K, N)) : OpenPartialHomeomorph C(K, N) (Sec E f) where
   toFun g := if hg : g ∈ A.chartSource f then Sec.ofTangent (A.chartTangent f g hg)
@@ -976,9 +983,9 @@ theorem Sec.contDiffMBOn_of_coordFun {V : Type u} [AddCommGroup V] [Module ℝ V
   contDiffMBOn_of_isClosedEmbedding Sec.toPiCLM Sec.isEmbedding_toPiCLM
     Sec.isClosed_range_toPiCLM hW (contDiffMBOn_pi hW hh)
 
-/-- **The transition maps are smooth** (Glöckner–Neeb, proof of Theorem 4.2.2, `ℓ = 0`):
+/-- **The transition maps are smooth** ([GN26, proof of Theorem 4.2.2], `ℓ = 0`):
 `φ_g ∘ φ_f⁻¹` is smooth on its open domain in `Γ_f`. In coordinates over compact sets adapted to
-charts of `N`, it is a superposition operator, smooth by Glöckner–Neeb, Proposition 1.7.1
+charts of `N`, it is a superposition operator, smooth by [GN26, Proposition 1.7.1]
 (`smoothMBOn_pushforward`). -/
 theorem smoothMBOn_transition (f g : C(K, N)) :
     SmoothMBOn (A.transition f g) (A.transitionDomain f g) := by
@@ -1016,7 +1023,7 @@ end TransitionSmooth
 
 /-! ### Atlases with varying models and the manifold `C(K, N)` -/
 
-/-- **An atlas with varying models** (compare Glöckner–Neeb, Definition 3.2.13): a family of
+/-- **An atlas with varying models** (compare [GN26, Definition 3.2.13]): a family of
 charts `φᵢ : X ⊇ Uᵢ → Vᵢ ⊆ Eᵢ`, each modeled on its own Hausdorff locally convex space `Eᵢ`,
 whose domains cover `X` and whose transition maps `φⱼ ∘ φᵢ⁻¹` are smooth in the sense of
 Michal–Bastiani. Mathlib's `ChartedSpace` has a single model space, which does not fit
@@ -1053,7 +1060,7 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTo
 
 namespace LocalAddition
 
-/-- **The manifold of continuous maps** `C(K, N)` (Glöckner–Neeb, Theorem 4.2.2(a) and (b), for
+/-- **The manifold of continuous maps** `C(K, N)` ([GN26, Theorem 4.2.2(a) and (b)], for
 `ℓ = 0`): for `K` compact Hausdorff and `N` admitting a local addition, the charts
 `φ_f : O'_f → O_f ⊆ Γ_f`, `g ↦ θ⁻¹ ∘ (f, g)`, form an atlas of `C(K, N)` with varying models
 `Γ_f` and smooth transition maps. The charts are partial homeomorphisms for the compact-open
@@ -1083,7 +1090,7 @@ theorem smoothMBM_evalTangent (f : C(K, N)) (x : K) :
     (fun w _ ↦ ?_) (hsmooth.mono (subset_univ _))
   rfl
 
-/-- **Point evaluations are smooth** (Glöckner–Neeb, Theorem 4.2.2(c), `ℓ = 0`): in the chart at
+/-- **Point evaluations are smooth** ([GN26, Theorem 4.2.2(c)], `ℓ = 0`): in the chart at
 `f`, the evaluation `ε_x : g ↦ g(x)` reads `τ ↦ Σ(τ(x))`, which is smooth on `O_f`. -/
 theorem smoothMBMOn_eval_chart_symm (f : C(K, N)) (x : K) :
     SmoothMBMOn (Sec E f) E (fun u ↦ (A.chart f).symm u x) (A.chart f).target := by

@@ -20,14 +20,32 @@ public import LocallyConvexManifolds.Bundle.Hom
   of the induced connection are `Γ^{Hom}(y)(a, A) = Γ₂(y)(a, A ·) − A Γ₁(y)(a, ·)`, the local
   form of `(∇_a A) ξ = ∇_a (A ξ) − A (∇_a ξ)` (`BundleConnection.hom`). Two points are not
   formal: `y ↦ Γ^{Hom}(y)` must be smooth for the operator norm, which follows from the theorem
-  on operator-valued maps of lc-analysis (`contDiffMBOn_of_unc_clm`); and the gauge law involves
-  the derivative of the inverse coordinate change, `∂(g⁻¹) = −g⁻¹ (∂g) g⁻¹`, obtained by
+  on operator-valued maps of lc-analysis [LCA] (`contDiffMBOn_of_unc_clm`); and the gauge law
+  involves the derivative of the inverse coordinate change, `∂(g⁻¹) = −g⁻¹ (∂g) g⁻¹`, obtained by
   differentiating `g(g⁻¹ ξ) = ξ` (`BundleConnection.hom_transition`).
+
+## Main definitions
+
+* `BundleConnection.pullback`: the pullback connection on `f*V`.
+* `BundleConnection.hom`: the induced connection on `Hom(V₁, V₂)`.
+* `BundleConnection.trivial`, `BundleConnection.dual`: the trivial connection on a trivial
+  bundle, and the induced connection on the dual bundle.
+
+## Main results
+
+* `BundleConnection.hom_transition`: the gauge transformation law of the symbols of the induced
+  connection on `Hom(V₁, V₂)`.
+
+## Implementation notes
 
 The induced symbols are only defined on the domains of the local coordinates; off them we set
 them to `0`, so that they are bilinear at every point, as `IsLocalSymbol` requires.
 
 No completeness is assumed.
+
+## References
+
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

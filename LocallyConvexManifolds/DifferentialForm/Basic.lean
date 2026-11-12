@@ -11,45 +11,54 @@ public import LocallyConvexManifolds.Tangent.Map
 /-!
 # Differential forms and the exterior derivative
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, §3.6.
-
 Let `M` be a manifold modeled on a locally convex space `E`, and `F` a locally convex space.
 An `F`-valued `n`-form `ω` on `M` assigns to each `x ∈ M` an alternating `n`-linear map
 `ωₓ : (TₓM)ⁿ → F`, such that in every chart `φ` the map `(y, v₁, …, vₙ) ↦ ω_{φ⁻¹ y}(Tφ⁻¹ v₁, …)`
-is smooth (Glöckner–Neeb, Definition 3.6.1). There are no partitions of unity, and in general no
+is smooth ([GN26, Definition 3.6.1]). There are no partitions of unity, and in general no
 coordinate description of forms by components; the definition only uses the local
-representatives.
+representatives. We follow [GN26, §3.6].
 
 A tangent vector at `x` is given by its coordinates in the preferred chart `chartAt E x`, as in
 `LocallyConvexManifolds.Tangent.Bundle`; so `ωₓ` is an alternating map `Eⁿ → F`.
 
-## Main definitions and results
+## Main definitions
 
-* `DifferentialForm E M F n`: the space `Ωⁿ(M, F)` of smooth `F`-valued `n`-forms;
-* `DifferentialForm.localRep`: the local representative of a form in a chart of the atlas; on
-  chart overlaps the representatives are related by pullback along the transition map
-  (`localRep_eq_pullbackLoc`);
+* `DifferentialForm E M F n`: the space `Ωⁿ(M, F)` of smooth `F`-valued `n`-forms, with its
+  vector space structure.
+* `DifferentialForm.localRep`: the local representative of a form in a chart of the atlas.
 * `DifferentialForm.d`: the exterior derivative, computed in the preferred chart at each point by
-  the local formula `dω(y)(v₀, …, vₙ) = ∑ᵢ (-1)ⁱ ∂_{vᵢ} ω(y)(v₀, …, v̂ᵢ, …, vₙ)` (Glöckner–Neeb,
-  (3.33)). Its local representative in *every* chart is given by the same formula
-  (`localRep_d`), because the local exterior derivative commutes with changes of variables
-  (`IsLocalForm.dLoc_pullbackLoc`); this is what makes `dω` a smooth form (Glöckner–Neeb,
-  Proposition 3.6.7);
-* `DifferentialForm.d_d`: `d ∘ d = 0` (Glöckner–Neeb, Proposition 3.6.9);
-* the vector space structure of `Ωⁿ(M, F)`, with `d` linear (`dLinear`);
-* `DifferentialForm.pullback`, `d_pullback`: pullbacks and the naturality of `d`
-  (Glöckner–Neeb, Lemma 3.6.13), with `pullback_id` and `pullback_pullback` (Glöckner–Neeb,
-  (3.27));
-* `DifferentialForm.compCLM`, `d_compCLM`: composition with a continuous linear map commutes with
-  `d` (Glöckner–Neeb, Exercise 3.6.4).
+  the local formula `dω(y)(v₀, …, vₙ) = ∑ᵢ (-1)ⁱ ∂_{vᵢ} ω(y)(v₀, …, v̂ᵢ, …, vₙ)`
+  ([GN26, (3.33)]); `DifferentialForm.dLinear` is `d` as a linear map.
+* `DifferentialForm.pullback`: pullbacks of forms along smooth maps.
+* `DifferentialForm.compCLM`: composition of a form with a continuous linear map.
 
-Glöckner–Neeb define `dω` through the Lie algebra differential on vector fields, (3.29), and
-show that it is given in charts by (3.33). We take (3.33) as the definition and prove directly
-that it does not depend on the chart: the terms with second derivatives of the transition maps
-cancel because these are symmetric. Their Remark 3.6.10 indicates the same kind of computation
-for `d ∘ d = 0`.
+## Main results
+
+* `DifferentialForm.localRep_eq_pullbackLoc`: on chart overlaps the local representatives are
+  related by pullback along the transition map.
+* `DifferentialForm.localRep_d`: the local representative of `dω` in *every* chart is given by
+  the local formula, because the local exterior derivative commutes with changes of variables
+  (`IsLocalForm.dLoc_pullbackLoc`); this is what makes `dω` a smooth form
+  ([GN26, Proposition 3.6.7]).
+* `DifferentialForm.d_d`: `d ∘ d = 0` ([GN26, Proposition 3.6.9]).
+* `DifferentialForm.d_pullback`: the naturality of `d` ([GN26, Lemma 3.6.13]), with
+  `DifferentialForm.pullback_id` and `DifferentialForm.pullback_pullback` ([GN26, (3.27)]).
+* `DifferentialForm.d_compCLM`: composition with a continuous linear map commutes with `d`
+  ([GN26, Exercise 3.6.4]).
+
+## Implementation notes
+
+[GN26] define `dω` through the Lie algebra differential on vector fields, (3.29), and show that
+it is given in charts by (3.33). We take (3.33) as the definition and prove directly that it does
+not depend on the chart: the terms with second derivatives of the transition maps cancel because
+these are symmetric. [GN26, Remark 3.6.10] indicates the same kind of computation for
+`d ∘ d = 0`.
 
 No completeness of `E` or `F` is assumed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -96,13 +105,13 @@ theorem exists_linear_tangentCoordChange (i j : atlas E M) {x : M}
 
 variable (n) in
 /-- The local representative of a family `ω` of `n`-linear maps on the tangent spaces in the
-chart `i`: `(y, v) ↦ ω_{i⁻¹ y}(v)`, the vectors `v` given in the chart `i` (Glöckner–Neeb,
-(3.26)). -/
+chart `i`: `(y, v) ↦ ω_{i⁻¹ y}(v)`, the vectors `v` given in the chart `i` [GN26,
+(3.26)]. -/
 def formLocalRep (i : atlas E M) (ω : M → (Fin n → E) → F) (p : E × (Fin n → E)) : F :=
   ω (i.1.symm p.1) fun k ↦ tangentCoordChange i (prefChart (i.1.symm p.1)) (i.1.symm p.1) (p.2 k)
 
 variable (E M F n) in
-/-- Smooth `F`-valued differential `n`-forms on `M` (Glöckner–Neeb, Definition 3.6.1): an
+/-- Smooth `F`-valued differential `n`-forms on `M` [GN26, Definition 3.6.1]: an
 alternating `n`-linear map `ωₓ` on each tangent space, with smooth local representatives. -/
 structure DifferentialForm : Type (max u v) where
   /-- The form at `x`, on vectors given in the preferred chart at `x`. -/
@@ -196,7 +205,7 @@ theorem localRep_d_aux (ω : DifferentialForm E M F n) (i j : atlas E M) {y : E}
   simp only [pullbackLoc, comp_apply, tangentCoordChange_eq_dMB i j hy.1]
 
 /-- The exterior derivative `dω`, computed in the preferred chart at each point by the local
-formula (Glöckner–Neeb, (3.33)). -/
+formula [GN26, (3.33)]. -/
 def dFun (ω : DifferentialForm E M F n) (x : M) (v : Fin (n + 1) → E) : F :=
   dLoc (ω.localRep (prefChart x)) (chartAt E x x, v)
 
@@ -211,8 +220,8 @@ theorem formLocalRep_dFun (ω : DifferentialForm E M F n) (i : atlas E M) {y : E
   rw [ω.localRep_d_aux i (prefChart x) hy' v]
   rfl
 
-/-- The exterior derivative of a smooth form is a smooth form (Glöckner–Neeb,
-Proposition 3.6.7). -/
+/-- The exterior derivative of a smooth form is a smooth form [GN26,
+Proposition 3.6.7]. -/
 def d (ω : DifferentialForm E M F n) : DifferentialForm E M F (n + 1) where
   toFun := ω.dFun
   alternating' x :=
@@ -227,14 +236,14 @@ theorem d_apply (ω : DifferentialForm E M F n) (x : M) (v : Fin (n + 1) → E) 
     ω.d x v = dLoc (ω.localRep (prefChart x)) (chartAt E x x, v) :=
   rfl
 
-/-- **Local formula for the exterior derivative** (Glöckner–Neeb, (3.33)): in every chart, the
+/-- **Local formula for the exterior derivative** [GN26, (3.33)]: in every chart, the
 local representative of `dω` is `(y, v) ↦ ∑ᵢ (-1)ⁱ ∂_{vᵢ} ωᵢ(y)(v₀, …, v̂ᵢ, …, vₙ)`. -/
 theorem localRep_d (ω : DifferentialForm E M F n) (i : atlas E M) {y : E}
     (hy : y ∈ i.1.target) (v : Fin (n + 1) → E) :
     ω.d.localRep i (y, v) = dLoc (ω.localRep i) (y, v) :=
   ω.formLocalRep_dFun i hy v
 
-/-- **`d ∘ d = 0`** (Glöckner–Neeb, Proposition 3.6.9). -/
+/-- **`d ∘ d = 0`** [GN26, Proposition 3.6.9]. -/
 theorem d_d (ω : DifferentialForm E M F n) (x : M) (v : Fin (n + 2) → E) : ω.d.d x v = 0 := by
   have hW := (prefChart (E := E) x).1.open_target
   have hy : chartAt E x x ∈ (prefChart (E := E) x).1.target :=
@@ -372,15 +381,15 @@ theorem d_d_eq_zero (ω : DifferentialForm E M F n) : ω.d.d = 0 :=
 end Linear
 
 
-/-! ### Composition with continuous linear maps (Glöckner–Neeb, Exercise 3.6.4) -/
+/-! ### Composition with continuous linear maps [GN26, Exercise 3.6.4] -/
 
 section CompCLM
 
 variable {G : Type u} [AddCommGroup G] [Module ℝ G] [TopologicalSpace G] [IsTopologicalAddGroup G]
   [ContinuousSMul ℝ G] [LocallyConvexSpace ℝ G] [T2Space G]
 
-/-- The form `α_* ω = α ∘ ω` for a continuous linear map `α : F → G` (Glöckner–Neeb,
-Exercise 3.6.4). -/
+/-- The form `α_* ω = α ∘ ω` for a continuous linear map `α : F → G` [GN26,
+Exercise 3.6.4]. -/
 def compCLM (α : F →L[ℝ] G) (ω : DifferentialForm E M F n) : DifferentialForm E M G n where
   toFun x v := α (ω x v)
   alternating' x := by
@@ -395,7 +404,7 @@ theorem compCLM_apply (α : F →L[ℝ] G) (ω : DifferentialForm E M F n) (x : 
     ω.compCLM α x v = α (ω x v) :=
   rfl
 
-/-- `α_*(dω) = d(α_* ω)` (Glöckner–Neeb, Exercise 3.6.4). -/
+/-- `α_*(dω) = d(α_* ω)` [GN26, Exercise 3.6.4]. -/
 theorem d_compCLM (α : F →L[ℝ] G) (ω : DifferentialForm E M F n) :
     (ω.compCLM α).d = ω.d.compCLM α := by
   ext x v
@@ -415,7 +424,7 @@ end CompCLM
 
 /-! ### Functions as `0`-forms, closed and exact forms -/
 
-/-- A smooth function `f : M → F` as an `F`-valued `0`-form (Glöckner–Neeb, Definition 3.6.1:
+/-- A smooth function `f : M → F` as an `F`-valued `0`-form ([GN26, Definition 3.6.1]:
 `Ω⁰(M, F) = C^∞(M, F)`). -/
 def ofFunction (f : M → F) (hf : SmoothMBM E F f) : DifferentialForm E M F 0 where
   toFun x _ := f x
@@ -430,18 +439,18 @@ def ofFunction (f : M → F) (hf : SmoothMBM E F f) : DifferentialForm E M F 0 w
       ext; simp] at h'
     exact h'
 
-/-- The exterior derivative of a function is its differential (Glöckner–Neeb,
-Remark 3.6.12 (a)): `(df)ₓ(v) = d(f ∘ φ⁻¹)(φ x) v` in the preferred chart `φ` at `x`. -/
+/-- The exterior derivative of a function is its differential [GN26,
+Remark 3.6.12 (a)]: `(df)ₓ(v) = d(f ∘ φ⁻¹)(φ x) v` in the preferred chart `φ` at `x`. -/
 theorem d_ofFunction_apply (f : M → F) (hf : SmoothMBM E F f) (x : M) (v : Fin 1 → E) :
     (ofFunction f hf).d x v = dMB (f ∘ (chartAt E x).symm) (chartAt E x x, v 0) := by
   rw [d_apply, IsLocalForm.dLoc_apply, Fin.sum_univ_one]
   simp only [Fin.val_zero, pow_zero, one_smul]
   rfl
 
-/-- Closed forms: `dω = 0` (Glöckner–Neeb, Definition 3.6.11). -/
+/-- Closed forms: `dω = 0` [GN26, Definition 3.6.11]. -/
 def IsClosed (ω : DifferentialForm E M F n) : Prop := ∀ x v, ω.d x v = 0
 
-/-- Exact forms: `ω = dη` (Glöckner–Neeb, Definition 3.6.11). -/
+/-- Exact forms: `ω = dη` [GN26, Definition 3.6.11]. -/
 def IsExact (ω : DifferentialForm E M F (n + 1)) : Prop := ∃ η : DifferentialForm E M F n, η.d = ω
 
 /-- Exact forms are closed. -/
@@ -457,8 +466,8 @@ variable {E₀ : Type u} [AddCommGroup E₀] [Module ℝ E₀] [TopologicalSpace
   [IsTopologicalAddGroup E₀] [ContinuousSMul ℝ E₀] [LocallyConvexSpace ℝ E₀] [T2Space E₀]
   {N : Type*} [TopologicalSpace N] [ChartedSpace E₀ N] [MBManifold E₀ N] {φ : N → M}
 
-/-- The pullback `(φ*ω)ₓ(v₁, …, vₙ) = ω_{φ x}(Tₓφ v₁, …, Tₓφ vₙ)` (Glöckner–Neeb,
-Definition 3.6.6), with `Tₓφ` written in the preferred charts at `x` and `φ x`. -/
+/-- The pullback `(φ*ω)ₓ(v₁, …, vₙ) = ω_{φ x}(Tₓφ v₁, …, Tₓφ vₙ)` [GN26,
+Definition 3.6.6], with `Tₓφ` written in the preferred charts at `x` and `φ x`. -/
 def pullbackFun (φ : N → M) (ω : DifferentialForm E M F n) (x : N) (v : Fin n → E₀) : F :=
   ω (φ x) fun k ↦ dMB (chartAt E (φ x) ∘ φ ∘ (chartAt E₀ x).symm) (chartAt E₀ x x, v k)
 
@@ -528,7 +537,7 @@ theorem pullback_apply (hφ : SmoothMBM E₀ E φ) (ω : DifferentialForm E M F 
       ω (φ x) fun k ↦ dMB (chartAt E (φ x) ∘ φ ∘ (chartAt E₀ x).symm) (chartAt E₀ x x, v k) :=
   rfl
 
-/-- **Naturality of the exterior derivative** (Glöckner–Neeb, Lemma 3.6.13):
+/-- **Naturality of the exterior derivative** [GN26, Lemma 3.6.13]:
 `d(φ*ω) = φ*(dω)` for smooth maps `φ`. -/
 theorem d_pullback (hφ : SmoothMBM E₀ E φ) (ω : DifferentialForm E M F n) :
     (ω.pullback hφ).d = ω.d.pullback hφ := by
@@ -578,7 +587,7 @@ end Pullback
 
 section Functoriality
 
-/-- `id* ω = ω` (Glöckner–Neeb, (3.27)). -/
+/-- `id* ω = ω` [GN26, (3.27)]. -/
 theorem pullback_id (ω : DifferentialForm E M F n) :
     ω.pullback (fun k ↦ smoothMBMOn_id (E := E) (M := M) isOpen_univ k) = ω := by
   ext x v
@@ -596,7 +605,7 @@ variable {E₀ E₁ : Type u}
   {N : Type*} [TopologicalSpace N] [ChartedSpace E₀ N] [MBManifold E₀ N]
   {P : Type*} [TopologicalSpace P] [ChartedSpace E₁ P] [MBManifold E₁ P]
 
-/-- `ψ* (φ* ω) = (φ ∘ ψ)* ω` (Glöckner–Neeb, (3.27)). -/
+/-- `ψ* (φ* ω) = (φ ∘ ψ)* ω` [GN26, (3.27)]. -/
 theorem pullback_pullback {φ : N → M} {ψ : P → N} (hφ : SmoothMBM E₀ E φ)
     (hψ : SmoothMBM E₁ E₀ ψ) (ω : DifferentialForm E M F n) :
     (ω.pullback hφ).pullback hψ = ω.pullback (hφ.comp hψ) := by

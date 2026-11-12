@@ -11,18 +11,35 @@ public import LocallyConvexAnalysis.Calculus.MBFrechet
 /-!
 # Geodesics on Banach manifolds: the geodesic equation in charts
 
-References: S. Lang, *Fundamentals of Differential Geometry*, Ch. IV and VIII; G. Larotonda,
-*Estructuras geométricas para las variedades de Banach*, Cap. 6.
-
 On a manifold modeled on a **normed** space the geodesic equation of a connection can be written
 with Fréchet derivatives: in a chart `i`, a curve `c = φᵢ ∘ α` is a geodesic when
 `c' = c₁` and `c₁' = Γᵢ(c)(c₁, c₁)`. This file proves that the equation does not depend on the
 chart (`geodesicEq_comp`): if `c` solves it in the chart `i`, then `τ ∘ c` solves it in the chart
 `j`, `τ = φⱼ ∘ φᵢ⁻¹`. The computation is `(τ ∘ c)'' = D²τ(c', c') + Dτ(c'')`, combined with the
-change of charts law of the symbols, `Γⱼ(τ y)(Dτ a, Dτ b) = Dτ Γᵢ(y)(a, b) + D²τ(a, b)`.
+change of charts law of the symbols, `Γⱼ(τ y)(Dτ a, Dτ b) = Dτ Γᵢ(y)(a, b) + D²τ(a, b)`. We follow
+[Lan99, Ch. IV and VIII] and [Lar22, Cap. 6].
+
+## Main definitions
+
+* `Connection.GeodesicEqAt`: the geodesic equation at a time, in a chart.
+* `Connection.IsGeodesicOn`: geodesics on a set of times.
+
+## Main results
+
+* `geodesicEq_comp`: the geodesic equation does not depend on the chart.
+* `Connection.geodesicEqAt_of_chart`: a curve that solves the geodesic equation at `t` in one chart
+  solves it in every chart around `α t`.
+
+## Implementation notes
 
 The Michal–Bastiani derivatives of the change of charts law are first identified with Fréchet
-derivatives (`dMB_eq_fderiv`, `dMB_dMB_eq_fderiv_fderiv`, in lc-analysis).
+derivatives (`dMB_eq_fderiv`, `dMB_dMB_eq_fderiv_fderiv`, in lc-analysis [LCA]).
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

@@ -14,15 +14,14 @@ public import LocallyConvexManifolds.Connection.Projector
 Let `X ⊆ F` be an embedded submanifold of a locally convex space, modeled on a closed subspace
 `S` (`IsEmbeddedSubmanifold`), with the charted space structure given by its slice charts. We
 describe smooth maps into `X` and into `TX` through the ambient space, and use this to build
-local additions (H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, arXiv:2602.12362,
-Definition 3.8.11) on `X` from formulas in `F`.
+local additions ([GN26, Definition 3.8.11]) on `X` from formulas in `F`.
 
 ## Main results
 
 * `IsEmbeddedSubmanifold.contMDiffMBOn_of_val`: a map into `X` is `C^k` as soon as it is `C^k`
   as a map into `F`.
-* `IsEmbeddedSubmanifold.ambVec`, `IsEmbeddedSubmanifold.ofAmb`: the ambient vector
-  `w ∈ T_p X ⊆ F` of a tangent vector of `X`, and back; `coe_coordAt_slice`: in a slice chart
+* `IsEmbeddedSubmanifold.ambVec`, `IsEmbeddedSubmanifold.ofAmb`: the ambient vector `w ∈ T_p X ⊆ F`
+  of a tangent vector of `X`, and back; `IsEmbeddedSubmanifold.coe_coordAt_slice`: in a slice chart
   `φ`, the fiber coordinate of a tangent vector is `dφ(p) w`.
 * `IsEmbeddedSubmanifold.smoothMBM_ambient`: the ambient map `TX → F × F`, `v ↦ (π v, w)`, is
   smooth; `IsEmbeddedSubmanifold.contMDiffMBOn_of_ambient`: a map into `TX` is `C^k` as soon as
@@ -38,9 +37,13 @@ Definition 3.8.11) on `X` from formulas in `F`.
 * The charted space structure of `X` is not an instance (it depends on the proof `h` of
   `IsEmbeddedSubmanifold X S`). The statements take an instance `cs : ChartedSpace S X` together
   with the hypothesis `cs = h.chartedSpace`, used with `rfl`.
-* Glöckner–Neeb obtain local additions from sprays (Proposition 3.8.13, for smoothly paracompact
-  Banach manifolds) and from Lie group structures (Proposition 3.8.12); they do not discuss
-  ambient formulas on submanifolds. We do not claim this argument is new.
+* Glöckner–Neeb obtain local additions from sprays ([GN26, Proposition 3.8.13], for smoothly
+  paracompact Banach manifolds) and from Lie group structures ([GN26, Proposition 3.8.12]); they do
+  not discuss ambient formulas on submanifolds. We do not claim this argument is new.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -58,10 +61,8 @@ namespace LocallyConvex.Manifolds
 /-- A pair of `C^k` maps into model spaces `A`, `B` is a `C^k` map into the model space `A × B`
 (with its own chart, not the product structure `ModelProd A B`). -/
 theorem ContMDiffMBOn.prodMk_model {G A B : Type u} [AddCommGroup G] [Module ℝ G]
-    [TopologicalSpace G] [AddCommGroup A] [Module ℝ A] [TopologicalSpace A]
-    [IsTopologicalAddGroup A] [ContinuousSMul ℝ A] [LocallyConvexSpace ℝ A] [T2Space A]
-    [AddCommGroup B] [Module ℝ B] [TopologicalSpace B] [IsTopologicalAddGroup B]
-    [ContinuousSMul ℝ B] [LocallyConvexSpace ℝ B] [T2Space B]
+    [TopologicalSpace G] [AddCommGroup A] [Module ℝ A] [TopologicalSpace A] [T2Space A]
+    [AddCommGroup B] [Module ℝ B] [TopologicalSpace B] [T2Space B]
     [IsTopologicalAddGroup G] [ContinuousSMul ℝ G] [LocallyConvexSpace ℝ G] [T2Space G]
     {P : Type*} [TopologicalSpace P] [ChartedSpace G P] {k : ℕ} {f : P → A} {g : P → B}
     {U : Set P} (hU : IsOpen U) (hf : ContMDiffMBOn (E := G) (F := A) k f U)
@@ -323,7 +324,7 @@ representative is the corestriction of `(a, b) ↦ (φ a, dφ(a) b)` applied to 
 theorem contMDiffMBOn_of_ambient (hc : cs = h.chartedSpace) {G : Type u} [AddCommGroup G]
     [Module ℝ G] [TopologicalSpace G] [IsTopologicalAddGroup G] [ContinuousSMul ℝ G]
     [LocallyConvexSpace ℝ G] [T2Space G] {Y : Type*} [TopologicalSpace Y] [ChartedSpace G Y]
-    [MBManifold G Y] {k : ℕ} {g : Y → TangentBundle S X} {U : Set Y} (hU : IsOpen U)
+    {k : ℕ} {g : Y → TangentBundle S X} {U : Set Y} (hU : IsOpen U)
     (hg : ContMDiffMBOn (E := G) (F := F × F) k (h.ambient ∘ g) U) :
     ContMDiffMBOn (E := G) (F := S × S) k g U := by
   subst hc

@@ -12,17 +12,35 @@ public import Mathlib.Geometry.Manifold.VectorBundle.Basic
 /-!
 # The tangent bundle
 
-Reference: K.-H. Neeb, *Towards a Lie theory of locally convex groups*, §I.3; H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Ch. 3.
-
 Let `M` be a manifold modeled on a locally convex space `E`. The tangent bundle `TM` is glued
 from the products `φ(U) × E` along the maps `(y, w) ↦ (τ y, dτ(y) w)`, where `τ` runs over the
-transition maps of the atlas. We build it from a `FiberBundleCore` indexed by the charts of the
-atlas, whose coordinate changes are the derivatives of the transition maps
-(`tangentBundleCore`). The tangent bundle is then a topological fiber bundle with fiber `E`, and
-it is a charted space modeled on `E × E`; we show that it is a manifold
+transition maps of the atlas ([Nee06, §I.3]; [GN26, Ch. 3]). We build it from a
+`FiberBundleCore` indexed by the charts of the atlas, whose coordinate changes are the derivatives
+of the transition maps (`tangentBundleCore`). The tangent bundle is then a topological fiber
+bundle with fiber `E`, and it is a charted space modeled on `E × E`; we show that it is a manifold
 (`TangentBundle.mbManifold`): its transition maps are `(y, w) ↦ (τ y, dτ(y) w)`, which are
 smooth.
+
+## Main definitions
+
+* `tangentCoordChange i j x`: the change of tangent coordinates, the derivative of the transition
+  map from the chart `i` to the chart `j` at `x`.
+* `tangentBundleCore E M`, `TangentBundle E M`: the tangent bundle, as a `FiberBundleCore` and as
+  its total space.
+* `tangentChart i c`: the chart of the tangent bundle built from the trivialization over the
+  chart `i` and the chart `c` of the base.
+
+## Main results
+
+* `tangentCoordChange_self`, `tangentCoordChange_comp`, `continuousOn_tangentCoordChange`: the
+  cocycle conditions and the continuity of the coordinate changes.
+* `smoothMBOn_tangentChart_transition`: the transition maps of the tangent charts are smooth.
+* `TangentBundle.mbManifold`: the tangent bundle is a manifold modeled on `E × E`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section

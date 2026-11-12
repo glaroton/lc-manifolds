@@ -16,47 +16,59 @@ public import LocallyConvexAnalysis.Calculus.MBFrechet
 /-!
 # The homotopy formula and the Poincaré Lemma
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Lemma 3.6.25 (Homotopy
-Lemma), Theorem 3.6.28 (Poincaré Lemma) and Corollary 3.6.29.
-
 For a form `ω` of degree `k + 1` on `ℝ × M` with values in a **Mackey complete** space `F`, the
 *fiber integral* `I(ω) ∈ Ωᵏ(M, F)` is
 `I(ω)ₓ(v₁, …, vₖ) = ∫₀¹ ω_{(t, x)}(∂ₜ, v₁, …, vₖ) dt`,
-and the *homotopy formula* (Glöckner–Neeb, (3.40)) is `d I(ω) + I(dω) = i₁*ω - i₀*ω`, where
+and the *homotopy formula* ([GN26, (3.40)]) is `d I(ω) + I(dω) = i₁*ω - i₀*ω`, where
 `iₜ(x) = (t, x)`. Mackey completeness is what makes the weak integrals of the smooth curves
-`t ↦ ω_{(t, x)}(…)` exist (`LocallyConvex.Analysis.ContDiffMBOn.exists_hasWeakIntegral`).
+`t ↦ ω_{(t, x)}(…)` exist (`LocallyConvex.Analysis.ContDiffMBOn.exists_hasWeakIntegral`). We
+follow [GN26, Lemma 3.6.25 (Homotopy Lemma), Theorem 3.6.28 (Poincaré Lemma) and
+Corollary 3.6.29].
 
-## Differences with Glöckner–Neeb
+## Main definitions
+
+* `fibLoc`: the local fiber integral.
+* `DifferentialForm.fibInt`: the fiber integral `I : Ωᵏ⁺¹(ℝ × M, F) → Ωᵏ(M, F)`.
+* `SmoothlyContractible`: smoothly contractible manifolds.
+* `deRhamProdEquiv`: for a locally convex space `G`, the isomorphism
+  `H^n_dR(M, F) ≅ H^n_dR(M × G, F)` induced by the projection `M × G → M`.
+
+## Main results
+
+* `IsLocalForm.isLocalForm_fibLoc`, `IsLocalForm.dLoc_fibLoc_add`: the local fiber integral is a
+  local form, and the local homotopy formula.
+* `DifferentialForm.d_fibInt_add`: the homotopy formula `d I(ω) + I(dω) = i₁*ω - i₀*ω`
+  ([GN26, (3.40)]), with `DifferentialForm.fibInt_d_zero` in degree `0`.
+* `deRhamMap_homotopy`: **the Homotopy Lemma** ([GN26, Lemma 3.6.25]): smoothly homotopic maps
+  induce the same maps in de Rham cohomology.
+* `DifferentialForm.IsClosed.isExact_of_smoothlyContractible`,
+  `deRham_subsingleton_of_smoothlyContractible`: **the Poincaré Lemma**
+  ([GN26, Theorem 3.6.28]).
+* `smoothlyContractible_of_starConvex`, `DifferentialForm.IsClosed.isExact_of_starConvex`: open
+  star-shaped subsets of `E` ([GN26, Corollary 3.6.29]).
+* `deRhamProdEquiv` ([GN26, Corollary 3.6.26]): the projection `M × G → M` induces isomorphisms
+  in de Rham cohomology, through the homotopy `(t, (m, x)) ↦ (m, t x)` between the identity and
+  `(m, x) ↦ (m, 0)`.
+
+## Implementation notes
+
+Differences with [GN26]:
 
 * Homotopies are smooth maps `ℝ × M → N`, instead of `[0, 1] × M → N`: we have no manifolds
-  with boundary. A homotopy on `[0, 1] × M` in the sense of Glöckner–Neeb can be precomposed
+  with boundary. A homotopy on `[0, 1] × M` in the sense of [GN26] can be precomposed
   with a smooth map `ℝ → [0, 1]` which is `0` near `(-∞, 0]` and `1` near `[1, ∞)`.
-* Glöckner–Neeb prove the homotopy formula through Cartan's formula on vector fields. We prove it
+* [GN26] prove the homotopy formula through Cartan's formula on vector fields. We prove it
   in charts: differentiating under the integral sign
   (`LocallyConvex.Analysis.ContDiffMBOn.dMB_weakIntegral_of_mackey`), the terms of `d I(ω)` cancel
   those of `I(dω)` with a derivative in a direction of `M`, and what remains is
   `∫₀¹ ∂ₜ ω_{(t, x)}(v) dt = ω_{(1, x)}(v) - ω_{(0, x)}(v)`.
 
-## Main results
-
-* `fibLoc`, `IsLocalForm.isLocalForm_fibLoc`, `IsLocalForm.dLoc_fibLoc_add`: the local fiber
-  integral and the local homotopy formula;
-* `DifferentialForm.fibInt`: the fiber integral `I : Ωᵏ⁺¹(ℝ × M, F) → Ωᵏ(M, F)`, and
-  `DifferentialForm.d_fibInt_add`: the homotopy formula `d I(ω) + I(dω) = i₁*ω - i₀*ω`
-  (Glöckner–Neeb, (3.40)), with `fibInt_d_zero` in degree `0`;
-* `deRhamMap_homotopy`: **the Homotopy Lemma** (Glöckner–Neeb, Lemma 3.6.25): smoothly homotopic
-  maps induce the same maps in de Rham cohomology;
-* `DifferentialForm.IsClosed.isExact_of_smoothlyContractible`,
-  `deRham_subsingleton_of_smoothlyContractible`: **the Poincaré Lemma** (Glöckner–Neeb,
-  Theorem 3.6.28);
-* `smoothlyContractible_of_starConvex`, `DifferentialForm.IsClosed.isExact_of_starConvex`: open
-  star-shaped subsets of `E` (Glöckner–Neeb, Corollary 3.6.29);
-* `deRhamProdEquiv` (Glöckner–Neeb, Corollary 3.6.26): for a locally convex space `G`, the
-  projection `M × G → M` induces isomorphisms `H^n_dR(M, F) ≅ H^n_dR(M × G, F)`, through the
-  homotopy `(t, (m, x)) ↦ (m, t x)` between the identity and `(m, x) ↦ (m, 0)`.
-
 To form `ℝ × M` for `M` modeled on `E : Type u`, the product of manifolds
 (`LocallyConvexManifolds.Manifold.Product`) allows model spaces in different universes.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -226,7 +238,7 @@ theorem IsLocalForm.isLocalForm_fibLoc (hΩ : IsLocalForm (k + 1) Ω (univ ×ˢ 
             map_eq_zero_of_eq' := fun v i j hv hij ↦ ?_ }, fun v ↦ rfl⟩
   · rename_i inst
     obtain rfl : inst = instDecidableEqFin k := Subsingleton.elim _ _
-    show weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i (a + b))))) 0 1 =
+    change weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i (a + b))))) 0 1 =
       weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i a)))) 0 1 +
         weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i b)))) 0 1
     rw [hupd v i (a + b), hupd v i a, hupd v i b]
@@ -239,7 +251,7 @@ theorem IsLocalForm.isLocalForm_fibLoc (hΩ : IsLocalForm (k + 1) Ω (univ ×ˢ 
     exact ((hI _).add (hc _) (hc _) (hI _)).weakIntegral_eq
   · rename_i inst
     obtain rfl : inst = instDecidableEqFin k := Subsingleton.elim _ _
-    show weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i (c • a))))) 0 1 =
+    change weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i (c • a))))) 0 1 =
       c • weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec (update v i a)))) 0 1
     rw [hupd v i (c • a), hupd v i a]
     have e : ∀ t : ℝ, Ω ((t, y), update (Fin.cons (1, 0) (inclVec v)) i.succ (0, c • a)) =
@@ -251,7 +263,7 @@ theorem IsLocalForm.isLocalForm_fibLoc (hΩ : IsLocalForm (k + 1) Ω (univ ×ˢ 
   · have e : ∀ t : ℝ, Ω ((t, y), Fin.cons (1, 0) (inclVec v)) = 0 := fun t ↦
       hΩ.map_eq_zero_of_eq (hmem t) (i := i.succ) (j := j.succ)
         (by simp [inclVec, hv]) (Fin.succ_injective _ |>.ne hij)
-    show weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec v))) 0 1 = 0
+    change weakIntegral (fun t ↦ Ω ((t, y), Fin.cons (1, 0) (inclVec v))) 0 1 = 0
     simp only [e]
     simpa using (hasWeakIntegral_const (0 : F) 0 1).weakIntegral_eq
 
@@ -315,7 +327,7 @@ theorem IsLocalForm.dMB_fibLoc {Ω : (ℝ × E) × (Fin (k + 1) → ℝ × E) �
         0 1 := by
   rw [← dMB_slice]
   have hf := hΩ.smoothMBOn_comp_fibPt hV 2
-  show dMB (fun p ↦ weakIntegral (fun t ↦ Ω (fibPt (p, t))) 0 1) ((y, w), (u, 0)) = _
+  change dMB (fun p ↦ weakIntegral (fun t ↦ Ω (fibPt (p, t))) 0 1) ((y, w), (u, 0)) = _
   have h := ContDiffMBOn.dMB_weakIntegral_of_mackey isOpen_univ zero_le_one (subset_univ _)
     (hV.prod isOpen_univ) hf (x := (y, w)) ⟨hy, mem_univ _⟩ (u, 0)
   refine h.trans ?_
@@ -330,7 +342,7 @@ theorem IsLocalForm.dMB_fibLoc {Ω : (ℝ × E) × (Fin (k + 1) → ℝ × E) �
   rw [e, hA, ← fibPt_eq, fibLin_dir, dMB_slice]
   rfl
 
-/-- **The local homotopy formula** (Glöckner–Neeb, (3.40), in a chart):
+/-- **The local homotopy formula** ([GN26, (3.40)], in a chart):
 `d I(Ω) + I(dΩ) = Ω|_{t = 1} - Ω|_{t = 0}` for a local form `Ω` of degree `k + 1` on `ℝ × V`. -/
 theorem IsLocalForm.dLoc_fibLoc_add {Ω : (ℝ × E) × (Fin (k + 1) → ℝ × E) → F}
     (hΩ : IsLocalForm (k + 1) Ω (univ ×ˢ V)) (hV : IsOpen V) {y : E} (hy : y ∈ V)
@@ -478,7 +490,7 @@ theorem smoothMBM_sliceIncl (t : ℝ) : SmoothMBM E (ModelProd ℝ E) (sliceIncl
     ContDiffMBOn.prodMk isOpen_univ (contDiffMBOn_const k t univ) (smoothMBOn_id univ k)
   refine ContDiffMBOn.congr_of_isOpen hD (fun y hy ↦ ?_) (h.mono (subset_univ _))
   simp only [sliceIncl, comp_apply, prodChartedSpace_chartAt, chartAt_self_eq]
-  show _ = ((t, c (c.symm y)) : ℝ × E)
+  change _ = ((t, c (c.symm y)) : ℝ × E)
   rw [c.right_inv hy.1]
 
 /-- The pullback along a slice inclusion: `(iₜ*ω)ₓ(v) = ω_{(t, x)}((0, v₁), …, (0, vₙ))`. -/
@@ -496,7 +508,7 @@ theorem DifferentialForm.pullback_sliceIncl_apply {F : Type u} [AddCommGroup F] 
     Filter.eventually_of_mem (c.open_target.mem_nhds (c.map_source (mem_chart_source E x)))
       fun y hy ↦ by
         simp only [sliceIncl, comp_apply, prodChartedSpace_chartAt, chartAt_self_eq]
-        show ((t, c (c.symm y)) : ℝ × E) = _
+        change ((t, c (c.symm y)) : ℝ × E) = _
         rw [c.right_inv hy]
   rw [dMB_congr_of_eventuallyEq hev]
   have hd : HasDirDerivAt (fun y : E ↦ ((t, y) : ℝ × E)) (c x) (v m) ((0 : ℝ), v m) := by
@@ -572,8 +584,8 @@ theorem isLocalForm_localRep_prodAtlas {n : ℕ} (ω : DifferentialForm (ModelPr
 
 variable [MackeyComplete F]
 
-/-- **The fiber integral** `I : Ωᵏ⁺¹(ℝ × M, F) → Ωᵏ(M, F)` (Glöckner–Neeb, proof of
-Lemma 3.6.25), for a Mackey complete space `F`. -/
+/-- **The fiber integral** `I : Ωᵏ⁺¹(ℝ × M, F) → Ωᵏ(M, F)` [GN26, proof of
+Lemma 3.6.25], for a Mackey complete space `F`. -/
 def fibInt (ω : DifferentialForm (ModelProd ℝ E) (ℝ × M) F (k + 1)) :
     DifferentialForm E M F k where
   toFun := fibIntFun ω
@@ -609,7 +621,7 @@ theorem pullback_sliceIncl_eq_sliceLoc {n : ℕ}
       simp only [prodChartedSpace_chartAt, chartAt_self_eq]; rfl]
   exact (ω.localRep_prefChart (t, x) _).symm
 
-/-- **The homotopy formula** (Glöckner–Neeb, (3.40)): `d I(ω) + I(dω) = i₁*ω - i₀*ω` for
+/-- **The homotopy formula** [GN26, (3.40)]: `d I(ω) + I(dω) = i₁*ω - i₀*ω` for
 `ω ∈ Ωᵏ⁺¹(ℝ × M, F)`. -/
 theorem d_fibInt_add (ω : DifferentialForm (ModelProd ℝ E) (ℝ × M) F (k + 1)) :
     (fibInt ω).d + fibInt ω.d =
@@ -698,7 +710,7 @@ theorem fibInt_zero :
   rw [fibInt_apply, zero_apply]
   simpa using (hasWeakIntegral_const (0 : F) 0 1).weakIntegral_eq
 
-/-- **The Homotopy Lemma** (Glöckner–Neeb, Lemma 3.6.25), at the level of forms: if
+/-- **The Homotopy Lemma** [GN26, Lemma 3.6.25], at the level of forms: if
 `H : ℝ × M → N` is smooth, `Hₜ = H(t, ·)` and `α` is a closed `(k + 1)`-form on `N` with values
 in a Mackey complete space, then `H₁*α - H₀*α = d I(H*α)`. -/
 theorem pullback_sub_pullback_eq_d_fibInt {H : ℝ × M → N} (hH : SmoothMBM (ModelProd ℝ E) E' H)
@@ -730,7 +742,7 @@ open DifferentialForm
 
 variable [MackeyComplete F]
 
-/-- **The Homotopy Lemma** (Glöckner–Neeb, Lemma 3.6.25): homotopic smooth maps
+/-- **The Homotopy Lemma** [GN26, Lemma 3.6.25]: homotopic smooth maps
 `H₀, H₁ : M → N` induce the same maps `H^n_dR(N, F) → H^n_dR(M, F)` in de Rham cohomology with
 values in a Mackey complete space `F`, for every `n`. Homotopies are smooth maps on `ℝ × M`. -/
 theorem deRhamMap_homotopy {H : ℝ × M → N} (hH : SmoothMBM (ModelProd ℝ E) E' H) (n : ℕ) :
@@ -739,7 +751,7 @@ theorem deRhamMap_homotopy {H : ℝ × M → N} (hH : SmoothMBM (ModelProd ℝ E
   refine Submodule.linearMap_qext _ (LinearMap.ext fun ω ↦ ?_)
   obtain ⟨ω, hω⟩ := ω
   have hω' : ω.IsClosed := mem_closedForms.mp hω
-  show DeRham.mk (ω.pullback (hH.comp (smoothMBM_sliceIncl 1))) (hω'.pullback _) =
+  change DeRham.mk (ω.pullback (hH.comp (smoothMBM_sliceIncl 1))) (hω'.pullback _) =
     DeRham.mk (ω.pullback (hH.comp (smoothMBM_sliceIncl 0))) (hω'.pullback _)
   rw [DeRham.mk_eq_mk_iff]
   cases n with
@@ -751,13 +763,13 @@ theorem deRhamMap_homotopy {H : ℝ × M → N} (hH : SmoothMBM (ModelProd ℝ E
     exact ⟨_, rfl⟩
 
 variable (E M) in
-/-- `M` is **smoothly contractible** to `p` (Glöckner–Neeb, Definition 3.6.27), with homotopies
+/-- `M` is **smoothly contractible** to `p` [GN26, Definition 3.6.27], with homotopies
 defined on `ℝ × M`: there is a smooth `H : ℝ × M → M` with `H(0, x) = x` and `H(1, x) = p`. -/
 def SmoothlyContractible : Prop :=
   ∃ (H : ℝ × M → M) (p : M), SmoothMBM (ModelProd ℝ E) E H ∧ (∀ x, H (0, x) = x) ∧
     ∀ x, H (1, x) = p
 
-/-- **The Poincaré Lemma** (Glöckner–Neeb, Theorem 3.6.28): on a smoothly contractible manifold,
+/-- **The Poincaré Lemma** [GN26, Theorem 3.6.28]: on a smoothly contractible manifold,
 every closed form of positive degree with values in a Mackey complete space is exact. -/
 theorem DifferentialForm.IsClosed.isExact_of_smoothlyContractible (hM : SmoothlyContractible E M)
     {α : DifferentialForm E M F (k + 1)} (hα : α.IsClosed) : α.IsExact := by
@@ -789,7 +801,7 @@ theorem deRham_subsingleton_of_smoothlyContractible (hM : SmoothlyContractible E
 
 end Poincare
 
-/-! ### Star-shaped open sets (Corollary 3.6.29) -/
+/-! ### Star-shaped open sets [GN26, Corollary 3.6.29] -/
 
 section StarShaped
 
@@ -863,14 +875,14 @@ theorem smoothlyContractible_of_starConvex (U : Opens E) {p : E} (hp : p ∈ U)
           OpenPartialHomeomorph.prod_target, OpenPartialHomeomorph.refl_target] at h
         exact h.2)
       exact this
-    show p + contrParam r.1 • (r.2 - p) = ((starContraction U p hU (r.1, (chartAt E q.2).symm r.2)
+    change p + contrParam r.1 • (r.2 - p) = ((starContraction U p hU (r.1, (chartAt E q.2).symm r.2)
       : U) : E)
     simp only [starContraction, hr2]
   · exact Subtype.ext (by simp [starContraction, contrParam_zero])
   · exact Subtype.ext (by simp [starContraction, contrParam_one])
 
 open TopologicalSpace in
-/-- **The Poincaré Lemma for star-shaped open sets** (Glöckner–Neeb, Corollary 3.6.29): on an
+/-- **The Poincaré Lemma for star-shaped open sets** [GN26, Corollary 3.6.29]: on an
 open subset of `E` which is star-shaped with respect to one of its points, every closed form of
 positive degree with values in a Mackey complete space is exact. -/
 theorem DifferentialForm.IsClosed.isExact_of_starConvex {F : Type u} [AddCommGroup F]
@@ -882,7 +894,7 @@ theorem DifferentialForm.IsClosed.isExact_of_starConvex {F : Type u} [AddCommGro
 
 end StarShaped
 
-/-! ### Products with a model space (Corollary 3.6.26) -/
+/-! ### Products with a model space [GN26, Corollary 3.6.26] -/
 
 section ProductModel
 
@@ -933,7 +945,7 @@ theorem smoothMBM_zeroSection :
 
 variable [MackeyComplete F]
 
-/-- **Glöckner–Neeb, Corollary 3.6.26.** For a locally convex space `G` and a Mackey complete
+/-- **[GN26, Corollary 3.6.26].** For a locally convex space `G` and a Mackey complete
 space `F`, the projection `p : M × G → M` induces isomorphisms
 `p* : H^n_dR(M, F) → H^n_dR(M × G, F)`, with inverse the pullback along the zero section. -/
 def deRhamProdEquiv (n : ℕ) : DeRham E M F n ≃ₗ[ℝ] DeRham (ModelProd E G) (M × G) F n := by
@@ -958,7 +970,7 @@ def deRhamProdEquiv (n : ℕ) : DeRham E M F n ≃ₗ[ℝ] DeRham (ModelProd E G
     exact h.symm
   · rw [← deRhamMap_comp, ← deRhamMap_id (E := E) (M := M) (F := F) n]
 
-/-- The isomorphism of Corollary 3.6.26 is the pullback along the projection. -/
+/-- The isomorphism of [GN26, Corollary 3.6.26] is the pullback along the projection. -/
 theorem coe_deRhamProdEquiv (n : ℕ) :
     ⇑(deRhamProdEquiv (E := E) (M := M) (G := G) (F := F) n) =
       deRhamMap (smoothMBM_fst (E := E) (F := G) (M := M) (N := G)) n :=

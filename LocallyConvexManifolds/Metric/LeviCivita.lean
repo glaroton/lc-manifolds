@@ -11,14 +11,6 @@ public import LocallyConvexManifolds.Metric.Bilinear
 /-!
 # The Levi-Civita connection: Koszul formula and uniqueness
 
-References: S. Lang, *Fundamentals of Differential Geometry*, Ch. VIII, §4, Theorem 4.1
-(metric derivative) and Theorem 4.2, condition MS 1 (metric spray), for pseudo-Riemannian
-metrics in Lang's sense; G. Larotonda, *Estructuras geométricas para las variedades de Banach*,
-§10.1, Teorema 10.1.1 (metric spray, pseudo-Riemannian case); A. Schmeding, *An Introduction to
-Infinite-Dimensional Differential Geometry*, Cambridge University Press (2023), §4.3:
-Definition 4.21 (metric spray, p. 92), Example 4.22 (a weak Riemannian metric on `ℓ²` without
-metric spray, p. 93), Definition 4.29 (metric derivative, p. 97).
-
 Let `g` be a smooth field of symmetric bilinear forms (`SymmBilinField`) of **any signature**:
 Riemannian, Lorentzian, or pseudo-Riemannian of finite or infinite index. A connection `C` is
 **metric** for `g` (`Connection.IsMetric`) if in every chart
@@ -30,20 +22,33 @@ point, in the direction `u`. With the convention `∇_X Y = dỸ · X̃ − Γ(X
 `LocallyConvex.Manifolds.Connection`, this is the chart expression of
 `X g(Y, Z) = g(∇_X Y, Z) + g(Y, ∇_X Z)`.
 
+The sources are [Lan99, Ch. VIII, §4, Theorem 4.1] (metric derivative) and [Lan99, Ch. VIII, §4,
+Theorem 4.2], condition MS 1 (metric spray), for pseudo-Riemannian metrics in Lang's sense;
+[Lar22, §10.1, Teorema 10.1.1] (metric spray, pseudo-Riemannian case); and [Sch23, §4.3]:
+Definition 4.21 (metric spray, p. 92), Example 4.22 (a weak Riemannian metric on `ℓ²` without
+metric spray, p. 93), Definition 4.29 (metric derivative, p. 97).
+
+## Main definitions
+
+* `koszul`: the Koszul expression `½ (−D(u)(a, b) − D(a)(u, b) + D(b)(u, a))`.
+* `SymmBilinField.localForm`, `SymmBilinField.localDeriv`: the local representative `G` of `g` in
+  a chart and its derivative `∂G` in the base point.
+* `Connection.IsMetric`: the connection is metric for `g`, in every chart.
+
 ## Main results
 
 * `koszul_eq`, `Connection.koszul`: **the Koszul formula.** If `C` is symmetric and metric,
   `G(Γ(u, a), b) = ½ (−∂G(u)(a, b) − ∂G(a)(u, b) + ∂G(b)(u, a))`. This is pure algebra in each
   chart: no completeness, no nondegeneracy.
 * `Connection.Γ_eq_of_isMetric`: **uniqueness.** If `g` is weakly nondegenerate, two symmetric
-  metric connections have the same symbols in every chart. This covers weak Riemannian metrics
-  and weak pseudo-Riemannian metrics of arbitrary index (`WeakPseudoRiemannianMetric.Γ_eq`).
+  metric connections have the same symbols in every chart. This covers weak Riemannian metrics and
+  weak pseudo-Riemannian metrics of arbitrary index (`WeakPseudoRiemannianMetric.covDeriv_eq`).
 * `Connection.isMetric_iff_spray`: **the metric spray.** A symmetric connection is metric if and
   only if its spray `F(v) = Γ(v, v)` satisfies, in every chart,
-  `G(F(v), z) = −∂G(v)(v, z) + ½ ∂G(z)(v, v)` (Larotonda, *Estructuras*, Teorema 10.1.1,
-  formulas (10.3)–(10.4)). The symbols are recovered from the spray by polarization
-  (`koszul_of_spray`); the additivity of `∂G(y)` in each argument, needed for this, is
-  `SymmBilinField.localDeriv_add_left` and its companions.
+  `G(F(v), z) = −∂G(v)(v, z) + ½ ∂G(z)(v, v)` ([Lar22, Teorema 10.1.1, formulas (10.3)–(10.4)]). The
+  symbols are recovered from the spray by polarization (`koszul_of_spray`); the additivity of
+  `∂G(y)` in each argument, needed for this, is `SymmBilinField.localDeriv_add_left` and its
+  companions.
 * `exists_symm_compatible_iff`: **the obstruction to existence**, pointwise. Symbols that are
   symmetric and compatible with `G` at a point exist if and only if, for all `u, a`, the
   functional `b ↦ koszul(u, a, b)` is represented by `G`: `koszul(u, a, ·) = G(c, ·)`.
@@ -51,13 +56,19 @@ point, in the direction `u`. With the convention `∇_X Y = dỸ · X̃ − Γ(X
 ## Existence: a word of caution
 
 For a strong Riemannian metric on a Hilbert manifold, the Koszul functional is always represented
-(Riesz), and the Levi-Civita connection exists (Lang, Ch. VIII, Theorem 4.1). For **weak** metrics,
-in particular on Fréchet manifolds, where every metric is weak, the representation may fail:
-Schmeding's Example 4.22 is a weak Riemannian metric on `ℓ²` whose Koszul functional is not
+(Riesz), and the Levi-Civita connection exists ([Lan99, Ch. VIII, Theorem 4.1]). For **weak**
+metrics, in particular on Fréchet manifolds, where every metric is weak, the representation may
+fail: [Sch23, Example 4.22] is a weak Riemannian metric on `ℓ²` whose Koszul functional is not
 represented, so that there is no metric spray. Even when the functional is represented at every
 point, the symbols so obtained still have to be smooth and to satisfy the change of charts law of a
 connection, and neither follows from the pointwise statement. We therefore do not state an existence
 theorem: existence is a property of the metric at hand, to be checked in examples.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*][Sch23]
 -/
 
 @[expose] public section
@@ -127,8 +138,7 @@ theorem exists_symm_compatible_iff {B : E → E → ℝ} {D : E → E → E → 
 
 omit [AddCommGroup E] in
 /-- On the diagonal, the Koszul expression is the **metric spray**:
-`koszul(v, v, z) = −D(v)(v, z) + ½ D(z)(v, v)` (Larotonda, *Estructuras*, Teorema 10.1.1,
-formula (10.3)). -/
+`koszul(v, v, z) = −D(v)(v, z) + ½ D(z)(v, v)` ([Lar22, Teorema 10.1.1, formula (10.3)]). -/
 theorem koszul_diag (D : E → E → E → ℝ) (v z : E) :
     koszul D v v z = -D v v z + D z v v / 2 := by
   simp only [koszul]
@@ -146,7 +156,7 @@ theorem compatible_of_koszul {B : E → E → ℝ} {D : E → E → E → ℝ} {
 /-- **Polarization: the spray determines the Koszul formula.** If `Γ` is symmetric and
 additive, `B` and `D` are additive in each argument and `D` is symmetric in its last two, and the
 spray `v ↦ Γ(v, v)` satisfies `B(Γ(v, v), z) = −D(v)(v, z) + ½ D(z)(v, v)`, then `Γ` satisfies
-the Koszul formula (Larotonda, *Estructuras*, formula (10.4)). -/
+the Koszul formula ([Lar22, formula (10.4)]). -/
 theorem koszul_of_spray {B : E → E → ℝ} {D : E → E → E → ℝ} {Γ : E → E → E}
     (hBadd : ∀ c c' b, B (c + c') b = B c b + B c' b)
     (hΓ : ∀ u a, Γ u a = Γ a u)
@@ -368,17 +378,17 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E]
   [MBManifold E M] in
 /-- **A necessary condition for existence.** If `g` has a symmetric metric connection, then in
 every chart the Koszul functionals `b ↦ ½ (−∂G(u)(a, b) − ∂G(a)(u, b) + ∂G(b)(u, a))` are
-represented by `G`. For weak metrics this can fail (Schmeding, Example 4.22). -/
+represented by `G`. For weak metrics this can fail ([Sch23, Example 4.22]). -/
 theorem koszul_represented (hC : C.IsSymmetric) (hm : C.IsMetric g) (i : atlas E M) {y : E}
     (hy : y ∈ i.1.target) (u a : E) :
     ∃ c, ∀ b, g.localForm i y c b = LocallyConvex.Manifolds.koszul (g.localDeriv i y) u a b :=
   ⟨C.Γ i y u a, koszul hC hm i hy u a⟩
 
-/-- **The metric spray** (Larotonda, *Estructuras*, Teorema 10.1.1, formula (10.3); Lang,
-Ch. VIII, Theorem 4.2, MS 1). A symmetric connection is metric for `g` if and only if, in every
+/-- **The metric spray** ([Lar22, Teorema 10.1.1, formula (10.3)]; [Lan99, Ch. VIII, Theorem 4.2,
+MS 1]). A symmetric connection is metric for `g` if and only if, in every
 chart, its spray `v ↦ Γ(y)(v, v)` satisfies
 `G(y)(Γ(y)(v, v), z) = −∂G(y)(v)(v, z) + ½ ∂G(y)(z)(v, v)`.
-In the notation of *Estructuras*, `G(y)(a, b) = ⟨a, g(y) b⟩` and
+In the notation of [Lar22], `G(y)(a, b) = ⟨a, g(y) b⟩` and
 `∂G(y)(z)(a, b) = ⟨a, g*_{y,z} b⟩`, and this is `⟨F_y(v), g(y) z⟩ = −⟨g*_{y,v} v, z⟩ +
 ½ ⟨g*_{y,z} v, v⟩`. The symbols are recovered from the spray by polarization, which is the
 Koszul formula (formula (10.4) there). No nondegeneracy is needed for this equivalence. -/

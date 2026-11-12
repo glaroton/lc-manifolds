@@ -18,12 +18,31 @@ the Krein space `(H, β)`, hence closed, nondegenerate and (for complete `H`) a 
 projectors are continuous (`ProjectorField.isOrthoComplemented_of_isOrthogonal`,
 `ProjectorField.isKreinSpace_of_isOrthogonal`, `ProjectorField.continuous_E_of_isOrthogonal`).
 
-The theory of ortho-complemented subspaces of Krein spaces used here (J. Bognár, *Indefinite Inner
-Product Spaces*, Springer (1974), Theorem V.3.4, p. 104) is in lc-analysis,
+## Main definitions
+
+* `ProjectorField.tangentSubmodule`: the tangent space `T_p X` as a submodule, the range of `P_p`.
+
+## Main results
+
+* `ProjectorField.isOrthoComplemented_of_isOrthogonal`: if `P` is `β`-orthogonal, every tangent
+  space is ortho-complemented.
+* `ProjectorField.isKreinSpace_of_isOrthogonal`: for complete `H`, the tangent spaces are Krein
+  spaces for the restriction of `β`.
+* `ProjectorField.continuous_E_of_isOrthogonal`: for complete `H`, the projectors are continuous.
+
+## Implementation notes
+
+The theory of ortho-complemented subspaces of Krein spaces used here
+([Bog74, Theorem V.3.4, p. 104]) is in lc-analysis [LCA],
 `LocallyConvexAnalysis/Krein/OrthoComplemented.lean`. Conversely, a closed tangent space that is a
 Krein space has a continuous `β`-orthogonal projector
-(`FundamentalSymmetry.exists_projector_of_kreinDecomposition`); whether these can be chosen
-smoothly in `p` is not addressed.
+(`FundamentalSymmetry.exists_projector_of_kreinDecomposition`); whether these can be chosen smoothly
+in `p` is not addressed.
+
+## References
+
+* [J. Bognár, *Indefinite Inner Product Spaces*][Bog74]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section
@@ -61,8 +80,8 @@ def tangentSubmodule (P : ProjectorField h) (p : X) : Submodule ℝ H where
 `β(x, y) = ⟪J x, y⟫` be the form of a fundamental symmetry of a real Hilbert space `H`. If the
 projector field `P` of a submanifold `X ⊆ H` is `β`-orthogonal, every tangent space `T_p X` is
 ortho-complemented in the Krein space `(H, β)`: hence closed, nondegenerate, with bijective Gram
-operator, and (if `H` is complete) a Krein space (`isKreinSpace_of_isOrthogonal`; Bognár,
-Theorem V.3.4). -/
+operator, and (if `H` is complete) a Krein space (`isKreinSpace_of_isOrthogonal`;
+[Bog74, Theorem V.3.4]). -/
 theorem isOrthoComplemented_of_isOrthogonal (J : FundamentalSymmetry ℝ H) (P : ProjectorField h)
     {β : LinearMap.BilinForm ℝ H} (hβ : ∀ x y, β x y = ⟪J.op x, y⟫_ℝ)
     (hP : P.IsOrthogonal β) (p : X) : J.IsOrthoComplemented (P.tangentSubmodule p) :=
@@ -70,8 +89,8 @@ theorem isOrthoComplemented_of_isOrthogonal (J : FundamentalSymmetry ℝ H) (P :
     fun w t ht ↦ by rw [← hβ, ← hβ]; exact hP p w t ht
 
 /-- The tangent spaces of a submanifold of a real Krein space (`H` complete) with a
-`β`-orthogonal projector field are Krein spaces for the restriction of `β` (Bognár,
-Theorem V.3.4, "only if", through the complexification). -/
+`β`-orthogonal projector field are Krein spaces for the restriction of `β` ([Bog74,
+Theorem V.3.4], "only if", through the complexification). -/
 theorem isKreinSpace_of_isOrthogonal [CompleteSpace H] (J : FundamentalSymmetry ℝ H)
     (P : ProjectorField h) {β : LinearMap.BilinForm ℝ H} (hβ : ∀ x y, β x y = ⟪J.op x, y⟫_ℝ)
     (hP : P.IsOrthogonal β) (p : X) : IsKreinSpace J.form (P.tangentSubmodule p) :=

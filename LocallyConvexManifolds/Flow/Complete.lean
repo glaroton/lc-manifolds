@@ -11,17 +11,18 @@ public import LocallyConvexManifolds.Flow.Maximal
 # A completeness criterion for vector fields on Banach manifolds
 
 Let `X` be a smooth vector field on a Hausdorff manifold `M` modeled on a Banach space `E`.
-Lang (*Fundamentals of Differential Geometry*, Springer GTM 191, Ch. IV, §2, Proposition 2.5,
-p. 92) proves that `X` is **complete**, i.e. its maximal flow is defined on all of `ℝ × M`, if
-there are `a > 0` and `K > 0` such that every point `x` admits a chart `(U, φ)` at `x` with
-`φ(U) ⊇ B(φ x, a)` in which the local representative `f` of `X` and its derivative `f'` are
-bounded by `K`.
+Lang [Lan99, Ch. IV, §2, Proposition 2.5, p. 92] proves that `X` is **complete**, i.e. its
+maximal flow is defined on all of `ℝ × M`, if there are `a > 0` and `K > 0` such that every point
+`x` admits a chart `(U, φ)` at `x` with `φ(U) ⊇ B(φ x, a)` in which the local representative `f`
+of `X` and its derivative `f'` are bounded by `K`.
+
+## Main results
 
 * `SmoothVectorField.not_mapClusterPt_flow_of_notMem`: a two-sided form of the escape lemma: if
   `t ∉ J_x`, the maximal curve `s ↦ Fl(s, x)` has no cluster point as `s → t` within `J_x`.
 * `SmoothVectorField.Ioo_subset_maxInterval_of_norm_rep_le` (**uniform existence time**): if
   `B(φ x, a) ⊆ φ(U)` and `‖f‖ ≤ K` on `B(φ x, a)`, then `J_x ⊇ (-a / (K + 1), a / (K + 1))`.
-* `SmoothVectorField.flowDomain_eq_univ_of_forall_norm_rep_le` (**Lang, Proposition IV.2.5**):
+* `SmoothVectorField.flowDomain_eq_univ_of_forall_norm_rep_le` ([Lan99, Proposition IV.2.5]):
   under Lang's hypotheses, without the bound on `f'`, the maximal flow is global.
 
 ## Implementation notes
@@ -36,11 +37,15 @@ bounded by `K`.
   `K a / (K + 1) < a`, so the curve has a cluster point in `M`, which the escape lemma forbids.
   We do not claim this argument is new.
 * **Infinite-dimensional subtlety.** In finite dimensions a vector field with compact support is
-  complete by the escape lemma (Lang, Corollary IV.2.4). On Banach manifolds compact sets have
+  complete by the escape lemma [Lan99, Corollary IV.2.4]. On Banach manifolds compact sets have
   empty interior, so the escape lemma gives no such criterion, and uniform bounds in charts of a
   fixed size play the role of compactness. The uniform radius `a` cannot be dropped: the
   constant vector field `1` on the open interval `(0, 1)` is bounded, but not complete.
 * As for the maximal flow, `E` is a Banach space (`[CompleteSpace E]`) and `M` is Hausdorff.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
 -/
 
 @[expose] public section
@@ -62,9 +67,9 @@ namespace SmoothVectorField
 
 variable {X : SmoothVectorField E M} [CompleteSpace E] [T2Space M]
 
-/-- **Escape lemma, two-sided form.** If `t ∉ J_x`, the maximal curve `s ↦ Fl(s, x)` has no
-cluster point as `s → t` within `J_x` (compare Lang, *Fundamentals of Differential Geometry*,
-Theorem IV.2.3): a flow box around a cluster point would continue the curve beyond `t`. -/
+/-- **Escape lemma, two-sided form.** If `t ∉ J_x`, the maximal curve `s ↦ Fl(s, x)` has no cluster
+point as `s → t` within `J_x` (compare [Lan99, Theorem IV.2.3]): a flow box around a cluster point
+would continue the curve beyond `t`. -/
 theorem not_mapClusterPt_flow_of_notMem {x : M} {t : ℝ} (ht : t ∉ X.maxInterval x) (y : M) :
     ¬ MapClusterPt y (𝓝[X.maxInterval x] t) (fun s ↦ X.flow (s, x)) := by
   intro hy
@@ -162,13 +167,12 @@ theorem Ioo_subset_maxInterval_of_norm_rep_le {a K : ℝ} (ha : 0 < a) {x : M} (
   exact hU.subset_connectedComponentIn (Or.inl h0I) (union_subset hIS hεS)
     (Or.inr (mem_ball_self hε))
 
-/-- **A completeness criterion for vector fields** (Lang, *Fundamentals of Differential
-Geometry*, Proposition IV.2.5, p. 92). Let `X` be a smooth vector field on a Hausdorff manifold
-modeled on a Banach space, and `a > 0`, `K` such that every point `x` admits a chart `φ` at `x`
-whose target contains the ball `B(φ x, a)`, on which the local representative of `X` is bounded
-by `K`. Then the maximal flow of `X` is defined on all of `ℝ × M`. Unlike Lang, we bound
-neither the derivative of the local representative, nor the local representative outside the
-ball. -/
+/-- **A completeness criterion for vector fields** [Lan99, Proposition IV.2.5, p. 92]. Let `X` be a
+smooth vector field on a Hausdorff manifold modeled on a Banach space, and `a > 0`, `K` such that
+every point `x` admits a chart `φ` at `x` whose target contains the ball `B(φ x, a)`, on which the
+local representative of `X` is bounded by `K`. Then the maximal flow of `X` is defined on all of
+`ℝ × M`. Unlike Lang, we bound neither the derivative of the local representative, nor the local
+representative outside the ball. -/
 theorem flowDomain_eq_univ_of_forall_norm_rep_le {a K : ℝ} (ha : 0 < a)
     (h : ∀ x : M, ∃ i : atlas E M, x ∈ i.1.source ∧ ball (i.1 x) a ⊆ i.1.target ∧
       ∀ y ∈ ball (i.1 x) a, ‖X.rep i y‖ ≤ K) :

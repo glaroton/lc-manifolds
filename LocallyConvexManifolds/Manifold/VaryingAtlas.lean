@@ -10,13 +10,12 @@ public import LocallyConvexManifolds.MappingSpace.Basic
 /-!
 # Smooth maps between atlases with varying models
 
-Manifolds of mappings are not pure: the chart of `C^ℓ(M, N)` at `f` is modeled on the space `Γ_f`
-of sections along `f`, which depends on `f`. They are therefore presented as atlases with varying
-models (`VaryingAtlas`, compare H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*,
-arXiv:2602.12362, Definition 3.2.13). This file develops the basic theory of `C^k` maps between
-such atlases. A manifold with a single model is an atlas with varying models through all the charts
-of its atlas (`VaryingAtlas.ofChartedSpace`), so the theory covers maps from and into manifolds of
-the library as well.
+Manifolds of mappings are not pure: the chart of `C^ℓ(M, N)` at `f` is modeled on the space `Γ_f` of
+sections along `f`, which depends on `f`. They are therefore presented as atlases with varying
+models (`VaryingAtlas`, compare [GN26, Definition 3.2.13]). This file develops the basic theory of
+`C^k` maps between such atlases. A manifold with a single model is an atlas with varying models
+through all the charts of its atlas (`VaryingAtlas.ofChartedSpace`), so the theory covers maps from
+and into manifolds of the library as well.
 
 ## Main definitions
 
@@ -43,7 +42,7 @@ the library as well.
 * `VaryingAtlas.TangentSpace A x`: the tangent space at `x`, the model of the preferred chart
   `A.chartAt x`; `VaryingAtlas.tangentCoordChangeEquiv`: the changes of tangent coordinates
   `d(φ_j ∘ φ_i⁻¹)(φ_i x)` are isomorphisms of topological vector spaces, with the cocycle
-  condition (`tangentCoordChange_comp`, `tangentCoordChange_self`).
+  condition (`VaryingAtlas.tangentCoordChange_comp`, `VaryingAtlas.tangentCoordChange_self`).
 * `VaryingAtlas.tangentMapAt`: the tangent map `T_x f` of a `C^1` map;
   `VaryingAtlas.dMB_chart_eq_tangentMapAt`: in any charts it is `T_x f` conjugated by the changes
   of tangent coordinates, so it does not depend on the preferred charts.
@@ -51,12 +50,17 @@ the library as well.
 ## Implementation notes
 
 * Only `k ∈ ℕ` is an argument; `k = ∞` is the conjunction over `k ∈ ℕ` (`SmoothOn`), as for
-  `ContDiffMBOn` and `SmoothMBOn` in lc-analysis.
+  `ContDiffMBOn` and `SmoothMBOn` in [LCA].
 * All the model spaces of the atlases involved live in one universe.
 * An atlas with varying models comes with a preferred chart at each point (`VaryingAtlas.chartAt`),
   as Mathlib's `ChartedSpace`; tangent spaces are the models of the preferred charts. This is the
   kinematic tangent space in chart coordinates; in infinite dimensions it need not agree with the
   operational tangent space (derivations).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

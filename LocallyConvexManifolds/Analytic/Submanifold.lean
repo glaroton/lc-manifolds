@@ -15,25 +15,35 @@ Let `F` be a real locally convex space (no completeness) and `S ⊆ F` a *comple
 given by a continuous linear projection `P : F → S`. A subset `X ⊆ F` is a *split real analytic
 submanifold* modeled on `S` (`IsSplitAnalyticSubmanifold`) if every point of `X` lies in a real
 analytic slice chart: a real analytic diffeomorphism `φ` between open subsets of `F` with
-`φ(U ∩ X) = φ(U) ∩ S`. Then:
-
-* `IsSplitAnalyticSubmanifold.chartedSpace`, `realAnalyticManifold`: `X` is a real analytic
-  manifold modeled on `S`, with the restrictions of the real analytic slice charts as atlas
-  (Glöckner–Neeb, *Infinite-Dimensional Lie Groups*, arXiv:2602.12362v1, Definition 3.1.10,
-  with `r = ω`);
-* `realAnalyticMOn_of_val`, `realAnalyticMOn_val`: a map into `X` is real analytic iff it is real
-  analytic into `F`;
-* `realAnalyticMOn_ambient`: the ambient map `TX → F × F`, `v ↦ (π v, w)` (`w ∈ T_p X ⊆ F` the
-  ambient vector of `v`), is real analytic; `realAnalyticMOn_of_ambient`: a map into `TX` is real
-  analytic as soon as its composition with the ambient map is;
-* `AnalyticAmbientAddition`: real analytic maps `σ`, `τ` on open subsets of `F × F` such that
-  `w ↦ σ(p, w)` is a bijection from part of `T_p X` onto part of `X` with inverse
-  `q ↦ τ(p, q)`; `AnalyticAmbientAddition.toLocalAddition` is the local addition
-  `Σ(v) = σ(π v, w)` they define, and `isRealAnalytic_toLocalAddition`: **it is a real analytic
-  local addition** (Glöckner–Neeb, p. 325, after Definition 3.8.11).
+`φ(U ∩ X) = φ(U) ∩ S`.
 
 This is the real analytic counterpart of `LocallyConvexManifolds.Submanifold.LocalAddition`; the
 proofs follow the same pattern, with `RealAnalyticOn` in place of `ContDiffMBOn`.
+
+## Main definitions
+
+* `IsAnalyticSliceChart`, `IsSplitAnalyticSubmanifold`: real analytic slice charts and split real
+  analytic submanifolds.
+* `IsSplitAnalyticSubmanifold.chartedSpace`: the restrictions of the real analytic slice charts,
+  as an atlas of `X`.
+* `AnalyticAmbientAddition`: real analytic maps `σ`, `τ` on open subsets of `F × F` such that
+  `w ↦ σ(p, w)` is a bijection from part of `T_p X` onto part of `X` with inverse
+  `q ↦ τ(p, q)`; `AnalyticAmbientAddition.toLocalAddition` is the local addition
+  `Σ(v) = σ(π v, w)` they define.
+
+## Main results
+
+* `IsSplitAnalyticSubmanifold.realAnalyticManifold`: `X` is a real analytic manifold modeled on
+  `S` ([GN26, Definition 3.1.10], with `r = ω`);
+* `IsSplitAnalyticSubmanifold.realAnalyticMOn_of_val`,
+  `IsSplitAnalyticSubmanifold.realAnalyticMOn_val`: a map into `X` is real analytic iff it is real
+  analytic into `F`;
+* `IsSplitAnalyticSubmanifold.realAnalyticMOn_ambient`: the ambient map `TX → F × F`,
+  `v ↦ (π v, w)` (`w ∈ T_p X ⊆ F` the ambient vector of `v`), is real analytic;
+  `IsSplitAnalyticSubmanifold.realAnalyticMOn_of_ambient`: a map into `TX` is real analytic as
+  soon as its composition with the ambient map is;
+* `AnalyticAmbientAddition.isRealAnalytic_toLocalAddition`: **the local addition of an analytic
+  ambient addition is a real analytic local addition** ([GN26, p. 325], after Definition 3.8.11).
 
 ## Implementation notes and infinite-dimensional subtleties
 
@@ -52,6 +62,11 @@ proofs follow the same pattern, with `RealAnalyticOn` in place of `ContDiffMBOn`
   `T_p X ⊆ F` agree (`IsEmbeddedSubmanifold.tangentSpace`).
 * Glöckner–Neeb do not discuss ambient formulas for local additions on submanifolds. We do not
   claim this argument is new.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]; the numbers refer to
+  arXiv:2602.12362v1.
 -/
 
 @[expose] public section

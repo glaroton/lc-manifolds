@@ -10,22 +10,33 @@ public import LocallyConvexManifolds.Examples.Subspace
 /-!
 # Counterexample: `c₀ ⊆ ℓ^∞` is embedded but not split (Phillips' lemma)
 
-References: R. S. Phillips, *On linear transformations*, Trans. Amer. Math. Soc. 48 (1940), 7.5,
-pp. 539–540 (stated there for the space `c` of convergent sequences, which contains `c₀` with
-codimension one); R. Whitley, *Projecting m onto c₀*, Amer. Math. Monthly 73 (1966).
-
 We realize `ℓ^∞` as the Banach space `ℕ →ᵇ ℝ` of bounded sequences and `c₀` as the closed
 subspace of sequences tending to `0` (`LocallyConvex.Manifolds.Phillips.c0`).
 
-* **Phillips' lemma** (`Phillips.not_closedComplemented_c0`): there is no continuous linear
-  projection of `ℓ^∞` onto `c₀`.
+* **Phillips' lemma** (`Phillips.not_closedComplemented_c0`; [Phi40, 7.5, pp. 539–540], stated
+  there for the space `c` of convergent sequences, which contains `c₀` with codimension one):
+  there is no continuous linear projection of `ℓ^∞` onto `c₀`.
 * Hence `c₀` is an embedded submanifold of `ℓ^∞` that is not split
   (`Phillips.isEmbeddedSubmanifold_c0`, `Phillips.not_isSplitSubmanifold_c0`), and the linear
   inclusion `c₀ → ℓ^∞` is an immersion (closed range, topological isomorphism onto it) that is not
   a split immersion (`Phillips.isImmersion_c0`, `Phillips.not_isSplitImmersion_c0`). This
   separates `IsImmersion` from `IsSplitImmersion` already between Banach spaces.
 
-**Proof (Whitley).** There is an uncountable family `(N_A)` of infinite subsets of `ℕ`, any two of
+## Main definitions
+
+* `Phillips.c0`: the closed subspace `c₀` of `ℓ^∞`.
+
+## Main results
+
+* `Phillips.not_closedComplemented_c0`: `c₀` is not complemented in `ℓ^∞`.
+* `Phillips.isEmbeddedSubmanifold_c0`, `Phillips.not_isSplitSubmanifold_c0`: `c₀` is an embedded,
+  not split, submanifold of `ℓ^∞`.
+* `Phillips.isImmersion_c0`, `Phillips.not_isSplitImmersion_c0`: the inclusion `c₀ → ℓ^∞` is an
+  immersion that is not a split immersion.
+
+## Implementation notes
+
+**Proof** [Whi66]. There is an uncountable family `(N_A)` of infinite subsets of `ℕ`, any two of
 which have finite intersection: index the finite binary words by `ℕ`, and let `N_A` be the set of
 indices of the initial segments of the indicator of `A ⊆ ℕ` (`Phillips.N`). Let `χ_A ∈ ℓ^∞` be the
 indicator of `N_A`; it is not in `c₀`.
@@ -40,6 +51,11 @@ indicator of `N_A`; it is not in `c₀`.
 3. If `P` were a projection onto `c₀`, apply 2 to the coordinates `f_n = e_n ∘ (1 - P)`. Some `A`
    avoids the countable union of the exceptional sets, so `(1 - P) χ_A = 0` and `χ_A = P χ_A ∈ c₀`,
    a contradiction.
+
+## References
+
+* [R. S. Phillips, *On linear transformations*][Phi40]
+* [R. Whitley, *Projecting m onto c₀*][Whi66]
 -/
 
 @[expose] public section

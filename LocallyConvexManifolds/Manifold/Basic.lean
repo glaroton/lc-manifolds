@@ -11,18 +11,26 @@ public import LocallyConvexAnalysis.Calculus.Operations
 /-!
 # Manifolds modeled on locally convex spaces
 
-Reference: K.-H. Neeb, *Towards a Lie theory of locally convex groups*, Jpn. J. Math. 1 (2006),
-291–468 (arXiv:1501.06269), §I.3; H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*
-(arXiv:2602.12362), Ch. 3.
-
 Mathlib's `ChartedSpace` and `StructureGroupoid` accept an arbitrary topological model space, so
 a manifold modeled on `E` is a `ChartedSpace E M` with `HasGroupoid M (mbGroupoid E)`, where
-`mbGroupoid E` consists of the Michal–Bastiani smooth diffeomorphisms between open subsets of `E`.
+`mbGroupoid E` consists of the Michal–Bastiani smooth diffeomorphisms between open subsets of `E`
+([Nee06, §I.3]; [GN26, Ch. 3]).
+
+## Main definitions
+
+* `mbGroupoid E`: the groupoid of Michal–Bastiani smooth diffeomorphisms between open subsets
+  of `E`.
+* `MBManifold E M`: a smooth manifold modeled on the locally convex space `E`.
+* `BanachManifold`, `HilbertManifold`: manifolds modeled on a Banach space and on a Hilbert
+  space (both complete).
+
+## Implementation notes
 
 **Convention: the model space need not be complete.** The model space `E` is a Hausdorff locally
 convex space, and *no completeness is assumed*. This is the convention of Glöckner–Neeb
-(§5.7: "as for manifolds, we do not assume that the model space of a Lie group is complete",
-following Glöckner 2002); Milnor (1984) assumed sequentially complete model spaces instead.
+([GN26, §5.7]: "as for manifolds, we do not assume that the model space of a Lie group is
+complete", following [Glo02]); Milnor [Mil84] assumed sequentially complete model spaces
+instead.
 
 * The formal theory (charts, smooth maps, tangent bundle, vector fields, connections,
   submanifolds) does not use completeness: the calculus of `LocallyConvex.Analysis` replaces
@@ -35,9 +43,17 @@ following Glöckner 2002); Milnor (1984) assumed sequentially complete model spa
   normed space is complete, and a manifold modeled on an inner product space is **not** a Hilbert
   manifold unless the space is complete. Statements about Banach or Hilbert manifolds in this
   library always carry the completeness hypothesis (`CompleteSpace`).
-* Without completeness things do go wrong: Glöckner–Neeb, Example 5.6.8, give a Lie group
-  modeled on an incomplete normed algebra (rational functions on `[0, 1]` with the sup norm)
-  that has no exponential function.
+* Without completeness things do go wrong: Glöckner and Neeb [GN26, Example 5.6.8] give a Lie
+  group modeled on an incomplete normed algebra (rational functions on `[0, 1]` with the sup
+  norm) that has no exponential function.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [H. Glöckner, *Infinite-dimensional Lie groups without completeness restrictions*][Glo02]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [J. Milnor, *Remarks on infinite-dimensional Lie groups*][Mil84]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section
@@ -108,7 +124,7 @@ instance : ClosedUnderRestriction (mbGroupoid E) where
   closedUnderRestriction he _ _ :=
     ⟨fun k ↦ (he.1 k).mono fun _ hx ↦ hx.1, fun k ↦ (he.2 k).mono fun _ hx ↦ hx.1⟩
 
-/-- A smooth manifold modeled on the locally convex space `E` (Definition I.3.1). -/
+/-- A smooth manifold modeled on the locally convex space `E` [Nee06, Definition I.3.1]. -/
 abbrev MBManifold (M : Type*) [TopologicalSpace M] [ChartedSpace E M] : Prop :=
   HasGroupoid M (mbGroupoid E)
 
@@ -119,14 +135,16 @@ section BanachHilbert
 /-- A **Banach manifold**: a smooth manifold modeled on a Banach space `E`, i.e. a normed space
 (`NormedAddCommGroup E`, `NormedSpace ℝ E`) which is complete (`CompleteSpace E`). On normed
 spaces Michal–Bastiani smoothness agrees with Fréchet smoothness
-(`LocallyConvex.Analysis.smoothMBOn_iff_contDiffOn`), so this is the classical notion (Lang). A
+(`LocallyConvex.Analysis.smoothMBOn_iff_contDiffOn`), so this is the classical notion [Lan99]. A
 manifold modeled on an incomplete normed space is an `MBManifold`, but not a Banach manifold. -/
+@[nolint unusedArguments]
 abbrev BanachManifold (E : Type u) [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (M : Type*) [TopologicalSpace M] [ChartedSpace E M] : Prop :=
   MBManifold E M
 
 /-- A **Hilbert manifold**: a smooth manifold modeled on a Hilbert space, i.e. a real inner
 product space which is complete. -/
+@[nolint unusedArguments]
 abbrev HilbertManifold (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] (M : Type*) [TopologicalSpace M] [ChartedSpace E M] : Prop :=
   MBManifold E M

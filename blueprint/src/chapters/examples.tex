@@ -57,7 +57,7 @@ simplest field of projectors: the constant one.
 
 \begin{proposition}[The flat connection of a subspace]
   \label{prop:ex-subspace-flat}
-  \lean{LocallyConvex.Manifolds.projectorField_subspace, LocallyConvex.Manifolds.symb_subspace_refl, LocallyConvex.Manifolds.isGeodesic_subspace_iff}
+  \lean{LocallyConvex.Manifolds.subspaceProjectorField, LocallyConvex.Manifolds.symb_subspace_refl, LocallyConvex.Manifolds.isGeodesic_subspace_iff}
   \leanok
   \uses{prop:ex-subspace, def:projector-field, thm:projector-connection, def:geodesic}
   Let $S$ be closed and $P$ a continuous projection onto $S$. Then $E_p = P$ for all $p \in S$
@@ -194,7 +194,7 @@ of its connection are the curves whose acceleration is normal to the sphere.
 
 \begin{theorem}[Geodesics of the sphere]
   \label{thm:ex-sphere-geodesics}
-  \lean{LocallyConvex.Manifolds.sphereProj, LocallyConvex.Manifolds.projectorField_sphere, LocallyConvex.Manifolds.isGeodesic_sphere_iff, LocallyConvex.Manifolds.greatCircle, LocallyConvex.Manifolds.isGeodesic_greatCircle}
+  \lean{LocallyConvex.Manifolds.sphereProj, LocallyConvex.Manifolds.sphereProjectorField, LocallyConvex.Manifolds.isGeodesic_sphere_iff, LocallyConvex.Manifolds.greatCircle, LocallyConvex.Manifolds.isGeodesic_greatCircle}
   \leanok
   \uses{thm:ex-sphere, def:projector-field, thm:projector-connection, def:geodesic}
   The maps $E_p w = w - \langle w, p\rangle p$, $p \in S$, form a field of projectors onto
@@ -355,7 +355,7 @@ is $E_p w = p\,\tfrac12(X - X^*)$, the skew-adjoint part translated back to $p$.
 
 \begin{theorem}[Geodesics of the unitary group]
   \label{thm:ex-unitary-geodesics}
-  \lean{LocallyConvex.Manifolds.unitaryProj, LocallyConvex.Manifolds.unitaryProj_idem, LocallyConvex.Manifolds.projectorField_unitary, LocallyConvex.Manifolds.isGeodesic_unitary_iff, LocallyConvex.Manifolds.expCurve, LocallyConvex.Manifolds.isGeodesic_expCurve}
+  \lean{LocallyConvex.Manifolds.unitaryProj, LocallyConvex.Manifolds.unitaryProj_idem, LocallyConvex.Manifolds.unitaryProjectorField, LocallyConvex.Manifolds.isGeodesic_unitary_iff, LocallyConvex.Manifolds.expCurve, LocallyConvex.Manifolds.isGeodesic_expCurve}
   \leanok
   \uses{thm:ex-unitary, def:projector-field, thm:projector-connection, def:geodesic}
   The maps $E_p w = \tfrac12(w - p w^* p)$, $p \in U(A)$, form a field of projectors onto the

@@ -26,6 +26,20 @@ What the symmetrization does not preserve is the metric geometry: lengths and sh
 `d_b` and `d_s` are different, and without a reversibility constant `d_s` may be much larger than
 `d_b(x, y) + d_b(y, x)` (both directions are measured along the same curve), so that its topology
 may be strictly finer.
+
+## Main definitions
+
+* `FinslerLengthStructure.symm`: the symmetrization `μₛ(v) = μ(v) + μ(-v)`.
+* `FinslerLengthStructure.homeomorphSymm`: with a reversibility constant, the identity as a
+  homeomorphism between `(M, d_b)` (with the symmetrized topology) and `(M, d_s)`.
+
+## Main results
+
+* `FinslerLengthStructure.symm_isReversible`: the symmetrization is reversible.
+* `FinslerLengthStructure.dist_le_dist_symm`, `FinslerLengthStructure.dist_swap_le_dist_symm`:
+  `d_b(x, y) ≤ d_s(x, y)` and `d_b(y, x) ≤ d_s(x, y)`.
+* `FinslerLengthStructure.dist_symm_le`: with a reversibility constant `λ`,
+  `d_s ≤ (1 + λ) d_b`.
 -/
 
 @[expose] public section

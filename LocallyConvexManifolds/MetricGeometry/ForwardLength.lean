@@ -12,17 +12,15 @@ public import Mathlib.Topology.Order.IntermediateValue
 /-!
 # Forward lengths of curves in asymmetric spaces
 
-Reference: A. C. G. Mennucci, *On asymmetric distances*, Anal. Geom. Metr. Spaces 1 (2013),
-200–231, §1.1, §2.2 and §3.2–3.4; the asymmetric counterpart of G. Larotonda, *Estructuras
-geométricas para las variedades de Banach*, Cap. 8, §8.1 (see `LengthMetric.lean` and
-`HopfRinow.lean` for the symmetric theory).
+This file follows [Men13, §1.1, §2.2 and §3.2–3.4]; it is the asymmetric counterpart of
+[Lar22, Cap. 8, §8.1] (see `LengthMetric.lean` and `HopfRinow.lean` for the symmetric theory).
 
 Let `(X, b)` be an asymmetric pseudo-(extended) metric space (`AsymmPseudoEMetricSpace`, see
 `AsymmDist.lean`), with the topology of the symmetrized distance `d = max (b, b̄)`, where
 `b̄(x, y) = b(y, x)` is the conjugate distance. The **forward length** of a curve
-`γ : [a, b] → X` is the total variation of Mennucci, (1.1), taken with forward sums:
+`γ : [a, b] → X` is the total variation of [Men13, (1.1)], taken with forward sums:
 `sup Σ b(γ tᵢ, γ tᵢ₊₁)` over the partitions `a ≤ t₀ ≤ ⋯ ≤ tₙ ≤ b`. It is in general different
-from the forward length of the reversed curve (Mennucci, Remark 3.5).
+from the forward length of the reversed curve ([Men13, Remark 3.5]).
 
 ## Main definitions and results
 
@@ -30,19 +28,19 @@ from the forward length of the reversed curve (Mennucci, Remark 3.5).
   basic API (`fwdVar.sum_le`, `fwdVar.mono`, `fwdVar.bdist_le`, `fwdVar.eq_of_eqOn`,
   `fwdVar.subsingleton`), additivity (`fwdVar.union`, `fwdVar.Icc_add_Icc`,
   `fwdVar.Icc_add_Icc'`), invariance under monotone reparametrizations
-  (`fwdVar.comp_eq_of_monotoneOn`, Mennucci, Prop. 2.7), the comparison with the variation of the
+  (`fwdVar.comp_eq_of_monotoneOn`, [Men13, Prop. 2.7]), the comparison with the variation of the
   symmetrized distance (`fwdVar_le_eVariationOn`) and reversal (`fwdVar_comp_neg`: reversing the
-  curve exchanges `b` and `b̄`, Mennucci, Remark 3.3);
+  curve exchanges `b` and `b̄`, [Men13, Remark 3.3]);
 * `fwdVar.continuousOn_Icc`, `fwdVar.continuousOn_toReal_Icc`: **continuity of the running
   length** `t ↦ ℓ(t) = fwdVar γ (Icc a t)` of a continuous curve of finite forward length
-  (Mennucci, Prop. 3.9), and `fwdVar.bdist_le_ofReal_sub`: `b(γ u, γ v) ≤ ℓ(v) - ℓ(u)`
-  (Mennucci, (3.5));
+  ([Men13, Prop. 3.9]), and `fwdVar.bdist_le_ofReal_sub`: `b(γ u, γ v) ≤ ℓ(v) - ℓ(u)`
+  ([Men13, (3.5)]);
 * `FwdPath x y`: curves from `x` to `y`, continuous for the symmetrized topology, with
   `FwdPath.length`, `FwdPath.const`, `FwdPath.concat` and `FwdPath.length_concat`;
-* `fwdLengthDist`: the induced asymmetric distance `b_g(x, y) = inf ℓ(γ)` (Mennucci, §3.4), with
+* `fwdLengthDist`: the induced asymmetric distance `b_g(x, y) = inf ℓ(γ)` ([Men13, §3.4]), with
   `fwdLengthDist_self`, `fwdLengthDist_triangle` and `b ≤ b_g` (`bdist_le_fwdLengthDist`,
-  Mennucci, Prop. 3.10, (3.6));
-* `IsFwdInterior X`: `b = b_g`, that is, `X` is g-intrinsic (Mennucci, Def. 3.16), with
+  [Men13, Prop. 3.10, (3.6)]);
+* `IsFwdInterior X`: `b = b_g`, that is, `X` is g-intrinsic ([Men13, Def. 3.16]), with
   `IsFwdInterior.exists_fwdPath` and approximate intermediate points
   (`IsFwdInterior.exists_bdist_le_add`, `IsFwdInterior.exists_bdist_toReal_le_add`);
 * `FwdPath.exists_lipschitz_reparam`: a curve of finite forward length `ℓ` has a
@@ -55,7 +53,7 @@ from the forward length of the reversed curve (Mennucci, Remark 3.5).
 * The additivity is proved by splitting a sequence `u` at the junction point `x` through
   `min (uᵢ, x)` and `max (uᵢ, x)`, which needs only the triangle inequality in the forward
   direction.
-* For the continuity of the running length we follow the idea of Mennucci, Appendix B.2: if `γ`
+* For the continuity of the running length we follow the idea of [Men13, Appendix B.2]: if `γ`
   is continuous from the right at `a`, a partition of `[a, b]` starting at `a` can be modified by
   inserting a point `y` close to `a`, at the cost of `b(γ a, γ y)`, which is small; so the
   forward variation on `[a, b]` is the supremum of those on `[y, b]`, `y > a`
@@ -64,6 +62,11 @@ from the forward length of the reversed curve (Mennucci, Remark 3.5).
   topology is what is needed.
 * The reparametrization `η` of `FwdPath.exists_lipschitz_reparam` controls only the forward
   distances `b(η u, η v)`, `u ≤ v`; it need not be continuous for the symmetrized topology.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 
 @[expose] public section
@@ -308,7 +311,7 @@ theorem comp_le_of_monotoneOn (f : α → X) {s : Set α} {t : Set β} (φ : β 
     le_iSup_of_le (⟨n, φ ∘ u, fun x y xy ↦ hφ (ut x) (ut y) (hu xy), fun i ↦ φst (ut i)⟩ :
       ℕ × { u : ℕ → α // Monotone u ∧ ∀ i, u i ∈ s }) le_rfl
 
-/-- **Invariance under monotone reparametrizations** (Mennucci, Prop. 2.7). -/
+/-- **Invariance under monotone reparametrizations** ([Men13, Prop. 2.7]). -/
 theorem comp_eq_of_monotoneOn (f : α → X) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t) :
     fwdVar (f ∘ φ) t = fwdVar f (φ '' t) := by
   apply le_antisymm (comp_le_of_monotoneOn f φ hφ (mapsTo_image φ t))
@@ -369,7 +372,7 @@ theorem bwdVar_le_eVariationOn (f : α → X) (s : Set α) : bwdVar f s ≤ eVar
   rintro ⟨n, u, hu, us⟩
   exact (Finset.sum_le_sum fun i _ ↦ bdist_le_edist _ _).trans (eVariationOn.sum_le hu us)
 
-/-- **Reversal** (Mennucci, Remark 3.3): the forward variation of the reversed curve
+/-- **Reversal** ([Men13, Remark 3.3]): the forward variation of the reversed curve
 `t ↦ f (-t)` on `-s` is the backward variation of `f` on `s`, that is, the forward variation
 of `f` for the conjugate distance `(x, y) ↦ b(y, x)`. -/
 theorem fwdVar_comp_neg (f : ℝ → X) (s : Set ℝ) :
@@ -545,7 +548,7 @@ theorem toReal_Icc_add_toReal_Icc (hfin : fwdVar f (Icc a b) ≠ ⊤) {u v w : �
 
 /-- The running length controls the asymmetric distance: if the forward variation on `[a, b]` is
 finite, then `b(f u, f v) ≤ ℓ(v) - ℓ(u)` for `a ≤ u ≤ v ≤ b`, where `ℓ(t)` is the forward
-variation on `[a, t]` (Mennucci, (3.5)). -/
+variation on `[a, t]` ([Men13, (3.5)]). -/
 theorem bdist_le_ofReal_sub (hfin : fwdVar f (Icc a b) ≠ ⊤) {u v : ℝ} (hu : a ≤ u) (huv : u ≤ v)
     (hv : v ≤ b) :
     bdist (f u) (f v) ≤
@@ -554,7 +557,7 @@ theorem bdist_le_ofReal_sub (hfin : fwdVar f (Icc a b) ≠ ⊤) {u v : ℝ} (hu 
     ENNReal.ofReal_toReal (ne_top_of_le_ne_top hfin (mono f (Icc_subset_Icc hu hv)))]
   exact bdist_le f ⟨le_rfl, huv⟩ ⟨huv, le_rfl⟩ huv
 
-/-- **Continuity of the running length** (Mennucci, Prop. 3.9), real-valued version: if `f` is
+/-- **Continuity of the running length** ([Men13, Prop. 3.9]), real-valued version: if `f` is
 continuous on `[a, b]` for the symmetrized topology and its forward variation there is finite,
 then `t ↦ ℓ(t)`, the forward variation on `[a, t]`, is continuous on `[a, b]`. The left and the
 right continuity come from `fwdVar.Icc_eq_iSup_Icc_left` and `fwdVar.Icc_eq_iSup_Icc_right`. -/
@@ -631,7 +634,7 @@ theorem continuousOn_toReal_Icc (hf : ContinuousOn f (Icc a b)) (hfin : fwdVar f
   · rw [abs_of_nonneg (sub_nonneg.2 (hmono ht₀ ht h))]
     exact hright t ht h (by linarith [(abs_lt.mp hdist).2])
 
-/-- **Continuity of the running length** (Mennucci, Prop. 3.9): if `f` is continuous on `[a, b]`
+/-- **Continuity of the running length** ([Men13, Prop. 3.9]): if `f` is continuous on `[a, b]`
 for the symmetrized topology and its forward variation there is finite, then the running length
 `t ↦ fwdVar f (Icc a t)` is continuous on `[a, b]`. -/
 theorem continuousOn_Icc (hf : ContinuousOn f (Icc a b)) (hfin : fwdVar f (Icc a b) ≠ ⊤) :
@@ -743,13 +746,13 @@ end FwdPath
 
 /-- The **induced asymmetric distance** `b_g(x, y)`: the infimum of the forward lengths of the
 curves from `x` to `y` that are continuous for the symmetrized topology, and `∞` if there is
-none (Mennucci, §3.4, for the class of continuous curves). -/
+none ([Men13, §3.4], for the class of continuous curves). -/
 def fwdLengthDist (x y : X) : ℝ≥0∞ := ⨅ p : FwdPath x y, p.length
 
 theorem fwdLengthDist_le {x y : X} (p : FwdPath x y) : fwdLengthDist x y ≤ p.length :=
   iInf_le _ p
 
-/-- **`b ≤ b_g`** (Mennucci, Prop. 3.10, (3.6)). -/
+/-- **`b ≤ b_g`** ([Men13, Prop. 3.10, (3.6)]). -/
 theorem bdist_le_fwdLengthDist (x y : X) : bdist x y ≤ fwdLengthDist x y :=
   le_iInf fun p ↦ p.bdist_le_length
 
@@ -767,7 +770,7 @@ theorem fwdLengthDist_triangle (x y z : X) :
   rw [← FwdPath.length_concat]
   exact fwdLengthDist_le _
 
-/-- An asymmetric space is **g-intrinsic** (Mennucci, Def. 3.16) if the asymmetric distance
+/-- An asymmetric space is **g-intrinsic** ([Men13, Def. 3.16]) if the asymmetric distance
 between two points is the infimum of the forward lengths of the curves joining them that are
 continuous for the symmetrized topology. -/
 def IsFwdInterior (X : Type*) [AsymmPseudoEMetricSpace X] : Prop :=
@@ -786,7 +789,7 @@ namespace FwdPath
 variable {x y : X}
 
 /-- Every intermediate value of the forward length is attained by the running length of a
-curve of finite forward length (Mennucci, Prop. 3.9, and the intermediate value theorem). -/
+curve of finite forward length ([Men13, Prop. 3.9], and the intermediate value theorem). -/
 theorem exists_runLength_eq (p : FwdPath x y) (hp : p.length ≠ ⊤) {c : ℝ} (hc0 : 0 ≤ c)
     (hc : c ≤ p.length.toReal) :
     ∃ t ∈ Icc p.a p.b, (fwdVar p.toFun (Icc p.a t)).toReal = c := by
@@ -796,7 +799,7 @@ theorem exists_runLength_eq (p : FwdPath x y) (hp : p.length ≠ ⊤) {c : ℝ} 
   exact this ⟨hc0, hc⟩
 
 /-- **Forward Lipschitz reparametrization**: a curve of finite forward length `ℓ` from `x` to
-`y` can be reparametrized on `[0, 1]` (through its running length, by Mennucci, Prop. 3.9, and
+`y` can be reparametrized on `[0, 1]` (through its running length, by [Men13, Prop. 3.9], and
 the intermediate value theorem) as a map `η` with `η 0 = x`, `η 1 = y` and
 `b(η u, η v) ≤ ℓ (v - u)` for `0 ≤ u ≤ v ≤ 1`. Only the values on `[0, 1]` matter.
 
@@ -863,7 +866,7 @@ end FwdPath
 space, if `b(x, y) < ∞`, `a, c ≥ 0` and `a + c = b(x, y)`, then for every `ε > 0` there is `z`
 with `b(x, z) ≤ a` and `b(z, y) ≤ c + ε`. Take a curve of forward length `< b(x, y) + ε` and
 its point at running length `a`, which exists by the continuity of the running length
-(Mennucci, Prop. 3.9) and the intermediate value theorem. -/
+([Men13, Prop. 3.9]) and the intermediate value theorem. -/
 theorem IsFwdInterior.exists_bdist_le_add (h : IsFwdInterior X) (x y : X) (hxy : bdist x y ≠ ⊤)
     {a c ε : ℝ} (ha : 0 ≤ a) (hc : 0 ≤ c) (hac : a + c = (bdist x y).toReal) (hε : 0 < ε) :
     ∃ z, bdist x z ≤ ENNReal.ofReal a ∧ bdist z y ≤ ENNReal.ofReal (c + ε) := by

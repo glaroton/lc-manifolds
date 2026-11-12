@@ -11,28 +11,37 @@ public import Mathlib.LinearAlgebra.Alternating.Uncurry.Fin
 /-!
 # Differential forms on open subsets of locally convex spaces
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, §3.6.
-
 Let `E`, `F` be Hausdorff locally convex spaces and `U ⊆ E` open. A *local `n`-form* on `U` is a
 map `ω : E × Eⁿ → F` which is smooth on `U × Eⁿ` in the sense of Michal–Bastiani and alternating
 `n`-linear in the vectors (`IsLocalForm`); these are the local representatives of differential
-forms on manifolds (Glöckner–Neeb, (3.26)).
+forms on manifolds ([GN26, (3.26)]). We follow [GN26, §3.6].
 
-## Main definitions and results
+## Main definitions
 
+* `IsLocalForm`: local `n`-forms on an open set.
 * `dLoc`: the local exterior derivative
-  `dω(y)(v₀, …, vₙ) = ∑ᵢ (-1)ⁱ ∂_{vᵢ} ω(y)(v₀, …, v̂ᵢ, …, vₙ)` (Glöckner–Neeb, (3.33)), where
-  `∂_{vᵢ}` differentiates in the base point;
-* `IsLocalForm.dLoc`: `dω` is a local `(n + 1)`-form;
-* `IsLocalForm.dLoc_dLoc`: `d ∘ d = 0`, from the symmetry of second derivatives;
-* `pullbackLoc`, `IsLocalForm.pullback`: the pullback
-  `(τ*ω)(y)(v₁, …, vₙ) = ω(τ y)(dτ(y) v₁, …, dτ(y) vₙ)` along a smooth map `τ : U → V`;
+  `dω(y)(v₀, …, vₙ) = ∑ᵢ (-1)ⁱ ∂_{vᵢ} ω(y)(v₀, …, v̂ᵢ, …, vₙ)` ([GN26, (3.33)]), where
+  `∂_{vᵢ}` differentiates in the base point.
+* `pullbackLoc`: the pullback `(τ*ω)(y)(v₁, …, vₙ) = ω(τ y)(dτ(y) v₁, …, dτ(y) vₙ)` along a
+  smooth map `τ : U → V`.
+
+## Main results
+
+* `IsLocalForm.dLoc`: `dω` is a local `(n + 1)`-form.
+* `IsLocalForm.dLoc_dLoc`: `d ∘ d = 0`, from the symmetry of second derivatives.
+* `IsLocalForm.pullback`: the pullback of a local form is a local form.
 * `IsLocalForm.dLoc_pullbackLoc`: naturality, `d(τ*ω) = τ*(dω)`. The terms with the second
   derivative of `τ` cancel because it is symmetric
   (`AlternatingMap.sum_neg_one_pow_smul_sum_update_eq_zero`).
 
+## Implementation notes
+
 The signs follow Mathlib's `AlternatingMap.alternatizeUncurryFin`, which is also the formula of
 Mathlib's `extDeriv` on normed spaces. No completeness of `E` or `F` is assumed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -153,12 +162,12 @@ end LinearCombination
 /-! ### Local forms -/
 
 /-- A smooth `F`-valued `n`-form on an open set `U ⊆ E`, given as a function on `U × Eⁿ`
-(Glöckner–Neeb, (3.26)): smooth, and alternating `n`-linear in the vectors. -/
+[GN26, (3.26)]: smooth, and alternating `n`-linear in the vectors. -/
 structure IsLocalForm (n : ℕ) (ω : E × (Fin n → E) → F) (U : Set E) : Prop where
   smooth : SmoothMBOn ω (U ×ˢ univ)
   alternating : ∀ y ∈ U, ∃ A : E [⋀^Fin n]→ₗ[ℝ] F, ∀ v, ω (y, v) = A v
 
-/-- The local exterior derivative (Glöckner–Neeb, (3.33)):
+/-- The local exterior derivative [GN26, (3.33)]:
 `dω(y)(v₀, …, vₙ) = ∑ᵢ (-1)ⁱ ∂_{vᵢ} ω(y)(v₀, …, v̂ᵢ, …, vₙ)`, where `∂_{vᵢ}` differentiates in
 the base point. -/
 noncomputable def dLoc (ω : E × (Fin n → E) → F) (p : E × (Fin (n + 1) → E)) : F :=
@@ -309,7 +318,7 @@ theorem dMB_dLoc (hω : IsLocalForm n ω U) (hU : IsOpen U) {y : E} (hy : y ∈ 
   exact (HasDirDerivAt.sum Finset.univ fun j _ ↦
     (hω.hasDirDerivAt_dMB_slice hU hy _ _ u).const_smul _).dMB_eq
 
-/-- `d ∘ d = 0` for local forms (Glöckner–Neeb, Remark 3.6.10): the second derivatives of `ω`
+/-- `d ∘ d = 0` for local forms [GN26, Remark 3.6.10]: the second derivatives of `ω`
 are symmetric. -/
 theorem dLoc_dLoc (hω : IsLocalForm n ω U) (hU : IsOpen U) {y : E} (hy : y ∈ U)
     (v : Fin (n + 2) → E) :
@@ -363,7 +372,7 @@ theorem dMBBilinear_symm (hτ : ContDiffMBOn 2 τ U) (hU : IsOpen U) (hy : y ∈
   hτ.dMB_dMB_symm hU hy a b
 
 /-- The pullback `τ*ω` of a local form: `(τ*ω)(y)(v₁, …, vₙ) = ω(τ y)(dτ(y) v₁, …, dτ(y) vₙ)`
-(Glöckner–Neeb, Definition 3.6.6, in a chart). -/
+[GN26, Definition 3.6.6, in a chart]. -/
 noncomputable def pullbackLoc (τ : E → E') (ω : E' × (Fin n → E') → F)
     (p : E × (Fin n → E)) : F :=
   ω (τ p.1, fun k ↦ dMB τ (p.1, p.2 k))
@@ -430,7 +439,7 @@ theorem IsLocalForm.dMB_pullbackLoc (hω : IsLocalForm n ω V) (hV : IsOpen V)
   rw [hchain, hsplit, dMB_slice, dMB_slice₂, hmult.dMB_eq]
 
 omit [LocallyConvexSpace ℝ E] [T2Space E] in
-/-- **Naturality of the exterior derivative** (Glöckner–Neeb, Lemma 3.6.13, in charts):
+/-- **Naturality of the exterior derivative** [GN26, Lemma 3.6.13, in charts]:
 `d(τ*ω) = τ*(dω)`. The terms with the second derivative of `τ` cancel because it is
 symmetric. -/
 theorem IsLocalForm.dLoc_pullbackLoc (hω : IsLocalForm n ω V) (hU : IsOpen U) (hV : IsOpen V)

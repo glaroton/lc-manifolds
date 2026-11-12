@@ -11,24 +11,31 @@ public import LocallyConvexAnalysis.ODE.Quadratic
 /-!
 # Local existence and uniqueness of geodesics on Banach manifolds
 
-References: S. Lang, *Fundamentals of Differential Geometry*, Ch. IV §3 and VIII; G. Larotonda,
-*Estructuras geométricas para las variedades de Banach*, §9.2.
-
 Let `C` be a connection on a manifold modeled on a **Banach** space `E` (completeness is used by
 Picard–Lindelöf). In a chart the geodesic equation is the quadratic second order equation
-`c'' = Γ_c(c', c')`, so the results of `LocallyConvexAnalysis.ODE.Quadratic` give:
+`c'' = Γ_c(c', c')`, so the results of `LocallyConvexAnalysis.ODE.Quadratic` give local existence
+and uniqueness of geodesics. We follow [Lan99, Ch. IV §3 and VIII] and [Lar22, §9.2].
+
+## Main results
 
 * `Connection.isSprayCurveOn_of_isGeodesicOn`: a geodesic read in any chart is a solution of the
-  equation of the symbols of that chart, with velocity `deriv (φ ∘ α)`;
+  equation of the symbols of that chart, with velocity `deriv (φ ∘ α)`.
 * `Connection.exists_isGeodesicOn_uniform` (**local existence with uniform time**): around a point
   of a chart there are `r > 0` and, for each bound `K` on the velocities, a time `ε > 0` such
   that every initial condition at distance `≤ r` (in the chart) with velocity `≤ K` has a geodesic
-  defined on `(-ε, ε)`;
+  defined on `(-ε, ε)`.
 * `Connection.IsGeodesicOn.eqOn` (**uniqueness**): if `M` is Hausdorff, two geodesics on an
   interval `(a, b)` with the same position and velocity at one instant agree on `(a, b)`.
 
+## Implementation notes
+
 The Hausdorff hypothesis cannot be dropped: on the line with two origins, the two copies of a line
 through the origins are geodesics of the flat connection with the same initial data.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section
@@ -139,7 +146,7 @@ variable {C}
 /-- Local step of uniqueness: near an instant `t` where two geodesics meet, there is an interval
 `J ∋ t` such that the two geodesics agree on `J` as soon as their positions and velocities, read in
 a chart `i` around the common point, agree at some instant of `J`. -/
-theorem exists_Ioo_eqOn [CompleteSpace E] {α β : ℝ → M} {I : Set ℝ} (hα : C.IsGeodesicOn α I)
+theorem exists_Ioo_eqOn {α β : ℝ → M} {I : Set ℝ} (hα : C.IsGeodesicOn α I)
     (hβ : C.IsGeodesicOn β I) {t : ℝ} (ht : t ∈ I) (heq : α t = β t) (i : atlas E M)
     (hi : α t ∈ i.1.source) :
     ∃ δ > (0 : ℝ), Ioo (t - δ) (t + δ) ⊆ I ∧ ∀ τ ∈ Ioo (t - δ) (t + δ),
@@ -163,7 +170,7 @@ theorem exists_Ioo_eqOn [CompleteSpace E] {α β : ℝ → M} {I : Set ℝ} (hα
 /-- **Uniqueness of geodesics.** On a Hausdorff manifold modeled on a Banach space, two geodesics
 on `(a, b)` with the same position at `t₀ ∈ (a, b)` and the same velocity there (read in a chart
 `i` around that point) agree on `(a, b)`. -/
-theorem IsGeodesicOn.eqOn [CompleteSpace E] [T2Space M] {α β : ℝ → M} {a b : ℝ}
+theorem IsGeodesicOn.eqOn [T2Space M] {α β : ℝ → M} {a b : ℝ}
     (hα : C.IsGeodesicOn α (Ioo a b)) (hβ : C.IsGeodesicOn β (Ioo a b)) {t₀ : ℝ}
     (ht₀ : t₀ ∈ Ioo a b) (heq : α t₀ = β t₀) (i : atlas E M) (hi : α t₀ ∈ i.1.source)
     (hv : deriv (i.1 ∘ α) t₀ = deriv (i.1 ∘ β) t₀) : EqOn α β (Ioo a b) := by
@@ -288,7 +295,7 @@ theorem IsGeodesicOn.exists_extend [CompleteSpace E] [T2Space M] {α : ℝ → M
   have hJμ : C.IsGeodesicOn μ' J :=
     hμ'.mono isOpen_Ioo (Ioo_subset_Ioo (le_max_right _ _) (by linarith))
   have heq : α t₁ = μ' t₁ := by
-    show α t₁ = μ (t₁ - t₁)
+    change α t₁ = μ (t₁ - t₁)
     rw [sub_self]
     exact i.1.injOn hsrc₁ (hμsrc 0 h0) hμ0.symm
   have hv : deriv (i.1 ∘ α) t₁ = deriv (i.1 ∘ μ') t₁ := by

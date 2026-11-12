@@ -20,25 +20,31 @@ its total space is a manifold modeled on `E × E'`. The projection `π : T*M →
 **canonical symplectic form** is `ω = -dθ`, with the local expression
 `ω_{(x, λ)}((u₁, ψ₁), (u₂, ψ₂)) = ψ₂(u₁) - ψ₁(u₂)`.
 
-Reference: S. Lang, *Fundamentals of Differential Geometry*, GTM 191, Springer (1999), Ch. V, §7:
-the canonical `1`-form and its local representation (Proposition 7.1, p. 149), the canonical
-`2`-form `Ω = -dθ` and its local representation (p. 150 and Proposition 7.2, p. 150).
-We follow Lang's sign. It is consistent with the canonical form on `H × H` of
-`LocallyConvexManifolds.Symplectic.Basic` (`canonicalSymplectic`, `ω = dθ'` for the form
-`θ'_{(x, a)}(y, b) = ⟨x, b⟩`): both are `Σ dqᵢ ∧ dpᵢ` in finite dimensions, with `q` the base
-and `p` the fiber coordinate.
+We follow [Lan99, Ch. V, §7]: the canonical `1`-form and its local representation
+(Proposition 7.1, p. 149), the canonical `2`-form `Ω = -dθ` and its local representation
+(p. 150 and Proposition 7.2, p. 150). We follow Lang's sign. It is consistent with the
+canonical form on `H × H` of `LocallyConvexManifolds.Symplectic.Basic` (`canonicalSymplectic`,
+`ω = dθ'` for the form `θ'_{(x, a)}(y, b) = ⟨x, b⟩`): both are `Σ dqᵢ ∧ dpᵢ` in finite
+dimensions, with `q` the base and `p` the fiber coordinate.
+
+## Main definitions
+
+* `CotangentBundle`: the total space of `T*M`.
+* `cotangentLiouville`: the canonical `1`-form `θ` on `T*M`, a smooth form.
+* `cotangentSymplectic`: the canonical symplectic form `ω = -dθ`; it is **weakly nondegenerate
+  for every normed model** (by the Hahn–Banach theorem).
 
 ## Main results
 
-* `cotangentLiouville`: the canonical `1`-form `θ` on `T*M`, a smooth form;
-  `cotangentLiouville_localRep`: its local representative in every chart of `T*M`;
-* `cotangentSymplectic`: the canonical symplectic form `ω = -dθ`, which is exact
-  (`cotangentSymplectic_isExact`), with `cotangentSymplectic_apply` its local expression;
-  it is **weakly nondegenerate for every normed model** (by the Hahn–Banach theorem);
+* `cotangentLiouville_localRep`: the local representative of `θ` in every chart of `T*M`.
+* `cotangentSymplectic_isExact`, `cotangentSymplectic_apply`: `ω` is exact, and its local
+  expression.
 * `cotangentSymplectic_isStrong_iff`: for nonempty `M`, `ω` is **strongly nondegenerate if and
   only if `E` is reflexive** (the canonical map `E → E''` is surjective).
 
-## Infinite-dimensional subtleties
+## Implementation notes
+
+**Infinite-dimensional subtleties.**
 
 * Weak nondegeneracy uses that the continuous linear functionals separate the points of `E`
   (Hahn–Banach). This is why we work with a normed model: for a non-normable locally convex
@@ -46,8 +52,7 @@ and `p` the fiber coordinate.
 * Strong nondegeneracy needs every functional on `T_λ(T*M) ≅ E × E'` to be of the form
   `ω(z, ·)`; on the `E'`-component this asks every element of `E''` to come from `E`. So
   the cotangent bundle of a manifold modeled on a non-reflexive Banach space, such as `ℓ¹` or
-  `c₀`, carries only a weak symplectic form. Marsden (*Darboux's theorem fails for weak
-  symplectic forms*, Proc. Amer. Math. Soc. 32 (1972), p. 590) mentions such cotangent bundles
+  `c₀`, carries only a weak symplectic form. [Mar72, p. 590] mentions such cotangent bundles
   as natural examples of weak symplectic manifolds.
 * No completeness is assumed: a normed space for which `E → E''` is onto is automatically
   complete (`E''` is), but this is never used.
@@ -55,6 +60,11 @@ and `p` the fiber coordinate.
   carrying a strong symplectic form is reflexive
   (`SymplecticForm.IsStrong.surjective_inclusionInDoubleDual`), which gives the reflexivity of
   `E × E'`; the direct argument below gives that of `E`.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [J. E. Marsden, *Darboux's theorem fails for weak symplectic forms*][Mar72]
 -/
 
 @[expose] public section
@@ -214,8 +224,8 @@ theorem smoothMBOn_liouvilleLoc (j c : atlas E M) :
   exact ContDiffMBOn.congr_of_isOpen hD (fun p _ ↦ rfl) h
 
 /-- **The canonical (Liouville) `1`-form** `θ` on the cotangent bundle: `θ_λ(z) = λ(Tπ z)`; with
-tangent vectors `z = (u, ψ)` given in the preferred chart at `λ`, `θ_λ(u, ψ) = λ(u)` (Lang,
-*Fundamentals of Differential Geometry*, Ch. V, §7, Proposition 7.1, p. 149). It is a smooth
+tangent vectors `z = (u, ψ)` given in the preferred chart at `λ`, `θ_λ(u, ψ) = λ(u)`
+[Lan99, Ch. V, §7, Proposition 7.1, p. 149]. It is a smooth
 `1`-form: its local representatives are computed in `formLocalRep_liouvilleFun`. -/
 def cotangentLiouville : DifferentialForm (E × (E →L[ℝ] ℝ)) (CotangentBundle E M) ℝ 1 where
   toFun := liouvilleFun
@@ -241,7 +251,7 @@ theorem cotangentLiouville_apply (p : CotangentBundle E M) (w : Fin 1 → E × (
 /-- **Local formula for the Liouville form.** In the chart of `T*M` built from a chart `c` of `M`
 and the trivialization of `T*M` over a chart `j`, the local representative of `θ` is
 `((y, μ), (u, ψ)) ↦ μ(g_{cj}(y) u)`, where `g_{cj}(y) = d(j ∘ c⁻¹)(y)` is the coordinate change
-of tangent vectors. For `j = c` it is `((y, μ), (u, ψ)) ↦ μ(u)` (Lang, Proposition V.7.1). -/
+of tangent vectors. For `j = c` it is `((y, μ), (u, ψ)) ↦ μ(u)` [Lan99, Proposition V.7.1]. -/
 theorem cotangentLiouville_localRep (I : atlas (E × (E →L[ℝ] ℝ)) (CotangentBundle E M))
     (j c : atlas E M) (hI : I.1 = (cotangentCore E M).bundleChart j c.1)
     {q : E × (E →L[ℝ] ℝ)} (hq : q ∈ I.1.target) (u : E) (ψ : E →L[ℝ] ℝ) :
@@ -284,8 +294,8 @@ theorem cotangentLiouville_d_apply (p : CotangentBundle E M) (u w : E × (E →L
   simp [sub_eq_add_neg]
 
 /-- **The canonical symplectic form** `ω = -dθ` on the cotangent bundle of a manifold modeled on
-a normed space (Lang, Ch. V, §7, p. 150): with tangent vectors in the preferred chart,
-`ω_λ((u₁, ψ₁), (u₂, ψ₂)) = ψ₂(u₁) - ψ₁(u₂)` (Lang, Proposition V.7.2). It is exact, hence closed,
+a normed space [Lan99, Ch. V, §7, p. 150]: with tangent vectors in the preferred chart,
+`ω_λ((u₁, ψ₁), (u₂, ψ₂)) = ψ₂(u₁) - ψ₁(u₂)` [Lan99, Proposition V.7.2]. It is exact, hence closed,
 and it is **weakly nondegenerate for every normed model**: if `ψ(u₁) = 0` for all `ψ ∈ E'`,
 then `u₁ = 0` by the Hahn–Banach theorem. No completeness or reflexivity is assumed. -/
 def cotangentSymplectic : SymplecticForm (E × (E →L[ℝ] ℝ)) (CotangentBundle E M) where
@@ -305,7 +315,7 @@ def cotangentSymplectic : SymplecticForm (E × (E →L[ℝ] ℝ)) (CotangentBund
     exact Prod.ext h1 h2
 
 /-- The canonical symplectic form in the preferred chart:
-`ω_λ((u₁, ψ₁), (u₂, ψ₂)) = ψ₂(u₁) - ψ₁(u₂)` (Lang, Proposition V.7.2). -/
+`ω_λ((u₁, ψ₁), (u₂, ψ₂)) = ψ₂(u₁) - ψ₁(u₂)` [Lan99, Proposition V.7.2]. -/
 theorem cotangentSymplectic_apply (p : CotangentBundle E M) (u w : E × (E →L[ℝ] ℝ)) :
     (cotangentSymplectic (E := E) (M := M)).form p ![u, w] = w.2 u.1 - u.2 w.1 := by
   change (-(cotangentLiouville (E := E) (M := M)).d) p ![u, w] = _

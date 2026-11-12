@@ -10,19 +10,20 @@ public import LocallyConvexManifolds.RoughBoundary.Subspace
 /-!
 # Graphs of maps into manifolds without boundary
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1),
-Proposition 3.5.17, pp. 283–284.
-
 Let `M` be a `C^r` manifold with rough boundary modeled on `E`, `N` a `C^r` manifold without
 boundary modeled on `F` (a rough atlas whose charts have open targets), and `f : M → N` a `C^r`
 map. Then the graph of `f` is a submanifold of `M × N` modeled on the closed subspace
-`E × {0}` of `E × F` (`horizontal E F`), with boundary `{(x, f x) : x ∈ ∂M}`.
+`E × {0}` of `E × F` (`horizontal E F`), with boundary `{(x, f x) : x ∈ ∂M}`
+[GN26, Proposition 3.5.17, pp. 283–284].
 
-## Main declarations
+## Main definitions
 
 * `roughGraphChart φ ψ f`: for charts `φ` of `M` and `ψ` of `N`, the chart
   `θ(x, y) = (φ x, ψ y - ψ (f x))` of `M × N` on `(U_φ ∩ f⁻¹ U_ψ) × U_ψ`, which is
   `g ∘ (φ × ψ)` for the `C^r` diffeomorphism `g(z, w) = (z, w - h z)`, `h = ψ ∘ f ∘ φ⁻¹`.
+
+## Main results
+
 * `RoughAtlas.isCompatible_roughGraphChart`: `θ` is compatible with the product atlas.
 * `isAdaptedTo_roughGraphChart`: `θ` is adapted to the graph and `E × {0}`.
 * `RoughAtlas.exists_roughGraphChart`: condition (S1) for the graph, for all `r`.
@@ -37,10 +38,15 @@ map. Then the graph of `f` is a submanifold of `M × N` modeled on the closed su
   partial homeomorphisms with non-open targets, so `θ` is defined directly.
 * The target of `θ` is `(V'_φ × F) ∩ O` for an open `O`, with `V'_φ = φ(U_φ ∩ f⁻¹ U_ψ)`
   (`roughGraphChart_target_eq`); this is where the openness of the targets of the charts of `N` is
-  used (G–N, Example 3.5.18: for `N = [0, ∞[` and `f(x) = x²` the graph is not a submanifold).
+  used ([GN26, Example 3.5.18]: for `N = [0, ∞[` and `f(x) = x²` the graph is not a submanifold).
 * For `r = 0`, G–N obtain the graph as a submanifold *with prescribed boundary* (3.5.15), since
   condition (S2) has to be checked against all adapted charts of `M × N`. We prove (S1) for all
   `r`, and the submanifold structure and its boundary for `r ≥ 1`, where (S2) is automatic.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
 -/
 
 @[expose] public section
@@ -124,7 +130,7 @@ theorem continuousOn_graphRep (hf : Continuous f) :
     fun _ hz ↦ hz.2
 
 variable {f} in
-/-- **The graph chart** (Glöckner–Neeb, proof of Proposition 3.5.17): `θ = g ∘ (φ × ψ)`,
+/-- **The graph chart** [GN26, proof of Proposition 3.5.17]: `θ = g ∘ (φ × ψ)`,
 `θ(x, y) = (φ x, ψ y - ψ (f x))`, on `(U_φ ∩ f⁻¹ U_ψ) × U_ψ`. -/
 def roughGraphChart (hf : Continuous f) : PartialHomeomorph (M × N) (E × F) where
   toFun p := (φ p.1, ψ p.2 - ψ (f p.1))
@@ -229,8 +235,8 @@ theorem preimage_val_roughGraphChart_target (hf : Continuous f) :
     zero_add, and_iff_left_iff_imp]
   exact fun h ↦ ψ.map_source h.2
 
-/-- **The graph chart is adapted** to the graph and to `E × {0}` (Glöckner–Neeb, proof of
-Proposition 3.5.17): `θ((U_φ × U_ψ) ∩ graph(f)) = V'_φ × {0}`. -/
+/-- **The graph chart is adapted** to the graph and to `E × {0}` [GN26, proof of
+Proposition 3.5.17]: `θ((U_φ × U_ψ) ∩ graph(f)) = V'_φ × {0}`. -/
 theorem isAdaptedTo_roughGraphChart (hf : Continuous f) (hφ : IsRoughChart φ)
     (hψ : IsRoughChart ψ) :
     IsAdaptedTo (horizontal E F) (roughGraphChart φ ψ hf) (univ.graphOn f) := by
@@ -272,7 +278,7 @@ variable (A : RoughAtlas r E M) (B : RoughAtlas r F N) (hB : ∀ e ∈ B.atlas, 
   {f : M → N} (hf : A.ContMDiff B r f)
 include hB hf
 
-/-- **The graph chart is a chart of `M × N`** (Glöckner–Neeb, proof of Proposition 3.5.17): it
+/-- **The graph chart is a chart of `M × N`** [GN26, proof of Proposition 3.5.17]: it
 is compatible with the product atlas. The transition maps factor through `φ × ψ` and the `C^r`
 maps `g(z, w) = (z, w - h z)` and `g⁻¹(z, w) = (z, w + h z)`, `h = ψ ∘ f ∘ φ⁻¹`. -/
 theorem isCompatible_roughGraphChart {φ : PartialHomeomorph M E} {ψ : PartialHomeomorph N F}
@@ -341,7 +347,7 @@ theorem isCompatible_roughGraphChart {φ : PartialHomeomorph M E} {ψ : PartialH
       interior_prod_eq, (hB ψ hψ).interior_eq, mem_prod, Prod.map_fst, Prod.map_snd,
       ψ.map_source hx.1.2, and_true]
 
-/-- **Glöckner–Neeb, Proposition 3.5.17, condition (S1)**: every point of the graph of a `C^r`
+/-- **[GN26, Proposition 3.5.17], condition (S1)**: every point of the graph of a `C^r`
 map `f : M → N` into a manifold without boundary lies in a chart of `M × N` adapted to the graph
 and to `E × {0}`. -/
 theorem exists_roughGraphChart {p : M × N} (hp : p ∈ univ.graphOn f) :
@@ -354,19 +360,19 @@ theorem exists_roughGraphChart {p : M × N} (hp : p ∈ univ.graphOn f) :
   rw [mem_graphOn_univ_iff.mp hp]
   exact hy
 
-/-- **Glöckner–Neeb, Proposition 3.5.17**: for `r ≥ 1`, the graph of a `C^r` map into a
+/-- **[GN26, Proposition 3.5.17]**: for `r ≥ 1`, the graph of a `C^r` map into a
 manifold without boundary is a submanifold of `M × N` modeled on `E × {0}`. -/
 theorem isSubmanifold_graph [Nonempty M] (hr : r ≠ 0) :
     (A.prod B).maximal.IsSubmanifold (horizontal E F) (univ.graphOn f) :=
   ⟨fun _ hp ↦ A.exists_roughGraphChart B hB hf hp, fun h ↦ absurd h hr⟩
 
 /-- The graph of a `C^r` map into a manifold without boundary, `r ≥ 1`, as a manifold with rough
-boundary modeled on `E × {0}` (Glöckner–Neeb, Proposition 3.5.17). -/
+boundary modeled on `E × {0}` [GN26, Proposition 3.5.17]. -/
 def graphSubmanifold [Nonempty M] (hr : r ≠ 0) : RoughAtlas r (horizontal E F) (univ.graphOn f) :=
   (A.prod B).maximal.submanifold (horizontal E F) (univ.graphOn f) isClosed_horizontal
     (A.isSubmanifold_graph B hB hf hr)
 
-/-- **Glöckner–Neeb, Proposition 3.5.17**: the boundary of the graph is
+/-- **[GN26, Proposition 3.5.17]**: the boundary of the graph is
 `{(x, f x) : x ∈ ∂M}`. -/
 theorem boundary_graphSubmanifold [Nonempty M] (hr : r ≠ 0) :
     (A.graphSubmanifold B hB hf hr).boundary =

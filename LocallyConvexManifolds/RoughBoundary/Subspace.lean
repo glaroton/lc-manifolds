@@ -11,31 +11,47 @@ public import LocallyConvexAnalysis.Calculus.DenseInterior.Rules
 /-!
 # Submanifolds of manifolds with rough boundary modeled on closed subspaces
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1),
-Definition 3.5.14 and Remark 3.5.16, pp. 282–283.
-
 Let `M` be a `C^r` manifold with rough boundary modeled on `E` and `F ⊆ E` a closed vector
 subspace. A chart `e` of `M` is **adapted** to `N ⊆ M` (`IsAdaptedTo`) if `e(U_e ∩ N) = V_e ∩ F`
 and `V_e ∩ F` has dense interior relative to `F`. `N` is a **submanifold modeled on `F`**
 (`RoughAtlas.IsSubmanifold`) if every point of `N` lies in the domain of an adapted chart (S1) and,
 for `r = 0`, adapted charts agree on the boundary points of `N` (S2). Then the charts
 `e_N : U_e ∩ N → V_e ∩ F` (`subChart`) form a `C^r` atlas of rough `F`-charts of `N`
-(`RoughAtlas.submanifold`).
+(`RoughAtlas.submanifold`) ([GN26, Definition 3.5.14 and Remark 3.5.16, pp. 282–283]).
+
+## Main definitions
+
+* `IsAdaptedTo F e N`: the chart `e` is adapted to `N` and the subspace `F`.
+* `subChart F e N`: the chart `e_N : U_e ∩ N → V_e ∩ F` of `N` induced by `e`.
+* `RoughAtlas.IsSubmanifold`: `N` is a submanifold modeled on `F`, conditions (S1) and (S2).
+* `RoughAtlas.submanifold`: a submanifold modeled on a closed subspace `F`, as a manifold with
+  rough boundary modeled on `F`.
+
+## Main results
+
+* `IsLocallyConvexSubset.preimage_clm`: the preimage of a locally convex subset under a
+  continuous linear map is locally convex.
 
 ## Proof
 
 The targets `V_e ∩ F`, as subsets of `F`, are locally convex (`IsLocallyConvexSubset.preimage_clm`;
-G–N, Remark 3.5.16(b)) and have dense interior by (S1). The transition maps of the `e_N` are those
-of `M` restricted to `F` and corestricted to `F`: they are `C^r` by the chain rule (with the
-inclusion `F → E`) and the corestriction lemma for sequentially closed subspaces (G–N,
-Lemma 1.4.16; lc-analysis, `contDiffLC_subtype_iff`), which is where closedness of `F` is used.
+[GN26, Remark 3.5.16(b)]) and have dense interior by (S1). The transition maps of the `e_N` are
+those of `M` restricted to `F` and corestricted to `F`: they are `C^r` by the chain rule (with the
+inclusion `F → E`) and the corestriction lemma for sequentially closed subspaces ([GN26,
+Lemma 1.4.16]; [LCA], `contDiffLC_subtype_iff`), which is where closedness of `F` is used.
 
 ## Infinite-dimensional subtleties
 
 * The density of the interior of `V_e ∩ F` relative to `F` is a genuine requirement when `V_e` is
-  not open (G–N, Remark 3.5.16(d)).
-* (S2) is automatic for `r ≥ 1` by the invariance of the boundary (G–N, Lemma 3.5.6, applied to
+  not open [GN26, Remark 3.5.16(d)].
+* (S2) is automatic for `r ≥ 1` by the invariance of the boundary ([GN26, Lemma 3.5.6], applied to
   the atlas of `N`); for `r = 0` it is part of the definition.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section
@@ -75,9 +91,9 @@ variable {r : ℕ∞} {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalS
   [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   {M : Type*} [TopologicalSpace M] (F : Submodule ℝ E)
 
-/-- A chart `e` of `M` is **adapted** to `N ⊆ M` and the subspace `F` (Glöckner–Neeb,
-Definition 3.5.14 (S1), p. 282): `e(U_e ∩ N) = V_e ∩ F`, and the interior of `V_e ∩ F` relative to
-`F` is dense in `V_e ∩ F`. -/
+/-- A chart `e` of `M` is **adapted** to `N ⊆ M` and the subspace `F` [GN26, Definition 3.5.14 (S1),
+p. 282]: `e(U_e ∩ N) = V_e ∩ F`, and the interior of `V_e ∩ F` relative to `F` is dense in
+`V_e ∩ F`. -/
 def IsAdaptedTo (e : PartialHomeomorph M E) (N : Set M) : Prop :=
   e.target ∩ e.symm ⁻¹' N = e.target ∩ F ∧ HasDenseInterior (Subtype.val ⁻¹' e.target : Set F)
 
@@ -170,7 +186,7 @@ theorem IsAdaptedTo.subChart_target (h : IsAdaptedTo F e N) :
 namespace RoughAtlas
 
 variable (F) in
-/-- **Glöckner–Neeb, Definition 3.5.14, p. 282**: `N ⊆ M` is a **submanifold modeled on** the
+/-- **[GN26, Definition 3.5.14, p. 282]**: `N ⊆ M` is a **submanifold modeled on** the
 subspace `F`: (S1) every point of `N` lies in the domain of a chart of the atlas adapted to `N`
 and `F`, and, for `r = 0`, (S2) adapted charts agree on which points of `N` lie on the boundary
 of `V ∩ F` relative to `F` (for `r ≥ 1` this is automatic, Remark 3.5.16(a)). -/
@@ -182,7 +198,7 @@ def IsSubmanifold (A : RoughAtlas r E M) (N : Set M) [Nonempty N] : Prop :=
         subChart F e' N x ∈ interior (Subtype.val ⁻¹' e'.target : Set F)))
 
 variable (F) in
-/-- **Glöckner–Neeb, Definition 3.5.14, p. 282**: a submanifold modeled on a closed subspace `F`
+/-- **[GN26, Definition 3.5.14, p. 282]**: a submanifold modeled on a closed subspace `F`
 is a manifold with rough boundary modeled on `F`, with the charts `e_N` induced by the adapted
 charts. -/
 def submanifold (A : RoughAtlas r E M) (N : Set M) [Nonempty N] (hF : IsClosed (F : Set E))

@@ -18,9 +18,8 @@ an embedded submanifold modeled on `e^⊥` (`isEmbeddedSubmanifold_sphere`) with
 
   `Σ(p, w) = (p + w) / ‖p + w‖`,   `w ⊥ p`,
 
-is a normalized local addition on `S` (H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie
-Groups*, arXiv:2602.12362, Definition 3.8.11 and (3.55)), defined on all of `TS`:
-`θ = (π, Σ)` maps `TS` diffeomorphically onto `{(p, q) ∈ S × S : ⟪p, q⟫ > 0}`, with inverse
+is a normalized local addition on `S` ([GN26, Definition 3.8.11 and (3.55)]), defined on all of
+`TS`: `θ = (π, Σ)` maps `TS` diffeomorphically onto `{(p, q) ∈ S × S : ⟪p, q⟫ > 0}`, with inverse
 `(p, q) ↦ (p, q / ⟪p, q⟫ - p)`. Hence the manifolds of mappings `C^ℓ(K, S)` of
 `MappingSpace/Ck.lean` are available for the sphere.
 
@@ -34,13 +33,17 @@ Groups*, arXiv:2602.12362, Definition 3.8.11 and (3.55)), defined on all of `TS`
 ## Implementation notes
 
 * Smoothness of `σ` and `τ` is checked in the Fréchet sense and transferred with
-  `smoothMBOn_iff_contDiffOn` (Glöckner–Neeb, Proposition 2.3.17); no completeness is needed.
+  `smoothMBOn_iff_contDiffOn` ([GN26, Proposition 2.3.17]); no completeness is needed.
 * Glöckner–Neeb do not treat the sphere: their local additions come from Lie group structures
-  (Proposition 3.8.12) and from sprays on smoothly paracompact Banach manifolds
-  (Proposition 3.8.13). The exponential map of the round metric, `w ↦ cos ‖w‖ p + sin ‖w‖ w/‖w‖`
-  on `‖w‖ < π`, would be another natural choice; the radial projection avoids the singularity
-  of `w ↦ w/‖w‖` at `0` and has explicit rational formulas. We do not claim this construction
-  is new.
+  ([GN26, Proposition 3.8.12]) and from sprays on smoothly paracompact Banach manifolds
+  ([GN26, Proposition 3.8.13]). The exponential map of the round metric,
+  `w ↦ cos ‖w‖ p + sin ‖w‖ w/‖w‖` on `‖w‖ < π`, would be another natural choice; the radial
+  projection avoids the singularity of `w ↦ w/‖w‖` at `0` and has explicit rational formulas. We do
+  not claim this construction is new.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section

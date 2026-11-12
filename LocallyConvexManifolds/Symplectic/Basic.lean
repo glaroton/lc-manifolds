@@ -29,31 +29,48 @@ nonempty strong symplectic manifold modeled on a normed space has a reflexive mo
 argument. Many symplectic forms of interest (for instance on spaces of smooth functions, which
 are not normable) are only weakly nondegenerate.
 
-## Main definitions and results
+## Main definitions
 
-* `SymplecticForm E M`: a closed weakly nondegenerate `2`-form; `SymplecticForm.IsStrong`;
-* `SymplecticForm.IsHamiltonianFor ω X f`: `i_X ω = df`. Hamiltonian vector fields are unique
-  (`IsHamiltonianFor.unique`), but need not exist for weak forms;
-* `SymplecticForm.IsSymplecticField ω X`: `L_X ω = 0`, equivalently `i_X ω` is closed
-  (`isSymplecticField_iff`). Hamiltonian fields are symplectic, and on a smoothly contractible
-  manifold every symplectic field is Hamiltonian (`IsSymplecticField.exists_isHamiltonianFor`,
-  from the Poincaré Lemma);
-* `interior_bracket`: for symplectic `X, Y`, `i_{[X, Y]} ω = d(ω(Y, X))`, so the bracket of two
-  symplectic fields is Hamiltonian;
-* conservation of energy (`IsHamiltonianFor.lieDeriv_self`), the Poisson bracket `{f, g}` and its
-  Jacobi identity (`poisson_jacobi`);
-* symplectomorphisms and the transport of Hamiltonian fields along them;
-* the canonical symplectic form `ω = dθ` on `H × H` for a real inner product space `H`
-  (`canonicalSymplectic`), weak in general and strong when `H` is complete.
+* `SymplecticForm E M`: a closed weakly nondegenerate `2`-form; `SymplecticForm.IsStrong`: strong
+  symplectic forms.
+* `SymplecticForm.IsHamiltonianFor ω X f`: `i_X ω = df`.
+* `SymplecticForm.IsSymplecticField ω X`: `L_X ω = 0`.
+* `SymplecticForm.poisson`: the Poisson bracket `{f, g}`.
+* `IsSymplecticMap`: symplectomorphisms.
+* `canonicalSymplectic`: the canonical symplectic form `ω = dθ` on `H × H` for a real inner
+  product space `H`.
 
-The Darboux theorem for strong symplectic forms on Banach manifolds (A. Weinstein, *Symplectic
-structures on Banach manifolds*, Bull. Amer. Math. Soc. 75 (1969), §1, Theorem) is proved in
-`LocallyConvexManifolds.Symplectic.Darboux` (`SymplecticForm.IsStrong.exists_darboux_chart`) by
-Moser's method, which needs flows of time-dependent vector fields; these need not exist on locally
-convex manifolds. For weak symplectic forms the theorem fails even on Hilbert spaces (J. Marsden,
-*Darboux's theorem fails for weak symplectic forms*, Proc. Amer. Math. Soc. 32 (1972),
-Proposition, p. 591). Real-valued forms require models in `Type`, since the value space of a form
-lives in the universe of the model.
+## Main results
+
+* `SymplecticForm.IsHamiltonianFor.unique`: Hamiltonian vector fields are unique, but need not
+  exist for weak forms.
+* `SymplecticForm.isSymplecticField_iff`: `X` is symplectic if and only if `i_X ω` is closed.
+  Hamiltonian fields are symplectic, and on a smoothly contractible manifold every symplectic
+  field is Hamiltonian (`SymplecticForm.IsSymplecticField.exists_isHamiltonianFor`, from the
+  Poincaré Lemma).
+* `SymplecticForm.interior_bracket`: for symplectic `X, Y`, `i_{[X, Y]} ω = d(ω(Y, X))`, so the
+  bracket of two symplectic fields is Hamiltonian.
+* `SymplecticForm.IsHamiltonianFor.lieDeriv_self`: conservation of energy.
+* `SymplecticForm.poisson_jacobi`: the Jacobi identity for the Poisson bracket.
+* `IsSymplecticMap.isHamiltonianFor`: the transport of Hamiltonian fields along
+  symplectomorphisms.
+* `canonicalSymplectic_isStrong`: the canonical symplectic form on `H × H`, weak in general, is
+  strong when `H` is complete.
+
+## Implementation notes
+
+The Darboux theorem for strong symplectic forms on Banach manifolds ([Wei69, §1, Theorem]) is
+proved in `LocallyConvexManifolds.Symplectic.Darboux`
+(`SymplecticForm.IsStrong.exists_darboux_chart`) by Moser's method, which needs flows of
+time-dependent vector fields; these need not exist on locally convex manifolds. For weak
+symplectic forms the theorem fails even on Hilbert spaces ([Mar72, Proposition, p. 591]).
+Real-valued forms require models in `Type`, since the value space of a form lives in the universe
+of the model.
+
+## References
+
+* [J. E. Marsden, *Darboux's theorem fails for weak symplectic forms*][Mar72]
+* [A. Weinstein, *Symplectic structures on Banach manifolds*][Wei69]
 -/
 
 @[expose] public section
@@ -476,7 +493,7 @@ theorem liouvilleForm_d_apply (x u w : H × H) :
 /-- **The canonical symplectic form** `ω = dθ` on `H × H`, for any real inner product space `H`
 (no completeness): `ω((y, b), (y', b')) = ⟨y, b'⟩ - ⟨y', b⟩`. It is exact, hence closed, and
 weakly nondegenerate. It is the skew form `Ḡ` induced by the symmetric form
-`G = ⟨·, ·⟩` in Marsden (Proc. Amer. Math. Soc. 32 (1972), p. 590). -/
+`G = ⟨·, ·⟩` in [Mar72, p. 590]. -/
 def canonicalSymplectic : SymplecticForm (H × H) (H × H) where
   form := (liouvilleForm (H := H)).d
   isClosed x v := by rw [d_d_eq_zero]; rfl

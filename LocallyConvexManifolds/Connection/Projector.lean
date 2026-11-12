@@ -13,32 +13,39 @@ public import LocallyConvexManifolds.Connection.CovariantCurve
 /-!
 # Derive and project: connections given by a field of projectors
 
-References: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Sección
-"La derivada covariante: derivar y proyectar", Teorema *esproyectar*.
-
 Let `X ⊆ F` be an embedded submanifold of a locally convex space `F`, modeled on a closed
 subspace `S`. Its tangent space at `p` is a subspace `T_p X ⊆ F`: in any slice chart `φ`,
-`T_p X = {w | dφ_p w ∈ S}` (`mem_tangentSpace_iff`). A *field of projectors* is a smooth map
-`E : X × F → F`, linear in the second variable, with `E_p² = E_p` and range `T_p X`
-(`ProjectorField`). The connection it defines has, in a slice chart with inverse
+`T_p X = {w | dφ_p w ∈ S}` (`IsEmbeddedSubmanifold.mem_tangentSpace_iff`). A *field of
+projectors* is a smooth map `E : X × F → F`, linear in the second variable, with `E_p² = E_p` and
+range `T_p X` (`ProjectorField`). The connection it defines has, in a slice chart with inverse
 `ψ = φ⁻¹|_S`, the Christoffel symbols
 
   `Γ_y(a, b) = - dφ (E (d²ψ_y(a, b)))`,
 
 so that the covariant derivative is "derive in the ambient space and project":
-`∇_X Y = E (dY · X)`.
+`∇_X Y = E (dY · X)`. We follow [Lar22, Sección "La derivada covariante: derivar y proyectar",
+Teorema *esproyectar*].
 
-Main results:
+## Main definitions
 
-* `ProjectorField.connection`: the connection, with symmetric symbols
-  (`connection_isSymmetric`); the change of charts law `symb_transition` follows from the
-  second-order chain rule `LocallyConvex.Analysis.dMB_dMB_comp`;
+* `IsEmbeddedSubmanifold.tangentSpace`: the tangent space `T_p X ⊆ F`.
+* `ProjectorField`: fields of projectors onto the tangent spaces.
+* `ProjectorField.connection`: the connection defined by a field of projectors.
+
+## Main results
+
+* `ProjectorField.connection_isSymmetric`: the connection has symmetric symbols; the change of
+  charts law `ProjectorField.symb_transition` follows from the second-order chain rule
+  `LocallyConvex.Analysis.dMB_dMB_comp`.
 * `ProjectorField.dMB_param_localCovDeriv`: in a slice chart, `dψ (∇_A B) = E (d(dψ · B) · A)`,
-  i.e. the covariant derivative is the projection of the ambient derivative;
-* `ProjectorField.connection_isGeodesic_iff` (Teorema *esproyectar*): a `C²` curve `α` in `X` is
-  a geodesic iff its acceleration in `F` is normal, `E_α (α̈) = 0`.
+  i.e. the covariant derivative is the projection of the ambient derivative.
+* `ProjectorField.connection_isGeodesic_iff` ([Lar22, Teorema *esproyectar*]): a `C²` curve `α`
+  in `X` is a geodesic iff its acceleration in `F` is normal, `E_α (α̈) = 0`.
 * `ProjectorField.dMB_localE_param`: the identity of the book, `E_{*p,v} w = (1 - E) d²ψ(a, b)`
-  for `v = dψ a`, `w = dψ b`; hence `E_{*p,v} w = E_{*p,w} v` (`dMB_localE_param_symm`).
+  for `v = dψ a`, `w = dψ b`; hence `E_{*p,v} w = E_{*p,w} v`
+  (`ProjectorField.dMB_localE_param_symm`).
+
+## Implementation notes
 
 **Subtleties.**
 
@@ -50,6 +57,10 @@ Main results:
 * No complement of `S` is needed: the projectors `E_p` themselves provide the complements
   `ker E_p` of the tangent spaces, but they are not assumed to come from a global splitting of
   `F`.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section
@@ -498,9 +509,10 @@ theorem dMB_param_injective {y : S} (hy : (y : F) ∈ φ.target) :
   rw [hss, dMB_chart_dMB_symm hφ.1 hy] at h1
   exact Subtype.ext h1.symm
 
-/-- **Derive in the ambient space and project** (Remark after Teorema *esproyectar*): in a slice
-chart, the covariant derivative of `B` along `A`, pushed to `F` by `dψ`, is the projection of
-the ambient derivative of the field `y ↦ dψ_y (B y)`. -/
+/-- **Derive in the ambient space and project**
+(remark after [Lar22, Teorema *esproyectar*]): in a slice chart, the covariant derivative of
+`B` along `A`, pushed to `F` by `dψ`, is the projection of the ambient derivative of the field
+`y ↦ dψ_y (B y)`. -/
 theorem dMB_param_localCovDeriv {A B : S → S} {U : Set S} (hU : IsOpen U)
     (hUd : U ⊆ (Subtype.val ⁻¹' φ.target : Set S)) (hB : ContDiffMBOn 1 B U) {y : S}
     (hy : y ∈ U) :
@@ -607,8 +619,9 @@ theorem dMB_localE_param_symm {y : S} (hy : (y : F) ∈ φ.target) (a b : S) :
   rw [P.dMB_localE_param hφ p₀ hy, P.dMB_localE_param hφ p₀ hy,
     ((smoothMBOn_param hφ) 2).dMB_dMB_symm (isOpen_dom φ) hy b a]
 
-/-- **The connection defined by a field of projectors** (Teorema *esproyectar*): in the slice
-chart `φ`, its symbols are `Γ_y(a, b) = - dφ (E (d²ψ_y(a, b)))`, `ψ = φ⁻¹|_S`. -/
+/-- **The connection defined by a field of projectors**
+([Lar22, Teorema *esproyectar*]): in the slice chart `φ`, its symbols are
+`Γ_y(a, b) = - dφ (E (d²ψ_y(a, b)))`, `ψ = φ⁻¹|_S`. -/
 def connection : letI := h.chartedSpace; haveI := h.mbManifold; Connection S X := by
   let := h.chartedSpace
   have := h.mbManifold
@@ -659,8 +672,9 @@ theorem sliceChart_facts {e : OpenPartialHomeomorph X S} (he : e = sliceChart h�
   exact ⟨sliceChart_apply_coe hφ p₀ hq, hq, (sliceChart hφ p₀).left_inv hq,
     (sliceChart hφ p₀).map_source hq⟩
 
-/-- **Teorema *esproyectar***: the geodesics of the connection defined by a field of projectors
-are the curves with normal acceleration, `E_α (α̈) = 0`, where `α̈` is the acceleration in `F`. -/
+/-- **[Lar22, Teorema *esproyectar*]**: the geodesics of the connection defined by a field of
+projectors are the curves with normal acceleration, `E_α (α̈) = 0`, where `α̈` is the
+acceleration in `F`. -/
 theorem connection_isGeodesic_iff {α : ℝ → X} (hα : letI := h.chartedSpace; IsCkCurve S 2 α) :
     letI := h.chartedSpace; haveI := h.mbManifold
     P.connection.IsGeodesic α ↔

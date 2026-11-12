@@ -14,7 +14,16 @@ public import Mathlib.Analysis.Complex.RealDeriv
 # Example: the sphere is a real analytic manifold with a real analytic local addition
 
 Let `H` be a real inner product space, not necessarily complete, `e ∈ H` a unit vector and
-`S ⊆ H` the unit sphere. We show:
+`S ⊆ H` the unit sphere. We show that `S` is a real analytic manifold, and that the radial
+projection is a real analytic local addition on it. This is the real analytic case of
+`sphereLocalAddition` (`Examples/SphereLocalAddition.lean`).
+
+## Main definitions
+
+* `sphereAnalyticLocalAddition`: the radial projection as a local addition on the real analytic
+  manifold `S`.
+
+## Main results
 
 * `isSplitAnalyticSubmanifold_sphere`: `S` is a split real analytic submanifold of `H` modeled
   on `e^⊥`; hence (`IsSplitAnalyticSubmanifold.realAnalyticManifold`) **a real analytic
@@ -26,10 +35,8 @@ Let `H` be a real inner product space, not necessarily complete, `e ∈ H` a uni
   defined on all of `TS`, with `θ = (π, Σ)` mapping `TS` onto `{(p, q) : ⟪p, q⟫ > 0}` and inverse
   `(p, q) ↦ (p, q/⟪p, q⟫ - p)`, is a local addition on the real analytic manifold `S`, and
   `isRealAnalytic_sphereAnalyticLocalAddition`: **it is a real analytic local addition**
-  (H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, arXiv:2602.12362v1, p. 325,
-  after Definition 3.8.11: `θ` is a diffeomorphism of real analytic manifolds).
-
-This is the real analytic case of `sphereLocalAddition` (`Examples/SphereLocalAddition.lean`).
+  ([GN26, p. 325, after Definition 3.8.11]: `θ` is a diffeomorphism of real analytic manifolds;
+  page numbers refer to arXiv:2602.12362v1).
 
 ## Real analyticity of the formulas
 
@@ -43,7 +50,7 @@ analytic function, only `‖x‖ = √⟪x, x⟫` on `x ≠ 0`. The charts of th
 built from the height `√(1 - ‖tang q‖²)`, composed with Householder reflections) are real
 analytic for the same reasons.
 
-## Implementation notes and subtleties
+## Implementation notes
 
 * The real analytic atlas consists of the real analytic slice charts; it is not the atlas of all
   smooth slice charts used by `isEmbeddedSubmanifold_sphere`, so `TS` here is a different type
@@ -55,9 +62,13 @@ analytic for the same reasons.
 * Universes: the analytic calculus for bilinear maps requires the factors to live in one universe,
   so scalar multiplication by real analytic functions goes through `ULift ℝ`
   (`RealAnalyticOn.smul_real`).
-* Normalization of the analytic local addition (Glöckner–Neeb, (3.55)) is not proved here; for
+* Normalization of the analytic local addition ([GN26, (3.55)]) is not proved here; for
   the smooth structure it is `isNormalized_sphereLocalAddition`.
 * Glöckner–Neeb do not treat the sphere. We do not claim this construction is new.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -388,8 +399,8 @@ theorem mem_sphereAnalyticLocalAddition_target (he : ‖e‖ = 1) :
   fun _ ↦ Iff.rfl
 
 /-- **The local addition of the sphere is real analytic**: `θ = (π, Σ)` is a real analytic
-diffeomorphism of `TS` onto the open set `{(p, q) ∈ S × S : ⟪p, q⟫ > 0}` (Glöckner–Neeb, p. 325,
-after Definition 3.8.11). -/
+diffeomorphism of `TS` onto the open set `{(p, q) ∈ S × S : ⟪p, q⟫ > 0}` ([GN26, p. 325,
+after Definition 3.8.11]). -/
 theorem isRealAnalytic_sphereAnalyticLocalAddition (he : ‖e‖ = 1) :
     letI := (isSplitAnalyticSubmanifold_sphere he).chartedSpace
     haveI := realAnalyticManifold_sphere he

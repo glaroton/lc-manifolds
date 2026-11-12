@@ -10,20 +10,39 @@ public import LocallyConvexManifolds.Geodesic.Spray
 /-!
 # Covariant derivatives along curves and geodesics
 
-References: S. Lang, *Fundamentals of Differential Geometry*, §VIII.3;
-G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 6.
-
 Let `α : ℝ → M` be a curve and `β : ℝ → TM` a lift of `α` (`β t ∈ T_{α t} M`). In a chart `i`,
 write `α̃ = i ∘ α` and `μᵢ(t)` for the fiber coordinate of `β t`. The covariant derivative of `β`
 along `α` is, in the chart,
 `D_t β = μ̇ᵢ − Γᵢ(α̃)(α̃̇, μᵢ)`
-(`covDerivAlong`, computed in the preferred chart at `α t`). It does not depend on the chart
-(`covDerivAlong_chart`): differentiating `μⱼ = dτ(α̃) μᵢ` produces `d²τ(α̃̇, μᵢ)`, which cancels
-with the term of the change of charts law of `Γ`.
+(`Connection.covDerivAlong`, computed in the preferred chart at `α t`). It does not depend on the
+chart (`Connection.covDerivAlong_chart`): differentiating `μⱼ = dτ(α̃) μᵢ` produces
+`d²τ(α̃̇, μᵢ)`, which cancels with the term of the change of charts law of `Γ`. We follow
+[Lan99, §VIII.3] and [Lar22, Cap. 6].
 
-A geodesic is a curve with `D_t α' = 0`, that is `α̃̈ = Γ(α̃̇, α̃̇)` in charts (`IsGeodesic`). Its
-existence for given initial data is not claimed: it would need existence theorems for ODEs,
-which fail in general locally convex spaces.
+A geodesic is a curve with `D_t α' = 0`, that is `α̃̈ = Γ(α̃̇, α̃̇)` in charts
+(`Connection.IsGeodesic`).
+
+## Main definitions
+
+* `velocity`: the velocity `α'` of a curve, as a lift to `TM`.
+* `Connection.covDerivAlong`: the covariant derivative along a curve.
+* `Connection.IsGeodesic`: geodesics.
+
+## Main results
+
+* `Connection.covDerivAlong_chart`: the covariant derivative along a curve does not depend on
+  the chart.
+* `Connection.isGeodesic_iff`: the geodesic equation `α̃̈ = Γ(α̃̇, α̃̇)` in charts.
+
+## Implementation notes
+
+The existence of geodesics for given initial data is not claimed: it would need existence
+theorems for ODEs, which fail in general locally convex spaces.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section

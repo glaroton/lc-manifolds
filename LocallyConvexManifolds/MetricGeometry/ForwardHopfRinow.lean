@@ -12,22 +12,19 @@ public import Mathlib.Topology.EMetricSpace.Lipschitz
 /-!
 # Shortest forward curves in asymmetric spaces
 
-References: A. C. G. Mennucci, *On asymmetric distances*, Anal. Geom. Metr. Spaces 1 (2013),
-200–231, §3; G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 8,
-Teorema 8.2.3 (see `HopfRinow.lean` for the symmetric case).
-
 Let `(X, b)` be an asymmetric pseudo-(extended) metric space (`AsymmPseudoEMetricSpace`, see
 `AsymmDist.lean`), with the topology of the symmetrized distance `d = max (b, b̄)`, and assume
 that it is g-intrinsic (`IsFwdInterior X`, see `ForwardLength.lean`): `b(x, y)` is the infimum of
 the forward lengths of the continuous curves from `x` to `y`. We prove the asymmetric analogue of
 the shortest-path part of the metric Hopf–Rinow theorem: if the forward ball
 `{z | b(x, z) ≤ b(x, y) + 1}` is compact and the asymmetry is bounded on it, there is a continuous
-curve from `x` to `y` of forward length `b(x, y)`.
+curve from `x` to `y` of forward length `b(x, y)`. The setting is that of [Men13, §3]; the
+symmetric case is [Lar22, Cap. 8, Teorema 8.2.3] (see `HopfRinow.lean`).
 
 ## Main results
 
 * `bdist_le_bdist_add_edist`, `continuous_bdist`: `b(x, y) ≤ b(x', y') + d(x, x') + d(y, y')`,
-  so `b` is continuous for the symmetrized topology (Mennucci, Prop. 3.2);
+  so `b` is continuous for the symmetrized topology ([Men13, Prop. 3.2]);
 * `IsFwdInterior.exists_fwdPath_length_eq_of_isCompact`: existence of shortest forward curves.
 
 ## Implementation notes
@@ -41,15 +38,20 @@ topology exists by Tychonoff's theorem, and by the continuity of `b` it satisfie
 `b(γ u, γ v) ≤ d (v - u)` for `u ≤ v`; this forward bound alone gives forward length `≤ d`.
 
 **Why bounded asymmetry.** The forward bound says nothing about `b(γ v, γ u)`, and the symmetrized
-topology needs both `b(γ u, γ v)` and `b(γ v, γ u)` small for `γ` to be continuous (Mennucci,
-Prop. 3.1). The hypothesis `b(w, z) ≤ C b(z, w)` on the forward ball turns `γ` into a Lipschitz
-curve for `d`. Without some such hypothesis the limit curve need not be continuous: already the
-running length of a curve can be continuous while the curve is not (Mennucci, Example 4.1), and,
-as Mennucci points out in the abstract, a geodesic segment in the sense of Busemann need not be
-continuous in this setting.
+topology needs both `b(γ u, γ v)` and `b(γ v, γ u)` small for `γ` to be continuous
+([Men13, Prop. 3.1]). The hypothesis `b(w, z) ≤ C b(z, w)` on the forward ball turns `γ` into a
+Lipschitz curve for `d`. Without some such hypothesis the limit curve need not be continuous:
+already the running length of a curve can be continuous while the curve is not
+([Men13, Example 4.1]), and, as Mennucci points out in the abstract of [Men13], a geodesic segment
+in the sense of Busemann need not be continuous in this setting.
 
 Since `X` is only pseudo-(extended) metric, `[T2Space X]` is used to identify `γ 0` with `x` and
 `γ 1` with `y`.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 
 @[expose] public section
@@ -64,7 +66,7 @@ namespace LocallyConvex.Manifolds
 variable {X : Type*} [AsymmPseudoEMetricSpace X]
 
 /-- The asymmetric distance is `1`-Lipschitz in each variable for the symmetrized distance:
-`b(x, y) ≤ b(x', y') + d(x, x') + d(y, y')` (Mennucci, Prop. 3.2). -/
+`b(x, y) ≤ b(x', y') + d(x, x') + d(y, y')` ([Men13, Prop. 3.2]). -/
 theorem bdist_le_bdist_add_edist (x y x' y' : X) :
     bdist x y ≤ bdist x' y' + edist x x' + edist y y' :=
   calc bdist x y ≤ bdist x x' + bdist x' y := bdist_triangle _ _ _
@@ -75,8 +77,8 @@ theorem bdist_le_bdist_add_edist (x y x' y' : X) :
         · exact bdist_le_edist' y y'
     _ = bdist x' y' + edist x x' + edist y y' := by ring
 
-/-- **The asymmetric distance is continuous** for the symmetrized topology (Mennucci,
-Prop. 3.2). -/
+/-- **The asymmetric distance is continuous** for the symmetrized topology ([Men13,
+Prop. 3.2]). -/
 theorem continuous_bdist : Continuous fun p : X × X ↦ bdist p.1 p.2 := by
   refine continuous_of_le_add_edist 2 ENNReal.ofNat_ne_top fun p q ↦ ?_
   refine (bdist_le_bdist_add_edist p.1 p.2 q.1 q.2).trans ?_
@@ -86,7 +88,7 @@ theorem continuous_bdist : Continuous fun p : X × X ↦ bdist p.1 p.2 := by
   · exact le_max_right (edist p.1 q.1) (edist p.2 q.2)
 
 /-- **Existence of shortest forward curves** (the asymmetric analogue of the shortest-path part
-of *Estructuras*, Teorema 8.2.3). Let `X` be a g-intrinsic asymmetric space and `x, y ∈ X` with
+of [Lar22, Teorema 8.2.3]). Let `X` be a g-intrinsic asymmetric space and `x, y ∈ X` with
 `b(x, y) < ∞`. If the forward ball `B = {z | b(x, z) ≤ b(x, y) + 1}` is compact and the
 asymmetry is bounded on it, `b(w, z) ≤ C b(z, w)` for `z, w ∈ B`, then there is a curve from
 `x` to `y`, continuous for the symmetrized topology, whose forward length is `b(x, y)`.

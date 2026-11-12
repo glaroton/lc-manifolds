@@ -11,25 +11,28 @@ public import LocallyConvexManifolds.Manifold.Product
 /-!
 # Local additions
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-§3.8, Definition 3.8.11 and Lemma 3.8.17.
-
 A **local addition** on a manifold `M` modeled on a locally convex space `E` is a smooth map
 `Σ : Ω → M` on an open subset `Ω ⊆ TM` containing the zero section, with `Σ(0ₓ) = x`, such that
-`θ = (π, Σ) : Ω → M × M` is a smooth diffeomorphism onto an open subset of `M × M`. Local
-additions are the basic tool for the manifold structure of spaces of mappings (Glöckner–Neeb,
-Section 4.2).
+`θ = (π, Σ) : Ω → M × M` is a smooth diffeomorphism onto an open subset of `M × M`
+([GN26, §3.8, Definition 3.8.11 and Lemma 3.8.17]). Local additions are the basic tool for the
+manifold structure of spaces of mappings [GN26, Section 4.2].
 
-## Main definitions and results
+## Main definitions
 
-* `LocalAddition E M` (Definition 3.8.11), with `LocalAddition.toFun` (the map `Σ`),
-  `LocalAddition.smoothMBMOn_toFun` and `LocalAddition.IsNormalized` ((3.55)).
+* `LocalAddition E M` ([GN26, Definition 3.8.11]), with `LocalAddition.toFun` (the map `Σ`) and
+  `LocalAddition.IsNormalized` ([GN26, (3.55)]).
 * `openLocalAddition U`: for an open subset `U` of `E`, `Σ(x, v) = x + v` on
-  `Ω = {(x, v) : x + v ∈ U}`, with `θ` a diffeomorphism of `Ω` onto `U × U`;
-  it is normalized (`isNormalized_openLocalAddition`).
-* `tangentProdHomeomorph`, `smoothMBM_tangentProdSplit`, `smoothMBM_tangentProdMk`: the
-  identification `T(M₁ × M₂) ≅ TM₁ × TM₂`, smooth in both directions.
-* `LocalAddition.prod` (Lemma 3.8.17): products of local additions.
+  `Ω = {(x, v) : x + v ∈ U}`, with `θ` a diffeomorphism of `Ω` onto `U × U`.
+* `tangentProdHomeomorph`: the identification `T(M₁ × M₂) ≅ TM₁ × TM₂`.
+* `LocalAddition.prod`: products of local additions.
+
+## Main results
+
+* `LocalAddition.smoothMBMOn_toFun`: `Σ` is smooth on `Ω`.
+* `isNormalized_openLocalAddition`: `openLocalAddition U` is normalized.
+* `smoothMBM_tangentProdSplit`, `smoothMBM_tangentProdMk`: the identification
+  `T(M₁ × M₂) ≅ TM₁ × TM₂` is smooth in both directions.
+* `LocalAddition.prod` ([GN26, Lemma 3.8.17]): products of local additions are local additions.
 
 ## Implementation notes
 
@@ -42,6 +45,10 @@ Section 4.2).
 * The identification `T(M₁ × M₂) ≅ TM₁ × TM₂`, implicit in Glöckner–Neeb, is constructed here:
   the coordinate changes of the product are the products of the coordinate changes
   (`tangentCoordChange_prod`), so in charts the identification is a regrouping of coordinates.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -90,7 +97,7 @@ variable (E : Type u) [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTo
   [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   (M : Type*) [TopologicalSpace M] [ChartedSpace E M] [MBManifold E M]
 
-/-- **Local additions** (Glöckner–Neeb, Definition 3.8.11). A local addition on `M` is a smooth
+/-- **Local additions** [GN26, Definition 3.8.11]. A local addition on `M` is a smooth
 map `Σ : Ω → M` on an open subset `Ω ⊆ TM` containing the zero section, with `Σ(0ₓ) = x`, such
 that `θ = (π, Σ) : Ω → M × M` is a smooth diffeomorphism onto an open subset of `M × M`.
 
@@ -147,7 +154,7 @@ theorem smoothMBMOn_toFun : SmoothMBMOn (E × E) E A.toFun A.source :=
   SmoothMBMOn.comp A.isOpen_source isOpen_univ (fun k ↦ smoothMBM_snd (M := M) (N := M) k)
     A.smoothMBMOn (mapsTo_univ _ _)
 
-/-- **Normalized local additions** (Glöckner–Neeb, (3.55)): the restriction of `Σ` to the fiber
+/-- **Normalized local additions** [GN26, (3.55)]: the restriction of `Σ` to the fiber
 `TₓM` has derivative the identity at `0ₓ`. Since the fiber coordinates of `TM` over `x` are
 those of the preferred chart at `x`, this reads `d(φₓ ∘ Σ(x, ·))(0)(w) = w` for that chart
 `φₓ`. -/
@@ -377,7 +384,7 @@ theorem smoothMBMOn_addOpen_symm :
   · change z.2 - z.1 = (((chartAt E q₀.2).symm z.2 : U) : E) - (((chartAt E q₀.1).symm z.1 : U) : E)
     rw [opens_atlas_symm (chart_mem_atlas E _) hz1, opens_atlas_symm (chart_mem_atlas E _) hz2]
 
-/-- **Local addition of an open subset of a locally convex space** (Glöckner–Neeb, 3.8.11):
+/-- **Local addition of an open subset of a locally convex space** [GN26, 3.8.11]:
 `Σ(x, v) = x + v` on `Ω = {(x, v) ∈ TU : x + v ∈ U}`, with `θ(x, v) = (x, x + v)` a
 diffeomorphism of `Ω` onto `U × U`. -/
 def openLocalAddition : LocalAddition E U where
@@ -720,7 +727,7 @@ theorem mem_prodTheta_target (A₁ : LocalAddition E₁ M₁) (A₂ : LocalAddit
       ((q.1.2, q.2.2) : M₂ × M₂) ∈ A₂.toOpenPartialHomeomorph.target := by
   simp [prodTheta, tangentProdHomeomorph, Homeomorph.prodProdProdComm]
 
-/-- **Glöckner–Neeb, Lemma 3.8.17**: if `Σ₁` and `Σ₂` are local additions on `M₁` and `M₂`, then,
+/-- **[GN26, Lemma 3.8.17]**: if `Σ₁` and `Σ₂` are local additions on `M₁` and `M₂`, then,
 identifying `T(M₁ × M₂)` with `TM₁ × TM₂`, `Σ₁ × Σ₂` is a local addition on `M₁ × M₂`. -/
 def prod (A₁ : LocalAddition E₁ M₁) (A₂ : LocalAddition E₂ M₂) :
     LocalAddition (ModelProd E₁ E₂) (M₁ × M₂) where

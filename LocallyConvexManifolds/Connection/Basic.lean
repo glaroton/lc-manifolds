@@ -10,28 +10,50 @@ public import LocallyConvexManifolds.VectorField.Derivation
 /-!
 # Connections and covariant derivatives
 
-References: S. Lang, *Fundamentals of Differential Geometry*, §§IV.3, VIII.1–2, IX.1;
-G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 6.
-
 A connection on a manifold `M` modeled on `E` is given in each chart `i` of the atlas by a
 smooth family of continuous bilinear maps `Γᵢ(x) : E × E → E`, subject to the change of charts
 law
 `Γⱼ(τ x)(dτₓ u, dτₓ v) = dτₓ Γᵢ(x)(u, v) + d²τₓ(u, v)`,
 where `τ = j ∘ i⁻¹` (`Connection`). The symbols are not tensorial: they transform affinely, with
-the second derivative of the transition map. Conventions: the first argument of `Γ` is the
-direction in which the base point moves, and
+the second derivative of the transition map. We follow [Lan99, §§IV.3, VIII.1–2, IX.1] and
+[Lar22, Cap. 6]. Conventions: the first argument of `Γ` is the direction in which the base point
+moves, and
 
-* the covariant derivative is `∇_X Y = dỸ · X̃ − Γ(X̃, Ỹ)` in a chart (`covDeriv`);
+* the covariant derivative is `∇_X Y = dỸ · X̃ − Γ(X̃, Ỹ)` in a chart (`Connection.covDeriv`);
 * the curvature follows Lang's sign, `R(X, Y) Z = ∇_X ∇_Y Z − ∇_Y ∇_X Z − ∇_[X,Y] Z`.
 
-The covariant derivative does not depend on the chart (`localRep_covDeriv`): differentiating
-`Ỹⱼ ∘ τ = dτ · Ỹᵢ` produces the term `d²τ(X̃ᵢ, Ỹᵢ)`, which cancels with the one in the change of
-charts law of `Γ`.
+## Main definitions
+
+* `localCovDeriv`, `localCurv`: the covariant derivative and the curvature in a chart.
+* `Connection`: connections on `M`, given by their symbols in the charts of the atlas.
+* `Connection.covDeriv`: the covariant derivative `∇_X Y` of vector fields.
+* `Connection.IsSymmetric`: symmetric (torsion-free) connections.
+* `Connection.curvature`: the curvature `R(X, Y) Z`.
+
+## Main results
+
+* `localCovDeriv_curv`: **the local curvature formula** ([Lan99, Prop. IX.1.2]).
+* `Connection.localRep_covDeriv`: the covariant derivative does not depend on the chart:
+  differentiating `Ỹⱼ ∘ τ = dτ · Ỹᵢ` produces the term `d²τ(X̃ᵢ, Ỹᵢ)`, which cancels with the one
+  in the change of charts law of `Γ`.
+* `Connection.covDeriv_sub_covDeriv_sub_lieBracket`, `Connection.covDeriv_sub_covDeriv`: the
+  torsion only depends on the values of the fields at the point, and for a symmetric connection
+  `∇_X Y − ∇_Y X = [X, Y]`.
+* `Connection.curvature_eq`: **the curvature is tensorial** ([Lan99, Prop. IX.1.1–1.2]).
+* `localCurv_bianchi`, `Connection.curvature_bianchi`: Bianchi's identity for a symmetric
+  connection.
+
+## Implementation notes
 
 A spray in the sense of Lang is the same as a symmetric connection, through
 `f(x, v) = Γₓ(v, v)`; following the design chosen for this library, sprays are handled through
 their local parts, and existence of geodesics or parallel transport (which need ODE theory, not
 available in locally convex spaces) is not assumed anywhere.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section
@@ -154,7 +176,7 @@ theorem dMB_symb_comp {Γ : E → E → E → E} {A B : E → E} {U : Set E} (hU
     (hasDirDerivAt_symb_right haddr hsmulr y (A y) (B y) _).dMB_eq]
   rfl
 
-/-- **The local curvature formula** (Lang, Prop. IX.1.2): for `C^2` fields on an open set,
+/-- **The local curvature formula** [Lan99, Prop. IX.1.2]: for `C^2` fields on an open set,
 `∇_X ∇_Y Z − ∇_Y ∇_X Z − ∇_[X,Y] Z = R(X, Y) Z` pointwise, where `R` is the trilinear expression
 `localCurv`; all the terms containing derivatives of the fields cancel. -/
 theorem localCovDeriv_curv {Γ : E → E → E → E} {X Y Z : E → E} {U : Set E} (hU : IsOpen U)
@@ -419,7 +441,7 @@ def curvature (X Y Z : M → TangentBundle E M) (x : M) : E :=
     (show E from (C.covDeriv Y (C.covDeriv X Z) x).2) -
     (show E from (C.covDeriv (lieBracket X Y) Z x).2)
 
-/-- **The curvature is tensorial** (Lang, Prop. IX.1.1–1.2): for `C^2` fields, `R(X, Y) Z` at
+/-- **The curvature is tensorial** [Lan99, Prop. IX.1.1–1.2]: for `C^2` fields, `R(X, Y) Z` at
 `x` is the trilinear expression `localCurv` in the preferred chart, evaluated at the values of
 `X`, `Y`, `Z` at `x`. -/
 theorem curvature_eq {X Y Z : M → TangentBundle E M} (hXv : IsVectorField X)

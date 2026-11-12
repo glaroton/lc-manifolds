@@ -16,36 +16,41 @@ Let `L` be a space with an atlas with varying models `B` (for instance a manifol
 through `VaryingAtlas.ofChartedSpace`, or a manifold of mappings) and `M`, `N` manifolds modeled on
 Hausdorff locally convex spaces `H`, `F`. A map
 `f : L × M → N` is `C^{k,ℓ}` if, around each point, its local representatives in charts are
-`C^{k,ℓ}` on products of open sets (H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*,
-arXiv:2602.12362, Definition 3.5.24; the `C^{k,ℓ}` maps on open sets are those of lc-analysis,
-Definition 1.7.17). These maps are the subject of the exponential law for manifolds of mappings,
-Theorem 4.2.2(a).
+`C^{k,ℓ}` on products of open sets ([GN26, Definition 3.5.24]; the `C^{k,ℓ}` maps on open sets are
+those of [LCA], [GN26, Definition 1.7.17]). These maps are the subject of the exponential law for
+manifolds of mappings, [GN26, Theorem 4.2.2(a)].
 
 ## Main definitions
 
 * `IsChartBox f e e' c U V`: `U × V` is a product of open sets in the targets of the charts `e`,
   `e'`, with `f(e⁻¹ U × e'⁻¹ V)` in the source of the chart `c`; `localRep₂ f e e' c`: the local
   representative `(a, b) ↦ c(f(e⁻¹ a, e'⁻¹ b))`.
-* `ContMDiffMB₂ H F B k ℓ f`: `f` is `C^{k,ℓ}` (Definition 3.5.24).
+* `ContMDiffMB₂ H F B k ℓ f`: `f` is `C^{k,ℓ}` ([GN26, Definition 3.5.24]).
 
 ## Main results
 
-* The `C^{k,ℓ}` calculus on open sets (locality, currying and the chain rule
-  `ContDiffMBOn₂.comp_prodMap`) is in lc-analysis, `Calculus/SmoothExponentialLaw.lean`.
-* `ContMDiffMB₂.continuous`: `C^{k,ℓ}` maps are continuous (remark after Definition 3.5.24).
+* `ContMDiffMB₂.continuous`: `C^{k,ℓ}` maps are continuous (remark after
+  [GN26, Definition 3.5.24]).
 * `ContMDiffMB₂.contDiffMBOn₂`: chart independence, the local representatives on every box in
-  every chart are `C^{k,ℓ}` (Remark 3.5.26(a)).
+  every chart are `C^{k,ℓ}` ([GN26, Remark 3.5.26(a)]).
 * `ContMDiffMB₂.contMDiffOn_left`: the partial maps `x ↦ f(x, y)` of a `C^{k,ℓ}` map are `C^k`.
-* The local compactness hypotheses hold for compact manifolds `M`
-  (`locallyCompactSpace_of_compactSpace`, in `Manifold/CkSuperposition.lean`).
 
 ## Implementation notes
 
 * Manifolds with rough boundary are out of scope; `M`, `N` are manifolds of the library (smooth,
   without boundary), and `k`, `ℓ` are finite (`∞` is "for all finite orders"). Glöckner–Neeb
-  remark (Remark 3.5.28) that the definition extends to non-pure manifolds; this is why the first
-  factor is an atlas with varying models.
+  remark [GN26, Remark 3.5.28] that the definition extends to non-pure manifolds; this is why the
+  first factor is an atlas with varying models.
 * All the model spaces live in one universe.
+* The `C^{k,ℓ}` calculus on open sets (locality, currying and the chain rule
+  `ContDiffMBOn₂.comp_prodMap`) is in [LCA], `Calculus/SmoothExponentialLaw.lean`.
+* The local compactness hypotheses hold for compact manifolds `M`
+  (`locallyCompactSpace_of_compactSpace`, in `Manifold/CkSuperposition.lean`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section
@@ -96,7 +101,7 @@ structure IsChartBox (f : L × M → N) (e : OpenPartialHomeomorph L G)
   mapsTo : ∀ a ∈ U, ∀ b ∈ V, f (e.symm a, e'.symm b) ∈ c.source
 
 variable (H F) in
-/-- **`C^{k,ℓ}` maps** `L × M → N` (Glöckner–Neeb, Definition 3.5.24), for `L` given by an atlas
+/-- **`C^{k,ℓ}` maps** `L × M → N` [GN26, Definition 3.5.24], for `L` given by an atlas
 with varying models `B` (for instance a manifold of the library, `VaryingAtlas.ofChartedSpace`, or
 a manifold of mappings): around each point `(x, y)` there are charts `φ_i` of `B` at `x`, `e'` of
 `M` at `y` and `c` of `N`, and a box `U × V ∋ (φ_i x, e' y)` on which the local representative of
@@ -148,7 +153,7 @@ theorem ContMDiffMB₂.continuous {B : VaryingAtlas.{u, _, _} L} {k ℓ : ℕ} {
 
 variable [MBManifold H M] [MBManifold F N]
 
-/-- **Chart independence** (Glöckner–Neeb, Remark 3.5.26(a)): the local representatives of a
+/-- **Chart independence** [GN26, Remark 3.5.26(a)]: the local representatives of a
 `C^{k,ℓ}` map on any box, in any charts, are `C^{k,ℓ}`. The model of the second factor is
 assumed locally compact (this holds when `M` is compact and nonempty,
 `locallyCompactSpace_of_compactSpace`; the model is then finite-dimensional); see

@@ -11,11 +11,10 @@ public import LocallyConvexManifolds.MappingSpace.Ck
 /-!
 # Iterated tangent bundles and the compact-open `C^ℓ` topology
 
-H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362), Definition 4.1.2,
-give `C^ℓ(M, N)` the initial topology with respect to the iterated tangent maps
-`f ↦ T^j f ∈ C(T^j M, T^j N)`, `j ≤ ℓ`, each space of continuous maps with the compact-open
-topology. This file sets up the iterated tangent bundles and the iterated tangent maps of the
-library's manifolds (modeled on Hausdorff locally convex spaces) and defines that topology.
+Glöckner and Neeb [GN26, Definition 4.1.2] give `C^ℓ(M, N)` the initial topology with respect to the
+iterated tangent maps `f ↦ T^j f ∈ C(T^j M, T^j N)`, `j ≤ ℓ`, each space of continuous maps with the
+compact-open topology. This file sets up the iterated tangent bundles and the iterated tangent maps
+of the library's manifolds (modeled on Hausdorff locally convex spaces) and defines that topology.
 
 ## Main definitions
 
@@ -23,15 +22,15 @@ library's manifolds (modeled on Hausdorff locally convex spaces) and defines tha
   `MBMfld.tangent`: its tangent bundle, modeled on `E × E`; `MBMfld.iter j X = T^j X`.
 * `MBMfld.iterMap j f = T^j f`, by `T^(j+1) f = T^j (T f)`; `MBMfld.contMDiffMB_iterMap`: it is
   `C^k` if `f` is `C^(k+j)`; `MBMfld.iterMapC`, `MBMfld.iterMapSm`: as continuous maps.
-* `MBMfld.gnTopology ℓ X Y`: the topology of Definition 4.1.2 on `C^ℓ(X, Y)`;
+* `MBMfld.gnTopology ℓ X Y`: the topology of [GN26, Definition 4.1.2] on `C^ℓ(X, Y)`;
   `MBMfld.gnTopologySm X Y`: the case `ℓ = ∞`.
 
 ## Main results
 
 * `MBMfld.gnTopology_succ`: the topology of `C^(ℓ+1)(X, Y)` is initial with respect to `f ↦ f`
-  and `f ↦ Tf ∈ C^ℓ(TX, TY)` (the statement used in the proof of Lemma 4.1.6).
+  and `f ↦ Tf ∈ C^ℓ(TX, TY)` (the statement used in the proof of [GN26, Lemma 4.1.6]).
 * `MBMfld.gnTopologySm_eq`: the `C^∞` topology is the projective limit of the `C^ℓ` topologies
-  (Remark 4.1.3(b)).
+  [GN26, Remark 4.1.3(b)].
 
 ## Implementation notes
 
@@ -42,6 +41,10 @@ library's manifolds (modeled on Hausdorff locally convex spaces) and defines tha
   have source and model in one universe) and `Y : MBMfld.{u, v}`: the target lives in a universe
   `max u v`. A target `N` in any universe is handled through `ULift N` (`CkMap.gnTopology`,
   `MappingSpace/TopologyULift.lean`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -164,7 +167,7 @@ def tangentCk {ℓ : ℕ} {X : MBMfld.{u, u}} {Y : MBMfld.{u, v}}
     CkMap (tangent X).Model (tangent Y).Model ℓ (tangent X).Carrier (tangent Y).Carrier :=
   ⟨tangentMap X.Model Y.Model f, ContMDiffMB.tangentMap f.2⟩
 
-/-- **The compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2**: the initial topology on
+/-- **The compact-open `C^ℓ` topology of [GN26, Definition 4.1.2]**: the initial topology on
 `C^ℓ(X, Y)` with respect to the maps `f ↦ T^j f ∈ C(T^j X, T^j Y)`, `j ≤ ℓ`, each space of
 continuous maps carrying the compact-open topology. -/
 @[instance_reducible]
@@ -178,7 +181,7 @@ def iterMapSm (j : ℕ) {X : MBMfld.{u, u}} {Y : MBMfld.{u, v}}
     C((iter j X).Carrier, (iter j Y).Carrier) :=
   iterMapC le_rfl (SmoothMap.toCk j f)
 
-/-- **The compact-open `C^∞` topology of Glöckner–Neeb, Definition 4.1.2**, `ℓ = ∞`: the initial
+/-- **The compact-open `C^∞` topology of [GN26, Definition 4.1.2]**, `ℓ = ∞`: the initial
 topology with respect to all the maps `f ↦ T^j f ∈ C(T^j X, T^j Y)`, `j ∈ ℕ`. -/
 @[instance_reducible]
 def gnTopologySm (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :
@@ -186,7 +189,7 @@ def gnTopologySm (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :
   ⨅ j : ℕ, TopologicalSpace.induced (iterMapSm j) inferInstance
 
 /-- The compact-open `C^∞` topology is the projective limit of the compact-open `C^ℓ` topologies
-(Glöckner–Neeb, Remark 4.1.3(b)): it is initial with respect to the inclusions into the
+[GN26, Remark 4.1.3(b)]: it is initial with respect to the inclusions into the
 `C^ℓ(X, Y)`. -/
 theorem gnTopologySm_eq (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :
     gnTopologySm X Y = ⨅ ℓ : ℕ, TopologicalSpace.induced (SmoothMap.toCk ℓ) (gnTopology ℓ X Y) := by
@@ -197,7 +200,7 @@ theorem gnTopologySm_eq (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :
     simp only [gnTopology, induced_iInf, induced_compose]
     exact iInf_le_of_le (Fin.last j) (le_of_eq rfl)
 
-/-- **Glöckner–Neeb, Lemma 4.1.6** (in the form used in its proof): the compact-open `C^(ℓ+1)`
+/-- **[GN26, Lemma 4.1.6]** (in the form used in its proof): the compact-open `C^(ℓ+1)`
 topology is initial with respect to `f ↦ f ∈ C(X, Y)` and `f ↦ Tf ∈ C^ℓ(TX, TY)`, the latter with
 the compact-open `C^ℓ` topology. This is a rearrangement of the infimum defining it. -/
 theorem gnTopology_succ (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :

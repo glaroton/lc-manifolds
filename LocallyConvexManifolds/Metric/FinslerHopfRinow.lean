@@ -12,28 +12,42 @@ public import LocallyConvexManifolds.MetricGeometry.ForwardHopfRinow
 /-!
 # Hopf–Rinow for finite-dimensional Finsler manifolds
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Corolario
-9.1.10.
-
 Let `M` be a Hausdorff manifold modeled on a finite-dimensional normed space, with a reversible
 Finsler metric `μ` whose seminorms are norms, and assume that `d_b` is finite (for instance, `M`
 is connected by piecewise `C¹` paths). Then:
 
-* `d_b` is a distance (`metricSpace`), since `μ` is bounded below (Teorema 9.1.5,
-  Lema 9.1.8);
-* `(M, d_b)` is locally compact, since it is homeomorphic to `M` (Corolario 9.1.9);
-* `(M, d_b)` is an interior metric space (Proposición 9.1.2).
+* `d_b` is a distance (`FinslerMetric.metricSpace`), since `μ` is bounded below
+  ([Lar22, Teorema 9.1.5], [Lar22, Lema 9.1.8]);
+* `(M, d_b)` is locally compact, since it is homeomorphic to `M` ([Lar22, Corolario 9.1.9]);
+* `(M, d_b)` is an interior metric space ([Lar22, Proposición 9.1.2]).
 
-So if `(M, d_b)` is complete, the metric Hopf–Rinow theorem (Teorema 8.2.3) gives **shortest
-curves**: any two points are joined by a continuous curve whose length is their distance
-(`exists_rectPath_length_eq`, Corolario 9.1.10). These curves are continuous for `d_b`; whether
-they can be taken piecewise `C¹` is a separate question (*Estructuras*, Observación 9.1.11).
+So if `(M, d_b)` is complete, the metric Hopf–Rinow theorem ([Lar22, Teorema 8.2.3]) gives
+**shortest curves**: any two points are joined by a continuous curve whose length is their
+distance ([Lar22, Corolario 9.1.10]). These curves are continuous for `d_b`; whether they can be
+taken piecewise `C¹` is a separate question ([Lar22, Observación 9.1.11]).
 
 **Non-reversible structures.** For a Finsler structure bounded below with a reversibility constant
 `λ` (`μ_x(-v) ≤ λ μ_x(v)`), `(M, d_b)` is a Hausdorff, forward-interior asymmetric metric space with
 bounded asymmetry, and compactness of the closed forward ball gives a curve of forward length
-`d_b(x, y)` (`FinslerLengthStructure.exists_fwdPath_length_eq`), by the asymmetric Hopf–Rinow
-theorem of `ForwardHopfRinow.lean`.
+`d_b(x, y)`, by the asymmetric Hopf–Rinow theorem of `ForwardHopfRinow.lean`.
+
+## Main definitions
+
+* `FinslerMetric.metricSpace`: the distance `d_b` as a metric space structure on `FinslerSpace`.
+
+## Main results
+
+* `FinslerMetric.locallyCompactSpace`: `(M, d_b)` is locally compact.
+* `FinslerMetric.exists_rectPath_length_eq` ([Lar22, Corolario 9.1.10], Hopf–Rinow): if
+  `(M, d_b)` is complete, any two points are joined by a continuous curve of length `d_b(x, y)`.
+* `FinslerLengthStructure.t2Space_finslerSpace`: if `μ` is bounded below, `(M, d_b)` is
+  Hausdorff.
+* `FinslerLengthStructure.exists_fwdPath_length_eq`: shortest forward curves for non-reversible
+  Finsler structures with a reversibility constant.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section
@@ -70,6 +84,7 @@ def metricSpace : MetricSpace μ.toFinslerLengthStructure.FinslerSpace :=
     rw [show edist x y = _ from μ.toFinslerLengthStructure.edist_toFinsler x y]
     exact hfin _ _
 
+omit [Fact μ.toFinslerLengthStructure.IsReversible] in
 include hnd in
 /-- `(M, d_b)` is locally compact: it is homeomorphic to `M` (Corolario 9.1.9). -/
 theorem locallyCompactSpace : LocallyCompactSpace μ.toFinslerLengthStructure.FinslerSpace :=
@@ -110,7 +125,7 @@ variable {E' : Type u} [NormedAddCommGroup E'] [NormedSpace ℝ E'] [CompleteSpa
 `d_b` separates points (Lema 9.1.8). -/
 theorem t2Space_finslerSpace (hb : μ.toFinslerSeminormField.IsBoundedBelow) :
     T2Space μ.FinslerSpace := by
-  haveI : T0Space μ.FinslerSpace := t0Space_iff_inseparable _ |>.mpr fun x y h ↦ by
+  have : T0Space μ.FinslerSpace := t0Space_iff_inseparable _ |>.mpr fun x y h ↦ by
     have h0 : edist x y = 0 := EMetric.inseparable_iff.mp h
     exact μ.eq_of_dist_eq_zero hb (le_antisymm ((bdist_le_edist x y).trans h0.le) bot_le)
   infer_instance
@@ -125,7 +140,7 @@ theorem exists_fwdPath_length_eq (hb : μ.toFinslerSeminormField.IsBoundedBelow)
     (hxy : μ.dist x y ≠ ⊤)
     (hK : IsCompact {z | bdist (μ.toFinsler x) z ≤ μ.dist x y + 1}) :
     ∃ p : FwdPath (μ.toFinsler x) (μ.toFinsler y), p.length = μ.dist x y := by
-  haveI := μ.t2Space_finslerSpace hb
+  have := μ.t2Space_finslerSpace hb
   exact μ.isFwdInterior.exists_fwdPath_length_eq_of_isCompact _ _ hxy hK
     ⟨ENNReal.ofReal lam, ENNReal.ofReal_ne_top, fun z _ w _ ↦
       μ.dist_comm_le hlam0 hlam (μ.ofFinsler z) (μ.ofFinsler w)⟩

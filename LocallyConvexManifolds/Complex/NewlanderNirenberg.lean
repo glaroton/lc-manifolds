@@ -21,20 +21,33 @@ torsion). Then:
   differential is complex linear for `J`, `Dψ(J v) = i Dψ(v)`; its model is `E` with the complex
   structure `J(x₀)` (`AlmostComplexStructure.exists_holomorphic_chart`);
 * the transition maps between `J`-holomorphic charts are complex analytic
-  (`AlmostComplexStructure.IsHolomorphicChart.analyticOnNhd_transition`).
+  (`AlmostComplexStructure.IsHolomorphicChart.complexAnalyticOn_transition`).
 
 So the `J`-holomorphic charts form a holomorphic atlas of `M` inducing `J`. This is the
-real analytic Newlander–Nirenberg theorem on Banach manifolds (J.-P. Penot, *Sur le théorème de
-Frobenius*, Bull. Soc. Math. France 98 (1970), Théorème 3.5, pp. 75–76; compare D. Beltiță,
-*Integrability of analytic almost complex structures on Banach manifolds*, Ann. Global Anal.
-Geom. 28 (2005), 59–73, Theorem 7). The converse, that the structure induced by a complex
+real analytic Newlander–Nirenberg theorem on Banach manifolds ([Pen70, Théorème 3.5,
+pp. 75–76]; compare [Bel05, Theorem 7]). The converse, that the structure induced by a complex
 analytic atlas is integrable, is `canonicalJ_isIntegrable`.
+
+## Main definitions
+
+* `AlmostComplexStructure.IsRealAnalytic`: in every chart the local representative of `J` is a
+  real analytic map into `L(E)`.
+* `AlmostComplexStructure.IsHolomorphicChart`: a chart into a complex Banach space, smooth with
+  smooth inverse in the real sense, whose differential is complex linear for `J`.
+
+## Main results
+
+* `AlmostComplexStructure.exists_holomorphic_chart` ([Pen70, Théorème 3.5]): every point lies in
+  the domain of a `J`-holomorphic chart.
+* `AlmostComplexStructure.IsHolomorphicChart.complexAnalyticOn_transition`: the transition maps
+  between `J`-holomorphic charts are complex analytic.
+* `nijenhuis_eq_neg_nijenhuisLoc`: the two conventions for the Nijenhuis tensor differ by a sign.
 
 ## Proof
 
 In the preferred chart at `x₀`, `J` is a real analytic `Ĵ : U → L(E)` with `Ĵ² = −1` and
 vanishing Nijenhuis tensor (`nijenhuis_eq_neg_nijenhuisLoc`: the two conventions differ by a
-sign). The local theorem (lc-analysis, `exists_holomorphic_chart`) gives a chart `φ` of `U` with
+sign). The local theorem ([LCA], `exists_holomorphic_chart`) gives a chart `φ` of `U` with
 `Dφ ∘ Ĵ = i Dφ`, and `ψ = φ ∘ chart` is `J`-holomorphic. For two `J`-holomorphic charts, the real
 derivative of `ψ₂ ∘ ψ₁⁻¹` is `B ∘ A` with `A = D(c ∘ ψ₁⁻¹)` and `B = D(ψ₂ ∘ c⁻¹)` in a chart `c`;
 `A` intertwines `i` and `J` and `B` intertwines `J` and `i`, so `B ∘ A` is complex linear and
@@ -43,13 +56,20 @@ derivative of `ψ₂ ∘ ψ₁⁻¹` is `B ∘ A` with `A = D(c ∘ ψ₁⁻¹)`
 ## Infinite-dimensional subtleties
 
 * **Real analyticity is needed.** For smooth almost complex structures the theorem fails on some
-  Banach manifolds (I. Patyi, *On the ∂̄-equation in a Banach space*, Bull. Soc. Math. France 128
-  (2000), 391–406, Theorem 3.1, p. 401) and on some Fréchet manifolds (L. Lempert, *The Dolbeault
-  complex in infinite dimensions I*, J. Amer. Math. Soc. 11 (1998), 485–520, §2, pp. 489–490).
+  Banach manifolds ([Pat99, Theorem 3.1, p. 401]) and on some Fréchet manifolds
+  ([Lem98, §2, pp. 489–490]).
 * **The model.** The chart at `x₀` takes values in `E^{1,0}_{x₀} = ker(J(x₀)_ℂ − i)`, which is
   isomorphic to `(E, J(x₀))`; we do not identify the models at different points, so no
   `ChartedSpace` over a fixed complex model is built.
 * Real analyticity of the charts themselves is not proved.
+
+## References
+
+* [D. Beltiță, *Integrability of analytic almost complex structures on Banach manifolds*][Bel05]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
+* [L. Lempert, *The Dolbeault complex in infinite dimensions I*][Lem98]
+* [I. Patyi, *On the ∂̄-equation in a Banach space*][Pat99]
+* [J.-P. Penot, *Sur le théorème de Frobenius*][Pen70]
 -/
 
 @[expose] public section
@@ -108,7 +128,7 @@ theorem nijenhuisLoc_congr {N N' : E → E → E} {y : E} (h : ∀ᶠ z in 𝓝 
 
 /-- **The Newlander–Nirenberg theorem, real analytic case, on Banach manifolds**: every point
 `x₀` of `M` lies in the domain of a `J`-holomorphic chart into `E^{1,0} = ker(J(x₀)_ℂ − i)`
-(Penot, *Sur le théorème de Frobenius*, Théorème 3.5, (6) ⇒ (1), pp. 75–76). Here `T` is `J(x₀)`
+([Pen70, Théorème 3.5, (6) ⇒ (1), pp. 75–76]). Here `T` is `J(x₀)`
 as a continuous linear map. -/
 theorem exists_holomorphic_chart [CompleteSpace E] (hω : J.IsRealAnalytic)
     (hJ : J.IsIntegrable) (x₀ : M) :

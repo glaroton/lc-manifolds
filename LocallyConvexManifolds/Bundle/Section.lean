@@ -14,7 +14,7 @@ public import LocallyConvexManifolds.VectorField.Basic
 A section of a vector bundle `V` over `M` is a map `s : M → V` with `s(x)` in the fiber over
 `x` (`MBVectorBundleCore.IsSection`). In the trivialization over a chart `i` it has a local
 representative `sᵢ : i(Uᵢ) → F` (`MBVectorBundleCore.localRep`), with `sⱼ ∘ τ = g · sᵢ` on
-overlaps (`localRep_transition`).
+overlaps (`MBVectorBundleCore.localRep_transition`).
 
 For a connection on `V`, the covariant derivative `∇_X s` of a section along a vector field is
 defined in the preferred chart at each point by `dsᵢ · Xᵢ − Γᵢ(Xᵢ, sᵢ)`
@@ -22,6 +22,23 @@ defined in the preferred chart at each point by `dsᵢ · Xᵢ − Γᵢ(Xᵢ, s
 (`BundleConnection.localRep_covDeriv`). The curvature `R(X, Y) s = ∇_X ∇_Y s − ∇_Y ∇_X s −
 ∇_[X,Y] s` only depends on the values of `X`, `Y`, `s` at the point, where it is the curvature
 form `Ω` of the preferred chart (`BundleConnection.curvature_eq`).
+
+## Main definitions
+
+* `MBVectorBundleCore.IsSection`, `MBVectorBundleCore.localRep`: sections and their local
+  representatives.
+* `BundleConnection.covDeriv`: the covariant derivative of a section along a vector field.
+* `BundleConnection.curvature`: the curvature `R(X, Y) s`.
+
+## Main results
+
+* `MBVectorBundleCore.localRep_transition`: `sⱼ ∘ τ = g · sᵢ` on overlaps.
+* `BundleConnection.localRep_covDeriv`: the covariant derivative is given by the local formula
+  in every trivialization.
+* `BundleConnection.curvature_eq`: the curvature is the curvature form of the preferred chart,
+  evaluated at the values of `X`, `Y`, `s`.
+
+## Implementation notes
 
 No completeness of `E` or `F` is assumed.
 -/

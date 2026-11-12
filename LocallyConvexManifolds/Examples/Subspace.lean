@@ -13,10 +13,24 @@ public import LocallyConvexManifolds.Connection.Projector
 A closed subspace `S` of a locally convex space `F` is an embedded submanifold of `F`, with the
 identity as slice chart (`isEmbeddedSubmanifold_subspace`); it is split when `S` is complemented.
 Its tangent space at every point is `S` itself (`tangentSpace_subspace`). A continuous projection
-`Pr` of `F` onto `S` is a constant field of projectors (`projectorField_subspace`). The connection
+`Pr` of `F` onto `S` is a constant field of projectors (`subspaceProjectorField`). The connection
 it defines is flat: its symbols vanish in the linear chart (`symb_subspace_refl`), and its
 geodesics are the curves with zero acceleration, i.e. the affine lines
 (`isGeodesic_subspace_iff`).
+
+## Main definitions
+
+* `subspaceProjectorField`: a continuous projection onto `S` as a constant field of projectors.
+
+## Main results
+
+* `isEmbeddedSubmanifold_subspace`, `isSplitSubmanifold_subspace`: a closed subspace is an
+  embedded submanifold, split when it is complemented.
+* `isSplitImmersion_subtypeL_iff`: the inclusion of `S` is a split immersion if and only if `S`
+  is complemented.
+* `tangentSpace_subspace`: the tangent space at every point is `S`.
+* `symb_subspace_refl`, `isGeodesic_subspace_iff`: the connection is flat, and its geodesics are
+  the affine lines.
 -/
 
 @[expose] public section
@@ -99,7 +113,7 @@ theorem tangentSpace_subspace (hS : IsClosed (S : Set F)) (p : (S : Set F)) :
   rfl
 
 /-- **A continuous projection onto `S` is a constant field of projectors.** -/
-def projectorField_subspace (hS : IsClosed (S : Set F)) (Pr : F →L[ℝ] F)
+def subspaceProjectorField (hS : IsClosed (S : Set F)) (Pr : F →L[ℝ] F)
     (hidem : ∀ w, Pr (Pr w) = Pr w) (hrange : Set.range Pr = S) :
     ProjectorField (isEmbeddedSubmanifold_subspace hS) where
   E _ w := Pr w
@@ -114,7 +128,7 @@ variable (hS : IsClosed (S : Set F)) (Pr : F →L[ℝ] F) (hidem : ∀ w, Pr (Pr
 
 /-- In the linear chart, the symbols of the connection vanish: the connection is flat. -/
 theorem symb_subspace_refl (p₀ : (S : Set F)) (y a b : S) :
-    (projectorField_subspace hS Pr hidem hrange).symb isSliceChart_refl p₀ y a b = 0 := by
+    (subspaceProjectorField hS Pr hidem hrange).symb isSliceChart_refl p₀ y a b = 0 := by
   have hψ : ProjectorField.param (S := S) (OpenPartialHomeomorph.refl F) = ⇑S.subtypeL := rfl
   refine Subtype.ext ?_
   rw [ProjectorField.coe_symb _ _ _ (mem_univ (y : F)), hψ]
@@ -140,7 +154,7 @@ theorem isGeodesic_subspace_iff {α : ℝ → (S : Set F)}
     (hα : letI := (isEmbeddedSubmanifold_subspace hS).chartedSpace; IsCkCurve S 2 α) :
     letI := (isEmbeddedSubmanifold_subspace hS).chartedSpace
     haveI := (isEmbeddedSubmanifold_subspace hS).mbManifold
-    (projectorField_subspace hS Pr hidem hrange).connection.IsGeodesic α ↔
+    (subspaceProjectorField hS Pr hidem hrange).connection.IsGeodesic α ↔
       ∀ t, dMB (fun s ↦ dMB (Subtype.val ∘ α) (s, 1)) (t, 1) = 0 := by
   let := (isEmbeddedSubmanifold_subspace hS).chartedSpace
   have := (isEmbeddedSubmanifold_subspace hS).mbManifold

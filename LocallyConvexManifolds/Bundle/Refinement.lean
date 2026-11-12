@@ -22,6 +22,17 @@ Any two covers have a **common refinement**, the cover by the intersections `Uáµ
 different covers is defined over their common refinement (`homCoreInf`), and so is the induced
 connection (`BundleConnection.homInf`).
 
+## Main definitions
+
+* `TrivializationCover.Refines`: refinements of trivializing covers.
+* `MBVectorBundleCore.refine`, `BundleConnection.refine`: a bundle and a connection on it,
+  trivialized over a refinement.
+* `TrivializationCover.inf`: the common refinement of two covers.
+* `homCoreInf`, `BundleConnection.homInf`: the Hom bundle of two bundles trivialized over
+  different covers, and its induced connection.
+
+## Implementation notes
+
 No completeness is assumed.
 -/
 

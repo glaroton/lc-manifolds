@@ -11,39 +11,50 @@ public import LocallyConvexManifolds.Manifold.ContMDiff
 /-!
 # Real and complex analytic manifolds
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-Definitions 3.1.3–3.1.4 (`C^r`-manifolds for `r ∈ ℕ₀ ∪ {∞, ω}`; the `C^ω_𝕂`-manifolds are the
-`𝕂`-analytic manifolds), Example 3.1.8, and Definition 2.2.18 (complexifications).
-
 As for smooth manifolds (`LocallyConvexManifolds.Manifold.Basic`), an analytic manifold is a
-`ChartedSpace` whose transition maps lie in a structure groupoid:
-
-* `realAnalyticGroupoid E`: the homeomorphisms between open subsets of a real locally convex
-  space `E` which are real analytic in the sense of Milnor (`LocallyConvex.Analysis.RealAnalyticOn`:
-  restrictions of complex analytic maps on open subsets of `E_ℂ`), together with their inverses;
-* `complexAnalyticGroupoid E`: the same for a complex locally convex space `E` and complex
-  analytic maps (`LocallyConvex.Analysis.ComplexAnalyticOn`).
+`ChartedSpace` whose transition maps lie in a structure groupoid. This follows
+[GN26, Definitions 3.1.3–3.1.4] (`C^r`-manifolds for `r ∈ ℕ₀ ∪ {∞, ω}`; the `C^ω_𝕂`-manifolds are
+the `𝕂`-analytic manifolds), [GN26, Example 3.1.8], and [GN26, Definition 2.2.18]
+(complexifications).
 
 No completeness of the model space is assumed (GN's convention, see
 `LocallyConvexManifolds.Manifold.Basic`): the facts used about analytic maps (composition, locality,
 analytic implies smooth, complex analytic implies real analytic) hold without completeness in
 `LocallyConvex.Analysis`.
 
+## Main definitions
+
+* `realAnalyticGroupoid E`: the homeomorphisms between open subsets of a real locally convex
+  space `E` which are real analytic in the sense of Milnor (`LocallyConvex.Analysis.RealAnalyticOn`:
+  restrictions of complex analytic maps on open subsets of `E_ℂ`), together with their inverses;
+* `complexAnalyticGroupoid E`: the same for a complex locally convex space `E` and complex
+  analytic maps (`LocallyConvex.Analysis.ComplexAnalyticOn`).
+* `RealAnalyticManifold`, `ComplexAnalyticManifold`: manifolds whose transition maps are real,
+  resp. complex, analytic ([GN26, Definition 3.1.4] with `r = ω`).
+* `RealAnalyticMOn`, `ComplexAnalyticMOn`: analytic maps between analytic manifolds, defined
+  through the preferred charts.
+* `IsComplexification`: [GN26, Definition 2.2.18]; `E_ℂ` is a complexification of `E`
+  (`isComplexification_ofReal`).
+
 ## Main results
 
 * `realAnalyticGroupoid_le_mbGroupoid`, `complexAnalyticGroupoid_le_realAnalyticGroupoid`:
-  every complex analytic manifold is real analytic (GN, Proposition 2.2.11) and every real
-  analytic manifold is smooth (GN, Lemma 2.2.5); both are instances.
-* Open subsets of analytic manifolds are analytic manifolds (GN, Example 3.1.9), through
+  every complex analytic manifold is real analytic ([GN26, Proposition 2.2.11]) and every real
+  analytic manifold is smooth ([GN26, Lemma 2.2.5]); both are instances.
+* Open subsets of analytic manifolds are analytic manifolds ([GN26, Example 3.1.9]), through
   Mathlib's `TopologicalSpace.Opens` charted space and `ClosedUnderRestriction`.
-* `RealAnalyticMOn`, `ComplexAnalyticMOn`: analytic maps between analytic manifolds, defined
-  through the preferred charts. Their local representatives in *any* charts of the maximal atlases
-  are analytic (`RealAnalyticMOn.realAnalyticOn_chart`), they compose, identities and constants
-  are analytic, analytic maps are smooth, complex analytic maps are real analytic, and on the
-  model spaces the notions agree with those of `LocallyConvex.Analysis`.
-* `IsComplexification`: GN, Definition 2.2.18; `E_ℂ` is a complexification of `E`.
-* Example: inversion on the (open) unit group of a real continuous inverse algebra is a real
-  analytic map (GN, Proposition 2.2.13).
+* `RealAnalyticMOn.realAnalyticOn_chart`: the local representatives of an analytic map in *any*
+  charts of the maximal atlases are analytic. Analytic maps compose (`RealAnalyticMOn.comp`),
+  identities and constants are analytic, analytic maps are smooth
+  (`RealAnalyticMOn.smoothMBMOn`), complex analytic maps are real analytic
+  (`ComplexAnalyticMOn.realAnalyticMOn`), and on the model spaces the notions agree with those of
+  `LocallyConvex.Analysis` (`realAnalyticMOn_iff_realAnalyticOn`).
+* `realAnalyticMOn_inverse`: inversion on the (open) unit group of a real continuous inverse
+  algebra is a real analytic map ([GN26, Proposition 2.2.13]).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -125,7 +136,7 @@ theorem mem_realAnalyticGroupoid {e : OpenPartialHomeomorph E E} :
     e ∈ realAnalyticGroupoid E ↔ RealAnalyticOn e e.source ∧ RealAnalyticOn e.symm e.target :=
   Iff.rfl
 
-/-- **Real analytic diffeomorphisms are smooth diffeomorphisms** (GN, Lemma 2.2.5). -/
+/-- **Real analytic diffeomorphisms are smooth diffeomorphisms** ([GN26, Lemma 2.2.5]). -/
 theorem realAnalyticGroupoid_le_mbGroupoid : realAnalyticGroupoid E ≤ mbGroupoid E :=
   StructureGroupoid.le_iff.2 fun e he ↦
     ⟨he.1.smoothMBOn e.open_source, he.2.smoothMBOn e.open_target⟩
@@ -192,8 +203,8 @@ theorem mem_complexAnalyticGroupoid {e : OpenPartialHomeomorph E E} :
       ComplexAnalyticOn e e.source ∧ ComplexAnalyticOn e.symm e.target :=
   Iff.rfl
 
-/-- **Complex analytic diffeomorphisms are real analytic diffeomorphisms** (GN,
-Proposition 2.2.11), without completeness. -/
+/-- **Complex analytic diffeomorphisms are real analytic diffeomorphisms** ([GN26,
+Proposition 2.2.11]), without completeness. -/
 theorem complexAnalyticGroupoid_le_realAnalyticGroupoid :
     complexAnalyticGroupoid E ≤ realAnalyticGroupoid E :=
   StructureGroupoid.le_iff.2 fun e he ↦
@@ -213,8 +224,8 @@ section Manifolds
 variable (E : Type u) [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTopologicalAddGroup E]
   [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
 
-/-- A **real analytic manifold** modeled on the real locally convex space `E` (GN,
-Definition 3.1.4 with `r = ω`, `𝕂 = ℝ`): the transition maps are real analytic. -/
+/-- A **real analytic manifold** modeled on the real locally convex space `E` ([GN26,
+Definition 3.1.4] with `r = ω`, `𝕂 = ℝ`): the transition maps are real analytic. -/
 abbrev RealAnalyticManifold (M : Type*) [TopologicalSpace M] [ChartedSpace E M] : Prop :=
   HasGroupoid M (realAnalyticGroupoid E)
 
@@ -231,14 +242,14 @@ variable (E : Type u) [AddCommGroup E] [Module ℝ E] [Module ℂ E] [IsScalarTo
   [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℂ E] [LocallyConvexSpace ℝ E]
   [T2Space E]
 
-/-- A **complex analytic manifold** modeled on the complex locally convex space `E` (GN,
-Definition 3.1.4 with `r = ω`, `𝕂 = ℂ`): the transition maps are complex analytic. -/
+/-- A **complex analytic manifold** modeled on the complex locally convex space `E` ([GN26,
+Definition 3.1.4] with `r = ω`, `𝕂 = ℂ`): the transition maps are complex analytic. -/
 abbrev ComplexAnalyticManifold (M : Type*) [TopologicalSpace M] [ChartedSpace E M] : Prop :=
   HasGroupoid M (complexAnalyticGroupoid E)
 
 attribute [local instance] continuousSMul_real_of_complex
 
-/-- Complex analytic manifolds are real analytic manifolds (GN, Proposition 2.2.11). -/
+/-- Complex analytic manifolds are real analytic manifolds ([GN26, Proposition 2.2.11]). -/
 theorem ComplexAnalyticManifold.realAnalyticManifold (M : Type*) [TopologicalSpace M]
     [ChartedSpace E M] [h : ComplexAnalyticManifold E M] : RealAnalyticManifold E M :=
   hasGroupoid_of_le h (complexAnalyticGroupoid_le_realAnalyticGroupoid E)
@@ -252,7 +263,7 @@ section ChartChange
 variable {E F : Type u} [TopologicalSpace E] [TopologicalSpace F]
   {M : Type*} [TopologicalSpace M] {N : Type*} [TopologicalSpace N]
 
-/-- **Insertion of charts** (GN, Remark 3.1.5), the set-theoretic part: near a point `y` of the
+/-- **Insertion of charts** ([GN26, Remark 3.1.5]), the set-theoretic part: near a point `y` of the
 domain of the local representative `e' ∘ f ∘ e⁻¹`, it factors as
 `(e' ∘ c'⁻¹) ∘ (c' ∘ f ∘ c⁻¹) ∘ (c ∘ e⁻¹)` through other charts `c`, `c'`, with explicit open
 domains. Used to show that every regularity class closed under composition and local is chart
@@ -319,7 +330,7 @@ omit [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [ChartedSpace F N]
   [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F] in
 /-- Transition maps between charts of the maximal atlas of a real analytic manifold are real
 analytic. -/
-theorem realAnalyticOn_transition [RealAnalyticManifold E M] {e e' : OpenPartialHomeomorph M E}
+theorem realAnalyticOn_transition {e e' : OpenPartialHomeomorph M E}
     (he : e ∈ (realAnalyticGroupoid E).maximalAtlas M)
     (he' : e' ∈ (realAnalyticGroupoid E).maximalAtlas M) :
     RealAnalyticOn (e' ∘ e.symm) (e.target ∩ e.symm ⁻¹' e'.source) := by
@@ -383,7 +394,7 @@ theorem RealAnalyticMOn.comp {f : M → N} {g : N → P} {U : Set M} {V : Set N}
   rfl
 
 omit [RealAnalyticManifold E M] [RealAnalyticManifold F N] [RealAnalyticManifold G P] in
-/-- **Real analytic maps are smooth** (GN, Lemma 2.2.5, globalized). -/
+/-- **Real analytic maps are smooth** ([GN26, Lemma 2.2.5, globalized]). -/
 theorem RealAnalyticMOn.smoothMBMOn {f : M → N} {U : Set M} (hU : IsOpen U)
     (hf : RealAnalyticMOn (E := E) (F := F) f U) : SmoothMBMOn E F f U :=
   fun k ↦ ⟨hf.1, fun x hx ↦ (hf.2 x hx).smoothMBOn (isOpen_chartDomain hU hf.1 _ _) k⟩
@@ -453,7 +464,7 @@ omit [Module ℝ F] [Module ℂ F] [IsScalarTower ℝ ℂ F] [TopologicalSpace F
   [IsTopologicalAddGroup F] [ContinuousSMul ℂ F] [LocallyConvexSpace ℝ F] [T2Space F] in
 /-- Transition maps between charts of the maximal atlas of a complex analytic manifold are
 complex analytic. -/
-theorem complexAnalyticOn_transition [ComplexAnalyticManifold E M]
+theorem complexAnalyticOn_transition
     {e e' : OpenPartialHomeomorph M E} (he : e ∈ (complexAnalyticGroupoid E).maximalAtlas M)
     (he' : e' ∈ (complexAnalyticGroupoid E).maximalAtlas M) :
     ComplexAnalyticOn (e' ∘ e.symm) (e.target ∩ e.symm ⁻¹' e'.source) := by
@@ -526,7 +537,7 @@ theorem ComplexAnalyticMOn.comp {f : M → N} {g : N → P} {U : Set M} {V : Set
 
 omit [ComplexAnalyticManifold E M] [ComplexAnalyticManifold F N]
   [ComplexAnalyticManifold G P] in
-/-- **Complex analytic maps are real analytic** (GN, Proposition 2.2.11, globalized). -/
+/-- **Complex analytic maps are real analytic** ([GN26, Proposition 2.2.11, globalized]). -/
 theorem ComplexAnalyticMOn.realAnalyticMOn {f : M → N} {U : Set M} (hU : IsOpen U)
     (hf : ComplexAnalyticMOn (E := E) (F := F) f U) : RealAnalyticMOn (E := E) (F := F) f U :=
   ⟨hf.1, fun x hx ↦ (hf.2 x hx).realAnalyticOn (isOpen_chartDomain hU hf.1 _ _)⟩
@@ -574,7 +585,7 @@ theorem complexAnalyticMOn_iff_complexAnalyticOn {f : E → F} {U : Set E} (hU :
 
 end ComplexMaps
 
-/-! ### Complexifications (GN, Definition 2.2.18) -/
+/-! ### Complexifications ([GN26, Definition 2.2.18]) -/
 
 section Complexification
 
@@ -584,8 +595,8 @@ variable (E : Type u) [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTo
   [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
 
 /-- `ι : M → M*` makes the complex analytic manifold `M*`, modeled on `E_ℂ`, a
-**complexification** of the real analytic manifold `M`, modeled on `E` (Glöckner–Neeb,
-Definition 2.2.18, where `M ⊆ M*`): `ι` is injective and each point of `M` lies in the domain of
+**complexification** of the real analytic manifold `M`, modeled on `E` ([GN26,
+Definition 2.2.18], where `M ⊆ M*`): `ι` is injective and each point of `M` lies in the domain of
 a chart `ψ` of `M` which is the restriction of a chart `φ` of `M*`, in the sense that
 `ψ.source = ι⁻¹(φ.source)`, `φ ∘ ι = ψ` (with `E ⊆ E_ℂ`) on `ψ.source`,
 `ψ.target = E ∩ φ.target`, and `φ` maps the points of `ι(M)` in its domain exactly to the real
@@ -619,7 +630,7 @@ variable {A : Type u} [Ring A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommC
   [T2Space A] [ContinuousInverseAlgebra A]
 
 /-- The unit group `A^×` of a real continuous inverse algebra is an open subset of `A`, hence a
-real analytic manifold, and inversion `A^× → A^×` is real analytic (GN, Proposition 2.2.13). -/
+real analytic manifold, and inversion `A^× → A^×` is real analytic ([GN26, Proposition 2.2.13]). -/
 theorem realAnalyticMOn_inverse :
     RealAnalyticMOn (E := A) (F := A) (Ring.inverse : A → A) {a : A | IsUnit a} :=
   (realAnalyticMOn_iff_realAnalyticOn ContinuousInverseAlgebra.isOpen_units).2

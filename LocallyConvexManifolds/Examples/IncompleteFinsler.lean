@@ -13,19 +13,16 @@ public import Mathlib.Analysis.Calculus.Deriv.Prod
 /-!
 # Lema 9.1.8 fails without completeness of the model
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 9,
-§9.1.2, Lema 9.1.8 and Corolario 9.1.9 (`FinslerLengthStructure.continuous_ofFinsler` and
-`FinslerLengthStructure.homeomorphFinsler` in `Metric/FinslerBounded.lean`).
-
-Lema 9.1.8 says that if a Finsler structure `μ` on a Hausdorff manifold modeled on a **Banach**
-space is bounded below, every open set of `M` is open for the Finsler distance `d_b`; by
-Corolario 9.1.9 a strong Finsler structure (bounded above and below) induces the topology of `M`.
-The proof is an exit argument (`FinslerLengthStructure.reach_exit`): a curve that leaves the
-domain of a chart before its image leaves a ball would have, by completeness, a limit point inside
-the ball. We show that **the completeness of the model is necessary**: for every incomplete normed
-space `E₀` there is a Hausdorff manifold modeled on `ℝ × E₀` with a strong reversible Finsler
-metric for which the identity `(M, d_b) → M` is not continuous
-(`exists_not_continuous_ofFinsler`).
+[Lar22, Cap. 9, §9.1.2, Lema 9.1.8] (`FinslerLengthStructure.continuous_ofFinsler` in
+`Metric/FinslerBounded.lean`) says that if a Finsler structure `μ` on a Hausdorff manifold modeled
+on a **Banach** space is bounded below, every open set of `M` is open for the Finsler distance
+`d_b`; by [Lar22, Corolario 9.1.9] (`FinslerLengthStructure.homeomorphFinsler`) a strong Finsler
+structure (bounded above and below) induces the topology of `M`. The proof is an exit argument
+(`FinslerLengthStructure.reach_exit`): a curve that leaves the domain of a chart before its image
+leaves a ball would have, by completeness, a limit point inside the ball. We show that **the
+completeness of the model is necessary**: for every incomplete normed space `E₀` there is a
+Hausdorff manifold modeled on `ℝ × E₀` with a strong reversible Finsler metric for which the
+identity `(M, d_b) → M` is not continuous (`exists_not_continuous_ofFinsler`).
 
 ## The construction
 
@@ -62,16 +59,28 @@ the max norm (Mathlib's product norm) instead of `|σ| + ‖w‖`.
 
 **Source.** We found no source for this counterexample; we do not claim it is new.
 
+## Main definitions
+
+* `IncompleteFinsler.GluingCurve`: a curve towards a hole in an incomplete normed space.
+* `IncompleteFinsler.Glued`: the manifold obtained by gluing two copies of `ℝ × E₀` along a
+  `GluingCurve`; `IncompleteFinsler.Glued.μ`: its Finsler metric.
+
 ## Main results
 
-* `exists_not_continuous_ofFinsler`: for every incomplete normed space `E₀`, a Hausdorff manifold
-  modeled on `ℝ × E₀` with a reversible, nondegenerate Finsler metric, bounded above and below,
-  such that the identity `(M, d_b) → M` is not continuous;
-* `not_completeSpace_c00`, `exists_not_continuous_ofFinsler_c00`: the same on the concrete model
-  `ℝ × c₀₀`, where `c₀₀` (finitely supported sequences, `ℓ²` norm) is not complete;
-* `Glued.t2Space`, `Glued.mbManifold`, `Glued.isBounded`, `Glued.continuous_μfun`,
-  `Glued.not_continuous_ofFinsler`, `Glued.not_reach_exit`: the counterexample built from a
-  `GluingCurve`.
+* `IncompleteFinsler.exists_not_continuous_ofFinsler`: for every incomplete normed space `E₀`, a
+  Hausdorff manifold modeled on `ℝ × E₀` with a reversible, nondegenerate Finsler metric, bounded
+  above and below, such that the identity `(M, d_b) → M` is not continuous;
+* `IncompleteFinsler.not_completeSpace_c00`,
+  `IncompleteFinsler.exists_not_continuous_ofFinsler_c00`: the same on the concrete model `ℝ × c₀₀`,
+  where `c₀₀` (finitely supported sequences, `ℓ²` norm) is not complete;
+* `IncompleteFinsler.Glued.t2Space`, `IncompleteFinsler.Glued.mbManifold`,
+  `IncompleteFinsler.Glued.isBounded`, `IncompleteFinsler.Glued.continuous_μfun`,
+  `IncompleteFinsler.Glued.not_continuous_ofFinsler`, `IncompleteFinsler.Glued.not_reach_exit`: the
+  counterexample built from a `GluingCurve`.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section
@@ -576,8 +585,8 @@ theorem isBoundedAboveOn_a₂ :
     rw [inv_mul_le_iff₀ (by linarith)]
     nlinarith [norm_nonneg v]
 
-/-- `μ` is **bounded above and below** (a *strong* Finsler structure, *Estructuras*,
-Observación 9.1.4). -/
+/-- `μ` is **bounded above and below** (a *strong* Finsler structure, [Lar22,
+Observación 9.1.4]). -/
 theorem isBounded : (μ c).toFinslerSeminormField.IsBounded := by
   have hK := bound_nonneg (c := c)
   rintro (a | ⟨a, ha⟩)
@@ -1107,7 +1116,7 @@ end GluingCurve
 
 /-! ### The main theorems -/
 
-/-- **Lema 9.1.8 and Corolario 9.1.9 of *Estructuras* fail without completeness.** For every
+/-- **Lema 9.1.8 and Corolario 9.1.9 of [Lar22] fail without completeness.** For every
 incomplete normed space `E₀` there are a Hausdorff manifold `M` modeled on `ℝ × E₀` and a
 reversible Finsler metric `μ` on `M`, whose seminorms are norms, which is bounded above and below
 (a *strong* Finsler structure), and such that the identity `(M, d_b) → M` is not continuous.

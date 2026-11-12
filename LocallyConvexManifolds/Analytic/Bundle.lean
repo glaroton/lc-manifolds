@@ -12,7 +12,15 @@ public import LocallyConvexManifolds.Manifold.LocalDiffeo
 # Real analytic tangent bundles, products, and real analytic local additions
 
 Let `M` be a real analytic manifold modeled on a real locally convex space `E` (no completeness,
-`LocallyConvexManifolds.Analytic.Basic`). We show:
+`LocallyConvexManifolds.Analytic.Basic`) and let `TM` be its tangent bundle.
+
+## Main definitions
+
+* `LocalAddition.IsRealAnalytic`: a local addition `Σ` on a real analytic manifold is *real
+  analytic* if `θ = (π, Σ)` is a real analytic diffeomorphism onto its (open) image
+  ([GN26, p. 325], after Definition 3.8.11).
+
+## Main results
 
 * `TangentBundle.realAnalyticManifold`: the tangent bundle `TM` is a real analytic manifold
   modeled on `E × E`. Its transition maps are `(y, w) ↦ (τ y, dσ(i (c⁻¹ y)) w)` for transition maps
@@ -20,10 +28,8 @@ Let `M` be a real analytic manifold modeled on a real locally convex space `E` (
   (`LocallyConvex.Analysis.RealAnalyticOn.dMB`).
 * `Prod.realAnalyticManifold`: products of real analytic manifolds are real analytic manifolds;
   `realAnalyticMOn_fst`, `realAnalyticMOn_snd`, `RealAnalyticMOn.prodMk`: projections and pairs.
-* `LocalAddition.IsRealAnalytic`: a local addition `Σ` on a real analytic manifold is *real
-  analytic* if `θ = (π, Σ)` is a real analytic diffeomorphism onto its (open) image (H. Glöckner,
-  K.-H. Neeb, *Infinite-Dimensional Lie Groups*, arXiv:2602.12362v1, p. 325, after
-  Definition 3.8.11).
+* `LocalAddition.IsRealAnalytic.realAnalyticMOn_toFun`: a real analytic local addition is a real
+  analytic map.
 
 ## Implementation notes
 
@@ -33,6 +39,11 @@ Let `M` be a real analytic manifold modeled on a real locally convex space `E` (
   analytic inverse already gives the smoothness fields.
 * The two maximal atlases (real analytic and smooth) are different; the charted space structure
   of `TM` is built from the atlas of `M`, and here this atlas is assumed real analytic.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]; the page number refers to
+  arXiv:2602.12362v1.
 -/
 
 @[expose] public section
@@ -265,7 +276,7 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTo
   [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   {M : Type*} [TopologicalSpace M] [ChartedSpace E M] [RealAnalyticManifold E M]
 
-/-- **Real analytic local additions** (Glöckner–Neeb, p. 325, after Definition 3.8.11): a local
+/-- **Real analytic local additions** ([GN26, p. 325], after Definition 3.8.11): a local
 addition `Σ` on a real analytic manifold is real analytic if `θ = (π, Σ)` is a diffeomorphism of
 real analytic manifolds from its domain onto its (open) image in `M × M`. -/
 def LocalAddition.IsRealAnalytic (A : LocalAddition E M) : Prop :=

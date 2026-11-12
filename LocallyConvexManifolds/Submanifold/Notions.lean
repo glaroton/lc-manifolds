@@ -11,18 +11,15 @@ public import LocallyConvexManifolds.Tangent.Map
 /-!
 # Notions of submanifolds and immersions
 
-References: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-Definitions 3.1.10, 3.3.22, Remark 3.3.23, Lemma 3.3.24; K.-H. Neeb, *Towards a Lie theory of
-locally convex groups*, §II.6 and §IV.4; Y. Karshon, D. Miyamoto, J. Watts, *Diffeological
-submanifolds and their friends*, Differential Geom. Appl. 96 (2024), 102170; H. Joris, *Une
-C^∞-application non-immersive qui possède la propriété universelle des immersions*, Arch. Math. 39
-(1982).
-
 In finite dimensions all reasonable notions of submanifold and immersion agree, up to the
 topological phenomena discussed below. In infinite dimensions they split apart, already for
 Banach models and more so for locally convex ones. This file records them as separate
-definitions, with names that say what each notion is. For a smooth map `f : M → N` and its
-differential `T_x f` (read in charts):
+definitions, with names that say what each notion is. The sources are [GN26, Definitions 3.1.10,
+3.3.22, Remark 3.3.23, Lemma 3.3.24], [Nee06, §II.6 and §IV.4], [KMW24] and [Jor82].
+
+## Main definitions
+
+For a smooth map `f : M → N` and its differential `T_x f` (read in charts):
 
 * `IsWeakImmersion`: `T_x f` is injective at every point, with no condition on its range;
 * `IsImmersion`: moreover `T_x f` has closed range and is a topological isomorphism onto it;
@@ -33,25 +30,29 @@ For an injective `f`, the image carries the structure transported from `M`:
 
 * `IsWeaklyImmersedSubmanifold`, `IsImmersedSubmanifold`: `f` is an injective weak immersion,
   resp. an injective immersion;
-* `IsInitialSubmanifold` (Glöckner–Neeb, Def. 3.3.22): moreover a map `g` from a test manifold is
+* `IsInitialSubmanifold` ([GN26, Def. 3.3.22]): moreover a map `g` from a test manifold is
   smooth as soon as `f ∘ g` is.
 
 For a subset `X ⊆ M` with slice charts onto a closed subspace `S`:
 
-* `IsEmbeddedSubmanifold` (in `LocallyConvexManifolds.Submanifold.Basic`) and `IsSplitSubmanifold`
-  (`S` is complemented).
+* `IsSplitSubmanifold`: an embedded submanifold (`IsEmbeddedSubmanifold`, in
+  `LocallyConvexManifolds.Submanifold.Basic`) whose model `S` is complemented.
 
-Implications proved here:
+## Main results
 
 * split immersion ⇒ immersion ⇒ weak immersion (`IsSplitImmersion.isImmersion`,
   `IsImmersion.isWeakImmersion`);
 * the inclusion of an embedded submanifold is an immersion and is initial
   (`IsEmbeddedSubmanifold.isImmersion_val`, `IsEmbeddedSubmanifold.isInitialSubmanifold_val`);
   for a split submanifold it is a split immersion (`IsSplitSubmanifold.isSplitImmersion_val`);
-* initial and immersed submanifolds are weakly immersed.
+* initial and immersed submanifolds are weakly immersed
+  (`IsInitialSubmanifold.isWeaklyImmersedSubmanifold`,
+  `IsImmersedSubmanifold.isWeaklyImmersedSubmanifold`).
 
 None of these implications can be reversed, and initial and immersed submanifolds are not
 comparable; see the subtleties below.
+
+## Implementation notes
 
 **Subtleties (infinite dimensions).**
 
@@ -64,21 +65,21 @@ comparable; see the subtleties below.
   embedded submanifold that is not split, and the inclusion is an immersion that is not a split
   immersion. Formalized, with Whitley's proof, in `LocallyConvexManifolds.Examples.Phillips`
   (`Phillips.not_isSplitImmersion_c0`).
-* *Immersions in the sense of Glöckner–Neeb.* Their Def. 3.3.25(b) asks for a local linear
+* *Immersions in the sense of Glöckner–Neeb.* Their [GN26, Def. 3.3.25(b)] asks for a local linear
   form with a continuous linear left inverse, which forces the range to be complemented. We do
   not use it as the definition of an immersion: it is much more restrictive than the notion
   above. For Banach models, an immersion with complemented range has this local form by the
   inverse function theorem; for locally convex models that theorem is not available.
-* *Initial submanifolds* (Glöckner–Neeb, Def. 3.3.22). A subset `S ⊆ M` with its own manifold
+* *Initial submanifolds* ([GN26, Def. 3.3.22]). A subset `S ⊆ M` with its own manifold
   structure is initial if the inclusion is smooth with injective differential, and a map
   `P → S` is smooth as soon as it is smooth into `M`. The structure is then unique
-  (Lemma 3.3.24), so being initial is a property of the subset; its topology may be finer than
-  the induced one (Remark 3.3.23).
-  - The universal property alone does not give an injective differential: by Joris' theorem
-    (`g²` and `g³` smooth imply `g` smooth) the cusp `t ↦ (t², t³)` has it, and its
-    differential vanishes at `0`. This is why the injectivity of the differential is part of
-    the definition (Glöckner–Neeb, p. 336; Karshon–Miyamoto–Watts call the universal property
-    alone a *diffeological submanifold*).
+  ([GN26, Lemma 3.3.24]), so being initial is a property of the subset; its topology may be finer
+  than the induced one ([GN26, Remark 3.3.23]).
+  - The universal property alone does not give an injective differential: by Joris' theorem [Jor82]
+    (`g²` and `g³` smooth imply `g` smooth) the cusp `t ↦ (t², t³)` has it, and its differential
+    vanishes at `0`. This is why the injectivity of the differential is part of the definition
+    ([GN26, p. 336]; Karshon–Miyamoto–Watts [KMW24] call the universal property alone a
+    *diffeological submanifold*).
   - Initial does not mean embedded: the dense line in the torus is initial. Embedded does not
     follow from injective immersion either: the figure eight `t ↦ (sin t, sin 2t)`,
     `t ∈ (-π, π)`, is an injectively immersed curve that is not initial. The curve
@@ -92,7 +93,7 @@ comparable; see the subtleties below.
     occurs in finite dimensions);
   - continuously, because there are uncountably many pieces (`ℝ × ℝ_discrete → ℝ²`; excluded
     for second countable domains, this is why Glöckner–Neeb assume separability in
-    Thm. 9.2.15);
+    [GN26, Thm. 9.2.15]);
   - continuously, because the map is not even locally a topological embedding (the linear
     inclusion `ℓ¹ → ℓ²`; infinite dimensions only);
   - continuously, but not smoothly, even when the map is a homeomorphism onto its image
@@ -111,8 +112,7 @@ comparable; see the subtleties below.
   `uK ↦ u A u*`, is a weak immersion with differential `X ↦ [X, A]`. It is initial if and only
   if there are finitely many `pₙ`.
   - If there are finitely many `pₙ`, the spectrum is finite and the orbit is a closed embedded
-    split submanifold (Beltiță–Larotonda, *Unitary group orbits versus groupoid orbits of normal
-    operators*). With two projections of infinite rank it is a Grassmannian.
+    split submanifold ([BL23]). With two projections of infinite rank it is a Grassmannian.
   - If there are infinitely many `pₙ`, the spectrum is infinite, so `[·, A]` does not have
     closed range (same reference). Then the orbit is not initial. Indeed, for orbits of
     Banach–Lie group actions with split stabilizer, initiality forces closed range: along
@@ -142,10 +142,20 @@ comparable; see the subtleties below.
   So for this `j` the closed-range condition fails at `0` although `j` is initial. Whether `j`
   is initial with respect to test manifolds modeled on non-metrizable spaces is open: the
   argument above uses sequences.
-* *Initial Lie subgroups.* Glöckner–Neeb (Def. 9.1.5) call an initial Lie subgroup *strictly
-  initial* when `L(ι)` is injective, a condition that Neeb (2006) includes in the definition.
-  Not every subgroup carries an initial Lie subgroup structure: `ℓ^∞ ⊆ ℝ^ℕ` does not
-  (Glöckner–Neeb, Ex. 9.1.8).
+* *Initial Lie subgroups.* Glöckner–Neeb ([GN26, Def. 9.1.5]) call an initial Lie subgroup
+  *strictly initial* when `L(ι)` is injective, a condition that Neeb [Nee06] includes in the
+  definition. Not every subgroup carries an initial Lie subgroup structure: `ℓ^∞ ⊆ ℝ^ℕ` does not
+  ([GN26, Ex. 9.1.8]).
+
+## References
+
+* [D. Beltiţă, G. Larotonda, *Unitary group orbits versus groupoid orbits of normal
+  operators*][BL23]
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [H. Joris, *Une C^∞-application non-immersive qui possède la propriété universelle des
+  immersions*][Jor82]
+* [Y. Karshon, D. Miyamoto, J. Watts, *Diffeological submanifolds and their friends*][KMW24]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section
@@ -168,7 +178,7 @@ variable {E F : Type u}
   {M : Type*} [TopologicalSpace M] [ChartedSpace E M] [MBManifold E M]
   {N : Type*} [TopologicalSpace N] [ChartedSpace F N] [MBManifold F N]
 
-omit [ChartedSpace F N] [MBManifold F N] in
+omit [MBManifold E M] [ChartedSpace F N] [MBManifold F N] in
 /-- The inverse transition map gives a left inverse of the derivative of a transition map between
 charts of the maximal atlas. -/
 theorem dMB_transition_leftInverse {e e' : OpenPartialHomeomorph M E}
@@ -191,7 +201,7 @@ theorem dMB_transition_leftInverse {e e' : OpenPartialHomeomorph M E}
     dMB_congr_of_eventuallyEq hev]
   exact ((ContinuousLinearMap.id ℝ E).hasDirDerivAt y v).dMB_eq
 
-omit [ChartedSpace F N] [MBManifold F N] in
+omit [MBManifold E M] [ChartedSpace F N] [MBManifold F N] in
 /-- The derivative of a transition map between charts of the maximal atlas is injective: the
 inverse transition map is a left inverse. -/
 theorem dMB_transition_injective {e e' : OpenPartialHomeomorph M E}
@@ -284,7 +294,7 @@ theorem IsSplitImmersion.isImmersion {f : M → N} (hf : IsSplitImmersion E F f)
 An injective map `f : M → N` exhibits its image as a submanifold of `N`, with the manifold
 structure transported from `M`. The structure is extra data: the figure eight carries two such
 structures. Initial submanifolds are the exception, since their structure is unique
-(Glöckner–Neeb, Lemma 3.3.24). -/
+([GN26, Lemma 3.3.24]). -/
 
 variable (E F) in
 /-- `f` exhibits its image as a weakly immersed submanifold: `f` is an injective weak immersion. -/
@@ -297,7 +307,7 @@ def IsImmersedSubmanifold (f : M → N) : Prop :=
   Function.Injective f ∧ IsImmersion E F f
 
 variable (E F) in
-/-- `f` exhibits its image as an initial submanifold (Glöckner–Neeb, Def. 3.3.22): `f` is an
+/-- `f` exhibits its image as an initial submanifold ([GN26, Def. 3.3.22]): `f` is an
 injective weak immersion, and a map `g` from a test manifold into `M` is smooth as soon as
 `f ∘ g` is smooth. The test manifolds are modeled on locally convex spaces in the universe of
 the model spaces. -/
@@ -331,7 +341,7 @@ section Embedded
 variable {X : Set M} {S : Submodule ℝ E}
 
 /-- `X ⊆ M` is a split submanifold: an embedded submanifold whose model `S` is complemented
-(Glöckner–Neeb, Def. 3.1.10). -/
+([GN26, Def. 3.1.10]). -/
 structure IsSplitSubmanifold (X : Set M) (S : Submodule ℝ E) : Prop
     extends IsEmbeddedSubmanifold X S where
   closedComplemented : S.ClosedComplemented

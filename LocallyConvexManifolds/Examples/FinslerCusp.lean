@@ -13,24 +13,37 @@ public import LocallyConvexManifolds.Metric.Finsler
 This example shows that the two continuity conditions of `LocallyConvexManifolds.Metric.Finsler`
 are really different, already on `ℝ²` (with the sup norm). Let
 `β (x, y) = max (0, x² - |y|) / (x² + |y|)` (and `β 0 = 0`), and
-`μ_p (v) = ‖v‖ + β(p) |v₂|`.
+`μ_p (v) = ‖v‖ + β(p) |v₂|`. Then `μ` is continuous along every `C¹` curve, but not on the
+tangent bundle.
 
-* Each `μ_p` is a reversible Finsler norm (`CuspFinsler.isNondegenerate`,
-  `CuspFinsler.isReversible`).
-* `β` equals `1` on the `x`-axis minus the origin and `0` at the origin, so `μ` is **not
-  continuous on the tangent bundle** at `(0, e₂)`: it is not a Finsler metric
-  (`CuspFinsler.not_continuous`).
-* `μ` **is continuous along every `C¹` curve** `γ`: it is a Finsler length structure
-  (`CuspFinsler.lengthStructure`). Away from the origin `β` is continuous. If `γ(t₀) = 0` and
+The phenomenon is not infinite dimensional: a `C¹` curve through `p` only sees the pairs
+`(p, v)` that are compatible with the way it approaches `p`, and the pairs `((1/n, 0), e₂)`,
+which converge in `TM` to `(0, e₂)`, are not of this kind. The natural examples in infinite
+dimensions are the quotient metrics of homogeneous spaces [Lar19, Lemma 3.19].
+
+## Main definitions
+
+* `CuspFinsler.β`, `CuspFinsler.μ`: the function `β` and the Finsler structure `μ`.
+* `CuspFinsler.field`: `μ` as a field of Finsler seminorms.
+* `CuspFinsler.lengthStructure`: `μ` as a Finsler length structure.
+
+## Main results
+
+* `CuspFinsler.isNondegenerate`, `CuspFinsler.isReversible`: each `μ_p` is a reversible Finsler
+  norm.
+* `CuspFinsler.not_continuous`: `β` equals `1` on the `x`-axis minus the origin and `0` at the
+  origin, so `μ` is **not continuous on the tangent bundle** at `(0, e₂)`: it is not a Finsler
+  metric.
+* `CuspFinsler.lengthStructure`: `μ` **is continuous along every `C¹` curve** `γ`: it is a Finsler
+  length structure. Away from the origin `β` is continuous. If `γ(t₀) = 0` and
   `γ̇₂(t₀) ≠ 0`, then near `t₀` the curve leaves the cusp `{|y| < x²}` where `β ≠ 0`, because
   `|γ₂ t| ≥ c |t - t₀|` while `γ₁(t)² = O(|t - t₀|²)`. If `γ̇₂(t₀) = 0`, then
   `0 ≤ β(γ) |γ̇₂| ≤ |γ̇₂| → 0`.
 
-So the phenomenon is not infinite dimensional: a `C¹` curve through `p` only sees the pairs
-`(p, v)` that are compatible with the way it approaches `p`, and the pairs `((1/n, 0), e₂)`,
-which converge in `TM` to `(0, e₂)`, are not of this kind. The natural examples in infinite
-dimensions are the quotient metrics of homogeneous spaces (Larotonda, Forum Math. 31 (2019),
-Lemma 3.19).
+## References
+
+* [G. Larotonda, *The metric geometry of infinite dimensional Lie groups and their homogeneous
+  spaces*][Lar19]
 -/
 
 @[expose] public section

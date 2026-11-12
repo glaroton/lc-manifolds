@@ -16,30 +16,37 @@ public import LocallyConvexManifolds.Analytic.Form
 
 Let `M` be a Hausdorff real analytic manifold modeled on a real Banach space `E`, and `X` a smooth
 vector field on `M` whose local representatives in the charts of the atlas are real analytic
-(`SmoothVectorField.IsRealAnalytic`, from `LocallyConvexManifolds.Analytic.Form`). We prove:
+(`SmoothVectorField.IsRealAnalytic`, from `LocallyConvexManifolds.Analytic.Form`). We prove that
+the maximal flow of `X` is real analytic.
+
+The proof is that of the smooth case (`SmoothVectorField.smoothMBMOn_flow`, after the proof of
+[GN26, Theorem 2.5.18]): the set of times `t ∈ J_{x₀}` near which the flow is real analytic is
+open, contains `0`, and is closed in `J_{x₀}`, since near `t` the flow is
+`Fl(τ, x) = φ(τ - t₁, Fl(t₁, x))` for a real analytic flow box `φ` at `Fl(t, x₀)`.
+
+## Main results
 
 * `SmoothVectorField.exists_flowBox_realAnalyticMOn`: **real analytic flow boxes**: around every
   point there is a flow box `φ : (-ε, ε) × V → M` which is real analytic, from the real analytic
-  local flows on Banach spaces (`LocallyConvex.Analysis.exists_realAnalyticOn_flow`, Glöckner–Neeb,
-  Theorem 2.4.34) read in a chart.
+  local flows on Banach spaces (`LocallyConvex.Analysis.exists_realAnalyticOn_flow`,
+  [GN26, Theorem 2.4.34]) read in a chart.
 * `SmoothVectorField.realAnalyticMOn_flow`: **the maximal flow is real analytic** on its open
-  domain `D ⊆ ℝ × M` (Glöckner–Neeb, *Infinite-Dimensional Lie Groups*, arXiv:2602.12362,
-  Theorem 2.5.18 (b), p. 220, and Corollary 2.5.21, last assertion, p. 222).
-
-The proof is that of the smooth case (`SmoothVectorField.smoothMBMOn_flow`, after GN's proof of
-Theorem 2.5.18): the set of times `t ∈ J_{x₀}` near which the flow is real analytic is open,
-contains `0`, and is closed in `J_{x₀}`, since near `t` the flow is
-`Fl(τ, x) = φ(τ - t₁, Fl(t₁, x))` for a real analytic flow box `φ` at `Fl(t, x₀)`.
+  domain `D ⊆ ℝ × M` ([GN26, Theorem 2.5.18 (b), p. 220] and [GN26, Corollary 2.5.21, last
+  assertion, p. 222]).
 
 ## Implementation notes
 
 * A vector field is real analytic if its local representatives in the charts of the atlas are
-  (`SmoothVectorField.IsRealAnalytic`). GN define real analytic vector fields as real analytic
-  sections of the tangent bundle; we do not prove that the two notions agree.
+  (`SmoothVectorField.IsRealAnalytic`). Glöckner–Neeb define real analytic vector fields as real
+  analytic sections of the tangent bundle; we do not prove that the two notions agree.
 * The model space `E` lives in `Type`: the calculus of real analytic maps between manifolds in
   `LocallyConvexManifolds.Analytic.Basic` is stated for model spaces in a common universe, and the
   time variable is modeled on `ℝ : Type`.
 * As for the smooth maximal flow, `E` is a Banach space and `M` is Hausdorff.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -203,9 +210,8 @@ private theorem goodTimeω_of_mem (hX : X.IsRealAnalytic) {x₀ : M} {t : ℝ}
   exact hsub ht
 
 /-- **The maximal flow of a real analytic vector field is real analytic** on its open domain
-`D ⊆ ℝ × M` (Glöckner–Neeb, *Infinite-Dimensional Lie Groups*, Theorem 2.5.18 (b), p. 220, and
-Corollary 2.5.21, last assertion, p. 222), for a Hausdorff real analytic manifold `M` modeled on
-a real Banach space. -/
+`D ⊆ ℝ × M` [GN26, Theorem 2.5.18 (b), p. 220, and Corollary 2.5.21, last assertion, p. 222],
+for a Hausdorff real analytic manifold `M` modeled on a real Banach space. -/
 theorem realAnalyticMOn_flow (hX : X.IsRealAnalytic) :
     RealAnalyticMOn (E := ModelProd ℝ E) (F := E) X.flow X.flowDomain :=
   realAnalyticMOn_of_local X.isOpen_flowDomain fun _ hp ↦

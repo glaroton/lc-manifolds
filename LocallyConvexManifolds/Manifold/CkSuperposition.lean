@@ -13,7 +13,7 @@ public import LocallyConvexManifolds.MappingSpace.Basic
 
 The superposition operators on spaces of `C^r` maps and the restrictions to covers
 (`ContDiffMBMap.contDiffMBOn_compLeftOn`, `ContDiffMBMap.isClosed_range_restrictCover`,
-`isClosed_range_restrictCompacts`), first proved here, now live in lc-analysis
+`isClosed_range_restrictCompacts`), first proved here, now live in [LCA]
 (`LocallyConvexAnalysis.MappingSpace.CkSuperposition`); this file re-exports them for the manifolds
 of `C^ℓ` maps (`LocallyConvexManifolds.MappingSpace.Ck`) and keeps the facts about compact
 manifolds.
@@ -23,6 +23,10 @@ manifolds.
 * `locallyCompactSpace_of_compactSpace`: a nonempty compact manifold has a locally compact
   model space;
 * `finiteDimensional_of_compactSpace`: hence (Riesz) a finite-dimensional one.
+
+## References
+
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

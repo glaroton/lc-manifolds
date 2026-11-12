@@ -16,7 +16,17 @@ The inclusion `ι : ℓ¹ → ℓ²` is a continuous injective linear map, hence
 between the Banach spaces `ℓ¹` and `ℓ²` (seen as manifolds), but it is not an immersion: its
 differential `ι` is not a topological isomorphism onto its range, since the vectors
 `x_n = e₀ + ⋯ + e_{n-1}` have `‖x_n‖₁ = n` and `‖x_n‖₂ = √n`.
-(`isWeakImmersion_lpInclusion`, `not_isImmersion_lpInclusion`).
+
+## Main definitions
+
+* `lpInclusion`: the inclusion `ι : ℓ¹ → ℓ²` as a continuous linear map.
+
+## Main results
+
+* `isWeakImmersion_lpInclusion`: `ι` is a weak immersion.
+* `not_isImmersion_lpInclusion`: `ι` is not an immersion.
+
+## Implementation notes
 
 Continuity of `ι` is obtained from the closed graph theorem: its graph is closed because the
 coordinate evaluations are continuous on both spaces.

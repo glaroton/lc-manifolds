@@ -10,15 +10,14 @@ public import LocallyConvexManifolds.MappingSpace.Topology
 /-!
 # The chart topology of `C^ℓ(M, N)` and the compact-open `C^ℓ` topology
 
-We prove that the chart topology `CkMap.chartTopology` of `C^ℓ(M, N)` (local representatives on
-open subsets of compact sets in charts) is, for a locally compact model of `M`, the compact-open
-`C^ℓ` topology of H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-Definition 4.1.2: the initial topology with respect to the iterated tangent maps
+We prove that the chart topology `CkMap.chartTopology` of `C^ℓ(M, N)` (local representatives on open
+subsets of compact sets in charts) is, for a locally compact model of `M`, the compact-open `C^ℓ`
+topology of [GN26, Definition 4.1.2]: the initial topology with respect to the iterated tangent maps
 `f ↦ T^j f ∈ C(T^j M, T^j N)`, `j ≤ ℓ` (`MBMfld.gnTopology`), and for `ℓ = ∞` with respect to all of
-them (`MBMfld.gnTopologySm`, the projective limit of Remark 4.1.3(b)).
+them (`MBMfld.gnTopologySm`, the projective limit of [GN26, Remark 4.1.3(b)]).
 
-The topology of `C^ℓ(M, N)` is the jet topology, not the chart topology; Theorem 4.2.2(b) for it,
-for every Hausdorff `M` and every model, is `MBMfld.jetTopology_eq_gnTopology`
+The topology of `C^ℓ(M, N)` is the jet topology, not the chart topology; [GN26, Theorem 4.2.2(b)]
+for it, for every Hausdorff `M` and every model, is `MBMfld.jetTopology_eq_gnTopology`
 (`MappingSpace/TopologyJet.lean`), and `CkMap.topology_eq_gnTopology`,
 `SmoothMap.topology_eq_gnTopologySm` for `N` in any universe (`MappingSpace/TopologyULift.lean`).
 For a locally compact model the two topologies agree (`CkMap.chartTopology_eq_jetTopology`), so the
@@ -27,21 +26,25 @@ theorems here give a second proof of (b) in that case, which does not use `Compa
 ## Main results
 
 * `chartTopology_eq_gnTopology`, `chartTopologySm_eq_gnTopologySm`: for a locally compact model of
-  `M`, by induction on `ℓ` from the recursion of Lemma 4.1.6 for both topologies
+  `M`, by induction on `ℓ` from the recursion of [GN26, Lemma 4.1.6] for both topologies
   (`chartTopology_succ`, `MBMfld.gnTopology_succ`).
 
 ## Implementation notes
 
 * Glöckner–Neeb obtain (b) "by construction", their charts being homeomorphisms for the topology
-  of Definition 4.1.2 by the results of their Section 4.1. Here the two topologies are compared by
-  induction, through Lemma 4.1.6. We do not claim this argument is new.
+  of [GN26, Definition 4.1.2] by the results of their Section 4.1. Here the two topologies are
+  compared by induction, through [GN26, Lemma 4.1.6]. We do not claim this argument is new.
 * Universes: the induction runs over the bundled manifolds `MBMfld.{u, v}`, whose carriers live
   in `Type (max u v)`, `u` the universe of `M` and of the models: the iteration `T^j` needs `N` and
-  `TN` to be carriers of one bundled type. For `N` in any universe, Definition 4.1.2 is
+  `TN` to be carriers of one bundled type. For `N` in any universe, [GN26, Definition 4.1.2] is
   `CkMap.gnTopology` (through `ULift N`, which is `MBMfld.gnTopology` when `N` is a carrier), and
   the chart topology is that topology for a locally compact model:
   `CkMap.chartTopology_eq_gnTopology`, `SmoothMap.chartTopologySm_eq_gnTopologySm`
   (`MappingSpace/TopologyULift.lean`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -55,7 +58,7 @@ universe u v
 
 namespace LocallyConvex.Manifolds
 
-/-- **The chart topology is the compact-open `C^ℓ` topology** (Glöckner–Neeb, Definition 4.1.2),
+/-- **The chart topology is the compact-open `C^ℓ` topology** ([GN26, Definition 4.1.2]),
 for a locally compact model of `X`. -/
 theorem chartTopology_eq_gnTopology (ℓ : ℕ) :
     ∀ (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) [LocallyCompactSpace X.Model],
@@ -83,8 +86,8 @@ theorem chartTopology_eq_gnTopology (ℓ : ℕ) :
           rw [← ih (MBMfld.tangent X) (MBMfld.tangent Y)]
       _ = MBMfld.gnTopology (ℓ + 1) X Y := (MBMfld.gnTopology_succ ℓ X Y).symm
 
-/-- **The chart topology of `C^∞` is the compact-open `C^∞` topology** (Glöckner–Neeb,
-Definition 4.1.2 and Remark 4.1.3(b)), for a locally compact model of `X`. -/
+/-- **The chart topology of `C^∞` is the compact-open `C^∞` topology** ([GN26,
+Definition 4.1.2] and Remark 4.1.3(b)), for a locally compact model of `X`. -/
 theorem chartTopologySm_eq_gnTopologySm (X : MBMfld.{u, u}) (Y : MBMfld.{u, v})
     [LocallyCompactSpace X.Model] :
     SmoothMap.chartTopologySm X.Model Y.Model X.Carrier Y.Carrier = MBMfld.gnTopologySm X Y := by

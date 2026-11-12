@@ -10,11 +10,10 @@ public import LocallyConvexManifolds.MappingSpace.Ck
 /-!
 # Normalized local additions
 
-We prove H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-Remark 3.8.16: every local addition `Σ` on a manifold `N` can be normalized. With
+We prove [GN26, Remark 3.8.16]: every local addition `Σ` on a manifold `N` can be normalized. With
 `α_y = T_{0_y}(Σ|_{T_y N}) ∈ GL(T_y N)`, the map `F : TN → TN`, `F(v) = α_{π v}⁻¹ v`, is a
 diffeomorphism preserving fibres, and `Σ ∘ F` is a normalized local addition
-(`LocalAddition.IsNormalized`, (3.55) there).
+(`LocalAddition.IsNormalized`, [GN26, (3.55)]).
 
 ## Main results
 
@@ -38,6 +37,10 @@ diffeomorphism preserving fibres, and `Σ ∘ F` is a normalized local addition
   the base point because they are partial derivatives of smooth chart representatives of `θ` and
   `θ⁻¹`; this gives the smoothness of `F` and `F⁻¹`. We do not claim this argument is new.
 * No completeness or local convexity beyond the standing assumptions on the model is used.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -547,7 +550,7 @@ def normEquiv : TangentBundle E N ≃ₜ TangentBundle E N where
   continuous_toFun := continuousOn_univ.1 (A.smoothMBM_normMap 0).1
   continuous_invFun := continuousOn_univ.1 (A.smoothMBM_normMapInv 0).1
 
-/-- **The normalized local addition** (Glöckner–Neeb, Remark 3.8.16): `Σ'(v) = Σ(β_{π v}(v))`,
+/-- **The normalized local addition** [GN26, Remark 3.8.16]: `Σ'(v) = Σ(β_{π v}(v))`,
 where `β_y = (T_{0_y}(Σ|_{T_y N}))⁻¹`; equivalently `θ' = θ ∘ normMap`. -/
 def normalize : LocalAddition E N where
   toOpenPartialHomeomorph := A.normEquiv.toOpenPartialHomeomorph.trans A.toOpenPartialHomeomorph
@@ -589,7 +592,7 @@ theorem normalize_toFun (v : TangentBundle E N) :
     A.normalize.toFun v = A.toFun ⟨v.proj, A.beta v.proj v.vec⟩ :=
   rfl
 
-/-- **Every local addition can be normalized** (Glöckner–Neeb, Remark 3.8.16):
+/-- **Every local addition can be normalized** [GN26, Remark 3.8.16]:
 `A.normalize` is a normalized local addition. -/
 theorem isNormalized_normalize : A.normalize.IsNormalized := by
   intro y w

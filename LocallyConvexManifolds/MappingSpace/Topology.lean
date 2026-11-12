@@ -11,14 +11,14 @@ public import LocallyConvexManifolds.Tangent.Iterated
 # The chart topology of `C^ℓ(M, N)` and the tangent map
 
 The chart topology `CkMap.chartTopology` describes the compact-open `C^ℓ` topology of `C^ℓ(M, N)`
-through local representatives on open subsets of compact sets in charts; for a locally compact
-model of `M` it is the topology of `C^ℓ(M, N)` (the jet topology `CkMap.jetTopology`,
+through local representatives on open subsets of compact sets in charts; for a locally compact model
+of `M` it is the topology of `C^ℓ(M, N)` (the jet topology `CkMap.jetTopology`,
 `CkMap.chartTopology_eq_jetTopology`). This file proves, for a locally compact model of `M`, that
-the chart topology satisfies the recursion of H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie
-Groups* (arXiv:2602.12362), Lemma 4.1.6: it is the compact-open topology for `ℓ = 0`, and for
-`ℓ + 1` it is initial with respect to `f ↦ f ∈ C(M, N)` and `f ↦ Tf ∈ C^ℓ(TM, TN)`. With
-`MBMfld.gnTopology_succ`, this gives the agreement of the chart topology with Definition 4.1.2
-(`chartTopology_eq_gnTopology`, `MappingSpace/TopologyGN.lean`).
+the chart topology satisfies the recursion of [GN26, Lemma 4.1.6]: it is the compact-open topology
+for `ℓ = 0`, and for `ℓ + 1` it is initial with respect to `f ↦ f ∈ C(M, N)` and
+`f ↦ Tf ∈ C^ℓ(TM, TN)`. With `MBMfld.gnTopology_succ`, this gives the agreement of the chart
+topology with [GN26, Definition 4.1.2] (`chartTopology_eq_gnTopology`,
+`MappingSpace/TopologyGN.lean`).
 
 ## Main results
 
@@ -28,7 +28,8 @@ Groups* (arXiv:2602.12362), Lemma 4.1.6: it is the compact-open topology for `�
 * `continuous_of_tangentCk`, `continuous_tangentCk`: a map into `C^(ℓ+1)(M, N)` is continuous if
   its compositions with `f ↦ f ∈ C(M, N)` and with `T` are, and `T` is continuous (chart
   topologies).
-* `chartTopology_zero`, `chartTopology_succ`: the recursion of Lemma 4.1.6 for the chart topology.
+* `chartTopology_zero`, `chartTopology_succ`: the recursion of [GN26, Lemma 4.1.6] for the chart
+  topology.
 
 ## Implementation notes
 
@@ -36,9 +37,9 @@ Groups* (arXiv:2602.12362), Lemma 4.1.6: it is the compact-open topology for `�
   `(y, w) ↦ (rep g(y), d(rep g)(y, w))` (`tangentIdx_rep_apply`), so `d(rep g)` is a component of a
   local representative of `Tg`, over products `V × int K` with `K` compact; in general tangent
   charts it is `(F, dF)` pulled back along a smooth map and composed with a smooth map, continuous
-  by `ContDiffMBMap.contDiffMBOn_compLeftOn`. Glöckner–Neeb prove Lemma 4.1.6 directly from their
-  Definition 4.1.2; here the chart description comes first. We do not claim these arguments are
-  new.
+  by `ContDiffMBMap.contDiffMBOn_compLeftOn`. Glöckner–Neeb prove [GN26, Lemma 4.1.6] directly from
+  their [GN26, Definition 4.1.2]; here the chart description comes first. We do not claim these
+  arguments are new.
 * The model of `M` is assumed locally compact: the chart topology is meant for such models (see
   `MappingSpace/Ck.lean`), and the localizations above use compact neighborhoods. For arbitrary
   models, the analogous recursion is proved for the jet topology, the topology of `C^ℓ(M, N)`,
@@ -46,6 +47,10 @@ Groups* (arXiv:2602.12362), Lemma 4.1.6: it is the compact-open topology for `�
 * All statements about topologies of `C^ℓ(X, Y)` in this file are about the chart topology, which
   is not the instance; it is named explicitly in them (inside the proofs it is made a local
   instance).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -262,7 +267,7 @@ theorem tangentIdx_rep_apply {a : CkMap.ChartIdx X.Model Y.Model X.Carrier Y.Car
   exact (a.rep_apply hg hy).symm
 
 /-- **A continuity criterion through the tangent map** (one half of the analogue of
-Glöckner–Neeb, Lemma 4.1.6, for the chart topology): if `p ↦ ψ p ∈ C(X, Y)` and
+[GN26, Lemma 4.1.6], for the chart topology): if `p ↦ ψ p ∈ C(X, Y)` and
 `p ↦ Tψ(p) ∈ C^ℓ(TX, TY)` are continuous, then `ψ : P → C^(ℓ+1)(X, Y)` is continuous. The model of
 `X` is assumed locally compact. -/
 theorem continuous_of_tangentCk [LocallyCompactSpace X.Model] {P : Type*} [tP : TopologicalSpace P]
@@ -313,7 +318,7 @@ theorem tangentChart_symm_eq {Z : MBMfld.{u, v}} (i : atlas Z.Model Z.Carrier)
     rw [i.1.left_inv hy]
 
 /-- **The tangent map is continuous** for the chart topologies (the other half of the analogue
-of Glöckner–Neeb, Lemma 4.1.6): `T : C^(ℓ+1)(X, Y) → C^ℓ(TX, TY)`. In tangent charts, the local
+of [GN26, Lemma 4.1.6]): `T : C^(ℓ+1)(X, Y) → C^ℓ(TX, TY)`. In tangent charts, the local
 representatives of `Tg` are obtained from those of `g` by `F ↦ (F, dF)`, a pullback along a smooth
 map, and a superposition by a smooth map; the model of `X` is assumed locally compact. -/
 theorem continuous_tangentCk [LocallyCompactSpace X.Model] :
@@ -478,7 +483,7 @@ theorem continuous_tangentCk [LocallyCompactSpace X.Model] :
     · rw [ContDiffMBMap.apply_of_notMem _ hq, ContDiffMBMap.apply_of_notMem _ hq]
   refine CkMap.continuous_of_rep (continuous_toC_of_rep hdomopen hrep) hrep
 
-/-- **The chart topology satisfies Glöckner–Neeb, Lemma 4.1.6** (in the form used in its proof):
+/-- **The chart topology satisfies [GN26, Lemma 4.1.6]** (in the form used in its proof):
 the chart topology of `C^(ℓ+1)(X, Y)` is initial with respect to `f ↦ f ∈ C(X, Y)` and
 `f ↦ Tf ∈ C^ℓ(TX, TY)`, the latter with the chart topology, if the model of `X` is locally
 compact. -/

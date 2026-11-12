@@ -11,16 +11,14 @@ public import LocallyConvexManifolds.Metric.FinslerBounded
 /-!
 # Geodesics of complete Finsler manifolds
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach* (version of
-29 November 2023), Cap. 9, §9.2 *Variedades de Finsler con spray*, Proposición 9.2.1.
-
 Let `M` be a Hausdorff manifold modeled on a **Banach** space `E`, with a connection (a quadratic
-spray) and a Finsler length structure `μ`. Proposición 9.2.1 states that, for a strong Finsler
-manifold with spray, completeness of `(M, d_b)` implies that every geodesic is defined on all of
-`ℝ`. Its proof: along a geodesic `α` on `(a, b)`, `b < ∞`, of constant speed `‖α̇‖ = ‖v‖`, one
-has `d_b(α(tₙ), α(tₘ)) ≤ (tₘ - tₙ) ‖v‖`, so `α(tₙ)` is Cauchy and converges to some `q`; near `q`
-geodesics with bounded initial velocity exist for a uniform time, and by uniqueness one of them
-continues `α` past `b`. This file formalizes this implication (`1 ⇒ 2`).
+spray) and a Finsler length structure `μ`. [Lar22, Cap. 9, §9.2 *Variedades de Finsler con spray*,
+Proposición 9.2.1] states that, for a strong Finsler manifold with spray, completeness of `(M, d_b)`
+implies that every geodesic is defined on all of `ℝ`. Its proof: along a geodesic `α` on `(a, b)`,
+`b < ∞`, of constant speed `‖α̇‖ = ‖v‖`, one has `d_b(α(tₙ), α(tₘ)) ≤ (tₘ - tₙ) ‖v‖`, so `α(tₙ)` is
+Cauchy and converges to some `q`; near `q` geodesics with bounded initial velocity exist for a
+uniform time, and by uniqueness one of them continues `α` past `b`. This file formalizes this
+implication (`1 ⇒ 2`).
 
 ## Main results
 
@@ -31,16 +29,18 @@ continues `α` past `b`. This file formalizes this implication (`1 ⇒ 2`).
   `ρ' · α̇ ∘ ρ`. This is how arcs of geodesics, which are only defined on an open interval,
   become competitors in the definition of `d_b` (which uses curves `ℝ → M`).
 * `Connection.IsGeodesicOn.dist_le_of_speed_le`: `μ(α̇) ≤ L` on `[s, t]` gives
-  `d_b(α s, α t) ≤ L (t - s)`; `dist_le_of_speed_le_rev` is the backward version.
+  `d_b(α s, α t) ≤ L (t - s)`; `Connection.IsGeodesicOn.dist_le_of_speed_le_rev` is the backward
+  version.
 * `Connection.IsGeodesicOn.exists_tendsto`: a geodesic of bounded speed converges at a finite end
   of its interval when `(M, d_b)` is complete and `μ` is bounded below.
-* `Connection.IsGeodesicOn.exists_extend_of_complete` (**Proposición 9.2.1, `1 ⇒ 2`**): such a
-  geodesic extends past both ends of its interval; `exists_extend_right_of_complete` and
-  `exists_extend_left_of_complete` treat each end.
+* `Connection.IsGeodesicOn.exists_extend_of_complete` ([Lar22, Proposición 9.2.1], `1 ⇒ 2`): such
+  a geodesic extends past both ends of its interval;
+  `Connection.IsGeodesicOn.exists_extend_right_of_complete` and
+  `Connection.IsGeodesicOn.exists_extend_left_of_complete` treat each end.
 
-## Hypotheses, compared with *Estructuras*
+## Hypotheses, compared with [Lar22]
 
-* **Speed.** In *Estructuras* a Finsler manifold *with spray* has a metric invariant under the
+* **Speed.** In [Lar22] a Finsler manifold *with spray* has a metric invariant under the
   parallel transport of the spray along geodesics, so geodesics have constant speed. We only
   assume that the **speed `μ(α̇)` and the backward speed `μ(-α̇)` are bounded** on `(a, b)`. This
   is weaker; both bounds hold, with the same constant, under the invariance hypothesis, which
@@ -50,13 +50,14 @@ continues `α` past `b`. This file formalizes this implication (`1 ⇒ 2`).
 * **Completeness.** `(M, d_b)` is complete for the symmetrized distance
   `max (d_b(x, y), d_b(y, x))`, the uniform structure of `FinslerSpace μ`. For a reversible `μ`
   this is the completeness of `(M, d_b)` itself.
-* **Boundedness.** The book assumes a *strong* Finsler manifold (`μ` bounded above and below).
-  Only the **lower bound** (`FinslerSeminormField.IsBoundedBelow`) is used: it makes the identity
-  `(M, d_b) → M` continuous (Lema 9.1.8), so the `d_b`-limit is a limit in `M`, and it turns the
-  bound on `μ(α̇)` into a bound on the velocity read in a chart near the limit point.
+* **Boundedness.** The book assumes a *strong* Finsler manifold (`μ` bounded above and below). Only
+  the **lower bound** (`FinslerSeminormField.IsBoundedBelow`) is used: it makes the identity
+  `(M, d_b) → M` continuous ([Lar22, Lema 9.1.8]), so the `d_b`-limit is a limit in `M`, and it
+  turns the bound on `μ(α̇)` into a bound on the velocity read in a chart near the limit point.
 * **Banach model, Hausdorff manifold.** Completeness of `E` is used by the Picard–Lindelöf theorem
-  (local existence with uniform time, replacing the normal neighborhoods of Teorema 6.2.3) and by
-  Lema 9.1.8; the Hausdorff property by uniqueness of geodesics and by Lema 9.1.8.
+  (local existence with uniform time, replacing the normal neighborhoods of [Lar22, Teorema 6.2.3])
+  and by [Lar22, Lema 9.1.8]; the Hausdorff property by uniqueness of geodesics and by
+  [Lar22, Lema 9.1.8].
 
 **Infinite-dimensional subtleties.** No local compactness is available, so the extension
 argument cannot rely on compactness of closed balls: it rests on the existence time being
@@ -67,6 +68,11 @@ a Finsler norm need not be equivalent to the norm of the model, and without the 
 geodesic; the statement "every maximal geodesic is defined on `ℝ`", with the rest of
 Proposición 9.2.1, is in `LocallyConvexManifolds.Metric.FinslerExp`, built on the maximal
 geodesics of `LocallyConvexManifolds.Geodesic.Maximal`.
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]; the numbers
+  refer to the version of 29 November 2023.
 -/
 
 @[expose] public section
@@ -315,7 +321,7 @@ theorem IsGeodesicOn.edist_toFinsler_le (hα : C.IsGeodesicOn α (Ioo a b))
 
 /-- **A geodesic of bounded speed converges at a finite end** of its interval when `(M, d_b)`
 is complete: the points `α t`, `t → b⁻`, form a Cauchy filter for the symmetrized distance, since
-`max (d_b(α s, α t), d_b(α t, α s)) ≤ L |t - s|` (*Estructuras*, proof of Proposición 9.2.1). -/
+`max (d_b(α s, α t), d_b(α t, α s)) ≤ L |t - s|` ([Lar22, proof of Proposición 9.2.1]). -/
 theorem IsGeodesicOn.exists_tendsto_toFinsler [CompleteSpace μ.FinslerSpace]
     (hα : C.IsGeodesicOn α (Ioo a b)) (hab : a < b)
     (hL : ∀ τ ∈ Ioo a b, μ.toFun (velocity E α τ) ≤ L)
@@ -414,12 +420,12 @@ theorem IsGeodesicOn.exists_extend_left_of_complete
   refine ⟨-b', by linarith, fun t ↦ β (-t), hγ, fun t ht ↦ ?_⟩
   simpa using hEq (show -t ∈ Ioo (-b) (-a) from ⟨neg_lt_neg ht.2, neg_lt_neg ht.1⟩)
 
-/-- **Proposición 9.2.1 (`1 ⇒ 2`)** (G. Larotonda, *Estructuras geométricas para las variedades
-de Banach*, §9.2). Let `M` be a Hausdorff manifold modeled on a Banach space, with a connection
-and a Finsler length structure `μ` bounded below, such that `(M, d_b)` is complete (for the
-symmetrized distance). Then a geodesic on a bounded interval `(a, b)` whose speed `μ(α̇)` and
-backward speed `μ(-α̇)` are bounded extends to a geodesic on a strictly larger open interval
-`(a', b') ⊋ (a, b)`, at both ends. So a maximal geodesic of bounded speed is defined on `ℝ`. -/
+/-- **Proposición 9.2.1 (`1 ⇒ 2`)** ([Lar22, §9.2]). Let `M` be a Hausdorff manifold modeled on a
+Banach space, with a connection and a Finsler length structure `μ` bounded below, such that
+`(M, d_b)` is complete (for the symmetrized distance). Then a geodesic on a bounded interval
+`(a, b)` whose speed `μ(α̇)` and backward speed `μ(-α̇)` are bounded extends to a geodesic on a
+strictly larger open interval `(a', b') ⊋ (a, b)`, at both ends. So a maximal geodesic of bounded
+speed is defined on `ℝ`. -/
 theorem IsGeodesicOn.exists_extend_of_complete
     (hb : μ.toFinslerSeminormField.IsBoundedBelow) (hα : C.IsGeodesicOn α (Ioo a b))
     (hab : a < b) (hL : ∀ τ ∈ Ioo a b, μ.toFun (velocity E α τ) ≤ L)

@@ -11,60 +11,25 @@ public import LocallyConvexManifolds.Examples.OpenAndGraph
 /-!
 # The group `Diff⁺(S¹)` as an open subset of `C^∞_per`
 
-References: A. Hatcher, *Algebraic Topology*, Cambridge University Press (2002), §1.3
-(Prop. 1.30, homotopy lifting; Prop. 1.33, lifting criterion; Prop. 1.34, uniqueness of lifts);
-A. Katok, B. Hasselblatt, *Introduction to the Modern Theory of Dynamical Systems*, Cambridge
-University Press (1995), Lemma 2.4.3 and Definition 2.4.4, pp. 72–73 (lifts and degree of circle
-maps), Propositions 8.2.1–8.2.2, pp. 310–311, and §11.1, pp. 387–388 (lifts of
-homeomorphisms); M. R. Herman, *Sur la conjugaison différentiable des difféomorphismes du cercle
-à des rotations*, Publ. Math. IHÉS 49 (1979),
-Introduction (Remarque importante) and Ch. I, 1.7; R. S. Hamilton, *The inverse function theorem
-of Nash and Moser*, Bull. Amer. Math. Soc. 7 (1982), Part I, Example 4.2.6; H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362). In Mathlib, the monotone lifts
-`φ (x + 1) = φ x + 1` of circle maps are `CircleDeg1Lift`
-(`Mathlib.Dynamics.Circle.RotationNumber.TranslationNumber`).
-
-## From the circle to its lifts (covering theory; not formalized here)
-
-Let `π : ℝ → S¹ = ℝ / ℤ` be the projection, a covering map and a local diffeomorphism. The
-following facts are classical and are **not** formalized in this file; we work directly with
-the lifts.
-
-* *Existence and uniqueness of lifts.* Since `ℝ` is simply connected, every continuous
-  `f : S¹ → S¹` has a continuous lift `φ : ℝ → ℝ`, `π ∘ φ = f ∘ π`, by the lifting criterion
-  (Hatcher, Prop. 1.33), and two lifts differ by an integer constant: integer translations are
-  deck transformations, and a lift is determined by its value at one point (Hatcher,
-  Prop. 1.34).
-* *Degree.* `φ (x + 1) - φ x` is a continuous integer valued function, hence a constant `d`, the
-  degree of `f` (Katok–Hasselblatt, Lemma 2.4.3 and Definition 2.4.4). A homeomorphism has
-  degree `±1`, since the degree is multiplicative (Proposition 8.2.2), and it preserves the
-  orientation exactly when `d = 1` (§11.1, p. 388), i.e. `φ (x + 1) = φ x + 1`; then
-  `φ = id + u` with `u` `1`-periodic.
-* *Smoothness.* Since `π` is a local diffeomorphism, `φ` is smooth if and only if `f` is, and
-  `φ` is a diffeomorphism of `ℝ` exactly when `f` is a diffeomorphism of `S¹` (the inverse of
-  `f` lifts to the inverse of `φ`).
-
-So `Diff⁺(S¹) ≅ Ω / ℤ`, where `n ∈ ℤ` acts by `u ↦ u + n` (Herman, Ch. I, 1.7, where
-`D^r(T¹) = {id + φ}` is called the universal cover of `Diff^r_+(T¹)`; Hamilton, Example 4.2.6,
-who parametrizes `Diff⁺(S¹)` by `S¹ × {f' > 0, ∫ f' = 2π}`). The set `Ω` below is convex
-(`DiffCircle.convex_domain`), hence contractible, and `Ω → Diff⁺(S¹)` is the universal cover
-`\widetilde{Diff}⁺(S¹)` (Herman, Introduction).
-
-## The lifts
-
 An orientation preserving diffeomorphism of the circle lifts to a diffeomorphism
 `φ = id + u` of `ℝ` with `u` smooth and `1`-periodic and `φ' = 1 + u' > 0`. We identify
 the universal cover of `Diff⁺(S¹)` with the set
 
   `Ω = {u ∈ C^∞_per | 1 + u'(x) > 0 for all x}`.
 
-Main results:
+## Main definitions
+
+* `DiffCircle.domain`: the set `Ω`; `DiffCircle.Ω`: the same set as an `Opens`, with its induced
+  charted space and `MBManifold` structure.
+* `DiffCircle.liftHomeomorph`: for `u ∈ Ω`, the lift `φ = id + u` as a homeomorphism of `ℝ`.
+
+## Main results
 
 * `DiffCircle.isOpen_domain`, `DiffCircle.convex_domain`: `Ω` is open and convex in the
   Fréchet space `C^∞_per`. Hence `Ω` is a manifold modeled on `C^∞_per` (`DiffCircle.Ω`, an
   `Opens`, with its induced charted space and `MBManifold` structure). It is a **Fréchet
   manifold**: the model is complete
-  (`CInfPer.instCompleteSpace`), but not normable, so it is not a Banach manifold.
+  (the instance `CompleteSpace CInfPer`), but not normable, so it is not a Banach manifold.
 * For `u ∈ Ω`, the lift `φ = id + u` is an increasing homeomorphism of `ℝ`, smooth with smooth
   inverse, commuting with the translation by `1` (`DiffCircle.liftHomeomorph`,
   `DiffCircle.contDiff_liftHomeomorph_symm`).
@@ -77,8 +42,50 @@ Main results:
   automatic. So `Ω` is exactly the group of diffeomorphisms of `ℝ` commuting with the
   translation by `1`.
 
-The smoothness of composition and inversion as maps `Ω × Ω → Ω`, `Ω → Ω` (which makes `Ω` a Lie
-group) is not proved here; it belongs to the theory of Lie groups.
+## From the circle to its lifts (covering theory; not formalized here)
+
+Let `π : ℝ → S¹ = ℝ / ℤ` be the projection, a covering map and a local diffeomorphism. The
+following facts are classical and are **not** formalized in this file; we work directly with
+the lifts.
+
+* *Existence and uniqueness of lifts.* Since `ℝ` is simply connected, every continuous
+  `f : S¹ → S¹` has a continuous lift `φ : ℝ → ℝ`, `π ∘ φ = f ∘ π`, by the lifting criterion
+  [Hat02, Prop. 1.33], and two lifts differ by an integer constant: integer translations are
+  deck transformations, and a lift is determined by its value at one point [Hat02, Prop. 1.34].
+* *Degree.* `φ (x + 1) - φ x` is a continuous integer valued function, hence a constant `d`, the
+  degree of `f` [KH95, Lemma 2.4.3 and Definition 2.4.4]. A homeomorphism has
+  degree `±1`, since the degree is multiplicative [KH95, Proposition 8.2.2], and it preserves the
+  orientation exactly when `d = 1` [KH95, §11.1, p. 388], i.e. `φ (x + 1) = φ x + 1`; then
+  `φ = id + u` with `u` `1`-periodic.
+* *Smoothness.* Since `π` is a local diffeomorphism, `φ` is smooth if and only if `f` is, and
+  `φ` is a diffeomorphism of `ℝ` exactly when `f` is a diffeomorphism of `S¹` (the inverse of
+  `f` lifts to the inverse of `φ`).
+
+So `Diff⁺(S¹) ≅ Ω / ℤ`, where `n ∈ ℤ` acts by `u ↦ u + n` ([Her79, Ch. I, 1.7], where
+`D^r(T¹) = {id + φ}` is called the universal cover of `Diff^r_+(T¹)`; [Ham82, Part I,
+Example 4.2.6], who parametrizes `Diff⁺(S¹)` by `S¹ × {f' > 0, ∫ f' = 2π}`). The set `Ω` is convex
+(`DiffCircle.convex_domain`), hence contractible, and `Ω → Diff⁺(S¹)` is the universal cover
+`\widetilde{Diff}⁺(S¹)` ([Her79, Introduction]).
+
+## Implementation notes
+
+* In Mathlib, the monotone lifts `φ (x + 1) = φ x + 1` of circle maps are `CircleDeg1Lift`
+  (`Mathlib.Dynamics.Circle.RotationNumber.TranslationNumber`).
+* The smoothness of composition and inversion as maps `Ω × Ω → Ω`, `Ω → Ω` (which makes `Ω` a Lie
+  group) is not proved here; it belongs to the theory of Lie groups.
+
+## References
+
+* [A. Hatcher, *Algebraic Topology*][Hat02], §1.3 (Prop. 1.30, homotopy lifting; Prop. 1.33,
+  lifting criterion; Prop. 1.34, uniqueness of lifts)
+* [A. Katok, B. Hasselblatt, *Introduction to the Modern Theory of Dynamical Systems*][KH95],
+  Lemma 2.4.3 and Definition 2.4.4, pp. 72–73 (lifts and degree of circle maps),
+  Propositions 8.2.1–8.2.2, pp. 310–311, and §11.1, pp. 387–388 (lifts of homeomorphisms)
+* [M. R. Herman, *Sur la conjugaison différentiable des difféomorphismes du cercle à des
+  rotations*][Her79], Introduction (Remarque importante) and Ch. I, 1.7
+* [R. S. Hamilton, *The inverse function theorem of Nash and Moser*][Ham82], Part I,
+  Example 4.2.6
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section

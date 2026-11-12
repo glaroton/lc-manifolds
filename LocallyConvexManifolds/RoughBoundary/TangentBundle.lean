@@ -11,20 +11,17 @@ public import LocallyConvexManifolds.Tangent.Bundle
 /-!
 # The tangent bundle of a manifold with rough boundary
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1),
-3.5.22, p. 285, which transfers Definitions 3.3.3–3.3.11, Lemma 3.3.8 and Proposition 3.3.12
-(pp. 256–260) to manifolds with rough boundary.
-
 Let `A` be a `C^r` atlas of rough charts of `M` modeled on `E` (`RoughAtlas r E M`), `r ≥ 1`.
 The tangent bundle `TM` is glued from the products `V_φ × E`, `φ ∈ A`, along the maps
 `T(ψ ∘ φ⁻¹) : (y, w) ↦ (ψ (φ⁻¹ y), d(ψ ∘ φ⁻¹)(y, w))`, where `d = dLC` is the differential on a
-locally convex subset with dense interior (G–N, Definition 1.4.4). As for the tangent bundle of an
+locally convex subset with dense interior [GN26, Definition 1.4.4]. As for the tangent bundle of an
 ordinary manifold in this library (`Tangent/Bundle.lean`), we build it from a `FiberBundleCore`
 indexed by the charts of `A` whose coordinate changes are the differentials of the transition
 maps (`RoughAtlas.tangentBundleCore`); the base sets are the chart domains, which are open in `M`.
-The tangent charts `Tφ : TU_φ → V_φ × E` (G–N, (3.9), p. 257) take values in the locally convex
+The tangent charts `Tφ : TU_φ → V_φ × E` [GN26, (3.9), p. 257] take values in the locally convex
 subsets `V_φ × E ⊆ E × E` with dense interior, and they form a rough `C^{r-1}` atlas of `TM`
-(`RoughAtlas.tangentAtlas`).
+(`RoughAtlas.tangentAtlas`). This follows [GN26, 3.5.22, p. 285], which transfers Definitions
+3.3.3–3.3.11, Lemma 3.3.8 and Proposition 3.3.12 (pp. 256–260) to manifolds with rough boundary.
 
 ## Main definitions
 
@@ -37,7 +34,7 @@ subsets `V_φ × E ⊆ E × E` with dense interior, and they form a rough `C^{r-
   target `φ.target ×ˢ univ`.
 * `RoughAtlas.tangentAtlas A hr : RoughAtlas (r - 1) (E × E) (A.TangentBundle hr)`.
 * `RoughAtlas.tangentMap A hr B hr' f : A.TangentBundle hr → B.TangentBundle hr'`: the tangent map
-  `Tf` (G–N, Definition 3.3.11, p. 259).
+  `Tf` [GN26, Definition 3.3.11, p. 259].
 
 ## Main results
 
@@ -46,32 +43,31 @@ subsets `V_φ × E ⊆ E × E` with dense interior, and they form a rough `C^{r-
   linear **also at boundary points**, and invertible (`RoughAtlas.tangentCoordChange_inv`), so
   the topological vector space structure of the fibers does not depend on the chart.
 * `RoughAtlas.tangentChart_trans_eqOn`: the transition maps of the tangent atlas are
-  `T(ψ ∘ φ⁻¹) : (y, w) ↦ (ψ (φ⁻¹ y), d(ψ ∘ φ⁻¹)(y, w))` (G–N, Lemma 3.3.8(a), p. 258).
+  `T(ψ ∘ φ⁻¹) : (y, w) ↦ (ψ (φ⁻¹ y), d(ψ ∘ φ⁻¹)(y, w))` [GN26, Lemma 3.3.8(a), p. 258].
 * `ContDiffLCUpTo.tangent`: `Tg = (g ∘ pr₁, dg)` is `C^{s-1}` on `D × E` if `g` is `C^s` on `D`
-  (G–N, Definition 3.3.3, p. 256, on locally convex subsets with dense interior).
-* `RoughAtlas.boundary_tangentAtlas`: `∂(TM) = π⁻¹(∂M)` (G–N, 3.5.22, p. 285:
+  ([GN26, Definition 3.3.3, p. 256], on locally convex subsets with dense interior).
+* `RoughAtlas.boundary_tangentAtlas`: `∂(TM) = π⁻¹(∂M)` ([GN26, 3.5.22, p. 285]:
   `(V_φ × E)⁰ = V_φ⁰ × E`; compare Lemma 3.5.23, p. 285).
-* `RoughAtlas.contMDiff_proj`: the bundle projection is `C^{r-1}` (G–N, Lemma 3.3.8(e), p. 258).
+* `RoughAtlas.contMDiff_proj`: the bundle projection is `C^{r-1}` [GN26, Lemma 3.3.8(e), p. 258].
 * `RoughAtlas.dLC_localRep_change`: the differentials of the local representatives of a `C^1` map
   transform by the tangent coordinate changes, so the tangent map is chart independent.
-* `RoughAtlas.tangentChart_tangentMap`: in tangent charts, `Tf` is `T(ψ ∘ f ∘ φ⁻¹)` (G–N,
-  Definition 3.3.11(b), p. 259); `RoughAtlas.continuous_tangentMap`,
-  `RoughAtlas.contMDiff_tangentMap`: `Tf` is continuous, and `C^{s-1}` if `f` is `C^s`,
-  `s ≥ 1`; `RoughAtlas.tangentMap_comp`: the chain rule `T(g ∘ f) = Tg ∘ Tf` (G–N,
-  Proposition 3.3.12, p. 259); `RoughAtlas.tangentMap_id`: `T(id) = id` (G–N, Remark 3.3.13,
-  p. 260).
+* `RoughAtlas.tangentChart_tangentMap`: in tangent charts, `Tf` is `T(ψ ∘ f ∘ φ⁻¹)`
+  [GN26, Definition 3.3.11(b), p. 259]; `RoughAtlas.continuous_tangentMap`,
+  `RoughAtlas.contMDiff_tangentMap`: `Tf` is continuous, and `C^{s-1}` if `f` is `C^s`, `s ≥ 1`;
+  `RoughAtlas.tangentMap_comp`: the chain rule `T(g ∘ f) = Tg ∘ Tf` [GN26, Proposition 3.3.12,
+  p. 259]; `RoughAtlas.tangentMap_id`: `T(id) = id` [GN26, Remark 3.3.13, p. 260].
 
 ## Infinite-dimensional subtleties
 
 * **Linearity at the boundary.** At a boundary point `x`, `d(ψ ∘ φ⁻¹)(φ x, ·)` is not a derivative
   at an interior point but the continuous extension of the differential from the interior. It is
-  still continuous linear (G–N, Lemma 1.4.7; `ContDiffLC.exists_clm`), and invertible by the chain
-  rule (G–N, Proposition 1.4.10; `ContDiffLC.dLC_comp`), which is what makes the fibers over
-  boundary points topological vector spaces, isomorphic to `E` through every chart. Both facts
+  still continuous linear ([GN26, Lemma 1.4.7]; `ContDiffLC.exists_clm`), and invertible by the
+  chain rule ([GN26, Proposition 1.4.10]; `ContDiffLC.dLC_comp`), which is what makes the fibers
+  over boundary points topological vector spaces, isomorphic to `E` through every chart. Both facts
   need the domains of the transition maps to be locally convex with dense interior, which they are
-  (G–N, Remark 3.5.2).
+  [GN26, Remark 3.5.2].
 * **No inward/outward distinction.** The fiber over a boundary point is all of `E`, not a cone
-  of inward vectors, as in G–N, 3.5.22 (`T_p M ≅ E` for all `p ∈ M`).
+  of inward vectors, as in [GN26, 3.5.22] (`T_p M ≅ E` for all `p ∈ M`).
 * **Order of differentiability.** `r - 1` is truncated subtraction in `ℕ∞`, with `⊤ - 1 = ⊤`;
   the hypothesis `r ≠ 0` is needed for the coordinate changes to exist.
 * **No completeness** of `E` is assumed, as everywhere in the rough-boundary files.
@@ -98,6 +94,11 @@ The comparison with the tangent bundle of an ordinary manifold (`TangentBundle E
 `RoughAtlas.ofChartedSpace`: it needs a comparison of `RoughAtlas.ContMDiff` with
 `ContMDiffMBOn`, which is not available yet. The coordinate changes agree
 (`RoughAtlas.tangentCoordChange_ofChartedSpace`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
 -/
 
 @[expose] public section
@@ -123,6 +124,7 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
   {G : Type w} [AddCommGroup G] [Module ℝ G] [TopologicalSpace G]
   [IsTopologicalAddGroup G] [ContinuousSMul ℝ G] [LocallyConvexSpace ℝ G] [T2Space G]
 
+omit [LocallyConvexSpace ℝ E] in
 /-- The differential of a map that is the identity on a set with dense interior is the identity
 at every point of the set, including the boundary points. -/
 theorem dLC_eq_snd_of_eqOn_id {f : E → E} {U : Set E} (hd : HasDenseInterior U)
@@ -166,7 +168,7 @@ theorem ContDiffLCUpTo.comp_fst {s : ℕ∞} {g : E → F} {D : Set E} (hD : Has
   exact this
 
 omit [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] in
-/-- **Glöckner–Neeb, Definition 3.3.3, p. 256**, on a set with dense interior (3.5.22, p. 285):
+/-- **[GN26, Definition 3.3.3, p. 256]**, on a set with dense interior (3.5.22, p. 285):
 if `g` is `C^s` on `D`, `s ≥ 1`, then `Tg : (y, w) ↦ (g y, dg(y, w))` is `C^{s-1}` on
 `D × E`. -/
 theorem ContDiffLCUpTo.tangent {s : ℕ∞} (hs : s ≠ 0) {g : E → F} {D : Set E}
@@ -202,6 +204,7 @@ differential from the interior. -/
 def tangentCoordChange (i j : A.atlas) (x : M) (v : E) : E :=
   dLC (j.1 ∘ i.1.symm) (i.1.target ∩ i.1.symm ⁻¹' j.1.source) (i.1 x, v)
 
+omit [LocallyConvexSpace ℝ E] in
 theorem tangentCoordChange_self (i : A.atlas) {x : M} (hx : x ∈ i.1.source) (v : E) :
     A.tangentCoordChange i i x v = v := by
   have hd : HasDenseInterior (i.1.target ∩ i.1.symm ⁻¹' i.1.source) := by
@@ -232,7 +235,7 @@ theorem hasDenseInterior_trans (i j : A.atlas) :
   (A.isRoughChart i.1 i.2).hasDenseInterior_inter_preimage (A.isRoughChart j.1 j.2).isOpen_source
 
 /-- The cocycle condition for the changes of tangent coordinates: the chain rule
-(G–N, Proposition 1.4.10) on `i(U_i ∩ U_j ∩ U_k)`. -/
+[GN26, Proposition 1.4.10] on `i(U_i ∩ U_j ∩ U_k)`. -/
 theorem tangentCoordChange_comp (hr : r ≠ 0) (i j k : A.atlas) {x : M}
     (hx : x ∈ i.1.source ∩ j.1.source ∩ k.1.source) (v : E) :
     A.tangentCoordChange j k x (A.tangentCoordChange i j x v) = A.tangentCoordChange i k x v := by
@@ -252,7 +255,7 @@ theorem tangentCoordChange_comp (hr : r ≠ 0) (i j k : A.atlas) {x : M}
   exact h.symm
 
 /-- **Linearity at the boundary**: for `x ∈ U_i ∩ U_j`, also when `x ∈ ∂M`, the change of tangent
-coordinates is a continuous linear map (G–N, Lemma 1.4.7). -/
+coordinates is a continuous linear map [GN26, Lemma 1.4.7]. -/
 theorem exists_clm_tangentCoordChange (hr : r ≠ 0) (i j : A.atlas) {x : M}
     (hx : x ∈ i.1.source ∩ j.1.source) :
     ∃ L : E →L[ℝ] E, ∀ v, L v = A.tangentCoordChange i j x v :=
@@ -278,7 +281,7 @@ theorem continuousOn_tangentCoordChange (hr : r ≠ 0) (i j : A.atlas) :
 variable (A) in
 /-- The tangent bundle of a manifold with rough boundary as a fiber bundle core: indexed by the
 charts of `A`, over the chart domains, with coordinate changes the differentials of the
-transition maps (G–N, 3.5.22 and Definition 3.3.7). -/
+transition maps [GN26, 3.5.22 and Definition 3.3.7]. -/
 def tangentBundleCore (hr : r ≠ 0) : FiberBundleCore A.atlas M E where
   baseSet i := i.1.source
   isOpen_baseSet i := (A.isRoughChart i.1 i.2).isOpen_source
@@ -303,7 +306,7 @@ instance (hr : r ≠ 0) (x : M) : Module ℝ ((A.tangentBundleCore hr).Fiber x) 
 /-! #### Tangent charts and the tangent atlas -/
 
 variable (A) in
-/-- **The tangent chart** `Tφ : TU_φ → V_φ × E` of a chart `φ = i` (G–N, (3.9), p. 257):
+/-- **The tangent chart** `Tφ : TU_φ → V_φ × E` of a chart `φ = i` [GN26, (3.9), p. 257]:
 `(x, v) ↦ (φ x, v read in φ)`. It is the local trivialization over `U_φ` followed by `φ × id`;
 its target is `V_φ × E` (`tangentChart_target`). -/
 def tangentChart (hr : r ≠ 0) (i : A.atlas) : PartialHomeomorph (A.TangentBundle hr) (E × E) where
@@ -350,7 +353,7 @@ theorem tangentChart_target (hr : r ≠ 0) (i : A.atlas) :
     exact i.1.map_target h.1
 
 /-- The tangent charts are rough charts: their targets `V_φ × E` are locally convex with dense
-interior (G–N, 3.5.22, p. 285). -/
+interior [GN26, 3.5.22, p. 285]. -/
 theorem isRoughChart_tangentChart (hr : r ≠ 0) (i : A.atlas) :
     IsRoughChart (A.tangentChart hr i) := by
   have hi := A.isRoughChart i.1 i.2
@@ -369,7 +372,7 @@ theorem tangentChart_trans_domain (hr : r ≠ 0) (i j : A.atlas) :
   simp only [tangentChart_target, tangentChart_source, mem_inter_iff, mem_prod, mem_univ,
     and_true, mem_preimage, tangentChart_symm_apply]
 
-/-- **Glöckner–Neeb, Lemma 3.3.8(a), p. 258**: the transition maps of the tangent atlas are
+/-- **[GN26, Lemma 3.3.8(a), p. 258]**: the transition maps of the tangent atlas are
 `T(ψ ∘ φ⁻¹) : (y, w) ↦ (ψ (φ⁻¹ y), d(ψ ∘ φ⁻¹)(y, w))`. -/
 theorem tangentChart_trans_eqOn (hr : r ≠ 0) (i j : A.atlas) :
     EqOn (A.tangentChart hr j ∘ (A.tangentChart hr i).symm)
@@ -385,7 +388,7 @@ theorem tangentChart_trans_eqOn (hr : r ≠ 0) (i j : A.atlas) :
     i.1.right_inv hy]
 
 variable (A) in
-/-- **The tangent bundle of a manifold with rough boundary** (G–N, 3.5.22, p. 285, and
+/-- **The tangent bundle of a manifold with rough boundary** ([GN26, 3.5.22, p. 285], and
 Definition 3.3.7 and Lemma 3.3.8(d), pp. 257–258): for `r ≥ 1`, the tangent charts form a rough
 `C^{r-1}` atlas of `TM` modeled on `E × E`. The transition maps are `T(ψ ∘ φ⁻¹)`
 (`tangentChart_trans_eqOn`), which are `C^{r-1}` (`ContDiffLCUpTo.tangent`); since
@@ -412,7 +415,7 @@ theorem tangentChart_mem_tangentAtlas (hr : r ≠ 0) (i : A.atlas) :
     A.tangentChart hr i ∈ (A.tangentAtlas hr).atlas :=
   ⟨i, rfl⟩
 
-/-- **The boundary of the tangent bundle** is `π⁻¹(∂M)` (G–N, 3.5.22, p. 285: since
+/-- **The boundary of the tangent bundle** is `π⁻¹(∂M)` ([GN26, 3.5.22, p. 285]: since
 `(V_φ × E)⁰ = V_φ⁰ × E`; compare Lemma 3.5.23, p. 285). -/
 theorem boundary_tangentAtlas (hr : r ≠ 0) :
     (A.tangentAtlas hr).boundary = TotalSpace.proj ⁻¹' A.boundary := by
@@ -424,7 +427,7 @@ theorem boundary_tangentAtlas (hr : r ≠ 0) :
     interior_prod_eq, interior_univ, tangentChart_apply]
   simp
 
-/-- The bundle projection `TM → M` is `C^{r-1}` (G–N, Lemma 3.3.8(e), p. 258). -/
+/-- The bundle projection `TM → M` is `C^{r-1}` [GN26, Lemma 3.3.8(e), p. 258]. -/
 theorem contMDiff_proj (hr : r ≠ 0) :
     (A.tangentAtlas hr).ContMDiff A (r - 1) TotalSpace.proj := by
   refine ⟨FiberBundleCore.continuous_proj _, ?_⟩
@@ -452,7 +455,7 @@ variable {r' r'' : ℕ∞} {F : Type v} [AddCommGroup F] [Module ℝ F] [Topolog
   {B : RoughAtlas r' F N} {C : RoughAtlas r'' G X}
 
 variable (A B) in
-/-- **The tangent map** `Tf : TM → TN` (G–N, Definition 3.3.11, p. 259, and 3.5.22, p. 285):
+/-- **The tangent map** `Tf : TM → TN` [GN26, Definition 3.3.11, p. 259, and 3.5.22, p. 285]:
 `Tf(x, v) = (f x, d(ψ ∘ f ∘ φ⁻¹)(φ x, v))`, where `φ = A.chartAt x` and `ψ = B.chartAt (f x)` are
 the charts in which the fibers are read. The definition makes sense for every map; it is
 meaningful for `C^1` maps, for which it does not depend on the charts (`dLC_localRep_change`,
@@ -463,13 +466,13 @@ def tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) (f : M → N) :
     ((A.chartAt p.1).1.target ∩ (A.chartAt p.1).1.symm ⁻¹' (f ⁻¹' (B.chartAt (f p.1)).1.source))
     ((A.chartAt p.1).1 p.1, p.2)⟩
 
-/-- `π_N ∘ Tf = f ∘ π_M` (G–N, Definition 3.3.11(a)). -/
+/-- `π_N ∘ Tf = f ∘ π_M` [GN26, Definition 3.3.11(a)]. -/
 @[simp] theorem proj_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) (f : M → N) (p : A.TangentBundle hr) :
     (A.tangentMap B hr hr' f p).proj = f p.proj :=
   rfl
 
-/-- **Chart independence of the tangent map** (the well-definedness in G–N, Definition 3.3.11,
-p. 259): for a `C^s` map `f`, `s ≥ 1`, charts `φ, φ'` at `x` and `ψ, ψ'` at `f x`, the
+/-- **Chart independence of the tangent map** (the well-definedness in [GN26, Definition 3.3.11,
+p. 259]): for a `C^s` map `f`, `s ≥ 1`, charts `φ, φ'` at `x` and `ψ, ψ'` at `f x`, the
 differentials of the local representatives transform by the changes of tangent coordinates:
 `d(ψ' ∘ f ∘ φ'⁻¹)(φ' x, d(φ' ∘ φ⁻¹)(φ x, v)) = d(ψ' ∘ ψ⁻¹)(ψ (f x), d(ψ ∘ f ∘ φ⁻¹)(φ x, v))`.
 Both sides are the differential of `ψ' ∘ f ∘ φ⁻¹` at `φ x`, by the chain rule on a common domain
@@ -526,7 +529,7 @@ theorem tangentCoordChange_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) {s : ℕ�
   (dLC_localRep_change hr hr' hs hf (A.chartAt x) i (B.chartAt (f x)) j
     ⟨A.mem_chartAt_source x, hx⟩ ⟨B.mem_chartAt_source (f x), hfx⟩ v).symm
 
-/-- **Glöckner–Neeb, Definition 3.3.11(b), p. 259**: in the tangent charts `Tφ` and `Tψ`, the
+/-- **[GN26, Definition 3.3.11(b), p. 259]**: in the tangent charts `Tφ` and `Tψ`, the
 tangent map is `T(ψ ∘ f ∘ φ⁻¹)`. -/
 theorem tangentChart_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) {s : ℕ∞} (hs : s ≠ 0) {f : M → N}
     (hf : A.ContMDiff B s f) (i : A.atlas) (j : B.atlas) :
@@ -582,7 +585,7 @@ theorem continuous_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) {s : ℕ∞} (hs :
   · exact (hf.1.comp continuous_fst).continuousAt
   · exact (hcont.congr hformula).continuousAt (hO.mem_nhds hp)
 
-/-- **Glöckner–Neeb, Definition 3.3.11, p. 259** (with 3.5.22, p. 285): the tangent map of a
+/-- **[GN26, Definition 3.3.11, p. 259]** (with 3.5.22, p. 285): the tangent map of a
 `C^s` map between manifolds with rough boundary, `s ≥ 1`, is `C^{s-1}`. -/
 theorem contMDiff_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) {s : ℕ∞} (hs : s ≠ 0) {f : M → N}
     (hf : A.ContMDiff B s f) :
@@ -600,7 +603,7 @@ theorem contMDiff_tangentMap (hr : r ≠ 0) (hr' : r' ≠ 0) {s : ℕ∞} (hs : 
     ((B.isRoughChart j.1 j.2).isOpen_source.preimage hf.1))).congr
     (tangentChart_tangentMap hr hr' hs hf i j).symm
 
-/-- `T(id) = id` (G–N, Remark 3.3.13, p. 260). -/
+/-- `T(id) = id` [GN26, Remark 3.3.13, p. 260]. -/
 theorem tangentMap_id (hr : r ≠ 0) : A.tangentMap A hr hr id = id := by
   funext p
   have hi := A.mem_chartAt_source p.1
@@ -613,8 +616,8 @@ theorem tangentMap_id (hr : r ≠ 0) : A.tangentMap A hr hr id = id := by
   exact dLC_eq_snd_of_eqOn_id hd (fun y hy ↦ (A.chartAt p.1).1.right_inv hy.1)
     ⟨(A.chartAt p.1).1.map_source hi, by simpa [(A.chartAt p.1).1.left_inv hi] using hi⟩
 
-/-- **The chain rule** `T(g ∘ f) = Tg ∘ Tf` (G–N, Proposition 3.3.12, p. 259, with 3.5.22,
-p. 285) for `C^1` maps between manifolds with rough boundary. -/
+/-- **The chain rule** `T(g ∘ f) = Tg ∘ Tf` [GN26, Proposition 3.3.12, p. 259, with 3.5.22,
+p. 285] for `C^1` maps between manifolds with rough boundary. -/
 theorem tangentMap_comp (hr : r ≠ 0) (hr' : r' ≠ 0) (hr'' : r'' ≠ 0) {s s' : ℕ∞} (hs : s ≠ 0)
     (hs' : s' ≠ 0) {f : M → N} {g : N → X} (hf : A.ContMDiff B s f) (hg : B.ContMDiff C s' g) :
     A.tangentMap C hr hr'' (g ∘ f) = B.tangentMap C hr' hr'' g ∘ A.tangentMap B hr hr' f := by

@@ -12,32 +12,53 @@ public import LocallyConvexManifolds.VectorField.Derivation
 /-!
 # Insertion of vector fields, the Lie derivative and Cartan's formula
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, §3.6.
-
 For a smooth vector field `X` on `M` and `ω ∈ Ωⁿ⁺¹(M, F)`, the insertion `i_X ω ∈ Ωⁿ(M, F)` is
-`(i_X ω)ₓ(v₁, …, vₙ) = ωₓ(X(x), v₁, …, vₙ)` (Glöckner–Neeb, Definition 3.6.15). The Lie
-derivative `L_X ω ∈ Ωⁿ(M, F)` is defined by Glöckner–Neeb through vector fields, (3.35); in
+`(i_X ω)ₓ(v₁, …, vₙ) = ωₓ(X(x), v₁, …, vₙ)` ([GN26, Definition 3.6.15]). The Lie
+derivative `L_X ω ∈ Ωⁿ(M, F)` is defined in [GN26] through vector fields, (3.35); in
 charts it reads
 `(L_X ω)(y)(v₁, …, vₙ) = ∂_{X(y)} ω(y)(v₁, …, vₙ) + ∑ₖ ω(y)(v₁, …, dX(y) vₖ, …, vₙ)`.
 
 We define `L_X ω` by **Cartan's formula**, `L_X = d ∘ i_X + i_X ∘ d` (with `i_X = 0` on
 `0`-forms), which produces a smooth form without further work, and prove that in every chart it
-is given by the local formula above (`localRep_lieDeriv`), which is the chart form of (3.35)
-(Glöckner–Neeb, Definition 3.6.14). Then:
+is given by the local formula above, which is the chart form of (3.35)
+([GN26, Definition 3.6.14]). We follow [GN26, §3.6].
 
-* `lieDeriv_interior_sub`: `[L_X, i_Y] = i_{[X, Y]}` (Glöckner–Neeb, Proposition 3.6.16 (b)),
-  by a computation in charts;
-* `lieDeriv_d`: `L_X ∘ d = d ∘ L_X` (Proposition 3.6.16 (d)), from `d ∘ d = 0`;
-* `lieDeriv_lieDeriv_sub`: `[L_X, L_Y] = L_{[X, Y]}` (Proposition 3.6.16 (a)), algebraically from
-  (b), (c) and (d);
-* `IsClosed.lieDeriv_eq`: `L_X ω = d(i_X ω)` for closed `ω` (Proposition 3.6.16 (e)).
+## Main definitions
 
-Glöckner–Neeb prove (a)–(d) by embedding forms into the Chevalley–Eilenberg complex of the Lie
+* `iLoc`, `lieLoc`: the insertion and the Lie derivative of local forms.
+* `DifferentialForm.interior`: the insertion `i_X ω`.
+* `DifferentialForm.lieDeriv`: the Lie derivative `L_X ω`, defined by Cartan's formula.
+
+## Main results
+
+* `DifferentialForm.localRep_lieDeriv`: the Lie derivative is given in every chart by the local
+  formula.
+* `DifferentialForm.lieDeriv_interior_sub`: `[L_X, i_Y] = i_{[X, Y]}`
+  ([GN26, Proposition 3.6.16 (b)]), by a computation in charts.
+* `DifferentialForm.lieDeriv_d`: `L_X ∘ d = d ∘ L_X` ([GN26, Proposition 3.6.16 (d)]), from
+  `d ∘ d = 0`.
+* `DifferentialForm.lieDeriv_lieDeriv_sub`: `[L_X, L_Y] = L_{[X, Y]}`
+  ([GN26, Proposition 3.6.16 (a)]), algebraically from (b), (c) and (d).
+* `DifferentialForm.IsClosed.lieDeriv_eq`: `L_X ω = d(i_X ω)` for closed `ω`
+  ([GN26, Proposition 3.6.16 (e)]).
+* `DifferentialForm.lieDeriv_apply_fields`, `DifferentialForm.d_apply_fields`: the Lie
+  derivative and the exterior derivative evaluated on vector fields ([GN26, (3.35)] and
+  [GN26, Proposition 3.6.7, (3.29)]).
+* `DifferentialForm.pullback_interior`, `DifferentialForm.pullback_lieDeriv`: naturality for
+  related vector fields ([GN26, Exercise 3.6.6]).
+
+## Implementation notes
+
+[GN26] prove (a)–(d) by embedding forms into the Chevalley–Eilenberg complex of the Lie
 algebra of vector fields with values in `C^∞(M, F)`; we compute in charts instead. In infinite
 dimensions vector fields need not have flows, so `L_X` cannot be defined by differentiating
-along a flow (Glöckner–Neeb, Remark 3.6.17).
+along a flow ([GN26, Remark 3.6.17]).
 
 No completeness of the spaces is assumed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -75,7 +96,7 @@ theorem _root_.Fin.removeNth_succ_cons {α : Type*} (j : Fin (n + 1)) (a : α)
 def iLoc (X : E → E) (ω : E × (Fin (n + 1) → E) → F) (p : E × (Fin n → E)) : F :=
   ω (p.1, Fin.cons (X p.1) p.2)
 
-/-- The local Lie derivative (Glöckner–Neeb, (3.35) in a chart):
+/-- The local Lie derivative ([GN26, (3.35)] in a chart):
 `(L_X ω)(y)(v) = ∂_{X(y)} ω(y)(v) + ∑ₖ ω(y)(v₁, …, dX(y) vₖ, …, vₙ)`. -/
 def lieLoc (X : E → E) (ω : E × (Fin n → E) → F) (p : E × (Fin n → E)) : F :=
   dMB (fun z ↦ ω (z, p.2)) (p.1, X p.1) + ∑ k : Fin n, ω (p.1, update p.2 k (dMB X (p.1, p.2 k)))
@@ -340,8 +361,8 @@ theorem formLocalRep_interiorFun (X : SmoothVectorField E M) (ω : DifferentialF
   | zero => exact (X.tangentCoordChange_localRep i hy).symm
   | succ k => rfl
 
-/-- The insertion `i_X ω` of a smooth vector field into a form (Glöckner–Neeb,
-Definition 3.6.15). -/
+/-- The insertion `i_X ω` of a smooth vector field into a form [GN26,
+Definition 3.6.15]. -/
 def interior (X : SmoothVectorField E M) (ω : DifferentialForm E M F (n + 1)) :
     DifferentialForm E M F n where
   toFun := interiorFun X ω
@@ -393,8 +414,8 @@ theorem interior_interior (X : SmoothVectorField E M) (ω : DifferentialForm E M
 /-! ### The Lie derivative -/
 
 /-- The Lie derivative `L_X ω`, defined by Cartan's formula `L_X = d ∘ i_X + i_X ∘ d`, with
-`i_X = 0` on functions. Its local representatives are given by the local formula (3.35) of
-Glöckner–Neeb (`localRep_lieDeriv`). -/
+`i_X = 0` on functions. Its local representatives are given by the local formula
+[GN26, (3.35)] (`localRep_lieDeriv`). -/
 def lieDeriv (X : SmoothVectorField E M) : ∀ {n : ℕ}, DifferentialForm E M F n →
     DifferentialForm E M F n
   | 0, ω => interior X ω.d
@@ -404,13 +425,13 @@ theorem lieDeriv_zero (X : SmoothVectorField E M) (ω : DifferentialForm E M F 0
     lieDeriv X ω = interior X ω.d :=
   rfl
 
-/-- **Cartan's formula** (Glöckner–Neeb, Proposition 3.6.16 (c)):
+/-- **Cartan's formula** [GN26, Proposition 3.6.16 (c)]:
 `L_X = d ∘ i_X + i_X ∘ d`. -/
 theorem lieDeriv_succ (X : SmoothVectorField E M) (ω : DifferentialForm E M F (n + 1)) :
     lieDeriv X ω = (interior X ω).d + interior X ω.d :=
   rfl
 
-/-- **The Lie derivative in charts** (Glöckner–Neeb, (3.35)): in every chart,
+/-- **The Lie derivative in charts** [GN26, (3.35)]: in every chart,
 `(L_X ω)(y)(v) = ∂_{X(y)} ω(y)(v) + ∑ₖ ω(y)(v₁, …, dX(y) vₖ, …, vₙ)`. -/
 theorem localRep_lieDeriv (X : SmoothVectorField E M) (ω : DifferentialForm E M F n)
     (i : atlas E M) {y : E} (hy : y ∈ i.1.target) (v : Fin n → E) :
@@ -455,9 +476,9 @@ theorem lieDeriv_sub (X : SmoothVectorField E M) (ω η : DifferentialForm E M F
     lieDeriv X (ω - η) = lieDeriv X ω - lieDeriv X η :=
   (lieDerivLinear F n X).map_sub ω η
 
-/-! ### Proposition 3.6.16 -/
+/-! ### [GN26, Proposition 3.6.16] -/
 
-/-- `L_X ∘ d = d ∘ L_X` (Glöckner–Neeb, Proposition 3.6.16 (d)). -/
+/-- `L_X ∘ d = d ∘ L_X` [GN26, Proposition 3.6.16 (d)]. -/
 theorem lieDeriv_d (X : SmoothVectorField E M) (ω : DifferentialForm E M F n) :
     lieDeriv X ω.d = (lieDeriv X ω).d := by
   cases n with
@@ -467,12 +488,12 @@ theorem lieDeriv_d (X : SmoothVectorField E M) (ω : DifferentialForm E M F n) :
     rw [lieDeriv_succ, lieDeriv_succ, d_d_eq_zero, interior_zero, add_zero, d_add,
       d_d_eq_zero, zero_add]
 
-/-- Closed forms: `L_X ω = d(i_X ω)` (Glöckner–Neeb, Proposition 3.6.16 (e)). -/
+/-- Closed forms: `L_X ω = d(i_X ω)` [GN26, Proposition 3.6.16 (e)]. -/
 theorem IsClosed.lieDeriv_eq {X : SmoothVectorField E M} {ω : DifferentialForm E M F (n + 1)}
     (hω : ω.IsClosed) : lieDeriv X ω = (interior X ω).d := by
   rw [lieDeriv_succ, show ω.d = 0 from ext hω, interior_zero, add_zero]
 
-/-- The Lie derivative of a closed form is exact (Glöckner–Neeb, Proposition 3.6.16 (e)). -/
+/-- The Lie derivative of a closed form is exact [GN26, Proposition 3.6.16 (e)]. -/
 theorem IsClosed.isExact_lieDeriv {X : SmoothVectorField E M}
     {ω : DifferentialForm E M F (n + 1)} (hω : ω.IsClosed) : (lieDeriv X ω).IsExact :=
   ⟨interior X ω, hω.lieDeriv_eq.symm⟩
@@ -506,7 +527,7 @@ theorem lieLoc_iLoc_sub {Xl Yl : E → E} {ω : E × (Fin (n + 1) → E) → F} 
   rw [h]
   abel
 
-/-- `[L_X, i_Y] = i_{[X, Y]}` (Glöckner–Neeb, Proposition 3.6.16 (b)). -/
+/-- `[L_X, i_Y] = i_{[X, Y]}` [GN26, Proposition 3.6.16 (b)]. -/
 theorem lieDeriv_interior_sub (X Y : SmoothVectorField E M) (ω : DifferentialForm E M F (n + 1)) :
     lieDeriv X (interior Y ω) - interior Y (lieDeriv X ω) = interior (X.bracket Y) ω := by
   ext x v
@@ -523,7 +544,7 @@ theorem lieDeriv_interior_sub (X Y : SmoothVectorField E M) (ω : DifferentialFo
     iLoc_congr (ω₂ := ω.localRep i) (fun _ ↦ rfl) (X.localRep_bracket Y i hy) v]
   exact lieLoc_iLoc_sub (ω.isLocalForm_localRep i) hT (Y.smoothMBOn_localRep i 1) hy v
 
-/-- `[L_X, L_Y] = L_{[X, Y]}` (Glöckner–Neeb, Proposition 3.6.16 (a)): the Lie derivative is a
+/-- `[L_X, L_Y] = L_{[X, Y]}` [GN26, Proposition 3.6.16 (a)]: the Lie derivative is a
 representation of the Lie algebra of smooth vector fields on `Ωⁿ(M, F)`. -/
 theorem lieDeriv_lieDeriv_sub (X Y : SmoothVectorField E M) (ω : DifferentialForm E M F n) :
     lieDeriv X (lieDeriv Y ω) - lieDeriv Y (lieDeriv X ω) = lieDeriv (X.bracket Y) ω := by
@@ -599,7 +620,7 @@ theorem derivFun_evalFields (ω : DifferentialForm E M F n) (X : Fin n → Smoot
   exact (ω.isLocalForm_localRep i).dMB_comp_vectors hT hy
     fun k ↦ ((X k).smoothMBOn_localRep i 1).2.1 _ hy _
 
-/-- **The Lie derivative on vector fields** (Glöckner–Neeb, (3.35)):
+/-- **The Lie derivative on vector fields** [GN26, (3.35)]:
 `(L_Y ω)(X₁, …, Xₙ) = Y.ω(X₁, …, Xₙ) − ∑ⱼ ω(X₁, …, [Y, Xⱼ], …, Xₙ)`. -/
 theorem lieDeriv_apply_fields (Y : SmoothVectorField E M) (ω : DifferentialForm E M F n)
     (X : Fin n → SmoothVectorField E M) (x : M) :
@@ -618,10 +639,10 @@ theorem lieDeriv_apply_fields (Y : SmoothVectorField E M) (ω : DifferentialForm
     Finset.sum_sub_distrib]
   abel
 
-/-- **The exterior derivative on vector fields** (Glöckner–Neeb, Proposition 3.6.7, (3.29)):
+/-- **The exterior derivative on vector fields** [GN26, Proposition 3.6.7, (3.29)]:
 `dω(X₀, …, X_{n+1}) = ∑ᵢ (-1)ⁱ Xᵢ.ω(…, X̂ᵢ, …) − ∑_{i ≤ j} (-1)^{i+j} ω([Xᵢ, X_{j+1}], …)`,
 where in the second sum `Xᵢ` and `X_{j+1}` are removed. (With the index `j + 1` in place of `j`,
-the second sum is `+ ∑_{i < j} (-1)^{i+j} ω([Xᵢ, Xⱼ], …)` as in Glöckner–Neeb; we follow the
+the second sum is `+ ∑_{i < j} (-1)^{i+j} ω([Xᵢ, Xⱼ], …)` as in [GN26]; we follow the
 indexing of Mathlib's `extDeriv_apply_vectorField`.) -/
 theorem d_apply_fields (ω : DifferentialForm E M F (n + 1))
     (X : Fin (n + 2) → SmoothVectorField E M) (x : M) :
@@ -648,7 +669,7 @@ theorem d_apply_fields (ω : DifferentialForm E M F (n + 1))
 
 end DifferentialForm
 
-/-! ### Related vector fields (Glöckner–Neeb, Exercise 3.6.6) -/
+/-! ### Related vector fields [GN26, Exercise 3.6.6] -/
 
 section Related
 
@@ -673,7 +694,7 @@ theorem dMB_vec_of_isRelated {X : SmoothVectorField E₀ N} {Y : SmoothVectorFie
   exact (key (X x) (X.isVectorField x)).symm.trans
     (congrArg (fun p : TangentBundle E M ↦ (p.2 : E)) (hXY x))
 
-/-- `φ*(i_Y ω) = i_X(φ*ω)` for `φ`-related vector fields (Glöckner–Neeb, Exercise 3.6.6). -/
+/-- `φ*(i_Y ω) = i_X(φ*ω)` for `φ`-related vector fields [GN26, Exercise 3.6.6]. -/
 theorem pullback_interior (hφ : SmoothMBM E₀ E φ) {X : SmoothVectorField E₀ N}
     {Y : SmoothVectorField E M} (hXY : IsRelated φ X Y) (ω : DifferentialForm E M F (n + 1)) :
     (interior Y ω).pullback hφ = interior X (ω.pullback hφ) := by
@@ -688,7 +709,7 @@ theorem pullback_interior (hφ : SmoothMBM E₀ E φ) {X : SmoothVectorField E�
   | zero => exact (dMB_vec_of_isRelated hXY x).symm
   | succ k => rfl
 
-/-- `φ*(L_Y ω) = L_X(φ*ω)` for `φ`-related vector fields (Glöckner–Neeb, Exercise 3.6.6). -/
+/-- `φ*(L_Y ω) = L_X(φ*ω)` for `φ`-related vector fields [GN26, Exercise 3.6.6]. -/
 theorem pullback_lieDeriv (hφ : SmoothMBM E₀ E φ) {X : SmoothVectorField E₀ N}
     {Y : SmoothVectorField E M} (hXY : IsRelated φ X Y) (ω : DifferentialForm E M F n) :
     (lieDeriv Y ω).pullback hφ = lieDeriv X (ω.pullback hφ) := by

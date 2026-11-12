@@ -15,30 +15,36 @@ public import LocallyConvexAnalysis.Calculus.CklMaps
 On manifolds modeled on locally convex spaces vector fields need not have flows, which is why
 the Lie derivative `L_X ω` is defined algebraically
 (`LocallyConvexManifolds.DifferentialForm.LieDerivative`). When `X` does have a local flow `Fl`, we
-prove H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362), Remark 3.6.17,
-formula (3.36) (their Exercise 3.6.15):
+prove [GN26, Remark 3.6.17, formula (3.36)] (their Exercise 3.6.15):
 
 `d/dt|_{t=0} ((Fl_t)* ω)ₓ(v₁, …, vₙ) = (L_X ω)ₓ(v₁, …, vₙ)`.
+
+## Main definitions
+
+* `IsLocalFlow`: local flows of a smooth vector field on a manifold (compare [GN26, Definition
+  2.5.23]), given as a hypothesis: an open `Ω ⊆ ℝ × M` containing `{0} × M`, a `C²` map `Fl : Ω → M`
+  with `Fl(0, x) = x` whose curves `t ↦ Fl(t, x)` are integral curves of `X`.
 
 ## Main results
 
 * `IsLocalForm.hasDirDerivAt_flow`: the formula in a chart, for a `C²` local flow
   `φ : ℝ × E → E` of `X : E → E`.
-* `IsLocalFlow`: local flows of a smooth vector field on a manifold (compare GN,
-  Definition 2.5.23), given as a hypothesis: an open `Ω ⊆ ℝ × M` containing `{0} × M`, a `C²`
-  map `Fl : Ω → M` with `Fl(0, x) = x` whose curves `t ↦ Fl(t, x)` are integral curves of `X`.
 * `IsLocalFlow.hasDirDerivAt_pullback`: (3.36), read in any chart around `x`.
 
 ## Implementation notes
 
-* GN assume local `C¹`-flows. We assume `C²`: the proof differentiates `∂_v Fl(t, ·)` in `t`
-  and exchanges the order of differentiation (`hasDirDerivAt_comm`, a Schwarz theorem without
-  completeness), using `∂_t Fl = X ∘ Fl`. GN's hint goes through their Exercises 2.5.1 and
-  2.4.9; we do not claim this argument is new.
+* Glöckner–Neeb assume local `C¹`-flows. We assume `C²`: the proof differentiates `∂_v Fl(t, ·)`
+  in `t` and exchanges the order of differentiation (`hasDirDerivAt_comm`, a Schwarz theorem
+  without completeness), using `∂_t Fl = X ∘ Fl`. Glöckner–Neeb's hint goes through their
+  Exercises 2.5.1 and 2.4.9; we do not claim this argument is new.
 * The pullback `(Fl_t)* ω` at `x` is written in a chart `i` around `x`: the vectors are pushed
   forward by the derivative of `i ∘ Fl_t ∘ i⁻¹` at `i x` and `ω` is evaluated at `Fl_t x` through
   its local representative in `i`. No pullback of forms along local diffeomorphisms is needed.
 * No completeness is assumed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -64,10 +70,10 @@ variable {E F : Type u}
   [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F]
   {n : ℕ}
 
-/-- **The Lie derivative along a local flow, in a chart** (the local form of Glöckner–Neeb,
-(3.36)). Let `φ : ℝ × E → E` be `C²` on an open set `D`, with values in `U`, solving
-`∂ₜφ(t, z) = X(φ(t, z))`, and with `φ(0, z) = z` near `y`. Then
-`t ↦ ω(φ(t, y))(∂_z φ(t, y) v₁, …, ∂_z φ(t, y) vₙ)` has derivative `(L_X ω)(y)(v)` at `t = 0`. -/
+/-- **The Lie derivative along a local flow, in a chart** (the local form of [GN26, (3.36)]). Let
+`φ : ℝ × E → E` be `C²` on an open set `D`, with values in `U`, solving `∂ₜφ(t, z) = X(φ(t, z))`,
+and with `φ(0, z) = z` near `y`. Then `t ↦ ω(φ(t, y))(∂_z φ(t, y) v₁, …, ∂_z φ(t, y) vₙ)` has
+derivative `(L_X ω)(y)(v)` at `t = 0`. -/
 theorem IsLocalForm.hasDirDerivAt_flow {ω : E × (Fin n → E) → F} {U : Set E}
     (hω : IsLocalForm n ω U) (hU : IsOpen U) {X : E → E} (hX : ContDiffMBOn 1 X U)
     {φ : ℝ × E → E} {D : Set (ℝ × E)} (hD : IsOpen D) (hφ : ContDiffMBOn 2 φ D)
@@ -146,9 +152,9 @@ variable {E : Type u}
   {F : Type u} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [IsTopologicalAddGroup F]
   [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F] {n : ℕ}
 
-/-- `Fl : Ω → M` is a **local flow** of the vector field `X` (compare Glöckner–Neeb,
-Definition 2.5.23): `Ω ⊆ ℝ × M` is an open set containing `{0} × M`, `Fl` is `C²` on `Ω`,
-`Fl(0, x) = x`, and each curve `t ↦ Fl(t, x)` is an integral curve of `X`, read in any chart. -/
+/-- `Fl : Ω → M` is a **local flow** of the vector field `X` (compare [GN26, Definition 2.5.23]):
+`Ω ⊆ ℝ × M` is an open set containing `{0} × M`, `Fl` is `C²` on `Ω`, `Fl(0, x) = x`, and each curve
+`t ↦ Fl(t, x)` is an integral curve of `X`, read in any chart. -/
 structure IsLocalFlow (X : SmoothVectorField E M) (Fl : ℝ × M → M) (Ω : Set (ℝ × M)) :
     Prop where
   isOpen : IsOpen Ω
@@ -158,7 +164,7 @@ structure IsLocalFlow (X : SmoothVectorField E M) (Fl : ℝ × M → M) (Ω : Se
   hasDirDerivAt : ∀ p ∈ Ω, ∀ i : atlas E M, Fl p ∈ i.1.source →
     HasDirDerivAt (fun s : ℝ ↦ i.1 (Fl (s, p.2))) p.1 1 (X.rep i (i.1 (Fl p)))
 
-/-- **The Lie derivative along a local flow** (Glöckner–Neeb, Remark 3.6.17, (3.36), and
+/-- **The Lie derivative along a local flow** ([GN26, Remark 3.6.17, (3.36)], and
 Exercise 3.6.15): if `X` has a local flow `Fl`, then in every chart `i` around `x`,
 `d/dt|₀ ω(Fl_t x)(T_x Fl_t v₁, …, T_x Fl_t vₙ) = (L_X ω)ₓ(v₁, …, vₙ)`, where `T_x Fl_t` is read as
 the derivative of `i ∘ Fl_t ∘ i⁻¹` at `i x`. That is, `d/dt|₀ (Fl_t* ω)ₓ = (L_X ω)ₓ`. -/

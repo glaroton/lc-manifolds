@@ -11,19 +11,29 @@ public import LocallyConvexManifolds.Manifold.Basic
 /-!
 # `C^k` maps between manifolds
 
-Reference: K.-H. Neeb, *Towards a Lie theory of locally convex groups*, §I.3; H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Ch. 3.
-
 Let `M` and `N` be manifolds modeled on locally convex spaces `E` and `F`. A map `f : M → N` is
 `C^k` on an open set `U ⊆ M` if it is continuous on `U` and its local representatives
 `chartAt (f x) ∘ f ∘ (chartAt x)⁻¹` are `C^k` in the sense of Michal–Bastiani on their (open)
-domains. We show:
+domains ([Nee06, §I.3]; [GN26, Ch. 3]).
+
+## Main definitions
+
+* `ContMDiffMBOn k f U`, `ContMDiffMB k f`: `f` is `C^k` on `U`, respectively on `M`.
+* `SmoothMBMOn f U`, `SmoothMBM f`: `f` is `C^k` for every `k`.
+
+## Main results
 
 * `ContMDiffMBOn.contDiffMBOn_chart`: then the local representatives in *any* charts of the
   atlases are `C^k`, because the transition maps are smooth;
 * `ContMDiffMBOn.comp`: compositions of `C^k` maps are `C^k`;
-* identities and constant maps are smooth, and for maps between the model spaces themselves the
-  notion agrees with `ContDiffMBOn` (`contMDiffMBOn_iff_contDiffMBOn`).
+* identities and constant maps are smooth (`smoothMBMOn_id`, `smoothMBMOn_const`), and for maps
+  between the model spaces themselves the notion agrees with `ContDiffMBOn`
+  (`contMDiffMBOn_iff_contDiffMBOn`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [K.-H. Neeb, *Towards a Lie theory of locally convex groups*][Nee06]
 -/
 
 @[expose] public section
@@ -106,7 +116,7 @@ omit [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [ChartedSpace F N]
   [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F] in
 /-- Transition maps between charts of the maximal atlas (charts compatible with the atlas) are
 smooth. -/
-theorem smoothMBOn_transition_of_mem_maximalAtlas [MBManifold E M]
+theorem smoothMBOn_transition_of_mem_maximalAtlas
     {e e' : OpenPartialHomeomorph M E} (he : e ∈ (mbGroupoid E).maximalAtlas M)
     (he' : e' ∈ (mbGroupoid E).maximalAtlas M) :
     SmoothMBOn (e' ∘ e.symm) (e.target ∩ e.symm ⁻¹' e'.source) := by

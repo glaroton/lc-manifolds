@@ -11,17 +11,16 @@ public import LocallyConvexAnalysis.Calculus.DenseInterior.Basic
 /-!
 # Manifolds with rough boundary
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1),
-§3.5 "Manifolds with boundary and generalizations", pp. 278–282.
+We follow [GN26, §3.5 "Manifolds with boundary and generalizations", pp. 278–282].
 
 A *rough chart* of a topological space `M` modeled on a locally convex space `E` is a
 homeomorphism `φ : U_φ → V_φ` from an open subset of `M` onto a **locally convex subset with
-dense interior** `V_φ ⊆ E` (G–N, Definition 3.5.1(a), p. 278). Closed half-spaces, cubes
+dense interior** `V_φ ⊆ E` [GN26, Definition 3.5.1(a), p. 278]. Closed half-spaces, cubes
 `[0, 1]ⁿ`, simplices and closed convex sets with nonempty interior are such subsets; open sets are
-a special case. Since the `C^r` calculus of lc-analysis (`LocallyConvex.Analysis.ContDiffLC`,
-G–N §1.4) works on these sets, `C^r`-compatibility of rough charts makes sense: the overlaps
+a special case. Since the `C^r` calculus of [LCA] (`LocallyConvex.Analysis.ContDiffLC`,
+[GN26, §1.4]) works on these sets, `C^r`-compatibility of rough charts makes sense: the overlaps
 `ψ(U_φ ∩ U_ψ)` are relatively open in `V_ψ`, hence again locally convex with dense interior
-(G–N, Remark 3.5.2, p. 279).
+[GN26, Remark 3.5.2, p. 279].
 
 ## Design
 
@@ -39,35 +38,35 @@ maps do not change when an atlas is replaced by its maximal atlas (`RoughAtlas.b
 
 ## Main definitions
 
-* `ContDiffLCUpTo r f U`: `f` is `C^k` on `U` (G–N, Definition 1.4.4) for all `k ≤ r`.
-* `IsRoughChart e`: open source, locally convex target with dense interior (G–N 3.5.1(a)).
-* `RoughAtlas r E M`: a `C^r` atlas of rough `E`-charts (G–N 3.5.1(a)).
+* `ContDiffLCUpTo r f U`: `f` is `C^k` on `U` [GN26, Definition 1.4.4] for all `k ≤ r`.
+* `IsRoughChart e`: open source, locally convex target with dense interior [GN26, 3.5.1(a)].
+* `RoughAtlas r E M`: a `C^r` atlas of rough `E`-charts [GN26, 3.5.1(a)].
 * `RoughAtlas.IsCompatible`, `RoughAtlas.maximal`, `RoughAtlas.IsMaximal`, `RoughManifold`:
-  maximal atlases, `C^r` manifolds with rough boundary (G–N 3.5.1(b)).
-* `RoughAtlas.boundary`: the formal boundary `∂M` (G–N 3.5.1(c)).
+  maximal atlases, `C^r` manifolds with rough boundary [GN26, 3.5.1(b)].
+* `RoughAtlas.boundary`: the formal boundary `∂M` [GN26, 3.5.1(c)].
 * `RoughAtlas.ContMDiff A B s f`: `C^s` maps between manifolds with rough boundary
-  (G–N, Definition 3.5.11, p. 281).
+  [GN26, Definition 3.5.11, p. 281].
 * `RoughAtlas.ofChartedSpace`: a manifold modeled on `E` (`MBManifold`) as a manifold with rough
-  boundary (G–N, Example 3.5.3(a), p. 279).
-* `RoughAtlas.prod`: products (G–N, Example 3.5.5, p. 279).
+  boundary [GN26, Example 3.5.3(a), p. 279].
+* `RoughAtlas.prod`: products [GN26, Example 3.5.5, p. 279].
 * `RoughAtlas.ofSubset`, `RoughAtlas.ofConvex`: a locally convex subset with dense interior
   (for instance a convex set with nonempty interior), with the single chart given by the
-  inclusion (G–N, Example 3.5.3(b), p. 279); `RoughAtlas.unitInterval`, `RoughAtlas.halfSpace`.
+  inclusion [GN26, Example 3.5.3(b), p. 279]; `RoughAtlas.unitInterval`, `RoughAtlas.halfSpace`.
 
 ## Main results
 
-* `ContDiffLC.mem_interior_of_rightInvOn`: the analytic core of G–N, Lemma 3.5.6
-  (pp. 279–280): a `C^1` map with a `C^1` right inverse sends interior points to interior points.
+* `ContDiffLC.mem_interior_of_rightInvOn`: the analytic core of [GN26, Lemma 3.5.6
+  (pp. 279–280)]: a `C^1` map with a `C^1` right inverse sends interior points to interior points.
   `RoughAtlas.mem_interior_iff`: **the boundary is well defined**: interior points in one chart
   are interior points in every chart; for `r ≥ 1` this is Lemma 3.5.6, for `r = 0` it is (A3).
   `RoughAtlas.mem_boundary_iff`: `x ∈ ∂M` if and only if `φ(x) ∉ V_φ⁰` for one (equivalently,
   every) chart `φ` at `x`.
-* `RoughAtlas.ContMDiff.comp`: composition of `C^s` maps (G–N, Proposition 3.5.12, p. 281);
+* `RoughAtlas.ContMDiff.comp`: composition of `C^s` maps [GN26, Proposition 3.5.12, p. 281];
   `RoughAtlas.contMDiff_id`, `RoughAtlas.contMDiff_maximal_iff` (chart independence).
-* `RoughAtlas.boundary_ofChartedSpace`: ordinary manifolds have empty boundary (G–N,
-  Remark 3.5.7, p. 280). `RoughAtlas.boundary_ofSubset`: the formal boundary of a subset `U` is
-  `U` minus the interior of `U` in `E` (Remark 3.5.7); `RoughAtlas.boundary_unitInterval`: the
-  boundary of `[0, 1]` is `{0, 1}`. `RoughAtlas.boundary_prod`: `∂(M × N) = ∂M × N ∪ M × ∂N`.
+* `RoughAtlas.boundary_ofChartedSpace`: ordinary manifolds have empty boundary [GN26, Remark 3.5.7,
+  p. 280]. `RoughAtlas.boundary_ofSubset`: the formal boundary of a subset `U` is `U` minus the
+  interior of `U` in `E` (Remark 3.5.7); `RoughAtlas.boundary_unitInterval`: the boundary of
+  `[0, 1]` is `{0, 1}`. `RoughAtlas.boundary_prod`: `∂(M × N) = ∂M × N ∪ M × ∂N`.
 
 ## Infinite-dimensional subtleties
 
@@ -77,13 +76,13 @@ maps do not change when an atlas is replaced by its maximal atlas (`RoughAtlas.b
   of the model space and of `V_ψ`), and then differentiates `t ↦ λ(κ(y + t u))` at an interior
   point `y` with `dκ(y) u = z - a`, `a` interior; the chain rule `d(κ ∘ κ⁻¹) = id` provides `u`.
   For `r = 0` the statement is false in infinite dimensions (a closed ball of an
-  infinite-dimensional Banach space is homeomorphic to the whole space, G–N, Remark 3.5.9,
-  p. 280), which is why (A3) is an axiom for `r = 0`. In finite dimensions it would follow from
-  Invariance of Domain (G–N, Remark 3.5.8), which is not used here.
+  infinite-dimensional Banach space is homeomorphic to the whole space, [GN26, Remark 3.5.9,
+  p. 280]), which is why (A3) is an axiom for `r = 0`. In finite dimensions it would follow from
+  Invariance of Domain [GN26, Remark 3.5.8], which is not used here.
 * **The rough boundary need not be a submanifold.** `∂M` is just a subset of `M` (corners of
   `[0, 1]²`, the boundary of a closed convex set with nonempty interior); no manifold structure on
   it is claimed or constructed.
-* **Dense interior, not just nonempty interior.** G–N, Example 3.5.3(b), speaks of locally convex
+* **Dense interior, not just nonempty interior.** [GN26, Example 3.5.3(b)] speaks of locally convex
   subsets "with non-empty interior"; since rough charts take values in sets with dense interior
   (Definition 3.5.1(a)), `RoughAtlas.ofSubset` assumes dense interior. For convex sets the two
   conditions agree (`Convex.hasDenseInterior`), see `RoughAtlas.ofConvex`.
@@ -108,6 +107,12 @@ The tangent bundle of a manifold with rough boundary is in `RoughBoundary/Tangen
 Open submanifolds (Example 3.5.4),
 submanifolds with prescribed boundary (Definition 3.5.14), the comparison of `ContMDiff` with
 `ContMDiffMBOn` for `RoughAtlas.ofChartedSpace`, and manifolds with corners (Remark 3.5.10).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section
@@ -133,7 +138,7 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
   {G : Type w} [AddCommGroup G] [Module ℝ G] [TopologicalSpace G]
   [IsTopologicalAddGroup G] [ContinuousSMul ℝ G] [LocallyConvexSpace ℝ G] [T2Space G]
 
-/-- `f` is `C^r` on `U`, `r ∈ ℕ₀ ∪ {∞}`, in the sense of Glöckner–Neeb, Definition 1.4.4:
+/-- `f` is `C^r` on `U`, `r ∈ ℕ₀ ∪ {∞}`, in the sense of [GN26, Definition 1.4.4]:
 `ContDiffLC k f U` for every `k ∈ ℕ` with `k ≤ r`. For `r = ∞` this is `SmoothLC f U`. -/
 def ContDiffLCUpTo (r : ℕ∞) (f : E → F) (U : Set E) : Prop :=
   ∀ k : ℕ, (k : ℕ∞) ≤ r → ContDiffLC k f U
@@ -157,7 +162,8 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E]
 theorem of_le (hf : ContDiffLCUpTo r f U) (hsr : s ≤ r) : ContDiffLCUpTo s f U :=
   fun k hk ↦ hf k (hk.trans hsr)
 
-omit [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F] in
+omit [LocallyConvexSpace ℝ E] [T2Space E] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F]
+  [LocallyConvexSpace ℝ F] [T2Space F] in
 theorem congr (hf : ContDiffLCUpTo r f U) {g : E → F} (h : EqOn f g U) :
     ContDiffLCUpTo r g U :=
   fun k hk ↦ (hf k hk).congr h
@@ -174,7 +180,7 @@ theorem of_local (h : ∀ x ∈ U, ∃ W, IsOpen W ∧ x ∈ W ∧ ContDiffLCUpT
     let ⟨W, hW, hxW, hf⟩ := h x hx
     ⟨W, hW, hxW, hf k hk⟩
 
-/-- Chain rule (Glöckner–Neeb, Proposition 1.4.10): only the domain `V` of `g` needs to be
+/-- Chain rule [GN26, Proposition 1.4.10]: only the domain `V` of `g` needs to be
 locally convex. -/
 theorem comp {g : F → G} {V : Set F} (hd : HasDenseInterior U) (hV : IsLocallyConvexSubset V)
     (hVd : HasDenseInterior V) (hg : ContDiffLCUpTo r g V) (hf : ContDiffLCUpTo r f U)
@@ -204,7 +210,7 @@ theorem ContDiffLCUpTo.prodMap {E₂ : Type u} [AddCommGroup E₂] [Module ℝ E
 
 /-! ### The analytic core of the invariance of the boundary -/
 
-/-- **Glöckner–Neeb, Lemma 3.5.6 (analytic core), pp. 279–280.** Let `κ : U → U'` be `C^1`
+/-- **[GN26, Lemma 3.5.6 (analytic core), pp. 279–280].** Let `κ : U → U'` be `C^1`
 between locally convex subsets with dense interior, with a `C^1` right inverse `μ : U' → U`
 (`κ ∘ μ = id` on `U'`). If `y` is an interior point of `U` with `μ (κ y) = y`, then `κ y` is an
 interior point of `U'`.
@@ -269,7 +275,7 @@ end UpTo
 
 /-! ### Rough charts -/
 
-/-- Glöckner–Neeb, Definition 3.5.1(a), p. 278: a *rough chart* is a homeomorphism from an open
+/-- [GN26, Definition 3.5.1(a), p. 278]: a *rough chart* is a homeomorphism from an open
 subset of `M` onto a locally convex subset of `E` with dense interior. -/
 structure IsRoughChart {M : Type*} [TopologicalSpace M] {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] (e : PartialHomeomorph M E) : Prop where
@@ -338,7 +344,7 @@ namespace IsRoughChart
 
 variable {e : PartialHomeomorph M E}
 
-/-- Glöckner–Neeb, Remark 3.5.2, p. 279: images of open subsets under rough charts are locally
+/-- [GN26, Remark 3.5.2, p. 279]: images of open subsets under rough charts are locally
 convex. -/
 theorem isLocallyConvexSubset_inter_preimage [LocallyConvexSpace ℝ E] (he : IsRoughChart e)
     {s : Set M} (hs : IsOpen s) : IsLocallyConvexSubset (e.target ∩ e.symm ⁻¹' s) := by
@@ -346,7 +352,7 @@ theorem isLocallyConvexSubset_inter_preimage [LocallyConvexSpace ℝ E] (he : Is
   rw [h]
   exact he.isLocallyConvexSubset_target.inter_isOpen hW
 
-/-- Glöckner–Neeb, Remark 3.5.2, p. 279: images of open subsets under rough charts have dense
+/-- [GN26, Remark 3.5.2, p. 279]: images of open subsets under rough charts have dense
 interior. -/
 theorem hasDenseInterior_inter_preimage (he : IsRoughChart e) {s : Set M} (hs : IsOpen s) :
     HasDenseInterior (e.target ∩ e.symm ⁻¹' s) := by
@@ -390,7 +396,7 @@ variable [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace �
 namespace IsRoughChart
 
 /-- **Factoring a local representative through an intermediate chart** (the computation in the
-proof of Glöckner–Neeb, Proposition 3.5.12, p. 281): on the part of the domain where `f` lands
+proof of [GN26, Proposition 3.5.12, p. 281]): on the part of the domain where `f` lands
 in the chart `κ`, `ψ ∘ (g ∘ f) ∘ φ⁻¹ = (ψ ∘ g ∘ κ⁻¹) ∘ (κ ∘ f ∘ φ⁻¹)` is `C^r` if both factors
 are. -/
 theorem contDiffLCUpTo_comp {φ : PartialHomeomorph M E} {κ : PartialHomeomorph N F}
@@ -417,7 +423,7 @@ theorem contDiffLCUpTo_comp {φ : PartialHomeomorph M E} {κ : PartialHomeomorph
     fun y hy ↦ ?_
   simp only [comp_apply, κ.left_inv hy.2.2]
 
-/-- **Glöckner–Neeb, Lemma 3.5.6, pp. 279–280, for two charts.** If the transition maps between
+/-- **[GN26, Lemma 3.5.6, pp. 279–280], for two charts.** If the transition maps between
 two rough charts are `C^1`, a point of the common domain is mapped to an interior point of the
 target by one chart if and only if it is so by the other. -/
 theorem mem_interior_of_trans {e e' : PartialHomeomorph M E} (he : IsRoughChart e)
@@ -454,11 +460,11 @@ variable (r : ℕ∞) (E : Type u) [AddCommGroup E] [Module ℝ E] [TopologicalS
   [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   (M : Type*) [TopologicalSpace M]
 
-/-- **Glöckner–Neeb, Definition 3.5.1(a), p. 278**: a `C^r` atlas of rough `E`-charts of `M`,
+/-- **[GN26, Definition 3.5.1(a), p. 278]**: a `C^r` atlas of rough `E`-charts of `M`,
 `r ∈ ℕ₀ ∪ {∞}`. The charts are rough charts (open sources, locally convex targets with dense
 interior), they cover `M` (A1), the transition maps `e' ∘ e⁻¹ : e(U_e ∩ U_{e'}) → E` are `C^r`
 (A2), and, for `r = 0`, interior points correspond to interior points (A3). For `r ≥ 1`, (A3)
-is automatic (`RoughAtlas.mem_interior_iff`, G–N Lemma 3.5.6). -/
+is automatic (`RoughAtlas.mem_interior_iff`, [GN26, Lemma 3.5.6]). -/
 structure RoughAtlas where
   /-- The charts. -/
   atlas : Set (PartialHomeomorph M E)
@@ -482,7 +488,7 @@ variable {F : Type v} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
   [IsTopologicalAddGroup G] [ContinuousSMul ℝ G] [LocallyConvexSpace ℝ G] [T2Space G]
   {N : Type*} [TopologicalSpace N] {X : Type*} [TopologicalSpace X]
 
-/-- **The boundary is well defined** (Glöckner–Neeb, Lemma 3.5.6, pp. 279–280): for two charts
+/-- **The boundary is well defined** [GN26, Lemma 3.5.6, pp. 279–280]: for two charts
 `e`, `e'` at `x`, `e x` is an interior point of `e.target` if and only if `e' x` is an interior
 point of `e'.target`. For `r ≥ 1` this follows from the invertibility of the differentials of the
 transition maps and Hahn–Banach; for `r = 0` it is axiom (A3). -/
@@ -497,12 +503,12 @@ theorem mem_interior_iff (A : RoughAtlas r E M) {e e' : PartialHomeomorph M E} (
     exact ⟨(A.isRoughChart e he).mem_interior_of_trans (A.isRoughChart e' he') h h' hx hx',
       (A.isRoughChart e' he').mem_interior_of_trans (A.isRoughChart e he) h' h hx' hx⟩
 
-/-- **Glöckner–Neeb, Definition 3.5.1(c), p. 278**: the (formal) boundary `∂M`, the set of
+/-- **[GN26, Definition 3.5.1(c), p. 278]**: the (formal) boundary `∂M`, the set of
 points mapped to the topological boundary `V_e \ V_e⁰` of the target by some chart. -/
 def boundary (A : RoughAtlas r E M) : Set M :=
   {x | ∃ e ∈ A.atlas, x ∈ e.source ∧ e x ∉ interior e.target}
 
-/-- `x ∈ ∂M` can be tested in any chart at `x` (Glöckner–Neeb, Lemma 3.5.6). -/
+/-- `x ∈ ∂M` can be tested in any chart at `x` [GN26, Lemma 3.5.6]. -/
 theorem mem_boundary_iff (A : RoughAtlas r E M) {e : PartialHomeomorph M E} (he : e ∈ A.atlas)
     {x : M} (hx : x ∈ e.source) : x ∈ A.boundary ↔ e x ∉ interior e.target := by
   constructor
@@ -512,9 +518,9 @@ theorem mem_boundary_iff (A : RoughAtlas r E M) {e : PartialHomeomorph M E} (he 
 
 /-! #### Maximal atlases -/
 
-/-- A rough chart is *compatible* with the atlas `A` if all the transition maps between it and
-the charts of `A` are `C^r` and, for `r = 0`, interior points correspond (Glöckner–Neeb,
-Remark 3.1.5 adapted to rough charts). -/
+/-- A rough chart is *compatible* with the atlas `A` if all the transition maps between it and the
+charts of `A` are `C^r` and, for `r = 0`, interior points correspond ([GN26, Remark 3.1.5] adapted
+to rough charts). -/
 def IsCompatible (A : RoughAtlas r E M) (e : PartialHomeomorph M E) : Prop :=
   IsRoughChart e ∧ ∀ c ∈ A.atlas,
     ContDiffLCUpTo r (c ∘ e.symm) (e.target ∩ e.symm ⁻¹' c.source) ∧
@@ -537,7 +543,7 @@ theorem contDiffLCUpTo_trans_of_isCompatible (A : RoughAtlas r E M) {e e' : Part
   exact he.1.contDiffLCUpTo_comp (A.isRoughChart c hc) he'.1.isOpen_source continuous_id
     continuous_id ((he.2 c hc).1) ((he'.2 c hc).2.1)
 
-/-- **The maximal atlas** containing `A` (Glöckner–Neeb, Remark 3.1.5, for rough charts): all
+/-- **The maximal atlas** containing `A` ([GN26, Remark 3.1.5], for rough charts): all
 rough charts compatible with `A`. -/
 def maximal (A : RoughAtlas r E M) : RoughAtlas r E M where
   atlas := {e | A.IsCompatible e}
@@ -587,7 +593,7 @@ theorem boundary_maximal (A : RoughAtlas r E M) : A.maximal.boundary = A.boundar
 
 /-! #### `C^s` maps -/
 
-/-- **Glöckner–Neeb, Definition 3.5.11, p. 281**: `f : M → N` is `C^s` if it is continuous and
+/-- **[GN26, Definition 3.5.11, p. 281]**: `f : M → N` is `C^s` if it is continuous and
 all its local representatives `e' ∘ f ∘ e⁻¹ : e(f⁻¹(U_{e'}) ∩ U_e) → F` are `C^s`. The domains
 are relatively open in the targets of the charts, hence locally convex with dense interior. -/
 def ContMDiff {r' : ℕ∞} (A : RoughAtlas r E M) (B : RoughAtlas r' F N) (s : ℕ∞) (f : M → N) :
@@ -597,7 +603,7 @@ def ContMDiff {r' : ℕ∞} (A : RoughAtlas r E M) (B : RoughAtlas r' F N) (s : 
 
 variable {r' r'' : ℕ∞}
 
-/-- **Glöckner–Neeb, Proposition 3.5.12, p. 281**: compositions of `C^s` maps between manifolds
+/-- **[GN26, Proposition 3.5.12, p. 281]**: compositions of `C^s` maps between manifolds
 with rough boundary are `C^s`. -/
 theorem ContMDiff.comp {A : RoughAtlas r E M} {B : RoughAtlas r' F N} {C : RoughAtlas r'' G X}
     {s : ℕ∞} {f : M → N} {g : N → X} (hg : B.ContMDiff C s g) (hf : A.ContMDiff B s f) :
@@ -627,7 +633,7 @@ theorem ContMDiff.of_maximal {A : RoughAtlas r E M} {B : RoughAtlas r' F N} {s :
 
 /-- **Chart independence**: for `s ≤ r` and `s ≤ r'`, a map is `C^s` for given atlases if and only
 if it is `C^s` for the maximal atlases. Hence `C^s` maps only depend on the manifolds with rough
-boundary, as in Glöckner–Neeb, Definition 3.5.11. -/
+boundary, as in [GN26, Definition 3.5.11]. -/
 theorem contMDiff_maximal_iff {A : RoughAtlas r E M} {B : RoughAtlas r' F N} {s : ℕ∞}
     (hsr : s ≤ r) (hsr' : s ≤ r') {f : M → N} :
     A.maximal.ContMDiff B.maximal s f ↔ A.ContMDiff B s f := by
@@ -640,7 +646,7 @@ theorem contMDiff_maximal_iff {A : RoughAtlas r E M} {B : RoughAtlas r' F N} {s 
 
 end RoughAtlas
 
-/-- **Glöckner–Neeb, Definition 3.5.1(b), p. 278**: a `C^r` manifold with rough boundary modeled
+/-- **[GN26, Definition 3.5.1(b), p. 278]**: a `C^r` manifold with rough boundary modeled
 on `E`, a maximal `C^r` atlas of rough `E`-charts. Every rough atlas `A` defines one,
 `A.toRoughManifold`. -/
 structure RoughManifold extends RoughAtlas r E M where
@@ -707,7 +713,7 @@ namespace RoughAtlas
 /-! #### Ordinary manifolds -/
 
 variable (r E M) in
-/-- **Glöckner–Neeb, Example 3.5.3(a), p. 279**: a smooth manifold modeled on `E`
+/-- **[GN26, Example 3.5.3(a), p. 279]**: a smooth manifold modeled on `E`
 (`MBManifold E M`) is a `C^r` manifold with rough boundary, for every `r`, through the charts of
 its atlas. -/
 def ofChartedSpace [ChartedSpace E M] [MBManifold E M] : RoughAtlas r E M where
@@ -730,7 +736,7 @@ def ofChartedSpace [ChartedSpace E M] [MBManifold E M] : RoughAtlas r E M where
     rw [e'.open_target.interior_eq]
     exact e'.map_source hx.2
 
-/-- Ordinary manifolds have empty boundary (Glöckner–Neeb, Remark 3.5.7, p. 280). -/
+/-- Ordinary manifolds have empty boundary [GN26, Remark 3.5.7, p. 280]. -/
 theorem boundary_ofChartedSpace [ChartedSpace E M] [MBManifold E M] :
     (ofChartedSpace r E M).boundary = ∅ := by
   refine eq_empty_iff_forall_notMem.mpr fun x hx ↦ ?_
@@ -742,7 +748,7 @@ theorem boundary_ofChartedSpace [ChartedSpace E M] [MBManifold E M] :
 
 /-! #### Products -/
 
-/-- **Glöckner–Neeb, Example 3.5.5, p. 279**: the product of manifolds with rough boundary, with
+/-- **[GN26, Example 3.5.5, p. 279]**: the product of manifolds with rough boundary, with
 the charts `φ₁ × φ₂`. -/
 def prod (A : RoughAtlas r E M) (B : RoughAtlas r F N) : RoughAtlas r (E × F) (M × N) where
   atlas := image2 PartialHomeomorph.prod' A.atlas B.atlas
@@ -792,7 +798,7 @@ theorem boundary_prod (A : RoughAtlas r E M) (B : RoughAtlas r F N) :
 /-! #### Subsets of the model space -/
 
 variable (r) in
-/-- **Glöckner–Neeb, Example 3.5.3(b), p. 279**: a nonempty locally convex subset `U ⊆ E` with
+/-- **[GN26, Example 3.5.3(b), p. 279]**: a nonempty locally convex subset `U ⊆ E` with
 dense interior is a `C^r` manifold with rough boundary, with the single chart `U ↪ E`. G–N state
 it for nonempty interior; dense interior is what makes the inclusion a rough chart
 (Definition 3.5.1(a)), and it follows from nonempty interior for convex `U` (`ofConvex`). -/
@@ -817,7 +823,7 @@ def ofSubset {U : Set E} (hU : IsLocallyConvexSubset U) (hd : HasDenseInterior U
     exact h
 
 /-- The formal boundary of a subset `U` is the set of points of `U` that are not interior points
-of `U` in `E` (Glöckner–Neeb, Remark 3.5.7, p. 280). -/
+of `U` in `E` [GN26, Remark 3.5.7, p. 280]. -/
 theorem boundary_ofSubset {U : Set E} (hU : IsLocallyConvexSubset U) (hd : HasDenseInterior U)
     [Nonempty U] : (ofSubset r hU hd).boundary = {x : U | (x : E) ∉ interior U} := by
   ext x
@@ -826,7 +832,7 @@ theorem boundary_ofSubset {U : Set E} (hU : IsLocallyConvexSubset U) (hd : HasDe
 
 variable (r) in
 /-- A convex subset with nonempty interior is a `C^r` manifold with rough boundary
-(Glöckner–Neeb, Example 3.5.3(b), p. 279). -/
+[GN26, Example 3.5.3(b), p. 279]. -/
 def ofConvex {U : Set E} (hU : Convex ℝ U) (hne : (interior U).Nonempty) : RoughAtlas r E U :=
   haveI : Nonempty U := ⟨⟨_, interior_subset hne.some_mem⟩⟩
   ofSubset r hU.isLocallyConvexSubset (hU.hasDenseInterior hne)

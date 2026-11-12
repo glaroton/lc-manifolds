@@ -15,10 +15,9 @@ public import Mathlib.Analysis.PSeries
 /-!
 # A weak Riemannian metric without Levi-Civita connection
 
-Reference: A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*,
-Cambridge University Press (2023), Example 4.22 (p. 93; a weak Riemannian metric on `ℓ²` without
-metric spray, pointed out to Schmeding by C. Maor), which takes up the metric of Example 4.12
-(p. 86, after Magnani and Tiberio).
+This follows [Sch23, Example 4.22] (p. 93; a weak Riemannian metric on `ℓ²` without metric spray,
+pointed out to Schmeding by C. Maor), which takes up the metric of [Sch23, Example 4.12] (p. 86,
+after Magnani and Tiberio).
 
 Let `H` be a real inner product space and `T : H → H` a continuous linear operator which is
 symmetric and positive definite, `⟨T x, x⟩ > 0` for `x ≠ 0`. For `v ∈ H`, the conformal metric
@@ -28,10 +27,7 @@ symmetric and positive definite, `⟨T x, x⟩ > 0` for `x ≠ 0`. For `v ∈ H`
 is a weak Riemannian metric on the manifold `H` (`conformalMetric`). Its derivative in the base
 point is `∂G(p)(w)(x, y) = ⟨v, w⟩ g_p(x, y)` (`localDeriv_conformal`), and the Koszul functional
 of `(x, x)` is `b ↦ g_p(c, b)` for some `c` if and only if `⟨T x, x⟩ v ∈ T(H)`, up to a term
-which is already in `T(H)`. Hence:
-
-* `not_exists_isMetric`: **if `v ∉ T(H)`, there is no symmetric metric connection** for `g`
-  (`Connection.koszul_represented` fails at `x = v`).
+which is already in `T(H)`.
 
 When `T` is invertible, `g` is a strong metric on a Hilbert space and the Levi-Civita connection
 exists. So the obstruction is genuinely infinite-dimensional: it needs a symmetric positive
@@ -39,9 +35,26 @@ definite `T` which is not surjective, that is, a metric `⟨T ·, ·⟩` whose t
 coarser than that of `H`. On `ℓ²` the diagonal operator `T x = (x_n / (n + 1))_n` is such an
 operator, and `v = (1 / (n + 1))_n` is not in its range (`L2.not_exists_isMetric`).
 
-Schmeding's example (the metric `e^{-‖p‖²} Σ x_n y_n / n³` of his Example 4.12) uses the weight
-`n⁻³` and the conformal factor `e^{-‖p‖²}`; the obstruction
-is the same, and a linear exponent `⟨v, p⟩` makes the computation shorter.
+## Main definitions
+
+* `NoLeviCivita.conformalMetric`: the weak Riemannian metric `g_p(x, y) = e^{⟨v, p⟩} ⟨T x, y⟩`.
+
+## Main results
+
+* `NoLeviCivita.localDeriv_conformal`: the derivative of `g` in the base point.
+* `NoLeviCivita.not_exists_isMetric`: **if `v ∉ T(H)`, there is no symmetric metric connection**
+  for `g` (`Connection.koszul_represented` fails at `x = v`).
+* `NoLeviCivita.L2.not_exists_isMetric`: the case of the diagonal operator on `ℓ²`.
+
+## Implementation notes
+
+Schmeding's example (the metric `e^{-‖p‖²} Σ x_n y_n / n³` of [Sch23, Example 4.12]) uses the
+weight `n⁻³` and the conformal factor `e^{-‖p‖²}`; the obstruction is the same, and a linear
+exponent `⟨v, p⟩` makes the computation shorter.
+
+## References
+
+* [A. Schmeding, *An Introduction to Infinite-Dimensional Differential Geometry*][Sch23]
 -/
 
 @[expose] public section
@@ -283,8 +296,8 @@ theorem v_not_mem_range : v ∉ range diag := by
   simp only [h1, norm_one, Real.one_rpow] at ht
   exact one_ne_zero (tendsto_nhds_unique tendsto_const_nhds ht)
 
-/-- **A weak Riemannian metric on `ℓ²` without Levi-Civita connection** (after Schmeding,
-Example 4.22): `g_p(x, y) = e^{⟨v, p⟩} Σ x_n y_n / (n + 1)`, with `v = (1 / (n + 1))_n`. -/
+/-- **A weak Riemannian metric on `ℓ²` without Levi-Civita connection** (after [Sch23,
+Example 4.22]): `g_p(x, y) = e^{⟨v, p⟩} Σ x_n y_n / (n + 1)`, with `v = (1 / (n + 1))_n`. -/
 theorem not_exists_isMetric :
     ¬ ∃ C : Connection H H, C.IsSymmetric ∧
       C.IsMetric (conformalMetric diag_symm diag_pos v).toSymmBilinField :=

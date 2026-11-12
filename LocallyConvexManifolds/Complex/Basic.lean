@@ -14,35 +14,51 @@ public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 /-!
 # Nijenhuis operators, almost complex structures, complex manifolds and Kähler structures
 
-* **Fields of endomorphisms** (`EndomorphismField`): a field `Nₓ` of real linear maps of the
-  tangent spaces with smooth local representatives `(y, v) ↦ N_i(y) v` (`jLocalRep`), stored, as
-  metrics and forms, in the coordinates of the preferred chart at each point.
-* **The Nijenhuis torsion**, with the convention of Goliński–Larotonda–Tumpach [GLT, Definition
-  3.1]: `Ω_N(X, Y) = N[NX, Y] + N[X, NY] − [NX, NY] − N²[X, Y]`. In local coordinates
-  (`nijenhuisLoc`) it is
-  `Ω_N(u, v) = N((∂_u N) v − (∂_v N) u) + (∂_{Nv} N) u − (∂_{Nu} N) v`
-  (`localBracket_nijenhuis`, [GLT, Theorem 3.2]): all the derivatives of the fields cancel.
-  Globally, `EndomorphismField.lieBracket_nijenhuis`: the torsion of two vector fields at `x`
-  only depends on their values at `x`.
-* **Almost complex structures** (`AlmostComplexStructure`): `Jₓ² = −1`. `J` is **integrable**
-  if its Nijenhuis torsion vanishes. On a complex analytic manifold (`ComplexAnalyticManifold`,
-  in `LocallyConvexManifolds.Analytic.Basic`) multiplication by `i` in the charts is an almost
-  complex structure (`canonicalJ`), because the derivatives of the transition maps are complex
-  linear; it is integrable (`canonicalJ_isIntegrable`), since its local representatives are
-  constant.
-* **Kähler structures** (`KaehlerStructure`): an integrable `J` and a `J`-invariant, weakly
-  nondegenerate symmetric bilinear field `g` whose **fundamental form**
-  `ω(u, v) = g(J u, v)` (`fundamentalForm`) is closed. Then `ω` is a (weak) symplectic form
-  (`KaehlerStructure.symplecticForm`).
+This file defines fields of endomorphisms of the tangent spaces and their Nijenhuis torsion,
+almost complex structures and their integrability, and (possibly indefinite) Hermitian and Kähler
+structures. No completeness of the model space is assumed.
+
+## Main definitions
+
+* `EndomorphismField`: a field `Nₓ` of real linear maps of the tangent spaces with smooth local
+  representatives `(y, v) ↦ N_i(y) v` (`jLocalRep`), stored, as metrics and forms, in the
+  coordinates of the preferred chart at each point.
+* `nijenhuisLoc`, `EndomorphismField.nijenhuisAt`: **the Nijenhuis torsion**, with the
+  convention of Goliński–Larotonda–Tumpach [GLT, Definition 3.1]:
+  `Ω_N(X, Y) = N[NX, Y] + N[X, NY] − [NX, NY] − N²[X, Y]`. In local coordinates it is
+  `Ω_N(u, v) = N((∂_u N) v − (∂_v N) u) + (∂_{Nv} N) u − (∂_{Nu} N) v`.
+* `AlmostComplexStructure`: `Jₓ² = −1`; `AlmostComplexStructure.IsIntegrable`: its Nijenhuis
+  torsion vanishes.
+* `canonicalJ`: on a complex analytic manifold (`ComplexAnalyticManifold`, in
+  `LocallyConvexManifolds.Analytic.Basic`) multiplication by `i` in the charts is an almost
+  complex structure, because the derivatives of the transition maps are complex linear.
+* `HermitianStructure`: an almost complex structure `J` and a `J`-invariant smooth field `g` of
+  symmetric bilinear forms, with **fundamental form** `ω(u, v) = g(J u, v)`
+  (`HermitianStructure.fundamentalForm`).
+* `KaehlerStructure`: an integrable `J` and a `J`-invariant, weakly nondegenerate symmetric
+  bilinear field `g` whose fundamental form is closed.
+* `flatKaehler`: the flat Kähler structure of a complex inner product space.
+
+## Main results
+
+* `localBracket_nijenhuis` ([GLT, Theorem 3.2]): the local formula for the Nijenhuis torsion; all
+  the derivatives of the fields cancel.
+* `EndomorphismField.lieBracket_nijenhuis`: the torsion of two vector fields at `x` only depends
+  on their values at `x`.
+* `canonicalJ_isIntegrable`: the almost complex structure of a complex analytic manifold is
+  integrable, since its local representatives are constant.
+* `KaehlerStructure.symplecticForm`: the fundamental form of a Kähler structure is a (weak)
+  symplectic form.
+
+## Implementation notes
 
 **Infinite-dimensional subtleties.**
 * `g` is only required to be weakly nondegenerate (`g(v, ·) = 0 ⇒ v = 0`), and it is not
   required to be positive: pseudo-Kähler metrics are included. Accordingly, `ω` is in general
   only a *weak* symplectic form.
 * The converse of the integrability of complex structures is, in finite dimensions, the
-  Newlander–Nirenberg theorem (Ann. of Math. 65 (1957), 391–404). Its real analytic case on
-  Banach manifolds is in `LocallyConvexManifolds.Complex.NewlanderNirenberg`. In infinite
-  dimensions:
+  Newlander–Nirenberg theorem [NN57]. Its real analytic case on Banach manifolds is in
+  `LocallyConvexManifolds.Complex.NewlanderNirenberg`. In infinite dimensions:
   - it holds for real analytic almost complex structures on real analytic Banach manifolds
     (Beltiță [Bel05, Theorem 7]);
   - it fails for smooth structures on some Banach manifolds (Patyi [Pat99, Theorem 3.1, p. 401]);
@@ -50,16 +66,14 @@ public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
     with integrable almost complex structures that are not locally biholomorphic to locally
     convex spaces.
 
-[GLT]: T. Goliński, G. Larotonda, A. B. Tumpach, *Nijenhuis operators on Banach homogeneous
-spaces*, Rend. Lincei Mat. Appl. 35 (2024), 713–739, doi:10.4171/RLM/1057.
-[Bel05]: D. Beltiță, *Integrability of analytic almost complex structures on Banach manifolds*,
-Ann. Global Anal. Geom. 28 (2005), 59–73.
-[Pat99]: I. Patyi, *On the ∂̄-equation in a Banach space*, Bull. Soc. Math. France 128 (2000),
-391–406.
-[Lem98]: L. Lempert, *The Dolbeault complex in infinite dimensions I*, J. Amer. Math. Soc. 11
-(1998), 485–520.
+## References
 
-No completeness of the model space is assumed.
+* [D. Beltiță, *Integrability of analytic almost complex structures on Banach manifolds*][Bel05]
+* [T. Goliński, G. Larotonda, A. B. Tumpach, *Nijenhuis operators on Banach homogeneous
+  spaces*][GLT]
+* [L. Lempert, *The Dolbeault complex in infinite dimensions I*][Lem98]
+* [A. Newlander, L. Nirenberg, *Complex analytic coordinates in almost complex manifolds*][NN57]
+* [I. Patyi, *On the ∂̄-equation in a Banach space*][Pat99]
 -/
 
 @[expose] public section

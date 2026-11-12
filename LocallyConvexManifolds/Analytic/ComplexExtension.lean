@@ -12,37 +12,40 @@ public import Mathlib.Topology.Compactness.Paracompact
 /-!
 # Complex analytic extensions to complexifications
 
-We prove H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362),
-Proposition 2.2.19: if `M*` is a paracompact complexification of the real analytic manifold `M`
-in which `M` is closed, every real analytic map from `M` to a complex analytic manifold extends to
-a complex analytic map on an open neighborhood of `M` in `M*`. The proof follows GN: local
-extensions in charts (GN, Proposition 2.2.12, `RealAnalyticOn.exists_complexAnalytic_extension`),
-their agreement near `M` by the identity theorem (GN, Theorem 2.1.16(c),
-`ComplexAnalyticOn.eqOn_of_eqOn_real`), and a gluing lemma for paracompact spaces (GN,
-Lemma A.5.10).
+We prove [GN26, Proposition 2.2.19]: if `M*` is a paracompact complexification of the real analytic
+manifold `M` in which `M` is closed, every real analytic map from `M` to a complex analytic manifold
+extends to a complex analytic map on an open neighborhood of `M` in `M*`. The proof follows [GN26]:
+local extensions in charts ([GN26, Proposition 2.2.12],
+`RealAnalyticOn.exists_complexAnalytic_extension`), their agreement near `M` by the identity theorem
+([GN26, Theorem 2.1.16(c)], `ComplexAnalyticOn.eqOn_of_eqOn_real`), and a gluing lemma for
+paracompact spaces ([GN26, Lemma A.5.10]).
 
 ## Main results
 
-* `exists_glue_of_paracompact`: GN, Lemma A.5.10.
+* `exists_glue_of_paracompact`: [GN26, Lemma A.5.10].
 * `complexAnalyticMOn_of_mem_maximalAtlas`, `complexAnalyticMOn_symm_of_mem_maximalAtlas`,
   `complexAnalyticMOn_of_local`: charts are complex analytic, and complex analyticity of maps
   between complex analytic manifolds is local.
 * `IsComplexification.exists_local_extension`, `IsComplexification.eventuallyEq_of_extension`:
   the two local steps.
-* `IsComplexification.exists_complexAnalytic_extension`: GN, Proposition 2.2.19.
+* `IsComplexification.exists_complexAnalytic_extension`: [GN26, Proposition 2.2.19].
 
 ## Implementation notes
 
 * In `IsComplexification` the inclusion `M ⊆ M*` is an injective map `ι`; "`M` closed in `M*`"
   becomes `IsClosed (range ι)`. The topology of `M` never enters: the extension is glued on
   `M*`. Paracompactness is Mathlib's `ParacompactSpace`, together with `T2Space` (GN's
-  paracompact spaces are Hausdorff, Definition A.5.2); regularity, used for closed
+  paracompact spaces are Hausdorff, [GN26, Definition A.5.2]); regularity, used for closed
   neighborhoods, follows. We also assume `M` nonempty, to have an index for the gluing lemma.
-* In Lemma A.5.10 the maps `g_i` are total maps `Z → Y` and need not be continuous; the
+* In [GN26, Lemma A.5.10] the maps `g_i` are total maps `Z → Y` and need not be continuous; the
   conclusion only records that the glued map agrees near each point with some `g_i`, which is
-  what the proof of Proposition 2.2.19 uses.
+  what the proof of [GN26, Proposition 2.2.19] uses.
 * The identity theorem is applied on convex open neighborhoods in `E_ℂ`, which exist since
   `E_ℂ` is locally convex; no local connectedness of `M*` beyond this is needed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -55,13 +58,13 @@ noncomputable section
 
 namespace LocallyConvex.Manifolds
 
-/-! ### Gluing near a closed subset of a paracompact space (GN, Lemma A.5.10) -/
+/-! ### Gluing near a closed subset of a paracompact space ([GN26, Lemma A.5.10]) -/
 
 section Glue
 
 variable {Y Z ι : Type*} [TopologicalSpace Z]
 
-/-- **Glöckner–Neeb, Lemma A.5.10.** Let `Z` be paracompact Hausdorff, `A ⊆ Z` closed, and
+/-- **[GN26, Lemma A.5.10].** Let `Z` be paracompact Hausdorff, `A ⊆ Z` closed, and
 `(V_i)` open sets covering `A`, with maps `g_i` such that `g_i` and `g_j` agree near each point
 of `A ∩ V_i ∩ V_j`. Then there are an open `U ⊇ A` and a map `G` which near each point of `U`
 agrees with some `g_i` on an open subset of `V_i`. -/
@@ -232,7 +235,7 @@ theorem complexAnalyticMOn_of_local {f : P → L} {U : Set P} (hU : IsOpen U)
 
 end ComplexCharts
 
-/-! ### Extension to complexifications (GN, Proposition 2.2.19) -/
+/-! ### Extension to complexifications ([GN26, Proposition 2.2.19]) -/
 
 section Extension
 
@@ -253,7 +256,7 @@ variable {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
   {L : Type*} [TopologicalSpace L] [ChartedSpace F L] [ComplexAnalyticManifold F L]
   {ι : M → Mc}
 
-/-- Local complex analytic extensions (the first step of the proof of GN, Proposition 2.2.19):
+/-- Local complex analytic extensions (the first step of the proof of [GN26, Proposition 2.2.19]):
 around `ι x`, a real analytic `f : M → L` has a complex analytic extension. -/
 theorem IsComplexification.exists_local_extension (hc : IsComplexification E M Mc ι)
     {f : M → L} (hf : RealAnalyticMOn (E := E) (F := F) f univ) (x : M) :
@@ -308,7 +311,7 @@ theorem IsComplexification.exists_local_extension (hc : IsComplexification E M M
 
 omit [RealAnalyticManifold E M] in
 /-- Local uniqueness of complex analytic extensions (the identity theorem step of the proof of
-GN, Proposition 2.2.19): two complex analytic maps on open sets `V₁`, `V₂` of `M*` which agree
+[GN26, Proposition 2.2.19]): two complex analytic maps on open sets `V₁`, `V₂` of `M*` which agree
 with `f` on the points of `M` agree near each point `ι m ∈ V₁ ∩ V₂`. -/
 theorem IsComplexification.eventuallyEq_of_extension (hc : IsComplexification E M Mc ι)
     {f : M → L} {V₁ V₂ : Set Mc} (hV₁ : IsOpen V₁) (hV₂ : IsOpen V₂) {g₁ g₂ : Mc → L}
@@ -368,7 +371,7 @@ theorem IsComplexification.eventuallyEq_of_extension (hc : IsComplexification E 
   simp only [comp_apply, φ.left_inv hz.1] at this
   rw [← κ.left_inv hzT.1.1.2, this, κ.left_inv hzT.1.2.2]
 
-/-- **Glöckner–Neeb, Proposition 2.2.19.** Let `M*` be a complexification of the real analytic
+/-- **[GN26, Proposition 2.2.19].** Let `M*` be a complexification of the real analytic
 manifold `M` (`ι : M → M*`), with `ι(M)` closed in `M*` and `M*` paracompact Hausdorff. Every real
 analytic map `f : M → L` into a complex analytic manifold extends to a complex analytic map on an
 open neighborhood of `ι(M)`: there are `U ⊇ ι(M)` open and `g` complex analytic on `U` with

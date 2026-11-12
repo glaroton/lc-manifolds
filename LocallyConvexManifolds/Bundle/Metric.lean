@@ -18,21 +18,29 @@ bundle metrics (`BundleMetric.IsPositive`), and indefinite ones are allowed.
 
 A connection is **metric** if `∂_a h(ξ, η) = −h(Γ(a, ξ), η) − h(ξ, Γ(a, η))` in every
 trivialization (`BundleConnection.IsMetric`); equivalently, `X h(s, t) = h(∇_X s, t) +
-h(s, ∇_X t)` for sections (`localCompat_sections`).
+h(s, ∇_X t)` for sections (`IsLocalBundleMetric.localCompat_sections`).
 
-**An infinite-dimensional subtlety.** For a weak metric (one whose flat map `F → F'` is only
-injective) a metric connection need not exist, and even the Levi-Civita connection of a weak
-Riemannian metric on `TM` may fail to exist. The results below are statements *about* metric
-connections, and do not assume existence.
+## Main definitions
+
+* `IsLocalBundleMetric`: a smooth family of symmetric bilinear forms on an open set.
+* `BundleMetric`, `BundleMetric.IsPositive`: bundle metrics, and positive definite ones.
+* `BundleConnection.IsMetric`: metric connections.
 
 ## Main results
 
-* `localCompat_sections`: compatibility with the metric, for sections;
+* `IsLocalBundleMetric.localCompat_sections`: compatibility with the metric, for sections.
 * `IsLocalBundleMetric.bundleCurv_skew` and `BundleConnection.IsMetric.curvLoc_skew`: **the
   curvature of a metric connection is skew-adjoint**,
   `h(Ω(u, v) ξ, η) + h(ξ, Ω(u, v) η) = 0`. The proof differentiates the compatibility condition
-  twice and uses the symmetry of second derivatives;
+  twice and uses the symmetry of second derivatives.
 * `BundleConnection.IsMetric.curvature_skew`: the same for the global curvature `R(X, Y)`.
+
+## Implementation notes
+
+**An infinite-dimensional subtlety.** For a weak metric (one whose flat map `F → F'` is only
+injective) a metric connection need not exist, and even the Levi-Civita connection of a weak
+Riemannian metric on `TM` may fail to exist. The results above are statements *about* metric
+connections, and do not assume existence.
 
 No completeness of `E` or `F` is assumed.
 -/

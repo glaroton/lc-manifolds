@@ -11,26 +11,36 @@ public import Mathlib.Topology.LocallyConstant.Basic
 /-!
 # De Rham cohomology
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, §3.6.
-
 Since `d ∘ d = 0`, the space `B^n_dR(M, F)` of exact `n`-forms is contained in the space
 `Z^n_dR(M, F)` of closed ones, and the `F`-valued de Rham cohomology is the quotient
-`H^n_dR(M, F) = Z^n_dR(M, F) / B^n_dR(M, F)`, with `B^0_dR(M, F) = 0` (Glöckner–Neeb,
-Definition 3.6.11).
+`H^n_dR(M, F) = Z^n_dR(M, F) / B^n_dR(M, F)`, with `B^0_dR(M, F) = 0`
+([GN26, Definition 3.6.11]). We follow [GN26, §3.6].
 
-## Main definitions and results
+## Main definitions
 
-* `closedForms`, `exactForms`, `exactForms_le_closedForms`;
-* `DeRham E M F n`: the de Rham cohomology space;
+* `DifferentialForm.closedForms`, `DifferentialForm.exactForms`: the spaces of closed and exact
+  forms.
+* `DeRham E M F n`: the de Rham cohomology space.
 * `deRhamMap`: a smooth map `φ : N → M` induces linear maps `φ* : H^n_dR(M, F) → H^n_dR(N, F)`,
-  since pullbacks of closed (exact) forms are closed (exact) by Lemma 3.6.13; this is
-  functorial (`deRhamMap_id`, `deRhamMap_comp`). This is the functoriality stated at the
-  beginning of the subsection on the Poincaré Lemma in Glöckner–Neeb;
-* `isClosed_iff_isLocallyConstant`: a function is closed if and only if it is locally constant
-  (Glöckner–Neeb, Remark 3.6.12 (b)), and `deRhamZeroEquiv : H^0_dR(M, F) ≃ Z^0_dR(M, F)`.
+  since pullbacks of closed (exact) forms are closed (exact) by [GN26, Lemma 3.6.13].
+* `DifferentialForm.deRhamZeroEquiv`: the isomorphism `H^0_dR(M, F) ≃ Z^0_dR(M, F)`.
 
-The proof of Remark 3.6.12 (b) uses that the model space is locally convex: a `C¹` map with
-vanishing derivative is constant on convex open sets.
+## Main results
+
+* `DifferentialForm.exactForms_le_closedForms`: exact forms are closed.
+* `deRhamMap_id`, `deRhamMap_comp`: the functoriality of `deRhamMap`. This is the functoriality
+  stated at the beginning of the subsection on the Poincaré Lemma in [GN26].
+* `DifferentialForm.isClosed_iff_isLocallyConstant`: a function is closed if and only if it is
+  locally constant ([GN26, Remark 3.6.12 (b)]).
+
+## Implementation notes
+
+The proof of [GN26, Remark 3.6.12 (b)] uses that the model space is locally convex: a `C¹` map
+with vanishing derivative is constant on convex open sets.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -55,13 +65,13 @@ variable {E : Type u}
 namespace DifferentialForm
 
 variable (E M F) in
-/-- The closed `n`-forms `Z^n_dR(M, F) = ker d` (Glöckner–Neeb, Definition 3.6.11). -/
+/-- The closed `n`-forms `Z^n_dR(M, F) = ker d` [GN26, Definition 3.6.11]. -/
 def closedForms (n : ℕ) : Submodule ℝ (DifferentialForm E M F n) :=
   LinearMap.ker (dLinear E M F n)
 
 variable (E M F) in
 /-- The exact `n`-forms `B^n_dR(M, F) = d(Ω^{n-1}(M, F))`, with `B^0_dR(M, F) = 0`
-(Glöckner–Neeb, Definition 3.6.11). -/
+[GN26, Definition 3.6.11]. -/
 def exactForms : (n : ℕ) → Submodule ℝ (DifferentialForm E M F n)
   | 0 => ⊥
   | n + 1 => LinearMap.range (dLinear E M F n)
@@ -88,7 +98,7 @@ open DifferentialForm
 
 variable (E M F) in
 /-- The `F`-valued de Rham cohomology `H^n_dR(M, F) = Z^n_dR(M, F) / B^n_dR(M, F)`
-(Glöckner–Neeb, Definition 3.6.11). -/
+[GN26, Definition 3.6.11]. -/
 abbrev DeRham (n : ℕ) : Type _ :=
   closedForms E M F n ⧸ (exactForms E M F n).comap (closedForms E M F n).subtype
 
@@ -102,7 +112,7 @@ theorem DeRham.mk_eq_mk_iff {n : ℕ} {ω η : DifferentialForm E M F n} (hω : 
   rw [Submodule.Quotient.eq]
   rfl
 
-/-! ### Remark 3.6.12 (b): closed functions are the locally constant ones -/
+/-! ### [GN26, Remark 3.6.12 (b)]: closed functions are the locally constant ones -/
 
 namespace DifferentialForm
 
@@ -125,7 +135,7 @@ theorem d_zero_apply (ω : DifferentialForm E M F 0) (x : M) (v : Fin 1 → E) :
   simp only [Fin.val_zero, pow_zero, one_smul, localRep_zero]
   rfl
 
-/-- **Closed functions are the locally constant ones** (Glöckner–Neeb, Remark 3.6.12 (b)). -/
+/-- **Closed functions are the locally constant ones** [GN26, Remark 3.6.12 (b)]. -/
 theorem isClosed_iff_isLocallyConstant (ω : DifferentialForm E M F 0) :
     ω.IsClosed ↔ IsLocallyConstant ω.toFunction := by
   constructor
@@ -184,7 +194,7 @@ theorem isClosed_iff_isLocallyConstant (ω : DifferentialForm E M F 0) :
 end DifferentialForm
 
 /-- `H^0_dR(M, F) ≃ Z^0_dR(M, F)`, the space of closed, i.e. locally constant, functions
-(Glöckner–Neeb, Remark 3.6.12 (b)). -/
+[GN26, Remark 3.6.12 (b)]. -/
 def deRhamZeroEquiv : DeRham E M F 0 ≃ₗ[ℝ] closedForms E M F 0 :=
   Submodule.quotEquivOfEqBot _ (by simp [exactForms])
 

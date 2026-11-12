@@ -18,6 +18,16 @@ public import LocallyConvexManifolds.RoughBoundary.Graph
   modeled on `E × 0` (`isSplitSubmanifold_graph`). The slice chart is explicit,
   `(x, y) ↦ (x, y - g x)`, with inverse `(x, z) ↦ (x, z + g x)`: no inverse function theorem is
   needed.
+
+## Main definitions
+
+* `graph`: the graph of `g` over `U`.
+* `graphChart`: the slice chart `(x, y) ↦ (x, y - g x)`.
+
+## Main results
+
+* `isEmbeddedSubmanifold_open`: an open subset is an embedded submanifold.
+* `isSplitSubmanifold_graph`: the graph of a smooth map is a split submanifold.
 -/
 
 @[expose] public section

@@ -10,21 +10,35 @@ public import LocallyConvexManifolds.VectorField.Basic
 /-!
 # The double tangent bundle
 
-References: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 5;
-S. Lang, *Fundamentals of Differential Geometry*, §IV.3.
+The double tangent bundle `TTM` is the tangent bundle of `TM` ([Lar22, Cap. 5]; [Lan99, §IV.3]).
+A chart `i` of `M` gives a chart `ψᵢ` of `TM` and a chart `Ψᵢ` of `TTM`, in which points are
+written `((x, v), (u, w))`: `(x, v)` is the base point in `TM` and `(u, w)` the tangent vector at
+it.
 
-The double tangent bundle `TTM` is the tangent bundle of `TM`. A chart `i` of `M` gives a chart
-`ψᵢ` of `TM` and a chart `Ψᵢ` of `TTM`, in which points are written `((x, v), (u, w))`: `(x, v)`
-is the base point in `TM` and `(u, w)` the tangent vector at it. We show:
+Since `d²τₓ(u, v)` is symmetric in `(u, v)` (Schwarz), the canonical flip
+`((x, v), (u, w)) ↦ ((x, u), (v, w))` commutes with the transition maps of `TTM`
+(`ddChart_transition_swap`), so it is a well defined map of `TTM`.
+
+## Main definitions
+
+* `DoubleTangentBundle E M`: the double tangent bundle `TTM`.
+* `ddChart i`: the chart `Ψᵢ` of `TTM` given by a chart `i` of `M`; `ddChartAt P`: the preferred
+  one at `P`.
+* `flip`: the canonical flip of `TTM`, `((x, v), (u, w)) ↦ ((x, u), (v, w))` in charts.
+
+## Main results
 
 * `tangentChart_transition_apply`: the transition maps of `TM` are `(x, v) ↦ (τ x, dτₓ v)`,
   `τ = j ∘ i⁻¹`;
 * `ddChart_transition_apply`: the transition maps of `TTM` are
-  `((x, v), (u, w)) ↦ ((τ x, dτₓ v), (dτₓ u, d²τₓ(u, v) + dτₓ w))`.
+  `((x, v), (u, w)) ↦ ((τ x, dτₓ v), (dτₓ u, d²τₓ(u, v) + dτₓ w))`;
+* `ddChart_transition_swap`: the flip commutes with these transition maps;
+* `ddChart_flip`, `flip_flip`: the flip does not depend on the chart, and it is an involution.
 
-Since `d²τₓ(u, v)` is symmetric in `(u, v)` (Schwarz), the canonical flip
-`((x, v), (u, w)) ↦ ((x, u), (v, w))` commutes with these transition maps
-(`ddChart_transition_swap`), so it is a well defined map of `TTM`.
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section

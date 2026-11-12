@@ -12,8 +12,15 @@ public import LocallyConvexManifolds.Manifold.ContMDiff
 
 If `M` and `N` are manifolds modeled on `E` and `F`, then `M × N` is a manifold modeled on
 `E × F` (`Prod.mbManifold`), with the product charts of Mathlib's `prodChartedSpace`: the
-transition maps are products of transition maps. The projections are smooth
-(`smoothMBM_fst`, `smoothMBM_snd`).
+transition maps are products of transition maps.
+
+## Main results
+
+* `Prod.mbManifold`: `M × N` is a manifold modeled on `ModelProd E F`.
+* `smoothMBM_fst`, `smoothMBM_snd`: the projections are smooth.
+* `ContMDiffMBOn.prodMk`: a pair of `C^k` maps into `M` and `N` is a `C^k` map into `M × N`.
+
+## Implementation notes
 
 The model space is Mathlib's `ModelProd E F`, a type synonym of `E × F` used to avoid instance
 diamonds when `M` or `N` is itself a product.
@@ -35,9 +42,10 @@ section ModelProd
 variable (A B : Type*) [AddCommGroup A] [Module ℝ A] [TopologicalSpace A]
   [AddCommGroup B] [Module ℝ B] [TopologicalSpace B]
 
-instance : AddCommGroup (ModelProd A B) := inferInstanceAs (AddCommGroup (A × B))
+instance ModelProd.instAddCommGroup : AddCommGroup (ModelProd A B) :=
+  inferInstanceAs (AddCommGroup (A × B))
 
-instance : Module ℝ (ModelProd A B) := inferInstanceAs (Module ℝ (A × B))
+instance ModelProd.instModule : Module ℝ (ModelProd A B) := inferInstanceAs (Module ℝ (A × B))
 
 instance [IsTopologicalAddGroup A] [IsTopologicalAddGroup B] :
     IsTopologicalAddGroup (ModelProd A B) :=

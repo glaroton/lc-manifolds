@@ -10,25 +10,38 @@ public import LocallyConvexManifolds.Connection.Basic
 /-!
 # Sprays
 
-References: S. Lang, *Fundamentals of Differential Geometry*, §IV.3 and §VIII.2;
-G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 6.
-
 A spray (second order vector field) on `M` is given in each chart `i` of the atlas by its local
 part `fᵢ(x, v)`: in the chart, the spray is `(x, v) ↦ (x, v; v, fᵢ(x, v))`. The local parts obey
 the change of charts law
 `fⱼ(τ x, dτₓ v) = dτₓ fᵢ(x, v) + d²τₓ(v, v)`, `τ = j ∘ i⁻¹`,
 which is the change of charts law of the double tangent bundle restricted to the points
 `(x, v; v, w)` (`Spray`). Geodesics are the curves with `α̈ = f(α, α̇)` in charts; their existence
-is not assumed (it needs ODE theory, not available in locally convex spaces).
+is not assumed (it needs ODE theory, not available in locally convex spaces). We follow
+[Lan99, §IV.3 and §VIII.2] and [Lar22, Cap. 6].
 
-A spray is quadratic if `fᵢ(x, s v) = s² fᵢ(x, v)`. We show (Lang, Prop. IV.3.2 and §VIII.2):
+A spray is quadratic if `fᵢ(x, s v) = s² fᵢ(x, v)` (`Spray.IsQuadratic`).
 
-* every connection induces a spray, `f(x, v) = Γₓ(v, v)` (`Connection.toSpray`), which is
-  quadratic;
-* conversely, a quadratic spray comes from a unique symmetric connection, with
-  `Γₓ(a, b) = ½ d²(f(x, ·))₀(a, b)` (`Spray.toConnection`). The key facts are that a homogeneous
-  map of degree 2 is the restriction to the diagonal of half its second derivative at `0`
+## Main definitions
+
+* `Spray`, `Spray.IsQuadratic`: sprays given by their local parts, and quadratic sprays.
+* `Connection.toSpray`: the spray `f(x, v) = Γₓ(v, v)` of a connection.
+* `Spray.toConnection`: the symmetric connection `Γₓ(a, b) = ½ d²(f(x, ·))₀(a, b)` of a quadratic
+  spray.
+
+## Main results
+
+We show ([Lan99, Prop. IV.3.2 and §VIII.2]):
+
+* `Connection.toSpray_isQuadratic`: every connection induces a quadratic spray;
+* `Spray.toConnection_isSymmetric`, `Spray.toConnection_toSpray`: conversely, a quadratic spray
+  comes from a unique symmetric connection. The key facts are that a homogeneous map of degree 2
+  is the restriction to the diagonal of half its second derivative at `0`
   (`dMB_dMB_zero_of_homogeneous`), and the polarization of the change of charts law.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
 -/
 
 @[expose] public section

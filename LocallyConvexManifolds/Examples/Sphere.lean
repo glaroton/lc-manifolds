@@ -28,11 +28,11 @@ charts are explicit, with no inverse function theorem: on the hemisphere `⟪q, 
 and `q` lies on the sphere iff `φ_e(q) ∈ e^⊥` (Pythagoras). Charts at other points are obtained
 by composing with Householder reflections.
 
-Main results:
+## Main results
 
 * `isEmbeddedSubmanifold_sphere`: the sphere is an embedded submanifold modeled on `e^⊥`;
 * `tangentSpace_sphere`: `T_p S = p^⊥`;
-* `projectorField_sphere`: the orthogonal projections `w ↦ w - ⟪w, p⟫ p` form a field of
+* `sphereProjectorField`: the orthogonal projections `w ↦ w - ⟪w, p⟫ p` form a field of
   projectors;
 * `isGeodesic_sphere_iff`: for the connection they define, a curve is a geodesic iff its
   acceleration is normal, `α̈ = ⟪α̈, α⟫ α`;
@@ -292,7 +292,7 @@ theorem tangentSpace_sphere {e : H} (he : ‖e‖ = 1) (p : Metric.sphere (0 : H
 def sphereProj (p w : H) : H := w - ⟪w, p⟫ • p
 
 /-- **The orthogonal projections onto the tangent spaces form a field of projectors.** -/
-def projectorField_sphere {e : H} (he : ‖e‖ = 1) :
+def sphereProjectorField {e : H} (he : ‖e‖ = 1) :
     ProjectorField (isEmbeddedSubmanifold_sphere he) where
   E p w := sphereProj p w
   map_add p w w' := by simp only [sphereProj, inner_add_left, add_smul]; abel
@@ -341,7 +341,7 @@ theorem isGeodesic_sphere_iff {e : H} (he : ‖e‖ = 1) {α : ℝ → Metric.sp
     (hα : SmoothMBOn (Subtype.val ∘ α) univ) :
     letI := (isEmbeddedSubmanifold_sphere he).chartedSpace
     haveI := (isEmbeddedSubmanifold_sphere he).mbManifold
-    (projectorField_sphere he).connection.IsGeodesic α ↔
+    (sphereProjectorField he).connection.IsGeodesic α ↔
       ∀ t, dMB (fun s ↦ dMB (Subtype.val ∘ α) (s, 1)) (t, 1) =
         ⟪dMB (fun s ↦ dMB (Subtype.val ∘ α) (s, 1)) (t, 1), (α t : H)⟫ • (α t : H) := by
   let := (isEmbeddedSubmanifold_sphere he).chartedSpace
@@ -379,7 +379,7 @@ theorem isGeodesic_greatCircle {e : H} (he : ‖e‖ = 1) {p v : H} (hp : ‖p�
     (hpv : ⟪p, v⟫ = 0) :
     letI := (isEmbeddedSubmanifold_sphere he).chartedSpace
     haveI := (isEmbeddedSubmanifold_sphere he).mbManifold
-    (projectorField_sphere he).connection.IsGeodesic (greatCircle hp hv hpv) := by
+    (sphereProjectorField he).connection.IsGeodesic (greatCircle hp hv hpv) := by
   have hval : Subtype.val ∘ greatCircle hp hv hpv =
       fun t ↦ Real.cos t • p + Real.sin t • v := rfl
   have hsmooth : SmoothMBOn (Subtype.val ∘ greatCircle hp hv hpv) univ := by

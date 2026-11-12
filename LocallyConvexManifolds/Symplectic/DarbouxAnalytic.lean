@@ -15,8 +15,12 @@ Let `M` be a **real analytic** manifold modeled on a Banach space `E` and `ω` a
 `2`-form on `M`, strongly nondegenerate at `x₀` and real analytic. Then the Darboux
 chart of `DifferentialForm.exists_darboux_chart` can be chosen in the real analytic maximal atlas
 (`DifferentialForm.exists_realAnalytic_darboux_chart`). Real analyticity is in the sense of
-Milnor (`LocallyConvex.Analysis.RealAnalyticOn`; Glöckner–Neeb, *Infinite-Dimensional Lie
-Groups*, arXiv:2602.12362, Definition 2.2.2).
+Milnor (`LocallyConvex.Analysis.RealAnalyticOn`; [GN26, Definition 2.2.2]).
+
+The smooth theorem is [Wei69, §1, Theorem] and [Lan99, Theorem V.8.1]; neither treats the real
+analytic case, nor does [GN26] (who mention Weinstein's theorem in the introduction, p. 13). We
+are not aware of a reference for the real analytic case on Banach manifolds; we do not claim this
+argument is new.
 
 ## Main results
 
@@ -46,10 +50,10 @@ Each step of the proof of `Darboux.exists_darboux_local'` preserves real analyti
    `ẏ = 0`, `ȧ = s Θ(p + s (y - p))(y - p)` starting at `(y, 0)`, a real analytic ordinary
    differential equation on `E × D`.
 2. *Moser's field* `Xₜ = -Ωₜ⁻¹ α` is real analytic, since inversion in the Banach algebra
-   `L(E)` is (`LocallyConvex.Analysis.realAnalyticOn_inverse`, Glöckner–Neeb,
-   Proposition 2.2.13).
+   `L(E)` is (`LocallyConvex.Analysis.realAnalyticOn_inverse`,
+   [GN26, Proposition 2.2.13]).
 3. *The flow up to time `1`* is real analytic, since the maximal flow of a real analytic vector
-   field is (`SmoothVectorField.realAnalyticMOn_flow`; Glöckner–Neeb, Theorem 2.5.18 (b)).
+   field is (`SmoothVectorField.realAnalyticMOn_flow`; [GN26, Theorem 2.5.18 (b)]).
 4. *The inverse of `ψ = F₁`.* No real analytic inverse function theorem is needed: `ψ⁻¹` is the
    map `y ↦ Fl(-1, (1, y))` of the suspended flow, which is real analytic
    (`Darboux.exists_flow_of_stationary`, `Darboux.exists_darboux_local_of_primitive`).
@@ -57,21 +61,15 @@ Each step of the proof of `Darboux.exists_darboux_local'` preserves real analyti
 ## The hypothesis on `ω`
 
 The manifold version asks `ω` to be real analytic in the sense of
-`LocallyConvexManifolds.Analytic.Form` (`DifferentialForm.IsRealAnalytic`, Glöckner–Neeb,
-Remark 3.6.18): its local representatives `(y, u, v) ↦ Ω(y)(u, v)` are jointly real analytic. The
-local theorem needs `y ↦ Ω(y) ∈ L(E, E')` real analytic for the operator norm; this follows from
-lc-analysis's `RealAnalyticOn.of_unc_clm₂`, the real analytic counterpart of
-`contDiffMBOn_of_unc_clm` (`DifferentialForm.IsRealAnalytic.exists_clm_localRep`).
+`LocallyConvexManifolds.Analytic.Form` (`DifferentialForm.IsRealAnalytic`,
+[GN26, Remark 3.6.18]): its local representatives `(y, u, v) ↦ Ω(y)(u, v)` are jointly real
+analytic. The local theorem needs `y ↦ Ω(y) ∈ L(E, E')` real analytic for the operator norm;
+this follows from lc-analysis's `RealAnalyticOn.of_unc_clm₂` [LCA], the real analytic
+counterpart of `contDiffMBOn_of_unc_clm` (`DifferentialForm.IsRealAnalytic.exists_clm_localRep`).
 
-## References
+## Implementation notes
 
-The smooth theorem is A. Weinstein, *Symplectic structures on Banach manifolds*, Bull. Amer. Math.
-Soc. 75 (1969), §1, Theorem, and S. Lang, *Fundamentals of Differential Geometry*, GTM 191,
-Theorem V.8.1; neither treats the real analytic case, nor does Glöckner–Neeb (who mention
-Weinstein's theorem in the introduction, p. 13). We are not aware of a reference for the real
-analytic case on Banach manifolds; we do not claim this argument is new.
-
-## Infinite-dimensional subtleties
+**Infinite-dimensional subtleties.**
 
 * Besides those of the smooth theorem (`LocallyConvexManifolds.Symplectic.Darboux`), real
   analyticity is measured by complex extensions to the complexification (Milnor), not by power
@@ -80,6 +78,13 @@ analytic case on Banach manifolds; we do not claim this argument is new.
 * The radial primitive is only shown to be real analytic near `p` (on a ball where the solution
   of the auxiliary equation exists up to time `1` near `(p, 0)`), which suffices for a local
   statement.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
+* [A. Weinstein, *Symplectic structures on Banach manifolds*][Wei69]
 -/
 
 @[expose] public section
@@ -513,7 +518,7 @@ theorem DifferentialForm.IsRealAnalytic.exists_clm_localRep {ω : DifferentialFo
 
 /-- **Real analytic Darboux charts.** Let `M` be a real analytic manifold modeled on a Banach space
 `E` (not necessarily Hausdorff) and `ω` a closed, **real analytic**
-(`DifferentialForm.IsRealAnalytic`, Glöckner–Neeb, Remark 3.6.18) real `2`-form on `M`, strongly
+(`DifferentialForm.IsRealAnalytic`, [GN26, Remark 3.6.18]) real `2`-form on `M`, strongly
 nondegenerate at `x₀`. Then the
 Darboux chart can be chosen in the **real analytic** maximal atlas: there is a chart `φ` of the real
 analytic structure around `x₀`, with `φ(x₀) = i(x₀)` and the same differential at `x₀` as the

@@ -12,12 +12,11 @@ public import Mathlib.Topology.IsLocalHomeomorph
 /-!
 # Local diffeomorphisms injective on a compact or σ-compact set
 
-We prove H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1,
-appendix "Alternative constructions" to §3.8, pp. 328–330), Proposition 3.8.18, Corollary 3.8.19,
-Proposition 3.8.20 and Corollary 3.8.21: a local diffeomorphism (or local homeomorphism) that is
-injective on a compact set `K`, or that restricts to an embedding with closed image on a
-σ-compact set `A` of a locally compact situation, is a diffeomorphism (homeomorphism) from an
-open neighborhood of `K` (of `A`) onto an open set.
+We prove [GN26, Proposition 3.8.18, Corollary 3.8.19, Proposition 3.8.20 and Corollary 3.8.21]
+(appendix "Alternative constructions" to §3.8, pp. 328–330): a local diffeomorphism (or local
+homeomorphism) that is injective on a compact set `K`, or that restricts to an embedding with closed
+image on a σ-compact set `A` of a locally compact situation, is a diffeomorphism (homeomorphism)
+from an open neighborhood of `K` (of `A`) onto an open set.
 
 ## Main results
 
@@ -69,6 +68,11 @@ open neighborhood of `K` (of `A`) onto an open set.
 * Manifolds with rough boundary are not treated.
 * The statements producing a partial homeomorphism assume the domain nonempty: a partial
   homeomorphism `M → N` needs an inverse `N → M`, which does not exist when `M = ∅ ≠ N`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
 -/
 
 @[expose] public section
@@ -88,7 +92,7 @@ section Topology
 
 variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 
-/-- **Glöckner–Neeb, Proposition 3.8.18.** A continuous map into a Hausdorff space that is
+/-- **[GN26, Proposition 3.8.18].** A continuous map into a Hausdorff space that is
 injective on a compact set `K` and locally injective at the points of `K` is injective on an open
 neighborhood of `K`. -/
 theorem exists_isOpen_injOn_of_isCompact [T2Space Y] {f : X → Y} (hf : Continuous f)
@@ -114,8 +118,8 @@ theorem exists_isOpen_injOn_of_isCompact [T2Space Y] {f : X → Y} (hf : Continu
   exact hAB (show (a, b) ∈ A ×ˢ B from ⟨(interior_subset ha).1, (interior_subset hb).2⟩) hab
 
 /-- A local homeomorphism into a Hausdorff space that is injective on a compact set `K` restricts
-to a homeomorphism from an open neighborhood of `K` onto an open set (Glöckner–Neeb, remark
-after Proposition 3.8.18). -/
+to a homeomorphism from an open neighborhood of `K` onto an open set [GN26, remark
+after Proposition 3.8.18]. -/
 theorem IsLocalHomeomorph.exists_openPartialHomeomorph_of_isCompact [T2Space Y] [Nonempty X]
     {f : X → Y} (hf : IsLocalHomeomorph f) {K : Set X} (hK : IsCompact K) (hinj : InjOn f K) :
     ∃ Φ : OpenPartialHomeomorph X Y, K ⊆ Φ.source ∧ ⇑Φ = f := by
@@ -146,7 +150,7 @@ theorem IsSigmaCompact.exists_compact_exhaustion [WeaklyLocallyCompactSpace Y] {
   exact iUnion_subset fun n ↦ (subset_union_right.trans (hsucc n)).trans interior_subset |>.trans
     (subset_iUnion (fun n ↦ (D n).1) (n + 1))
 
-/-- **Injectivity near a σ-compact set**, in the form used for Glöckner–Neeb, Proposition 3.8.20:
+/-- **Injectivity near a σ-compact set**, in the form used for [GN26, Proposition 3.8.20]:
 let `f : X → Y` be continuous into a Hausdorff weakly locally compact space, `A ⊆ X` a set on
 which `f` is injective, such that `f(A)` is σ-compact and `A ∩ f⁻¹(C)` is compact for every
 compact `C ⊆ Y`, and assume that `f` is injective on a neighborhood of each point of `A`. Then
@@ -201,7 +205,7 @@ theorem exists_isOpen_injOn_of_isSigmaCompact_image [T2Space Y] [WeaklyLocallyCo
     · exact key i j h x hi y hj hxy
     · exact (key j i h y hj x hi hxy.symm).symm
 
-/-- **Glöckner–Neeb, Proposition 3.8.20.** Let `f : X → Y` be continuous into a Hausdorff weakly
+/-- **[GN26, Proposition 3.8.20].** Let `f : X → Y` be continuous into a Hausdorff weakly
 locally compact space and `A ⊆ X` a σ-compact set such that `f(A)` is closed and `f|_A` is a
 topological embedding. If `f` is injective on a neighborhood of each point of `A`, then `f` is
 injective on an open neighborhood of `A`. -/
@@ -247,7 +251,7 @@ theorem exists_openPartialHomeomorph_of_injOn [Nonempty X] {f : X → Y} (hf : C
   exact ⟨OpenPartialHomeomorph.ofContinuousOpenRestrict (hUi.toPartialEquiv f U)
     hf.continuousOn hopen hU, rfl, rfl⟩
 
-/-- **Glöckner–Neeb, Proposition 3.8.20, for local homeomorphisms near `A`.** Let `f : X → Y` be
+/-- **[GN26, Proposition 3.8.20], for local homeomorphisms near `A`.** Let `f : X → Y` be
 continuous into a Hausdorff weakly locally compact space, `A ⊆ X` a σ-compact set with `f(A)`
 closed and `f|_A` a topological embedding, and assume that near each point of `A`, `f` agrees with
 a partial homeomorphism `e` having a property `P`. Then `f` restricts to a homeomorphism `Φ` from
@@ -342,7 +346,7 @@ theorem OpenPartialHomeomorph.contMDiffMBOn_symm_of_local {k : ℕ} (Φ : OpenPa
   rw [← hΦ, Φ.left_inv hz.2.2]
   simp only [hΦ]
 
-/-- **Glöckner–Neeb, Corollary 3.8.19** (`C^k` maps, `k ∈ ℕ`). A local `C^k`-diffeomorphism
+/-- **[GN26, Corollary 3.8.19]** (`C^k` maps, `k ∈ ℕ`). A local `C^k`-diffeomorphism
 `f : M → N` into a Hausdorff manifold that is injective on a compact set `K` restricts to a
 `C^k`-diffeomorphism from an open neighborhood of `K` onto an open subset of `N`. -/
 theorem exists_contMDiffMB_diffeo_of_isCompact [T2Space N] [Nonempty M] {k : ℕ} {f : M → N}
@@ -363,7 +367,7 @@ theorem exists_contMDiffMB_diffeo_of_isCompact [T2Space N] [Nonempty M] {k : ℕ
   · obtain ⟨e, hx, heq, -, he⟩ := hf x
     exact ⟨e, hx, by rw [hΦ]; exact heq, he⟩
 
-/-- **Glöckner–Neeb, Corollary 3.8.19** (smooth maps). A local diffeomorphism `f : M → N` into a
+/-- **[GN26, Corollary 3.8.19]** (smooth maps). A local diffeomorphism `f : M → N` into a
 Hausdorff manifold that is injective on a compact set `K` restricts to a diffeomorphism from an
 open neighborhood of `K` onto an open subset of `N`. -/
 theorem exists_smoothMBM_diffeo_of_isCompact [T2Space N] [Nonempty M] {f : M → N}
@@ -386,7 +390,7 @@ theorem exists_smoothMBM_diffeo_of_isCompact [T2Space N] [Nonempty M] {f : M →
 omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] [T2Space E]
   [LocallyConvexSpace ℝ F] [MBManifold E M] [MBManifold F N] in
 /-- A manifold modeled on a finite-dimensional (Hausdorff) space is locally compact; this is how
-the finite-dimensionality hypothesis of Glöckner–Neeb, Corollary 3.8.21, enters below (through
+the finite-dimensionality hypothesis of [GN26, Corollary 3.8.21], enters below (through
 `WeaklyLocallyCompactSpace N`). -/
 theorem locallyCompactSpace_of_finiteDimensional [FiniteDimensional ℝ F] :
     LocallyCompactSpace N := by
@@ -394,7 +398,7 @@ theorem locallyCompactSpace_of_finiteDimensional [FiniteDimensional ℝ F] :
   have : LocallyCompactSpace F := e.toHomeomorph.isClosedEmbedding.locallyCompactSpace
   exact ChartedSpace.locallyCompactSpace F N
 
-/-- **Glöckner–Neeb, Corollary 3.8.21** (`C^k` maps, `k ∈ ℕ`). Let `f : M → N` be continuous
+/-- **[GN26, Corollary 3.8.21]** (`C^k` maps, `k ∈ ℕ`). Let `f : M → N` be continuous
 into a Hausdorff, weakly locally compact manifold (e.g. a finite-dimensional one), `A ⊆ M` a
 σ-compact set with `f(A)` closed and `f|_A` a topological embedding, and assume that near each
 point of `A`, `f` agrees with a `C^k`-diffeomorphism between open sets. Then `f` restricts to a
@@ -418,7 +422,7 @@ theorem exists_contMDiffMB_diffeo_of_isSigmaCompact [T2Space N] [WeaklyLocallyCo
   · obtain ⟨e, hx, heq, -, he⟩ := hdata x hx
     exact ⟨e, hx, by rw [hΦ]; exact heq, he⟩
 
-/-- **Glöckner–Neeb, Corollary 3.8.21** (smooth maps); see
+/-- **[GN26, Corollary 3.8.21]** (smooth maps); see
 `exists_contMDiffMB_diffeo_of_isSigmaCompact`. -/
 theorem exists_smoothMBM_diffeo_of_isSigmaCompact [T2Space N] [WeaklyLocallyCompactSpace N]
     [Nonempty M] {f : M → N} (hf : Continuous f) {A : Set M} (hA : IsSigmaCompact A)
@@ -510,7 +514,7 @@ theorem OpenPartialHomeomorph.realAnalyticMOn_symm_of_local (Φ : OpenPartialHom
   rw [← hΦ, Φ.left_inv hz.2.2]
   simp only [hΦ]
 
-/-- **Glöckner–Neeb, Corollary 3.8.19** (real analytic maps, `r = ω`). A local real analytic
+/-- **[GN26, Corollary 3.8.19]** (real analytic maps, `r = ω`). A local real analytic
 diffeomorphism `f : M → N` into a Hausdorff manifold that is injective on a compact set `K`
 restricts to a real analytic diffeomorphism from an open neighborhood of `K` onto an open subset
 of `N`. -/
@@ -532,7 +536,7 @@ theorem exists_realAnalyticMOn_diffeo_of_isCompact [T2Space N] [Nonempty M] {f :
   · obtain ⟨e, hx, heq, -, he⟩ := hf x
     exact ⟨e, hx, by rw [hΦ]; exact heq, he⟩
 
-/-- **Glöckner–Neeb, Corollary 3.8.21** (real analytic maps, `r = ω`). Let `f : M → N` be
+/-- **[GN26, Corollary 3.8.21]** (real analytic maps, `r = ω`). Let `f : M → N` be
 continuous into a Hausdorff, weakly locally compact real analytic manifold (e.g. a
 finite-dimensional one), `A ⊆ M` a σ-compact set with `f(A)` closed and `f|_A` a topological
 embedding, and assume that near each point of `A`, `f` agrees with a real analytic

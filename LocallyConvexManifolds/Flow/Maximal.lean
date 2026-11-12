@@ -13,40 +13,42 @@ public import LocallyConvexManifolds.Flow.Existence
 Let `X` be a smooth vector field on a Hausdorff manifold `M` modeled on a Banach space. By
 uniqueness of integral curves (`SmoothVectorField.IsIntegralCurveOn.eqOn`), the integral curves of
 `X` starting at `x` glue to a **maximal integral curve**, defined on an open interval `J_x ∋ 0`.
-We prove:
+
+## Main definitions
 
 * `SmoothVectorField.maxInterval`, `SmoothVectorField.flowDomain`, `SmoothVectorField.flow`: the
   maximal interval `J_x`, the domain `D = {(t, x) | t ∈ J_x}` and the **maximal flow**
-  `Fl(t, x)`. `SmoothVectorField.isIntegralCurveThrough_flow` and
+  `Fl(t, x)`.
+* `SmoothVectorField.IsIntegralCurveThrough`: integral curves through a point.
+
+## Main results
+
+* `SmoothVectorField.isIntegralCurveThrough_flow` and
   `SmoothVectorField.IsIntegralCurveThrough.subset_maxInterval`,
   `SmoothVectorField.IsIntegralCurveThrough.flow_eq` (**maximality**): `t ↦ Fl(t, x)` is an
   integral curve through `x` on `J_x`, and every integral curve through `x` on an open interval
   `I ∋ 0` is its restriction to `I`.
-* `SmoothVectorField.maxInterval_flow`, `SmoothVectorField.flow_add` (**group law**): if
+* `SmoothVectorField.maxInterval_flow`, `SmoothVectorField.flow_add` (**group law**,
+  [Lan99, Ch. IV, §2, Theorem 2.2, p. 91], [GN26, Remark 2.5.24 (c), p. 223]): if
   `t ∈ J_x` then `J_{Fl(t, x)} = J_x - t`, and `Fl(s + t, x) = Fl(s, Fl(t, x))` whenever
   `(t, x) ∈ D` and `(s, Fl(t, x)) ∈ D`; then `(s + t, x) ∈ D`
   (`SmoothVectorField.add_mem_flowDomain`).
 * `SmoothVectorField.isOpen_flowDomain`, `SmoothVectorField.smoothMBMOn_flow`: **the domain `D` is
-  open in `ℝ × M` and the maximal flow is smooth on `D`**.
+  open in `ℝ × M` and the maximal flow is smooth on `D`** ([Lan99, Ch. IV, §2, Theorem 2.6,
+  p. 92], [GN26, Theorem 2.5.18, p. 220], [GN26, Corollary 2.5.21, p. 222]).
 * `SmoothVectorField.isLocalFlow_flow`: hence the maximal flow is a local flow in the sense of
-  `IsLocalFlow`, and the formula `d/dt|₀ (Fl_t)* ω = L_X ω` of
-  `LocallyConvexManifolds.Flow.LieDerivative` holds for it
+  `IsLocalFlow` (compare [GN26, Definition 2.5.23]), and the formula
+  `d/dt|₀ (Fl_t)* ω = L_X ω` of `LocallyConvexManifolds.Flow.LieDerivative` holds for it
   (`SmoothVectorField.hasDirDerivAt_pullback_flow`).
 * `SmoothVectorField.boxFlowDomain_subset_flowDomain`, `SmoothVectorField.boxFlow_eq_flow`: the
   flow `boxFlow` of `LocallyConvexManifolds.Flow.Existence`, obtained by gluing flow boxes, is the
   restriction of the maximal flow to the open set `boxFlowDomain ⊆ D`.
 * `SmoothVectorField.not_mapClusterPt_flow_of_lt_top`,
-  `SmoothVectorField.eventually_flow_not_mem_of_isCompact` (**escape lemma**): if the forward
-  maximal time `b` of `x` is finite, then `t ↦ Fl(t, x)` has no cluster point as `t → b⁻`; in
-  particular it eventually leaves every compact set. The same holds backwards
-  (`SmoothVectorField.not_mapClusterPt_flow_of_bot_lt`,
+  `SmoothVectorField.eventually_flow_not_mem_of_isCompact` (**escape lemma**, [Lan99, Ch. IV, §2,
+  Theorem 2.3, p. 91]): if the forward maximal time `b` of `x` is finite, then `t ↦ Fl(t, x)` has
+  no cluster point as `t → b⁻`; in particular it eventually leaves every compact set. The same
+  holds backwards (`SmoothVectorField.not_mapClusterPt_flow_of_bot_lt`,
   `SmoothVectorField.eventually_flow_not_mem_of_isCompact'`).
-
-References: S. Lang, *Fundamentals of Differential Geometry*, Springer GTM 191 (1999), Ch. IV, §2:
-Theorem 2.2 (p. 91, `J_{tx} = J_x - t` and the group law), Theorem 2.3 (p. 91, escape from
-compact sets) and Theorem 2.6 (p. 92, `D` is open and the flow is smooth); H. Glöckner,
-K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362), Theorem 2.5.18 (p. 220),
-Corollary 2.5.21 (p. 222), Definition 2.5.23 and Remark 2.5.24 (c) (p. 223).
 
 ## Implementation notes
 
@@ -54,23 +56,28 @@ Corollary 2.5.21 (p. 222), Definition 2.5.23 and Remark 2.5.24 (c) (p. 223).
   (`SmoothVectorField.exists_flowBox`, through the Picard–Lindelöf theorem of
   `LocallyConvexAnalysis.ODE.Flow`) and local uniqueness. On manifolds modeled on Fréchet or
   general locally convex spaces smooth vector fields need neither have integral curves nor unique
-  ones (Glöckner–Neeb, Examples 2.4.2 and 2.4.3), so neither the maximal curve nor its domain need
+  ones [GN26, Examples 2.4.2 and 2.4.3], so neither the maximal curve nor its domain need
   make sense. `M` is Hausdorff (`[T2Space M]`): on the line with two origins the constant vector
   field `∂/∂t` has two integral curves through `-1` which agree up to time `1` and then split, so
   there is no maximal integral curve. Both hypotheses are only assumed where they are used.
-* Openness and smoothness. We follow the proofs of Lang (Theorem IV.2.6) and Glöckner–Neeb
-  (Theorem 2.5.18): for a fixed `x₀`, the set of `t ∈ J_{x₀}` around which `D` contains a
-  neighbourhood of `(t, x₀)` on which `Fl` is smooth is open, contains `0`, and is closed in
-  `J_{x₀}`, because near `t` the flow is `Fl(τ, x) = φ(τ - t₁, Fl(t₁, x))` for a flow box `φ` at
-  `Fl(t, x₀)` and `t₁` close to `t`. No compactness argument is needed.
-* The escape lemma. Lang proves Theorem IV.2.3 with sequences; since we do not assume `M`
-  metrizable or first countable at the level of compact sets, we argue with cluster points of
-  filters instead. We do not claim this argument is new. Lang's Proposition IV.2.5 (completeness
-  of vector fields that are uniformly bounded in suitable charts) is in
+* Openness and smoothness. We follow the proofs of Lang [Lan99, Theorem IV.2.6] and
+  Glöckner–Neeb [GN26, Theorem 2.5.18]: for a fixed `x₀`, the set of `t ∈ J_{x₀}` around which `D`
+  contains a neighbourhood of `(t, x₀)` on which `Fl` is smooth is open, contains `0`, and is
+  closed in `J_{x₀}`, because near `t` the flow is `Fl(τ, x) = φ(τ - t₁, Fl(t₁, x))` for a flow
+  box `φ` at `Fl(t, x₀)` and `t₁` close to `t`. No compactness argument is needed.
+* The escape lemma. Lang proves [Lan99, Theorem IV.2.3] with sequences; since we do not assume
+  `M` metrizable or first countable at the level of compact sets, we argue with cluster points of
+  filters instead. We do not claim this argument is new. [Lan99, Proposition IV.2.5]
+  (completeness of vector fields that are uniformly bounded in suitable charts) is in
   `LocallyConvexManifolds.Flow.Complete`.
 * `Fl` takes the junk value `Fl(t, x) = x` outside `D`.
-* The real analytic case (Glöckner–Neeb, Corollary 2.5.21, last assertion) is
+* The real analytic case ([GN26, Corollary 2.5.21], last assertion) is
   `LocallyConvexManifolds.Flow.Analytic`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
 -/
 
 @[expose] public section
@@ -105,8 +112,8 @@ structure IsIntegralCurveThrough (x : M) (c : ℝ → M) (I : Set ℝ) : Prop wh
 variable {X : SmoothVectorField E M}
 
 /-- Two integral curves through the same point agree where both are defined
-(Lang, *Fundamentals of Differential Geometry*, Theorem IV.2.1). -/
-theorem IsIntegralCurveThrough.eqOn [CompleteSpace E] [T2Space M] {x : M} {c₁ c₂ : ℝ → M}
+[Lan99, Theorem IV.2.1]. -/
+theorem IsIntegralCurveThrough.eqOn [T2Space M] {x : M} {c₁ c₂ : ℝ → M}
     {I₁ I₂ : Set ℝ} (h₁ : X.IsIntegralCurveThrough x c₁ I₁)
     (h₂ : X.IsIntegralCurveThrough x c₂ I₂) : EqOn c₁ c₂ (I₁ ∩ I₂) :=
   IsIntegralCurveOn.eqOn (h₁.isOpen.inter h₂.isOpen)
@@ -154,7 +161,7 @@ theorem IsIntegralCurveThrough.subset_maxInterval {x : M} {c : ℝ → M} {I : S
   fun _ ht ↦ ⟨c, I, h, ht⟩
 
 /-- **Maximality**: every integral curve through `x` is a restriction of `t ↦ Fl(t, x)`. -/
-theorem IsIntegralCurveThrough.flow_eq [CompleteSpace E] [T2Space M] {x : M} {c : ℝ → M}
+theorem IsIntegralCurveThrough.flow_eq [T2Space M] {x : M} {c : ℝ → M}
     {I : Set ℝ} (h : X.IsIntegralCurveThrough x c I) {t : ℝ} (ht : t ∈ I) :
     X.flow (t, x) = c t := by
   have hex : ∃ c I, X.IsIntegralCurveThrough x c I ∧ t ∈ I := ⟨c, I, h, ht⟩
@@ -186,7 +193,7 @@ theorem zero_mem_flowDomain [CompleteSpace E] (x : M) : ((0 : ℝ), x) ∈ X.flo
   X.zero_mem_maxInterval x
 
 /-- `t ↦ Fl(t, x)` is an integral curve of `X` on `J_x`. -/
-theorem isIntegralCurveOn_flow [CompleteSpace E] [T2Space M] (x : M) :
+theorem isIntegralCurveOn_flow [T2Space M] (x : M) :
     X.IsIntegralCurveOn (fun t ↦ X.flow (t, x)) (X.maxInterval x) := by
   rintro t ⟨c, I, h, ht⟩
   exact (h.isIntegralCurveOn.congr h.isOpen fun s hs ↦ (h.flow_eq hs).symm) t ht
@@ -197,7 +204,7 @@ theorem flow_zero [CompleteSpace E] [T2Space M] (x : M) : X.flow (0, x) = x := b
   rw [h.flow_eq h.zero_mem, h.map_zero]
 
 /-- **The maximal integral curve**: `t ↦ Fl(t, x)` is an integral curve of `X` through `x` on the
-maximal interval `J_x` (compare Glöckner–Neeb, Definition 2.5.23). -/
+maximal interval `J_x` (compare [GN26, Definition 2.5.23]). -/
 theorem isIntegralCurveThrough_flow [CompleteSpace E] [T2Space M] (x : M) :
     X.IsIntegralCurveThrough x (fun t ↦ X.flow (t, x)) (X.maxInterval x) where
   isOpen := X.isOpen_maxInterval x
@@ -212,7 +219,7 @@ theorem FlowBox.box_subset_flowDomain {z : M} (B : X.FlowBox z) : B.box ⊆ X.fl
   fun _ hp ↦ (B.isIntegralCurveThrough hp.2).subset_maxInterval hp.1
 
 /-- On the box of a flow box (around any point), the maximal flow is given by the flow box. -/
-theorem FlowBox.flow_eq [CompleteSpace E] [T2Space M] {z : M} (B : X.FlowBox z) {p : ℝ × M}
+theorem FlowBox.flow_eq [T2Space M] {z : M} (B : X.FlowBox z) {p : ℝ × M}
     (hp : p ∈ B.box) : X.flow p = B.φ p :=
   (B.isIntegralCurveThrough hp.2).flow_eq hp.1
 
@@ -220,7 +227,7 @@ theorem FlowBox.flow_eq [CompleteSpace E] [T2Space M] {z : M} (B : X.FlowBox z) 
 
 /-- The time-translated curve `u ↦ Fl(u + t, x)` is an integral curve through `Fl(t, x)` on
 `J_x - t`. -/
-theorem isIntegralCurveThrough_flow_add [CompleteSpace E] [T2Space M] {x : M} {t : ℝ}
+theorem isIntegralCurveThrough_flow_add [T2Space M] {x : M} {t : ℝ}
     (ht : (t, x) ∈ X.flowDomain) :
     X.IsIntegralCurveThrough (X.flow (t, x)) (fun u ↦ X.flow (u + t, x))
       ((· + t) ⁻¹' X.maxInterval x) where
@@ -240,8 +247,8 @@ theorem flow_flow_of_add_mem [CompleteSpace E] [T2Space M] {x : M} {s t : ℝ}
     X.flow (s, X.flow (t, x)) = X.flow (s + t, x) :=
   (X.isIntegralCurveThrough_flow_add ht).flow_eq (show s + t ∈ X.maxInterval x from hst)
 
-/-- **Translation of the maximal interval** (Lang, *Fundamentals of Differential Geometry*,
-Theorem IV.2.2; Glöckner–Neeb, Remark 2.5.24 (c)): if `t ∈ J_x`, then `J_{Fl(t, x)} = J_x - t`. -/
+/-- **Translation of the maximal interval** [Lan99, Theorem IV.2.2], [GN26, Remark 2.5.24 (c)]: if
+`t ∈ J_x`, then `J_{Fl(t, x)} = J_x - t`. -/
 theorem maxInterval_flow [CompleteSpace E] [T2Space M] {x : M} {t : ℝ}
     (ht : (t, x) ∈ X.flowDomain) :
     X.maxInterval (X.flow (t, x)) = (· + t) ⁻¹' X.maxInterval x := by
@@ -288,7 +295,7 @@ theorem add_mem_flowDomain [CompleteSpace E] [T2Space M] {x : M} {s t : ℝ}
   exact this
 
 /-- If `(t, x)` lies in the domain of the maximal flow, then `(s, Fl(t, x))` lies in it if and only
-if `(s + t, x)` does (Glöckner–Neeb, Remark 2.5.24 (c)). -/
+if `(s + t, x)` does [GN26, Remark 2.5.24 (c)]. -/
 theorem mem_flowDomain_flow_iff [CompleteSpace E] [T2Space M] {x : M} {s t : ℝ}
     (ht : (t, x) ∈ X.flowDomain) :
     (s, X.flow (t, x)) ∈ X.flowDomain ↔ (s + t, x) ∈ X.flowDomain := by
@@ -296,10 +303,9 @@ theorem mem_flowDomain_flow_iff [CompleteSpace E] [T2Space M] {x : M} {s t : ℝ
   rw [X.maxInterval_flow ht]
   rfl
 
-/-- **The group law** `Fl(s + t, x) = Fl(s, Fl(t, x))` whenever `(t, x)` and `(s, Fl(t, x))` lie
-in the domain of the maximal flow (Lang, *Fundamentals of Differential Geometry*, Theorem IV.2.2;
-Glöckner–Neeb, Remark 2.5.24 (c)); then `(s + t, x)` lies in it by
-`SmoothVectorField.add_mem_flowDomain`. -/
+/-- **The group law** `Fl(s + t, x) = Fl(s, Fl(t, x))` whenever `(t, x)` and `(s, Fl(t, x))` lie in
+the domain of the maximal flow [Lan99, Theorem IV.2.2], [GN26, Remark 2.5.24 (c)]; then `(s + t, x)`
+lies in it by `SmoothVectorField.add_mem_flowDomain`. -/
 theorem flow_add [CompleteSpace E] [T2Space M] {x : M} {s t : ℝ} (ht : (t, x) ∈ X.flowDomain)
     (hs : (s, X.flow (t, x)) ∈ X.flowDomain) :
     X.flow (s + t, x) = X.flow (s, X.flow (t, x)) :=
@@ -424,22 +430,22 @@ theorem exists_isOpen_smoothMBMOn_flow {p : ℝ × M} (hp : p ∈ X.flowDomain) 
       SmoothMBMOn (ModelProd ℝ E) E X.flow W :=
   goodTime_of_mem hp
 
-/-- **The domain of the maximal flow is open** in `ℝ × M` (Lang, *Fundamentals of Differential
-Geometry*, Theorem IV.2.6; Glöckner–Neeb, Corollary 2.5.21 (b)). -/
+/-- **The domain of the maximal flow is open** in `ℝ × M` [Lan99, Theorem IV.2.6], [GN26,
+Corollary 2.5.21 (b)]. -/
 theorem isOpen_flowDomain : IsOpen X.flowDomain :=
   isOpen_iff_forall_mem_open.2 fun _ hp ↦
     let ⟨W, hW, hpW, hWD, _⟩ := X.exists_isOpen_smoothMBMOn_flow hp
     ⟨W, hWD, hW, hpW⟩
 
-/-- **The maximal flow is smooth** on its domain (Lang, *Fundamentals of Differential Geometry*,
-Theorem IV.2.6; Glöckner–Neeb, Corollary 2.5.21 (c)). -/
+/-- **The maximal flow is smooth** on its domain [Lan99, Theorem IV.2.6], [GN26, Corollary 2.5.21
+(c)]. -/
 theorem smoothMBMOn_flow : SmoothMBMOn (ModelProd ℝ E) E X.flow X.flowDomain := fun k ↦
   ContMDiffMBOn.of_local X.isOpen_flowDomain fun _ hp ↦
     let ⟨W, hW, hpW, _, hsm⟩ := X.exists_isOpen_smoothMBMOn_flow hp
     ⟨W, hW, hpW, hsm k⟩
 
 /-- **The maximal flow is a local flow** in the sense of `IsLocalFlow`, on its open domain
-`flowDomain ⊇ {0} × M` (compare Glöckner–Neeb, Corollary 2.5.21 and Definition 2.5.23). -/
+`flowDomain ⊇ {0} × M` (compare [GN26, Corollary 2.5.21 and Definition 2.5.23]). -/
 theorem isLocalFlow_flow : IsLocalFlow X X.flow X.flowDomain where
   isOpen := X.isOpen_flowDomain
   zero_mem := X.zero_mem_flowDomain
@@ -487,7 +493,7 @@ theorem boxFlow_eq_flow {p : ℝ × M} (hp : p ∈ X.boxFlowDomain) : X.boxFlow 
 
 /-- **Escape lemma, forward.** If the forward maximal time `b` of `x` is finite,
 i.e. `J_x ∩ [0, ∞) = [0, b)`, then the curve `t ↦ Fl(t, x)` has no cluster point as `t → b⁻`
-(compare Lang, *Fundamentals of Differential Geometry*, Theorem IV.2.3). -/
+(compare [Lan99, Theorem IV.2.3]). -/
 theorem not_mapClusterPt_flow_of_lt_top {x : M} {b : ℝ}
     (hb : X.maxInterval x ∩ Ici 0 = Ico 0 b) (y : M) :
     ¬ MapClusterPt y (𝓝[<] b) (fun t ↦ X.flow (t, x)) := by
@@ -532,10 +538,10 @@ theorem not_mapClusterPt_flow_of_bot_lt {x : M} {a : ℝ}
   have : a ∈ Ioc a 0 := ha ▸ ⟨h, ha0.le⟩
   exact lt_irrefl a this.1
 
-/-- **Escape from compact sets, forward** (Lang, *Fundamentals of Differential Geometry*,
-Theorem IV.2.3): if `J_x ∩ [0, ∞) = [0, b)` with `b` finite, then for every compact `K ⊆ M`,
-`Fl(t, x) ∉ K` for all `t < b` close enough to `b`. In infinite dimensions compact sets have empty
-interior, so this is much weaker than in finite dimensions. -/
+/-- **Escape from compact sets, forward** [Lan99, Theorem IV.2.3]: if `J_x ∩ [0, ∞) = [0, b)` with
+`b` finite, then for every compact `K ⊆ M`, `Fl(t, x) ∉ K` for all `t < b` close enough to `b`. In
+infinite dimensions compact sets have empty interior, so this is much weaker than in finite
+dimensions. -/
 theorem eventually_flow_not_mem_of_isCompact {x : M} {b : ℝ}
     (hb : X.maxInterval x ∩ Ici 0 = Ico 0 b) {K : Set M} (hK : IsCompact K) :
     ∀ᶠ t in 𝓝[<] b, X.flow (t, x) ∉ K := by

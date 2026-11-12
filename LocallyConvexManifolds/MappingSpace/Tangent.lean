@@ -12,8 +12,7 @@ public import LocallyConvexManifolds.LocalAddition.Normalize
 # Tangent spaces of manifolds of mappings
 
 For `M` compact, `N` with a local addition `Σ` (normalized, `LocalAddition.IsNormalized`, or
-not) and `f ∈ C^ℓ(M, N)`, we prove H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*
-(arXiv:2602.12362), Theorem 4.2.2(d): the map `Θ : T_f C^ℓ(M, N) → Γ_f`,
+not) and `f ∈ C^ℓ(M, N)`, we prove [GN26, Theorem 4.2.2(d)]: the map `Θ : T_f C^ℓ(M, N) → Γ_f`,
 `v ↦ (T_f ε_x (v))_{x ∈ M}`, is an isomorphism of topological vector spaces. The tangent space is
 that of an atlas with varying models (`VaryingAtlas.TangentSpace`): at `f`, it is the model `Γ_f`
 of the chart `φ_f`, and for a normalized local addition `Θ` turns out to be the identity of `Γ_f`.
@@ -34,11 +33,11 @@ of the chart `φ_f`, and for a normalized local addition `Θ` turns out to be th
   the statements: it holds automatically for nonempty compact `M` (and then the model is
   finite-dimensional, `finiteDimensional_of_compactSpace`).
 
-* **Normalization.** Glöckner–Neeb also assume the local addition normalized for (d): they note
-  that by (a) the smooth structure does not depend on the local addition
-  (`mappingAtlasCk_equivalent`) and that every local addition can be normalized (Remark 3.8.16,
-  `LocalAddition.normalize` in `LocalAddition/Normalize.lean`). The computation is
-  `T_f ε_x (v) = T_{0}(Σ|_{T_{f(x)} N})(v(x))`, which is `v(x)` by (3.55).
+* **Normalization.** Glöckner–Neeb also assume the local addition normalized for (d): they note that
+  by (a) the smooth structure does not depend on the local addition (`mappingAtlasCk_equivalent`)
+  and that every local addition can be normalized ([GN26, Remark 3.8.16], `LocalAddition.normalize`
+  in `LocalAddition/Normalize.lean`). The computation is
+  `T_f ε_x (v) = T_{0}(Σ|_{T_{f(x)} N})(v(x))`, which is `v(x)` by [GN26, (3.55)].
 * **Arbitrary local additions.** For a local addition `A` that is not normalized, the tangent
   space `T_f C^ℓ(M, N)` of `A`'s atlas is the model `Γ_f` of `A`'s chart at `f`, and `Θ` is no
   longer the identity. `LocalAddition.tangentEquivSecCkOf` defines `Θ` as the change of tangent
@@ -52,13 +51,17 @@ of the chart `φ_f`, and for a normalized local addition `Θ` turns out to be th
   computation is a chain rule at the zero section `φ_f(f) = 0`. We do not claim this argument is
   new.
 * **Infinite-dimensional subtlety.** In infinite dimensions, different notions of tangent vector
-  need not agree. Chart (kinematic) tangent vectors, as here, correspond to classes of `C^1`
-  curves; operational tangent vectors (derivations of the algebra of smooth functions at a point)
-  may form a different, larger space, for instance when the model has few smooth functions
-  (compare A. Kriegl, P. W. Michor, *The Convenient Setting of Global Analysis*, AMS 1997, 28.1
-  and Lemma 28.4: on infinite-dimensional Hilbert space there are nonzero operational tangent
-  vectors of order 2 and 3, which are not kinematic). Statement (d) concerns the
+  need not agree. Chart (kinematic) tangent vectors, as here, correspond to classes of `C^1` curves;
+  operational tangent vectors (derivations of the algebra of smooth functions at a point) may form a
+  different, larger space, for instance when the model has few smooth functions (compare
+  [KM97, 28.1 and Lemma 28.4]: on infinite-dimensional Hilbert space there are nonzero
+  operational tangent vectors of order 2 and 3, which are not kinematic). Statement (d) concerns the
   kinematic tangent space only.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [A. Kriegl, P. W. Michor, *The Convenient Setting of Global Analysis*][KM97]
 -/
 
 @[expose] public section
@@ -105,7 +108,7 @@ theorem evalSecCk_apply (f : CkMap H E ℓ M N) (x : M) (τ : SecCk H E ℓ (CkM
     evalSecCk f x τ = τ x :=
   coordAt_chartAt (f x) (τ x)
 
-/-- **The tangent maps of the point evaluations** (Glöckner–Neeb, proof of Theorem 4.2.2(d)): for
+/-- **The tangent maps of the point evaluations** ([GN26, proof of Theorem 4.2.2(d)]): for
 a normalized local addition, `T_f ε_x (v) = v(x)` for every `v` in the tangent space at `f`,
 which is the model space `Γ_f` of the chart at `f`. -/
 theorem tangentMapAt_eval (hA : A.IsNormalized) (f : CkMap H E ℓ M N) (x : M)
@@ -128,7 +131,7 @@ theorem tangentMapAt_eval (hA : A.IsNormalized) (f : CkMap H E ℓ M N) (x : M)
   rw [hd.dMB_eq, map_zero, evalSecCk_apply]
   exact hA (f x) _
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(d)**, finite `ℓ`: for a normalized local addition, the map
+/-- **[GN26, Theorem 4.2.2(d)]**, finite `ℓ`: for a normalized local addition, the map
 `Θ : T_f C^ℓ(M, N) → Γ_f`, `v ↦ (T_f ε_x (v))_{x ∈ M}`, is an isomorphism of topological vector
 spaces. In the atlas `φ_f`, the tangent space at `f` is `Γ_f` itself, and `Θ` is the identity
 (`coe_tangentEquivSecCk`). -/
@@ -145,8 +148,8 @@ theorem coe_tangentEquivSecCk (hA : A.IsNormalized) (f : CkMap H E ℓ M N)
         v : E) :=
   funext fun x ↦ (A.tangentMapAt_eval hA f x v).symm
 
-/-- **The smooth structure does not depend on the local addition** (Glöckner–Neeb, proof of
-Theorem 4.2.2(d)): the atlases of `C^ℓ(M, N)` built from two local additions of `N` are
+/-- **The smooth structure does not depend on the local addition** ([GN26, proof of
+Theorem 4.2.2(d)]): the atlases of `C^ℓ(M, N)` built from two local additions of `N` are
 equivalent, since both satisfy the exponential law. -/
 theorem mappingAtlasCk_equivalent (A' : LocalAddition E N) :
     (A'.mappingAtlasCk (H := H) (M := M) (ℓ := ℓ)).Equivalent A.mappingAtlasCk :=
@@ -205,7 +208,7 @@ theorem tangentMapAt_evalSm (hA : A.IsNormalized) (f : SmoothMap H E M N) (x : M
   rw [hd.dMB_eq, map_zero, evalSecSm_apply]
   exact hA (f x) _
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(d)**, `ℓ = ∞`: `Θ : T_f C^∞(M, N) → Γ_f`,
+/-- **[GN26, Theorem 4.2.2(d)]**, `ℓ = ∞`: `Θ : T_f C^∞(M, N) → Γ_f`,
 `v ↦ (T_f ε_x (v))_{x ∈ M}`, is an isomorphism of topological vector spaces (the identity of
 `Γ_f`, the model of the chart at `f`, by `coe_tangentEquivSecSm`). -/
 def tangentEquivSecSm (f : SmoothMap H E M N) :
@@ -232,7 +235,7 @@ def unionAtlasCk : VaryingAtlas (CkMap H E ℓ M N) :=
   (A.mappingAtlasCk (H := H) (M := M) (ℓ := ℓ)).union A.normalize.mappingAtlasCk
     A.compatible_normalize
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(d)**, finite `ℓ`, for an arbitrary local addition: the map
+/-- **[GN26, Theorem 4.2.2(d)]**, finite `ℓ`, for an arbitrary local addition: the map
 `Θ : T_f C^ℓ(M, N) → Γ_f`, `v ↦ (T_f ε_x (v))_{x ∈ M}`, is an isomorphism of topological vector
 spaces. Here `Θ` is the change of tangent coordinates at `f` from the chart `φ_f` of `A` to the
 chart `φ'_f` of the normalized local addition `A.normalize` (the derivative at `0` of the
@@ -277,7 +280,7 @@ def unionAtlasSm : VaryingAtlas (SmoothMap H E M N) :=
   (A.mappingAtlasSm (H := H) (M := M)).union A.normalize.mappingAtlasSm
     A.compatible_normalizeSm
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(d)**, `ℓ = ∞`, for an arbitrary local addition: the map
+/-- **[GN26, Theorem 4.2.2(d)]**, `ℓ = ∞`, for an arbitrary local addition: the map
 `Θ : T_f C^∞(M, N) → Γ_f`, `v ↦ (T_f ε_x (v))_{x ∈ M}`, is an isomorphism of topological vector
 spaces. Here `Θ` is the change of tangent coordinates at `f` from the chart `φ_f` of `A` to the
 chart `φ'_f` of the normalized local addition `A.normalize` (the derivative at `0` of the

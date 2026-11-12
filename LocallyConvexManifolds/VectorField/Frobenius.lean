@@ -16,21 +16,35 @@ Let `M` be a manifold modeled on a normed space `E`. A **distribution** `D` on `
 split of type `(E₁, E₂)`** (`Distribution.IsSmoothSplit`) if around each point `x₀`, read in the
 preferred chart `i` at `x₀` and after a linear isomorphism `ℓ : E ≃ E₁ × E₂`, it is the field of
 graphs of a smooth map `f : ℓ(W) → L(E₁, E₂)`. This is the local form of a split subbundle of
-`TM` with fibre `E₁` and complement `E₂` (Lang, *Fundamentals of Differential Geometry*, GTM 191,
-Springer (1999), Ch. VI, §1, pp. 155–157). `D` is **involutive** (`Distribution.IsInvolutive`) if
-the bracket of two `C¹` vector fields tangent to `D` near a point lies in `D` at that point.
+`TM` with fibre `E₁` and complement `E₂` [Lan99, Ch. VI, §1, pp. 155–157]. `D` is **involutive**
+(`Distribution.IsInvolutive`) if the bracket of two `C¹` vector fields tangent to `D` near a point
+lies in `D` at that point.
 
 **Theorem** (`Distribution.IsInvolutive.exists_flat_chart`, `Distribution.isInvolutive_iff_flat`).
 If `E₁` and `E₂` are Banach spaces and `D` is smooth, split and involutive, then around every
 point there is a chart `φ` of the maximal atlas in which `D` is the constant subspace `ℓ⁻¹(E₁ × 0)`
-(Lang, Ch. VI, Theorem 1.1, p. 156, and Theorem 1.2, p. 158). Conversely, a distribution with flat
-charts is involutive (`Distribution.isInvolutive_of_flat`), with no completeness or splitting
+[Lan99, Ch. VI, Theorem 1.1, p. 156, and Theorem 1.2, p. 158]. Conversely, a distribution with
+flat charts is involutive (`Distribution.isInvolutive_of_flat`), with no completeness or splitting
 hypothesis.
+
+## Main definitions
+
+* `Distribution E M`: a distribution on `M`, a subspace `D x ⊆ T_x M` given in the preferred
+  chart at `x`.
+* `Distribution.IsSmoothSplit`: `D` is smooth and split of type `(E₁, E₂)`.
+* `Distribution.IsInvolutive`: `D` is involutive.
+
+## Main results
+
+* `Distribution.IsInvolutive.exists_flat_chart`: the Frobenius theorem, an involutive smooth split
+  distribution with Banach fibre and complement has flat charts.
+* `Distribution.isInvolutive_of_flat`: a distribution with flat charts is involutive.
+* `Distribution.isInvolutive_iff_flat`: the Frobenius theorem as an equivalence.
 
 ## Proof
 
 In the chart `i`, after `ℓ`, the fields `X_a(z) = (a, f(z) a)`, `a ∈ E₁`, are tangent to `D`, and
-their bracket lies in `D` exactly when `f` satisfies Penot's condition (Frob)
+their bracket lies in `D` exactly when `f` satisfies Penot's condition (Frob) [Pen70]
 (`LocallyConvex.Analysis.lieBracket_mem_graph_iff`). Extending `X_a` by `0` outside the chart
 domain gives vector fields on `M` that are smooth near every point of the domain, so involutivity
 gives (Frob) on `ℓ(W)` (`Distribution.IsInvolutive.frob`). The Frobenius theorem in chart form
@@ -51,7 +65,12 @@ is transported back to the preferred chart by `localBracket_transition`.
   the point; this is part of `IsSmoothSplit`. Closed subspaces of Banach spaces need not be
   complemented.
 * **Completeness.** `E₁` and `E₂` are complete, for the inverse function theorem and the linear
-  differential equations in Penot's proof.
+  differential equations in Penot's proof [Pen70].
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [J.-P. Penot, *Sur le théorème de Frobenius*][Pen70]
 -/
 
 @[expose] public section
@@ -412,12 +431,11 @@ theorem IsInvolutive.frob (hinv : D.IsInvolutive) {x₀ : M} (ℓ : E ≃L[ℝ] 
     exact hbr
   exact frob_of_localBracket ℓ hfd a b ((hgraph y hy _).1 hmem)
 
-/-- **The Frobenius theorem on Banach manifolds** (Lang, *Fundamentals of Differential
-Geometry*, Ch. VI, Theorem 1.1, p. 156, and Theorem 1.2, p. 158). Let `D` be a smooth split
-distribution of type `(E₁, E₂)`, with `E₁` and `E₂` Banach spaces, which is involutive. Then
-around every `x₀ ∈ M` there is a chart `φ` of the maximal atlas, with `φ(x₀) = i(x₀)` for the
-preferred chart `i` at `x₀`, in which `D` is constant: a vector `u` given in the chart `φ` at `x`
-lies in `D x` if and only if `ℓ u ∈ E₁ × 0`. -/
+/-- **The Frobenius theorem on Banach manifolds** [Lan99, Ch. VI, Theorem 1.1, p. 156, and Theorem
+1.2, p. 158]. Let `D` be a smooth split distribution of type `(E₁, E₂)`, with `E₁` and `E₂` Banach
+spaces, which is involutive. Then around every `x₀ ∈ M` there is a chart `φ` of the maximal atlas,
+with `φ(x₀) = i(x₀)` for the preferred chart `i` at `x₀`, in which `D` is constant: a vector `u`
+given in the chart `φ` at `x` lies in `D x` if and only if `ℓ u ∈ E₁ × 0`. -/
 theorem IsInvolutive.exists_flat_chart [CompleteSpace E₁] [CompleteSpace E₂]
     (hsplit : D.IsSmoothSplit E₁ E₂) (hinv : D.IsInvolutive) (x₀ : M) :
     ∃ ℓ : E ≃L[ℝ] E₁ × E₂, ∃ φ : OpenPartialHomeomorph M E,
@@ -659,7 +677,7 @@ theorem isInvolutive_of_flat
   rw [← hkey]
   exact (hfl x hxφ _).2 ((hK _).1 hbφ)
 
-/-- **The Frobenius theorem as an equivalence** (Lang, Ch. VI, §1, pp. 155–158): a smooth split
+/-- **The Frobenius theorem as an equivalence** [Lan99, Ch. VI, §1, pp. 155–158]: a smooth split
 distribution with Banach fibre and complement is involutive if and only if it admits flat charts
 around every point. -/
 theorem isInvolutive_iff_flat [CompleteSpace E₁] [CompleteSpace E₂]

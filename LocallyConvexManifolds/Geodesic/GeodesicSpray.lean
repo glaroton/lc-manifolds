@@ -14,36 +14,37 @@ public import Mathlib.Analysis.Calculus.Deriv.Prod
 /-!
 # The geodesic spray; openness of `D(exp)` and smoothness of `exp`
 
-References: S. Lang, *Fundamentals of Differential Geometry*, Springer GTM 191 (1999), Ch. IV §3
-(second-order vector fields and geodesics, p. 97; local representation, p. 98) and §4 (the
-domain `𝔇` of the exponential map is open and `exp` is a morphism, p. 107); G. Larotonda,
-*Estructuras geométricas para las variedades de Banach* (version of 29 November 2023), §6.1.2
-(p. 154) and Ejercicio 6.III (p. 168).
-
 Let `C` be a connection on a manifold `M` modeled on a Banach space `E`. Its **geodesic spray**
 is the vector field `S` on the manifold `TM` (modeled on `E × E`) which, in the chart of `TM`
 over a chart `i` of `M`, reads `(x, w) ↦ (x, w; w, Γᵢ(x)(w, w))`; with the sign convention of
 `LocallyConvexManifolds.Geodesic.Banach`, geodesics are the curves with `c'' = Γ_c(c', c')`. We
-prove:
+follow [Lan99, Ch. IV §3] (second-order vector fields and geodesics, p. 97; local representation,
+p. 98) and [Lan99, Ch. IV §4] (the domain `𝔇` of the exponential map is open and `exp` is a
+morphism, p. 107), and [Lar22, §6.1.2 (p. 154) and Ejercicio 6.III (p. 168)].
 
-* `Connection.spray`, `Connection.rep_spray`, `Connection.spray_isSecondOrder`: `S` is a well
-  defined smooth vector field on `TM`, it has the local representative above in **every** chart
-  of `TM` over a chart of `M` (`Connection.ddChart_sprayFun`: the change of charts law of the
-  symbols is exactly what makes the local formulas agree under the transition maps of `TTM`), and
-  it is a second-order vector field;
+## Main definitions
+
+* `Connection.spray`: the geodesic spray `S`, a smooth vector field on `TM`.
+
+## Main results
+
+* `Connection.rep_spray`, `Connection.spray_isSecondOrder`: `S` has the local representative
+  above in **every** chart of `TM` over a chart of `M` (`Connection.ddChart_sprayFun`: the change
+  of charts law of the symbols is exactly what makes the local formulas agree under the
+  transition maps of `TTM`), and it is a second-order vector field.
 * `Connection.IsGeodesicOn.isIntegralCurveOn_velocity`,
   `Connection.isGeodesicOn_proj_of_isIntegralCurveOn`,
   `Connection.velocity_proj_of_isIntegralCurveOn`: the velocity `α̇` of a geodesic `α` is an
   integral curve of `S`, and conversely every integral curve of `S` is the velocity of its
-  projection, which is a geodesic;
+  projection, which is a geodesic.
 * `Connection.maxInterval_eq_spray`, `Connection.maxGeodesic_eq_proj_flow`,
   `Connection.flow_spray_eq_velocity`: hence the maximal interval `J_v` of the geodesic with
   initial velocity `v` is the maximal interval of the integral curve of `S` through `v`, and
-  `γ_v(t) = π(Fl_S(t, v))`, `Fl_S(t, v) = γ̇_v(t)`;
-* `Connection.isOpen_expDomain`, `Connection.smoothMBMOn_exp` (**Lang, p. 107**): the domain
-  `D(exp) = {v | (1, v) ∈ D(Fl_S)}` is open in `TM`, and `exp = π ∘ Fl_S(1, ·)` is smooth on it;
+  `γ_v(t) = π(Fl_S(t, v))`, `Fl_S(t, v) = γ̇_v(t)`.
+* `Connection.isOpen_expDomain`, `Connection.smoothMBMOn_exp` ([Lan99, p. 107]): the domain
+  `D(exp) = {v | (1, v) ∈ D(Fl_S)}` is open in `TM`, and `exp = π ∘ Fl_S(1, ·)` is smooth on it.
 * `Connection.isOpen_expDomainAt`, `Connection.smoothMBMOn_expAt`: the same for `exp_p` on its
-  domain in `T_pM = E`;
+  domain in `T_pM = E`.
 * `Connection.zero_mem_expDomain`, `Connection.tangentSMul_mem_expDomain`,
   `Connection.starConvex_expDomainAt`: `D(exp)` contains the zero section and is star-shaped in
   the fibers.
@@ -63,12 +64,18 @@ prove:
 * Infinite-dimensional subtleties. For each `p`, `D(exp_p)` is an open star-shaped neighbourhood
   of `0` in `T_pM`; but since `M` need not be locally compact, openness of `D(exp)` in `TM` does
   not give balls of a uniform radius in `T_pM` for `p` in a closed neighbourhood of a point
-  (uniformly normal neighbourhoods, *Estructuras* §6.2.1, need a separate argument with the
+  (uniformly normal neighbourhoods, [Lar22, §6.2.1], need a separate argument with the
   norms of a chart). Both facts are in `LocallyConvexManifolds.Geodesic.Normal`: `exp_p` is a
-  local diffeomorphism at `0` (Lang, Theorem IV.4.1), and uniformly normal neighbourhoods come
+  local diffeomorphism at `0` ([Lan99, Theorem IV.4.1]), and uniformly normal neighbourhoods come
   from the inverse function theorem applied to `v ↦ (π v, exp v)`.
 * We do not claim the arguments are new; they follow Lang's construction of `exp` through the
   flow of the spray.
+
+## References
+
+* [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]; the numbers
+  refer to the version of 29 November 2023.
 -/
 
 @[expose] public section
@@ -220,8 +227,8 @@ theorem rep_spray (i : atlas E M) {y : E × E} (hy : y ∈ (tangentAtlas i).1.ta
     C.spray.rep (tangentAtlas i) y = (y.2, C.Γ i y.1 y.2 y.2) :=
   C.localRep_sprayFun i hy
 
-/-- **The geodesic spray is a second-order vector field** (Lang, *Fundamentals*, Ch. IV §3,
-p. 97): `π_* S(v) = v`, that is, in the chart of `TTM` over any chart of `M` around the base point,
+/-- **The geodesic spray is a second-order vector field** [Lan99, Ch. IV §3,
+p. 97]: `π_* S(v) = v`, that is, in the chart of `TTM` over any chart of `M` around the base point,
 the point `((x, w), (u, w'))` of `S(v)` has `u = w`. -/
 theorem spray_isSecondOrder (i : atlas E M) {v : TangentBundle E M} (hv : v.proj ∈ i.1.source) :
     (ddChart i (C.spray v)).2.1 = (ddChart i (C.spray v)).1.2 := by
@@ -253,8 +260,8 @@ theorem tangentChart_velocity {α : ℝ → M} {t : ℝ} (hα : ContinuousAt α 
   rw [velocity_eq_of_hasDerivAt hd.hasDerivAt, tangentChart_apply, hd'.deriv, hτd]
   rfl
 
-/-- **The velocity of a geodesic is an integral curve of the geodesic spray** (Lang,
-*Fundamentals*, Ch. IV §3, p. 97, where this is the definition of a geodesic). -/
+/-- **The velocity of a geodesic is an integral curve of the geodesic spray**
+([Lan99, Ch. IV §3, p. 97], where this is the definition of a geodesic). -/
 theorem IsGeodesicOn.isIntegralCurveOn_velocity {C : Connection E M} {α : ℝ → M} {I : Set ℝ}
     (h : C.IsGeodesicOn α I) : C.spray.IsIntegralCurveOn (velocity E α) I := by
   have hαc : ∀ s ∈ I, ContinuousAt α s := fun s hs ↦ (h.2.1 s hs).continuousAt (h.1.mem_nhds hs)
@@ -315,8 +322,8 @@ theorem hasDerivAt_proj_of_isIntegralCurveOn {C : Connection E M} {c : ℝ → T
   have H2 := (hasFDerivAt_snd (p := (tangentAtlas i).1 (c t))).comp_hasDerivAt t H
   exact ⟨H1, H2⟩
 
-/-- **The projection of an integral curve of the geodesic spray is a geodesic** (Lang,
-*Fundamentals*, Ch. IV §3, p. 97). -/
+/-- **The projection of an integral curve of the geodesic spray is a geodesic**
+[Lan99, Ch. IV §3, p. 97]. -/
 theorem isGeodesicOn_proj_of_isIntegralCurveOn {C : Connection E M} {c : ℝ → TangentBundle E M}
     {I : Set ℝ} (hI : IsOpen I) (h : C.spray.IsIntegralCurveOn c I) :
     C.IsGeodesicOn (fun s ↦ (c s).proj) I := by
@@ -333,8 +340,8 @@ theorem isGeodesicOn_proj_of_isIntegralCurveOn {C : Connection E M} {c : ℝ →
     exact (hasDerivAt_proj_of_isIntegralCurveOn h hs.1 j hs.2).1
   · exact (hasDerivAt_proj_of_isIntegralCurveOn h ht j hj).2
 
-/-- **An integral curve of the geodesic spray is the velocity of its projection** (Lang,
-*Fundamentals*, Ch. IV §3, p. 97: `(πβ)' = β`). -/
+/-- **An integral curve of the geodesic spray is the velocity of its projection**
+([Lan99, Ch. IV §3, p. 97]: `(πβ)' = β`). -/
 theorem velocity_proj_of_isIntegralCurveOn {C : Connection E M} {c : ℝ → TangentBundle E M}
     {I : Set ℝ} (h : C.spray.IsIntegralCurveOn c I) {t : ℝ} (ht : t ∈ I) :
     velocity E (fun s ↦ (c s).proj) t = c t := by
@@ -414,13 +421,13 @@ theorem expDomain_eq_preimage_flowDomain :
 theorem exp_eq_proj_flow (v : TangentBundle E M) : C.exp v = (C.spray.flow (1, v)).proj :=
   C.maxGeodesic_eq_proj_flow v 1
 
-/-- **The domain of the exponential map is open in `TM`** (Lang, *Fundamentals*, Ch. IV §4,
-p. 107; *Estructuras*, §6.1.2, p. 154, and Ejercicio 6.III, p. 168). -/
+/-- **The domain of the exponential map is open in `TM`** ([Lan99, Ch. IV §4,
+p. 107]; [Lar22, §6.1.2, p. 154, and Ejercicio 6.III, p. 168]). -/
 theorem isOpen_expDomain : IsOpen C.expDomain := by
   rw [expDomain_eq_preimage_flowDomain]
   exact C.spray.isOpen_flowDomain.preimage (continuous_const.prodMk continuous_id)
 
-/-- **The exponential map is smooth on its domain** (Lang, *Fundamentals*, Ch. IV §4, p. 107). -/
+/-- **The exponential map is smooth on its domain** [Lan99, Ch. IV §4, p. 107]. -/
 theorem smoothMBMOn_exp : SmoothMBMOn (E × E) E C.exp C.expDomain := by
   have hU := C.isOpen_expDomain
   have h1 : SmoothMBMOn (E × E) (ModelProd ℝ (E × E))

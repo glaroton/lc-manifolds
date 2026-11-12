@@ -13,28 +13,38 @@ public import LocallyConvexManifolds.MetricGeometry.ForwardLength
 /-!
 # Finsler manifolds as metric spaces
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 9, §9.1.1
-(Proposición 9.1.2).
-
 Let `μ` be a **reversible** Finsler length structure on `M`. Its distance `d_b`
 (`FinslerLengthStructure.dist`, defined with piecewise `C¹` paths) is then a pseudo-(extended)
 metric, and `FinslerSpace μ` is a copy of `M` with this distance. Reversibility is needed for the
 symmetry of `d_b`; without it `d_b` is only a quasi-metric (`FinslerLengthStructure.dist_triangle`
-still holds), and the metric theory of Cap. 8, which is symmetric, does not apply as such.
+still holds), and the metric theory of [Lar22, Cap. 8], which is symmetric, does not apply as
+such. This file follows [Lar22, Cap. 9, §9.1.1 (Proposición 9.1.2)].
 
 The topology of `FinslerSpace μ` is the one of `d_b`, which need not be the manifold topology of
-`M`; comparing both is the subject of *Estructuras*, §9.1.2.
+`M`; comparing both is the subject of [Lar22, §9.1.2].
+
+## Main definitions
+
+* `FinslerLengthStructure.FinslerSpace`: a copy of `M` with the distance `d_b`, with the
+  identities `FinslerLengthStructure.toFinsler` and `FinslerLengthStructure.ofFinsler`.
 
 ## Main results
 
-* `edist_le_abs_length`, `continuous_toFinsler`: a `C¹` curve of `M` is continuous for `d_b`,
-  since `d_b(γ s, γ t) ≤ |L_b(γ|[s, t])|`;
-* `eVariationOn_le_length` (**Proposición 9.1.2**, first part): the metric length of a `C¹` arc
-  is at most its Finsler length, `ℓ(γ) ≤ L_b(γ)`;
-* `isInterior` (**Proposición 9.1.2**): `(M, d_b)` is an interior metric space, `d_ℓ = d_b`.
-* `fwdVar_le_length`, `isFwdInterior`: the same without reversibility, for the asymmetric distance
-  `d_b` (Mennucci, *On asymmetric distances*, 2013): the forward length of a `C¹` arc is at most its
-  Finsler length, and `(M, d_b)` is forward-interior (Mennucci's g-intrinsic, Def. 3.16).
+* `FinslerLengthStructure.edist_le_abs_length`, `FinslerLengthStructure.continuous_toFinsler`: a
+  `C¹` curve of `M` is continuous for `d_b`, since `d_b(γ s, γ t) ≤ |L_b(γ|[s, t])|`;
+* `FinslerLengthStructure.eVariationOn_le_length` ([Lar22, Proposición 9.1.2], first part): the
+  metric length of a `C¹` arc is at most its Finsler length, `ℓ(γ) ≤ L_b(γ)`;
+* `FinslerLengthStructure.isInterior` ([Lar22, Proposición 9.1.2]): `(M, d_b)` is an interior
+  metric space, `d_ℓ = d_b`.
+* `FinslerLengthStructure.fwdVar_le_length`, `FinslerLengthStructure.isFwdInterior`: the same
+  without reversibility, for the asymmetric distance `d_b` ([Men13]): the forward length of a
+  `C¹` arc is at most its Finsler length, and `(M, d_b)` is forward-interior (Mennucci's
+  g-intrinsic, [Men13, Def. 3.16]).
+
+## References
+
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 
 @[expose] public section
@@ -58,7 +68,7 @@ namespace FinslerLengthStructure
 variable (μ : FinslerLengthStructure E M)
 
 /-- A copy of `M` with the Finsler distance `d_b`, an asymmetric distance; its topology is that of
-the symmetrized distance `max (d_b(x, y), d_b(y, x))` (Mennucci, §3.1). -/
+the symmetrized distance `max (d_b(x, y), d_b(y, x))` ([Men13, §3.1]). -/
 def FinslerSpace (_μ : FinslerLengthStructure E M) : Type _ := M
 
 /-- The identity `M → FinslerSpace μ`. -/
@@ -172,8 +182,8 @@ theorem fwdLengthDist_le_of_reach {x y : M} {L : ℝ} (h : μ.Reach x y L) :
           (ENNReal.ofReal_add (μ.length_nonneg γ hab) hrest.nonneg).symm
 
 /-- **Proposición 9.1.2 for non-reversible Finsler structures**: `(M, d_b)` is a forward-interior
-asymmetric metric space (Mennucci's g-intrinsic, Def. 3.16): `d_b` is the infimum of the forward
-lengths of the curves continuous for the symmetrized topology. -/
+asymmetric metric space (Mennucci's g-intrinsic, [Men13, Def. 3.16]): `d_b` is the infimum of the
+forward lengths of the curves continuous for the symmetrized topology. -/
 theorem isFwdInterior : IsFwdInterior (FinslerSpace μ) := by
   intro x y
   refine le_antisymm ?_ (bdist_le_fwdLengthDist x y)

@@ -10,13 +10,12 @@ public import LocallyConvexManifolds.MappingSpace.TopologyJet
 /-!
 # The compact-open `C^ℓ` topology for targets in any universe
 
-The iterated tangent bundles `T^j N` behind H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie
-Groups* (arXiv:2602.12362), Definition 4.1.2, run over the bundled manifolds `MBMfld.{u, v}`, whose
-carriers live in `Type (max u v)`, `u` the universe of the models: the tangent bundle of `N` lives
-in the universe of `N` and of its model, so only there is the iteration `T^j` closed. A target `N`
-in a universe below `u` is not the carrier of a bundled manifold. This file removes that
-restriction by a transport along `ULift`: `ULift N` is a manifold over the same model, with the
-charts of `N` (`chartedSpaceULift`), and `f ↦ ULift.up ∘ f` is a homeomorphism
+The iterated tangent bundles `T^j N` behind [GN26, Definition 4.1.2] run over the bundled manifolds
+`MBMfld.{u, v}`, whose carriers live in `Type (max u v)`, `u` the universe of the models: the
+tangent bundle of `N` lives in the universe of `N` and of its model, so only there is the iteration
+`T^j` closed. A target `N` in a universe below `u` is not the carrier of a bundled manifold. This
+file removes that restriction by a transport along `ULift`: `ULift N` is a manifold over the same
+model, with the charts of `N` (`chartedSpaceULift`), and `f ↦ ULift.up ∘ f` is a homeomorphism
 `C^ℓ(M, N) ≃ₜ C^ℓ(M, ULift N)` for the topology of `C^ℓ(M, N)` (`CkMap.uliftHomeomorph`).
 
 ## Main definitions
@@ -24,21 +23,22 @@ charts of `N` (`chartedSpaceULift`), and `f ↦ ULift.up ∘ f` is a homeomorphi
 * `chartedSpaceULift`, `mbManifoldULift`: the manifold `ULift N`, with the charts of `N`.
 * `CkMap.uliftHomeomorph`, `SmoothMap.uliftHomeomorph`: `C^ℓ(M, N) ≃ₜ C^ℓ(M, ULift N)`,
   `ℓ ∈ ℕ ∪ {∞}`.
-* `CkMap.gnTopology H E ℓ M N`, `SmoothMap.gnTopologySm H E M N`: the compact-open `C^ℓ` topology
-  of Definition 4.1.2 for `N` in any universe, through `ULift N`. For `N` in the universe of the
-  bundled manifolds it is `MBMfld.gnTopology` (`CkMap.gnTopology_eq`, `SmoothMap.gnTopologySm_eq`).
+* `CkMap.gnTopology H E ℓ M N`, `SmoothMap.gnTopologySm H E M N`: the compact-open `C^ℓ` topology of
+  [GN26, Definition 4.1.2] for `N` in any universe, through `ULift N`. For `N` in the universe of
+  the bundled manifolds it is `MBMfld.gnTopology` (`CkMap.gnTopology_eq`,
+  `SmoothMap.gnTopologySm_eq`).
 
 ## Main results
 
-* `MBMfld.gnTopology_eq_induced`, `MBMfld.gnTopologySm_eq_induced`: Definition 4.1.2 is natural in
-  the target: a diffeomorphism `φ : Y → Y'` induces a homeomorphism `f ↦ φ ∘ f` between the
-  topologies of Definition 4.1.2. The proof uses the chain rule for the iterated tangent maps,
-  `MBMfld.iterMap_comp`.
+* `MBMfld.gnTopology_eq_induced`, `MBMfld.gnTopologySm_eq_induced`: [GN26, Definition 4.1.2] is
+  natural in the target: a diffeomorphism `φ : Y → Y'` induces a homeomorphism `f ↦ φ ∘ f` between
+  the topologies of [GN26, Definition 4.1.2]. The proof uses the chain rule for the iterated tangent
+  maps, `MBMfld.iterMap_comp`.
 * For every universe of `N`: `CkMap.jetTopology_eq_gnTopology`, `CkMap.topology_eq_gnTopology`,
-  `SmoothMap.jetTopologySm_eq_gnTopologySm`, `SmoothMap.topology_eq_gnTopologySm`: **the
-  topology of `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of Definition 4.1.2** (Glöckner–Neeb,
-  Theorem 4.2.2(b)), for every Hausdorff `M`, `ℓ ∈ ℕ ∪ {∞}`; the same for a locally compact model
-  (`..._of_locallyCompactSpace`); `CkMap.chartTopology_eq_gnTopology`,
+  `SmoothMap.jetTopologySm_eq_gnTopologySm`, `SmoothMap.topology_eq_gnTopologySm`: **the topology of
+  `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of [GN26, Definition 4.1.2]**
+  ([GN26, Theorem 4.2.2(b)]), for every Hausdorff `M`, `ℓ ∈ ℕ ∪ {∞}`; the same for a locally compact
+  model (`..._of_locallyCompactSpace`); `CkMap.chartTopology_eq_gnTopology`,
   `SmoothMap.chartTopologySm_eq_gnTopologySm`: the chart topology is that topology for a locally
   compact model.
 
@@ -50,10 +50,14 @@ charts of `N` (`chartedSpaceULift`), and `f ↦ ULift.up ∘ f` is a homeomorphi
   and the others in `MappingSpace/TopologyJet.lean`, `MappingSpace/TopologyGN.lean`) are transported
   along `CkMap.uliftHomeomorph`; the jets of `C^ℓ(M, ULift N)` are, chart by chart, those of
   `C^ℓ(M, N)`, since the charts of `ULift N` are those of `N` precomposed with `ULift.down`.
-* Mathematically `ULift N` is `N`; the transport is a formal device of type theory. The
-  naturality of Definition 4.1.2 (`MBMfld.gnTopology_eq_induced`) shows that `CkMap.gnTopology`
-  does not depend on it: for `N` in the carrier universe of a bundled manifold it is
-  `MBMfld.gnTopology`. We do not claim this argument is new.
+* Mathematically `ULift N` is `N`; the transport is a formal device of type theory. The naturality
+  of [GN26, Definition 4.1.2] (`MBMfld.gnTopology_eq_induced`) shows that `CkMap.gnTopology` does
+  not depend on it: for `N` in the carrier universe of a bundled manifold it is `MBMfld.gnTopology`.
+  We do not claim this argument is new.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -123,7 +127,7 @@ theorem induced_postcomp_eq {A B B' : Type*} [TopologicalSpace A] [TopologicalSp
 
 /-- **Definition 4.1.2 is natural in the target**: if `φ : Y → Y'` is a diffeomorphism (smooth,
 with a smooth left inverse `ψ`), then `f ↦ φ ∘ f` is an embedding `C^ℓ(X, Y) → C^ℓ(X, Y')` for the
-compact-open `C^ℓ` topologies of Glöckner–Neeb, Definition 4.1.2. The map is given as any `e` with
+compact-open `C^ℓ` topologies of [GN26, Definition 4.1.2]. The map is given as any `e` with
 `e f = φ ∘ f`. -/
 theorem gnTopology_eq_induced (ℓ : ℕ) (X : MBMfld.{u, u}) {Y : MBMfld.{u, v}}
     {Y' : MBMfld.{u, w}} {φ : Y.Carrier → Y'.Carrier} {ψ : Y'.Carrier → Y.Carrier}
@@ -306,7 +310,7 @@ variable {H : Type u} [AddCommGroup H] [Module ℝ H] [TopologicalSpace H] [IsTo
   {N : Type w} [TopologicalSpace N] [ChartedSpace E N] [MBManifold E N]
 
 variable (H E) in
-/-- **The compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2, for `N` in any
+/-- **The compact-open `C^ℓ` topology of [GN26, Definition 4.1.2], for `N` in any
 universe**: the initial topology with respect to `f ↦ T^j (ULift.up ∘ f) ∈ C(T^j M, T^j N)`,
 `j ≤ ℓ`, where `ULift N`, with the charts of `N`, is the carrier of a bundled manifold
 `MBMfld.{u, w}`. For `N` in the carrier universe of a bundled manifold it is
@@ -319,7 +323,7 @@ def CkMap.gnTopology (ℓ : ℕ) (M : Type u) [TopologicalSpace M] [ChartedSpace
     (MBMfld.gnTopology ℓ (MBMfld.of H M) (MBMfld.of.{u, w} E (ULift.{u} N)))
 
 variable (H E) in
-/-- **The compact-open `C^∞` topology of Glöckner–Neeb, Definition 4.1.2, for `N` in any
+/-- **The compact-open `C^∞` topology of [GN26, Definition 4.1.2], for `N` in any
 universe**, through `ULift N` as for `CkMap.gnTopology`. For `N` in the carrier universe of a
 bundled manifold it is `MBMfld.gnTopologySm` (`SmoothMap.gnTopologySm_eq`). -/
 @[instance_reducible]
@@ -349,23 +353,23 @@ theorem SmoothMap.gnTopologySm_eq {N : Type (max u v)} [TopologicalSpace N] [Cha
     (Y' := MBMfld.of.{u, max u v} E (ULift.{u} N)) smoothMBM_up smoothMBM_down
     (fun _ ↦ rfl) SmoothMap.uliftEquiv fun _ ↦ rfl).symm
 
-/-- **The jet topology of `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of Glöckner–Neeb,
-Definition 4.1.2**, for every Hausdorff manifold `M` (compact or not) modeled on any Hausdorff
+/-- **The jet topology of `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of [GN26,
+Definition 4.1.2]**, for every Hausdorff manifold `M` (compact or not) modeled on any Hausdorff
 locally convex space `H` (locally compact or not), and `N` in any universe. -/
 theorem CkMap.jetTopology_eq_gnTopology [T2Space M] (ℓ : ℕ) :
     CkMap.jetTopology H E ℓ M N = CkMap.gnTopology H E ℓ M N := by
   rw [CkMap.gnTopology, ← MBMfld.jetTopology_eq_gnTopology]
   exact (CkMap.uliftHomeomorph : CkMap H E ℓ M N ≃ₜ CkMap H E ℓ M (ULift.{u} N)).induced_eq.symm
 
-/-- The jet topology of `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of Glöckner–Neeb,
-Definition 4.1.2, for a locally compact model `H` (no Hausdorff hypothesis on `M`) and `N` in any
+/-- The jet topology of `C^ℓ(M, N)` is the compact-open `C^ℓ` topology of [GN26,
+Definition 4.1.2], for a locally compact model `H` (no Hausdorff hypothesis on `M`) and `N` in any
 universe. -/
 theorem CkMap.jetTopology_eq_gnTopology_of_locallyCompactSpace [LocallyCompactSpace H] (ℓ : ℕ) :
     CkMap.jetTopology H E ℓ M N = CkMap.gnTopology H E ℓ M N := by
   rw [CkMap.gnTopology, ← MBMfld.jetTopology_eq_gnTopology_of_locallyCompactSpace]
   exact (CkMap.uliftHomeomorph : CkMap H E ℓ M N ≃ₜ CkMap H E ℓ M (ULift.{u} N)).induced_eq.symm
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(b)**, finite `ℓ`, and more: the topology of `C^ℓ(M, N)` (the
+/-- **[GN26, Theorem 4.2.2(b)]**, finite `ℓ`, and more: the topology of `C^ℓ(M, N)` (the
 jet topology; for `M` compact, the topology underlying the atlas `LocalAddition.mappingAtlasCk`)
 is the compact-open `C^ℓ` topology of Definition 4.1.2, for every Hausdorff manifold `M` (compact
 or not) modeled on any Hausdorff locally convex space, and `N` in any universe. -/
@@ -373,38 +377,39 @@ theorem CkMap.topology_eq_gnTopology [T2Space M] (ℓ : ℕ) :
     (inferInstance : TopologicalSpace (CkMap H E ℓ M N)) = CkMap.gnTopology H E ℓ M N :=
   CkMap.jetTopology_eq_gnTopology ℓ
 
-/-- **The chart topology is the compact-open `C^ℓ` topology** of Glöckner–Neeb, Definition 4.1.2,
+/-- **The chart topology is the compact-open `C^ℓ` topology** of [GN26, Definition 4.1.2],
 for a locally compact model of `M` and `N` in any universe. -/
 theorem CkMap.chartTopology_eq_gnTopology [LocallyCompactSpace H] (ℓ : ℕ) :
     CkMap.chartTopology H E ℓ M N = CkMap.gnTopology H E ℓ M N :=
   CkMap.chartTopology_eq_jetTopology.trans
     (CkMap.jetTopology_eq_gnTopology_of_locallyCompactSpace ℓ)
 
-/-- **The jet topology of `C^∞(M, N)` is the compact-open `C^∞` topology of Glöckner–Neeb,
-Definition 4.1.2**, for every Hausdorff manifold `M` and `N` in any universe. -/
+/-- **The jet topology of `C^∞(M, N)` is the compact-open `C^∞` topology of [GN26,
+Definition 4.1.2]**, for every Hausdorff manifold `M` and `N` in any universe. -/
 theorem SmoothMap.jetTopologySm_eq_gnTopologySm [T2Space M] :
     SmoothMap.jetTopologySm H E M N = SmoothMap.gnTopologySm H E M N := by
   rw [SmoothMap.gnTopologySm, ← MBMfld.jetTopologySm_eq_gnTopologySm]
   exact (SmoothMap.uliftHomeomorph :
     SmoothMap H E M N ≃ₜ SmoothMap H E M (ULift.{u} N)).induced_eq.symm
 
-/-- The jet topology of `C^∞(M, N)` is the compact-open `C^∞` topology of Glöckner–Neeb,
-Definition 4.1.2, for a locally compact model `H` and `N` in any universe. -/
+/-- The jet topology of `C^∞(M, N)` is the compact-open `C^∞` topology of [GN26,
+Definition 4.1.2], for a locally compact model `H` and `N` in any universe. -/
 theorem SmoothMap.jetTopologySm_eq_gnTopologySm_of_locallyCompactSpace [LocallyCompactSpace H] :
     SmoothMap.jetTopologySm H E M N = SmoothMap.gnTopologySm H E M N := by
   rw [SmoothMap.gnTopologySm, ← MBMfld.jetTopologySm_eq_gnTopologySm_of_locallyCompactSpace]
   exact (SmoothMap.uliftHomeomorph :
     SmoothMap H E M N ≃ₜ SmoothMap H E M (ULift.{u} N)).induced_eq.symm
 
-/-- **Glöckner–Neeb, Theorem 4.2.2(b)**, `ℓ = ∞`, and more: the topology of `C^∞(M, N)` is the
+/-- **[GN26, Theorem 4.2.2(b)]**, `ℓ = ∞`, and more: the topology of `C^∞(M, N)` is the
 compact-open `C^∞` topology of Definition 4.1.2, for every Hausdorff manifold `M` and `N` in any
 universe. -/
 theorem SmoothMap.topology_eq_gnTopologySm [T2Space M] :
     (inferInstance : TopologicalSpace (SmoothMap H E M N)) = SmoothMap.gnTopologySm H E M N :=
   SmoothMap.jetTopologySm_eq_gnTopologySm
 
-/-- **The chart topology of `C^∞(M, N)` is the compact-open `C^∞` topology** of Glöckner–Neeb,
-Definition 4.1.2 and Remark 4.1.3(b), for a locally compact model of `M` and `N` in any universe. -/
+/-- **The chart topology of `C^∞(M, N)` is the compact-open `C^∞` topology** of
+[GN26, Definition 4.1.2 and Remark 4.1.3(b)], for a locally compact model of `M` and `N` in any
+universe. -/
 theorem SmoothMap.chartTopologySm_eq_gnTopologySm [LocallyCompactSpace H] :
     SmoothMap.chartTopologySm H E M N = SmoothMap.gnTopologySm H E M N :=
   SmoothMap.chartTopologySm_eq_jetTopologySm.trans

@@ -11,11 +11,8 @@ public import LocallyConvexManifolds.Metric.FinslerGeodesics
 /-!
 # Complete Finsler manifolds are geodesically complete
 
-Reference: G. Larotonda, *Estructuras geométricas para las variedades de Banach* (version of
-29 November 2023), Cap. 9, §9.2 *Variedades de Finsler con spray*, Proposición 9.2.1 (p. 251).
-
-Proposición 9.2.1 states that, for a strong Finsler manifold `M` with spray, each of the
-following assertions implies the next:
+[Lar22, Cap. 9, §9.2 *Variedades de Finsler con spray*, Proposición 9.2.1 (p. 251)] states that,
+for a strong Finsler manifold `M` with spray, each of the following assertions implies the next:
 
 1. `(M, d_b)` is complete;
 2. every geodesic of `M` is defined on all of `ℝ`;
@@ -25,7 +22,9 @@ following assertions implies the next:
 With the maximal geodesics and the exponential map of `LocallyConvexManifolds.Geodesic.Maximal`,
 all of them can now be stated. The implications `2 ⇒ 3 ⇒ 4` are proved there
 (`Connection.expDomain_eq_univ_of_maxInterval_eq_univ`, `Connection.exists_expDomainAt_eq_univ`).
-Here we prove:
+This file proves the implications that start from `1`.
+
+## Main results
 
 * `Connection.maxInterval_eq_univ_of_complete` (**`1 ⇒ 2`**): every maximal geodesic is defined
   on `ℝ`;
@@ -38,7 +37,7 @@ and the extension would be a geodesic with initial velocity `v` on an interval r
 `b`, against maximality. Boundedness below reduces to boundedness above through
 `J_{-v} = -J_v`. We do not claim this argument is new.
 
-## Hypotheses, compared with *Estructuras*
+## Hypotheses, compared with [Lar22]
 
 The hypotheses are those of `Connection.IsGeodesicOn.exists_extend_of_complete`, whose docstring
 compares them with the book in detail:
@@ -64,20 +63,25 @@ compares them with the book in detail:
   unbounded in every chart.
 * The converse implications are **not** claimed. In finite dimension the Hopf–Rinow theorem
   makes `1`–`4` equivalent for Riemannian (and reversible Finsler) manifolds, and adds that `exp_p`
-  is onto. In infinite dimension the surjectivity of `exp_p` fails: C. J. Atkin, *The Hopf–Rinow
-  theorem is false in infinite dimensions*, Bull. London Math. Soc. 7 (1975), 261–266, Lemma 6,
-  p. 265, shows that on the unit sphere `M` of `ℝ × ℓ²`, with the Riemannian metric induced by
-  the inner product `|ξ|² + ⟨T x, x⟩` for a suitable strictly positive operator `T` ((3), p. 262),
+  is onto. In infinite dimension the surjectivity of `exp_p` fails: [Atk75, Lemma 6, p. 265]
+  shows that on the unit sphere `M` of `ℝ × ℓ²`, with the Riemannian metric induced by the inner
+  product `|ξ|² + ⟨T x, x⟩` for a suitable strictly positive operator `T` ([Atk75, (3), p. 262]),
   a complete Riemannian Hilbert manifold, the poles `(±1, 0)` are joined by no geodesic (see also
-  I. Ekeland, *The Hopf–Rinow theorem in infinite dimension*, J. Differential Geom. 13 (1978),
-  287–301, p. 288). Atkin leaves without proof the Hilbert manifold structure of the space of
+  [Eke78, p. 288]). Atkin leaves without proof the Hilbert manifold structure of the space of
   `H¹` paths and the characterization of geodesics as critical points of the energy (Lemmas 3
   and 4, p. 263, adaptations of Palais). Even the existence of shortest curves fails: in the
   ellipsoid `M = A(S)` of a Hilbert space, image of the unit sphere by
   `A = diag(1, 1 + 2⁻¹, 1 + 2⁻², …)`, a complete Riemannian Hilbert manifold, `e₀` and `-e₀` are at
-  distance `π` but every curve joining them is strictly longer (J. McAlpin, *Infinite dimensional
-  manifolds and Morse theory*, thesis, Columbia University (1965), as presented in G. Larotonda,
-  *Estructuras*, Ejemplo 10.4.2, pp. 295–296).
+  distance `π` but every curve joining them is strictly longer ([McA65], as presented
+  in [Lar22, Ejemplo 10.4.2, pp. 295–296]).
+
+## References
+
+* [C. J. Atkin, *The Hopf–Rinow theorem is false in infinite dimensions*][Atk75]
+* [I. Ekeland, *The Hopf–Rinow theorem in infinite dimension*][Eke78]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]; the numbers
+  refer to the version of 29 November 2023.
+* [J. McAlpin, *Infinite dimensional manifolds and Morse theory*][McA65]
 -/
 
 @[expose] public section
@@ -148,12 +152,12 @@ theorem not_bddAbove_maxInterval_of_complete (hb : μ.toFinslerSeminormField.IsB
   have := le_csSup hbdd hmem
   linarith
 
-/-- **Proposición 9.2.1 (`1 ⇒ 2`)** (G. Larotonda, *Estructuras geométricas para las variedades
-de Banach*, §9.2, p. 251). Let `M` be a Hausdorff manifold modeled on a Banach space, with a
-connection and a Finsler length structure `μ` bounded below, such that `(M, d_b)` is complete (for
-the symmetrized distance). Assume that every geodesic on a bounded open interval has bounded
-speed `μ(α̇)` and bounded backward speed `μ(-α̇)` there (as when geodesics have constant speed).
-Then **every maximal geodesic is defined on all of `ℝ`**: `J_v = ℝ` for every `v ∈ TM`. -/
+/-- **Proposición 9.2.1 (`1 ⇒ 2`)** ([Lar22, §9.2, p. 251]). Let `M` be a Hausdorff manifold modeled
+on a Banach space, with a connection and a Finsler length structure `μ` bounded below, such that
+`(M, d_b)` is complete (for the symmetrized distance). Assume that every geodesic on a bounded open
+interval has bounded speed `μ(α̇)` and bounded backward speed `μ(-α̇)` there (as when geodesics have
+constant speed). Then **every maximal geodesic is defined on all of `ℝ`**: `J_v = ℝ` for every
+`v ∈ TM`. -/
 theorem maxInterval_eq_univ_of_complete (hb : μ.toFinslerSeminormField.IsBoundedBelow)
     (hL : ∀ (α : ℝ → M) (a b : ℝ), C.IsGeodesicOn α (Ioo a b) → ∃ L, ∀ τ ∈ Ioo a b,
       μ.toFun (velocity E α τ) ≤ L ∧ μ.toFun (velocity E (fun σ ↦ α (-σ)) (-τ)) ≤ L)

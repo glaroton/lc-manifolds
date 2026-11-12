@@ -11,52 +11,50 @@ public import LocallyConvexManifolds.MappingSpace.TopologyGN
 # The compact-open `C^ℓ` topology through jets on compact sets in charts
 
 The topology of `C^ℓ(M, N)` (the instance `CkMap.instTopologicalSpace`, `MappingSpace/Ck.lean`) is
-the jet topology `CkMap.jetTopology`, which works for every Hausdorff locally convex model and
-every manifold `M`, compact or not. This file compares it with H. Glöckner, K.-H. Neeb,
-*Infinite-Dimensional Lie Groups* (arXiv:2602.12362), Definition 4.1.2 (p. 339). The chart topology
-`CkMap.chartTopology` (local representatives on *open* subsets of compact sets in charts) agrees
-with it for a locally compact model (`CkMap.chartTopology_eq_jetTopology`, `MappingSpace/Ck.lean`);
-if the model `H` of `M` is not locally compact (for instance infinite-dimensional), compact sets
-have empty interior and the chart topology collapses to the compact-open `C^0` topology.
+the jet topology `CkMap.jetTopology`, which works for every Hausdorff locally convex model and every
+manifold `M`, compact or not. This file compares it with [GN26, Definition 4.1.2] (p. 339). The
+chart topology `CkMap.chartTopology` (local representatives on *open* subsets of compact sets in
+charts) agrees with it for a locally compact model (`CkMap.chartTopology_eq_jetTopology`,
+`MappingSpace/Ck.lean`); if the model `H` of `M` is not locally compact (for instance
+infinite-dimensional), compact sets have empty interior and the chart topology collapses to the
+compact-open `C^0` topology.
 
 **The jet topology** (`CkMap.jetTopology`, defined in `MappingSpace/Ck.lean`). For charts `j` of
 `M`, `i` of `N`, a compact set `K` in the target of `j` (no interior is required) and `m ≤ ℓ`, the
 `m`-jet of `g` on `K` is `d^(m)(i ∘ g ∘ j⁻¹)|_{K × H^m} ∈ C(K × H^m, E)`, defined on the open set of
-maps `g` with
-`g(j⁻¹(K)) ⊆ i.source`. The jet topology is the coarsest topology finer than the compact-open
-topology of `C(M, N)` that makes all the jets continuous (compact-open topology on
+maps `g` with `g(j⁻¹(K)) ⊆ i.source`. The jet topology is the coarsest topology finer than the
+compact-open topology of `C(M, N)` that makes all the jets continuous (compact-open topology on
 `C(K × H^m, E)`). A subbasis consists of the open sets of `C(M, N)` and the sets
 `{g : g(j⁻¹(K)) ⊆ i.source, d^(m)(i ∘ g ∘ j⁻¹)|_{K × H^m} ∈ O}`. This is the weak (compact-open)
-`C^r` topology of M. W. Hirsch, *Differential Topology* (Springer, 1976), Chapter 2, §1,
-pp. 34–35, with the uniform bounds on the derivatives over `K` replaced by the compact-open
-topology of `C(K × H^m, E)`, as in the compact-open `C^k` topology of Glöckner–Neeb,
-Definition 1.7.10 (p. 90), for maps on open sets.
+`C^r` topology of [Hir76, Chapter 2, §1, pp. 34–35], with the uniform bounds on the derivatives over
+`K` replaced by the compact-open topology of `C(K × H^m, E)`, as in the compact-open `C^k` topology
+of [GN26, Definition 1.7.10] (p. 90), for maps on open sets.
+
+The jets and the jet topologies are defined in `MappingSpace/Ck.lean`: `jetOn m f S`, the `m`-jet
+`d^(m) f|_{S × H^m}` of `f : H → E` on any set `S ⊆ H`; `CkMap.CompactIdx`, `CkMap.CompactIdx.jet`:
+charts `j`, `i`, a compact set `K` and the jets of `i ∘ g ∘ j⁻¹` on `K`;
+`CkMap.jetTopology H E ℓ M N`, `SmoothMap.jetTopologySm H E M N`: the jet topologies of
+`C^ℓ(M, N)` and `C^∞(M, N)`, the instances; `CkMap.continuous_jetTopology_iff`.
 
 ## Main definitions
 
-* In `MappingSpace/Ck.lean`: `jetOn m f S`, the `m`-jet `d^(m) f|_{S × H^m}` of `f : H → E` on any
-  set `S ⊆ H`; `CkMap.CompactIdx`, `CkMap.CompactIdx.jet`: charts `j`, `i`, a compact set `K` and
-  the jets of `i ∘ g ∘ j⁻¹` on `K`; `CkMap.jetTopology H E ℓ M N`,
-  `SmoothMap.jetTopologySm H E M N`: the jet topologies of `C^ℓ(M, N)` and `C^∞(M, N)`, the
-  instances;
-  `CkMap.continuous_jetTopology_iff`.
 * `CompactLocalizable Z`: every compact set is covered by finitely many compact sets inside
   prescribed neighborhoods of its points; true for Hausdorff (`R₁`) and for locally compact `Z`.
 
 ## Main results
 
-* `MBMfld.gnTopology_le_jetTopology`: the topology of Definition 4.1.2 is always finer than the
-  jet topology; `MBMfld.jetTopology_le_gnTopology`: the converse, when the iterated tangent
+* `MBMfld.gnTopology_le_jetTopology`: the topology of [GN26, Definition 4.1.2] is always finer than
+  the jet topology; `MBMfld.jetTopology_le_gnTopology`: the converse, when the iterated tangent
   bundles of `M` are compact-localizable.
-* `MBMfld.jetTopology_eq_gnTopology`, `MBMfld.jetTopologySm_eq_gnTopologySm`: **the jet
-  topology is the compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2**, `ℓ ∈ ℕ ∪ {∞}`,
-  for every Hausdorff manifold `M` (their manifolds are Hausdorff, Definition 3.1.4, p. 242),
-  compact or not, modeled on any Hausdorff locally convex space;
-  `MBMfld.jetTopology_eq_gnTopology_of_locallyCompactSpace`: the same for a locally compact
-  model, without the Hausdorff hypothesis. This is **Glöckner–Neeb, Theorem 4.2.2(b)**, in that
-  generality: the topology of `C^ℓ(M, N)` (for compact `M`, the topology underlying the atlases
+* `MBMfld.jetTopology_eq_gnTopology`, `MBMfld.jetTopologySm_eq_gnTopologySm`: **the jet topology is
+  the compact-open `C^ℓ` topology of [GN26, Definition 4.1.2]**, `ℓ ∈ ℕ ∪ {∞}`, for every Hausdorff
+  manifold `M` (their manifolds are Hausdorff, [GN26, Definition 3.1.4], p. 242), compact or not,
+  modeled on any Hausdorff locally convex space;
+  `MBMfld.jetTopology_eq_gnTopology_of_locallyCompactSpace`: the same for a locally compact model,
+  without the Hausdorff hypothesis. This is **[GN26, Theorem 4.2.2(b)]**, in that generality: the
+  topology of `C^ℓ(M, N)` (for compact `M`, the topology underlying the atlases
   `LocalAddition.mappingAtlasCk`, `LocalAddition.mappingAtlasSm`) is the topology of
-  Definition 4.1.2. For unbundled `M`, `N`, with `N` in any universe, these are
+  [GN26, Definition 4.1.2]. For unbundled `M`, `N`, with `N` in any universe, these are
   `CkMap.topology_eq_gnTopology`, `SmoothMap.topology_eq_gnTopologySm` and their variants
   (`MappingSpace/TopologyULift.lean`).
 * `MBMfld.jetTopology_eq_chartTopology`: for a locally compact model, the jet topology is the
@@ -64,26 +62,26 @@ Definition 1.7.10 (p. 90), for maps on open sets.
 
 ## Implementation notes
 
-* **The comparison with Definition 4.1.2** is by induction on the order, through the tangent map
-  as in the proof of Glöckner–Neeb, Lemma 4.1.6 (p. 340): in the charts `tangentChart j j`,
+* **The comparison with [GN26, Definition 4.1.2]** is by induction on the order, through the tangent
+  map as in the proof of [GN26, Lemma 4.1.6] (p. 340): in the charts `tangentChart j j`,
   `tangentChart i i` the local representative of `Tg` is `(y, w) ↦ (F y, dF(y, w))`,
   `F = i ∘ g ∘ j⁻¹` (`tangentJetIdx_jet`), and the jets of `dF` and those of `F` determine each
-  other by `d^(m+1)F(x, v₀, v) = d^(m)(dF)((x, v₀), (v, 0))` (Glöckner–Neeb (1.36), p. 42;
-  `jetOn_succ`) and the formula for `d^(m)(dF)` (`jetOn_dMB`), the identities behind the proof of
-  their Lemma 4.1.12 (pp. 342–344). Only the charts `tangentChart j j` are used at each step,
+  other by `d^(m+1)F(x, v₀, v) = d^(m)(dF)((x, v₀), (v, 0))` ([GN26, (1.36)], p. 42; `jetOn_succ`)
+  and the formula for `d^(m)(dF)` (`jetOn_dMB`), the identities behind the proof of
+  [GN26, Lemma 4.1.12] (pp. 342–344). Only the charts `tangentChart j j` are used at each step,
   which is why the induction is run for families of chart pairs that cover `M × N` (compare
-  Glöckner–Neeb, Lemma 4.1.17, p. 346: any atlas gives the topology). We do not claim these
-  arguments are new.
+  [GN26, Lemma 4.1.17], p. 346: any atlas gives the topology). We do not claim these arguments are
+  new.
 * **Infinite-dimensional subtleties.** The compact sets `K` have empty interior when `H` is not
   locally compact, so jets are taken on `K × H^m` itself, not on open sets; continuity on the
   non-compact set `K × H` of the jets of `dF` is reduced to compact subsets
   (`continuousOn_jetOn_of_isCompact`). Recovering the compact-open topology of `C(T^n M, T^n N)`
   from compact sets inside charts needs every compact subset of `T^n M` to be a finite union of
   compact sets inside charts (`CompactLocalizable`): this holds for Hausdorff `M`
-  (`IsCompact.finite_compact_cover`; Glöckner–Neeb use the corresponding Lemma A.6.11, p. 873,
-  for Hausdorff spaces) and for a locally compact model; for non-Hausdorff manifolds with
-  infinite-dimensional models we only prove that Definition 4.1.2 is finer than the jet topology.
-  `t2Space_tangentBundle`: tangent bundles of Hausdorff manifolds are Hausdorff.
+  (`IsCompact.finite_compact_cover`; Glöckner–Neeb use the corresponding [GN26, Lemma A.6.11],
+  p. 873, for Hausdorff spaces) and for a locally compact model; for non-Hausdorff manifolds with
+  infinite-dimensional models we only prove that [GN26, Definition 4.1.2] is finer than the jet
+  topology. `t2Space_tangentBundle`: tangent bundles of Hausdorff manifolds are Hausdorff.
 * The jet topology is the instance `CkMap.instTopologicalSpace` (and `SmoothMap.jetTopologySm` is
   `SmoothMap.instTopologicalSpace`), so every statement about the topology of `C^ℓ(M, N)` holds for
   arbitrary models. The manifold structure of `C^ℓ(M, N)` for compact `M` (`MappingSpace/Ck.lean`)
@@ -91,6 +89,11 @@ Definition 1.7.10 (p. 90), for maps on open sets.
 * The induction runs over `MBMfld.{u, v}`, so here `N` lives in `Type (max u v)`, `u` the universe
   of `M` and of the models; `MappingSpace/TopologyULift.lean` transports the results to `N` in any
   universe along `ULift`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [M. W. Hirsch, *Differential Topology*][Hir76]
 -/
 
 @[expose] public section
@@ -145,7 +148,7 @@ def jetSucc (S : Set H) (m : ℕ) :
     C(S × (Fin (m + 1) → H), (S ×ˢ (univ : Set H) : Set (H × H)) × (Fin m → H × H)) :=
   ⟨fun p ↦ (⟨((p.1 : H), p.2 0), p.1.2, mem_univ _⟩, fun i ↦ (p.2 i.succ, 0)), by fun_prop⟩
 
-/-- **The jets of order `m + 1` of `γ` from those of order `m` of `dγ`** (Glöckner–Neeb (1.36)). -/
+/-- **The jets of order `m + 1` of `γ` from those of order `m` of `dγ`** ([GN26, (1.36)]). -/
 theorem jetOn_succ {k m : ℕ} {γ : H → E} {U S : Set H} (hγ : ContDiffMBOn (k + 1) γ U)
     (hSU : S ⊆ U) (hm : m ≤ k) :
     jetOn (m + 1) γ S = (jetOn m (dMB γ) (S ×ˢ univ)).comp (jetSucc S m) := by
@@ -534,7 +537,7 @@ theorem jetFam_of_jetFam_tangent {A : Set (atlas X.Model X.Carrier × atlas Y.Mo
   rfl
 
 /-- **The iterated tangent maps determine the jets** (one half of the comparison with
-Glöckner–Neeb, Definition 4.1.2): if `p ↦ T^n(ψ p) ∈ C(T^n X, T^n Y)` is continuous for `n ≤ m`,
+[GN26, Definition 4.1.2]): if `p ↦ T^n(ψ p) ∈ C(T^n X, T^n Y)` is continuous for `n ≤ m`,
 then the jets of order `≤ m` of `ψ` are continuous in all chart pairs. No hypothesis on `X` is
 needed. -/
 theorem jetFam_of_iterCont (m : ℕ) : ∀ {X : MBMfld.{u, u}} {Y : MBMfld.{u, v}} {ℓ : ℕ}, m ≤ ℓ →
@@ -593,7 +596,7 @@ theorem iterCont_of_jetFam (m : ℕ) : ∀ {X : MBMfld.{u, u}} {Y : MBMfld.{u, v
 
 end Induction
 
-/-! ### Comparison with Glöckner–Neeb, Definition 4.1.2, and with the chart topology -/
+/-! ### Comparison with [GN26, Definition 4.1.2], and with the chart topology -/
 
 section Comparison
 
@@ -604,8 +607,8 @@ theorem univ_covering (X : MBMfld.{u, w}) (Y : MBMfld.{u, v}) :
   ⟨(⟨chartAt X.Model x, chart_mem_atlas _ x⟩, ⟨chartAt Y.Model y, chart_mem_atlas _ y⟩), trivial,
     mem_chart_source _ x, mem_chart_source _ y⟩
 
-/-- **The jet topology is coarser than the compact-open `C^ℓ` topology of Glöckner–Neeb,
-Definition 4.1.2**, with no hypothesis on the manifolds. -/
+/-- **The jet topology is coarser than the compact-open `C^ℓ` topology of [GN26,
+Definition 4.1.2]**, with no hypothesis on the manifolds. -/
 theorem MBMfld.gnTopology_le_jetTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MBMfld.{u, v}) :
     MBMfld.gnTopology ℓ X Y ≤ CkMap.jetTopology X.Model Y.Model ℓ X.Carrier Y.Carrier := by
   let _ : TopologicalSpace (CkMap X.Model Y.Model ℓ X.Carrier Y.Carrier) := MBMfld.gnTopology ℓ X Y
@@ -616,7 +619,7 @@ theorem MBMfld.gnTopology_le_jetTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MB
   · exact continuous_toC_of_iterMapC_zero (hiter 0 (Nat.zero_le ℓ) (Nat.zero_le ℓ))
   · exact jetFam_of_iterCont ℓ le_rfl univ id hiter a trivial m hm
 
-/-- **The compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2, is coarser than the jet
+/-- **The compact-open `C^ℓ` topology of [GN26, Definition 4.1.2], is coarser than the jet
 topology** if the iterated tangent bundles of `X` are compact-localizable. -/
 theorem MBMfld.jetTopology_le_gnTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MBMfld.{u, v})
     (hloc : ∀ n, CompactLocalizable (MBMfld.iter n X).Carrier) :
@@ -630,7 +633,7 @@ theorem MBMfld.jetTopology_le_gnTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MB
   refine continuous_id_iff_le.1 (continuous_iInf_rng.2 fun j ↦ continuous_induced_rng.2 ?_)
   exact hc j (Nat.lt_succ_iff.1 j.2) (Nat.lt_succ_iff.1 j.2)
 
-/-- **The jet topology is the compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2**,
+/-- **The jet topology is the compact-open `C^ℓ` topology of [GN26, Definition 4.1.2]**,
 for compact-localizable iterated tangent bundles of `X`. -/
 theorem MBMfld.jetTopology_eq_gnTopology_of_compactLocalizable (ℓ : ℕ) (X : MBMfld.{u, u})
     (Y : MBMfld.{u, v})
@@ -638,7 +641,7 @@ theorem MBMfld.jetTopology_eq_gnTopology_of_compactLocalizable (ℓ : ℕ) (X : 
     CkMap.jetTopology X.Model Y.Model ℓ X.Carrier Y.Carrier = MBMfld.gnTopology ℓ X Y :=
   le_antisymm (MBMfld.jetTopology_le_gnTopology ℓ X Y hloc) (MBMfld.gnTopology_le_jetTopology ℓ X Y)
 
-/-- **The jet topology is the compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2**,
+/-- **The jet topology is the compact-open `C^ℓ` topology of [GN26, Definition 4.1.2]**,
 for a Hausdorff manifold `X` modeled on any Hausdorff locally convex space. -/
 theorem MBMfld.jetTopology_eq_gnTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MBMfld.{u, v})
     [T2Space X.Carrier] :
@@ -646,7 +649,7 @@ theorem MBMfld.jetTopology_eq_gnTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y : MB
   MBMfld.jetTopology_eq_gnTopology_of_compactLocalizable ℓ X Y
     (MBMfld.compactLocalizable_iter_of_t2Space X)
 
-/-- The jet topology is the compact-open `C^ℓ` topology of Glöckner–Neeb, Definition 4.1.2, for a
+/-- The jet topology is the compact-open `C^ℓ` topology of [GN26, Definition 4.1.2], for a
 locally compact model of `X` (no Hausdorff hypothesis on `X`). -/
 theorem MBMfld.jetTopology_eq_gnTopology_of_locallyCompactSpace (ℓ : ℕ) (X : MBMfld.{u, u})
     (Y : MBMfld.{u, v})
@@ -664,8 +667,8 @@ theorem MBMfld.jetTopology_eq_chartTopology (ℓ : ℕ) (X : MBMfld.{u, u}) (Y :
       CkMap.chartTopology X.Model Y.Model ℓ X.Carrier Y.Carrier :=
   CkMap.chartTopology_eq_jetTopology.symm
 
-/-- **The jet topology of `C^∞(X, Y)` is the compact-open `C^∞` topology of Glöckner–Neeb,
-Definition 4.1.2**, for a Hausdorff manifold `X` modeled on any Hausdorff locally convex space. -/
+/-- **The jet topology of `C^∞(X, Y)` is the compact-open `C^∞` topology of [GN26,
+Definition 4.1.2]**, for a Hausdorff manifold `X` modeled on any Hausdorff locally convex space. -/
 theorem MBMfld.jetTopologySm_eq_gnTopologySm (X : MBMfld.{u, u}) (Y : MBMfld.{u, v})
     [T2Space X.Carrier] :
     SmoothMap.jetTopologySm X.Model Y.Model X.Carrier Y.Carrier = MBMfld.gnTopologySm X Y := by
@@ -673,8 +676,8 @@ theorem MBMfld.jetTopologySm_eq_gnTopologySm (X : MBMfld.{u, u}) (Y : MBMfld.{u,
   exact iInf_congr fun ℓ ↦ congrArg (TopologicalSpace.induced (SmoothMap.toCk ℓ))
     (MBMfld.jetTopology_eq_gnTopology ℓ X Y)
 
-/-- The jet topology of `C^∞(X, Y)` is the compact-open `C^∞` topology of Glöckner–Neeb,
-Definition 4.1.2, for a locally compact model of `X`. -/
+/-- The jet topology of `C^∞(X, Y)` is the compact-open `C^∞` topology of [GN26,
+Definition 4.1.2], for a locally compact model of `X`. -/
 theorem MBMfld.jetTopologySm_eq_gnTopologySm_of_locallyCompactSpace (X : MBMfld.{u, u})
     (Y : MBMfld.{u, v}) [LocallyCompactSpace X.Model] :
     SmoothMap.jetTopologySm X.Model Y.Model X.Carrier Y.Carrier = MBMfld.gnTopologySm X Y := by

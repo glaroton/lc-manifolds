@@ -17,15 +17,27 @@ For `ω ∈ Ωᵖ(M, E₁)`, `η ∈ Ω^q(M, E₂)` and a continuous bilinear ma
 and `DifferentialForm.d_wedge` states the identity of forms with the reindexing
 `DifferentialForm.castDeg`.
 
-Glöckner–Neeb do not state this rule in §3.6. The proof is local: by the product rule, the
+[GN26] do not state this rule in §3.6. The proof is local: by the product rule, the
 derivative of `z ↦ ω(z) ∧ η(z)` in a direction `u` is `∂ᵤω ∧ η + ω ∧ ∂ᵤη`, and the identity
 reduces to two algebraic identities between alternating maps (`alternatizeUncurryFin_wedge_left`,
 `alternatizeUncurryFin_wedge_right`), the classical computation behind the Leibniz rule.
 
-## The algebraic identities
+## Main definitions
 
-We write `altF f v = ∑_σ sign(σ) f(v ∘ σ)` for the (unnormalized) alternation of an arbitrary
-function `f` of `k` vectors. Everything follows from:
+* `altF`: the unnormalized alternation `altF f v = ∑_σ sign(σ) f(v ∘ σ)` of an arbitrary
+  function `f` of `k` vectors.
+* `DifferentialForm.castDeg`: the reindexing of a form along an equality of degrees.
+
+## Main results
+
+* `DifferentialForm.d_wedge_apply`, `DifferentialForm.d_wedge`: the Leibniz rule
+  `d(ω ∧ η) = dω ∧ η + (-1)ᵖ ω ∧ dη`.
+* `alternatizeUncurryFin_wedge_left`, `alternatizeUncurryFin_wedge_right`: the algebraic
+  identities behind it.
+
+## Implementation notes
+
+The algebraic identities follow from:
 
 * `altF_comp_perm`: `altF f (v ∘ σ) = sign(σ) altF f v`;
 * `altF_precomp`: `altF (f ∘ (· ∘ e)) = altF f ∘ (· ∘ e)` for a bijection `e`;
@@ -36,6 +48,10 @@ function `f` of `k` vectors. Everything follows from:
 The wedge product is `(p! q!)⁻¹ altF` of `w ↦ β(f(w₁, …, w_p), g(w_{p+1}, …))`, and
 `alternatizeUncurryFin L = (n!)⁻¹ altF (w ↦ L(w₀)(w₁, …, wₙ))`
 (`alternatizeUncurryFin_eq_altF`).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section

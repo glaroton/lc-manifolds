@@ -25,19 +25,31 @@ map `f : N → M` is trivial over the sets `k.source ∩ f⁻¹(Uᵢ)`, with `k`
 general not over the chart domains of `N` (`MBVectorBundleCore.pullback`). The tangent bundle is
 trivialized over the charts of the atlas (`tangentMBCore`).
 
+## Main definitions
+
+* `TrivializationCover`: an open cover of `M` with a chart of the atlas on each open set.
+* `MBVectorBundleCore`: a vector bundle given by its coordinate changes, jointly smooth.
+* `MBVectorBundleCore.toFiberBundleCore`: the total space is a topological fiber bundle with
+  fiber `F`.
+* `MBVectorBundleCore.mbManifold`: the total space is a manifold modeled on `E × F`, with
+  transition maps `(y, ξ) ↦ (τ y, g(y) ξ)`.
+* `tangentMBCore`: the tangent bundle, whose coordinate changes are `(y, w) ↦ dτ(y) w`.
+* `MBVectorBundleCore.pullback`: the pullback `f*V` along a smooth map.
+
+## Implementation notes
+
 **An infinite-dimensional subtlety.** In finite dimensions (and for Banach spaces, with the norm
 topology on `L(F)`) one asks the transition functions `x ↦ g_{ij}(x)` to be smooth maps into
 `GL(F)`. If `F` is not normable, no vector topology on `L(F)` makes the evaluation
-`L(F) × F → F` continuous (Maissen, Math. Ann. 151 (1963), Satz 1), so this requirement is not
-available; joint smoothness of `(y, ξ) ↦ g(y) ξ` is the substitute, and it is exactly what the
-tangent bundle satisfies
-(`tangentMBCore`): its coordinate changes are `(y, w) ↦ dτ(y) w`.
-
-The total space is a topological fiber bundle with fiber `F`
-(`MBVectorBundleCore.toFiberBundleCore`), and it is a manifold modeled on `E × F`
-(`MBVectorBundleCore.mbManifold`), with transition maps `(y, ξ) ↦ (τ y, g(y) ξ)`.
+`L(F) × F → F` continuous ([Mai63, Satz 1]), so this requirement is not available; joint
+smoothness of `(y, ξ) ↦ g(y) ξ` is the substitute, and it is exactly what the tangent bundle
+satisfies (`tangentMBCore`): its coordinate changes are `(y, w) ↦ dτ(y) w`.
 
 No completeness of `E` or `F` is assumed.
+
+## References
+
+* [B. Maissen, *Über Topologien im Endomorphismenraum eines topologischen Vektorraumes*][Mai63]
 -/
 
 @[expose] public section

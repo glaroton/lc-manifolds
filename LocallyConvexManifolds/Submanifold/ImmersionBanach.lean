@@ -23,6 +23,15 @@ The calculus behind this is `LocallyConvex.Analysis.ContDiffMBOn.of_comp_of_boun
 the differential is bounded below, and the bound persists near a point because, for Banach spaces,
 Michal–Bastiani `C^{k+1}` maps are Fréchet `C^k`.
 
+## Main results
+
+* `IsImmersion.smoothMBM_of_comp`: if `f` is an immersion with Banach domain, `g` is continuous
+  and `f ∘ g` is smooth, then `g` is smooth.
+* `IsImmersedSubmanifold.isInitialSubmanifold`: an injective immersion with Banach domain which
+  is a homeomorphism onto its image is an initial submanifold.
+
+## Implementation notes
+
 **Subtleties.**
 
 * No inverse function theorem is used, and no complement of the range of the differential is

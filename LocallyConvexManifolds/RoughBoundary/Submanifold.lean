@@ -10,26 +10,27 @@ public import LocallyConvexManifolds.RoughBoundary.Basic
 /-!
 # Open subsets, full submanifolds and corners of manifolds with rough boundary
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362v1), §3.5.
+We treat open subsets, full submanifolds, and manifolds with corners and with boundary in the
+traditional sense, as manifolds with rough boundary [GN26, §3.5].
 
 ## Main definitions
 
 * `PartialHomeomorph.subtypeRestr'`: the restriction of a partial homeomorphism `M → E` to a
   subset `s ⊆ M`, with target `e(U_e ∩ s)`. Mathlib's `OpenPartialHomeomorph.subtypeRestr` needs
   open partial homeomorphisms and open `s`; rough charts have non-open targets.
-* `RoughAtlas.restrict`: a nonempty open subset of a manifold with rough boundary (G–N,
-  Example 3.5.4, p. 279).
+* `RoughAtlas.restrict`: a nonempty open subset of a manifold with rough boundary [GN26,
+  Example 3.5.4, p. 279].
 * `RoughAtlas.IsFullSubmanifold`, `RoughAtlas.fullSubmanifold`: full submanifolds, subsets `N`
   such that `e(U_e ∩ N)` is locally convex with dense interior for charts around the points of
-  `N` (G–N, Definition 3.5.19, p. 284).
+  `N` [GN26, Definition 3.5.19, p. 284].
 * `quadrant`, `RoughAtlas.IsWithCorners`, `RoughAtlas.IsWithBoundary`: manifolds with corners
   and with boundary in the traditional sense, as manifolds with rough boundary modeled on `ℝ^ι`
-  with charts into open subsets of `[0, ∞[^ι` or of a half-space (G–N, Remark 3.5.10, p. 281).
+  with charts into open subsets of `[0, ∞[^ι` or of a half-space [GN26, Remark 3.5.10, p. 281].
 
 ## Main results
 
 * `RoughAtlas.boundary_restrict`: `∂U = U ∩ ∂M`.
-* `RoughAtlas.boundary_fullSubmanifold`: `∂N = N ∩ (∂M ∪ (N \ N⁰))` (G–N, (3.24), p. 284), from
+* `RoughAtlas.boundary_fullSubmanifold`: `∂N = N ∩ (∂M ∪ (N \ N⁰))` [GN26, (3.24), p. 284], from
   `mem_interior_inter_preimage_iff`. Condition (A3) for `C^0` atlases follows from it, as G–N
   observe.
 * `RoughAtlas.quadrantAtlas`, `boundary_quadrantAtlas`, `isWithCorners_quadrantAtlas`: the
@@ -37,8 +38,13 @@ Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:26
 
 ## See also
 
-Submanifolds modeled on closed subspaces (G–N, Definition 3.5.14) are in
+Submanifolds modeled on closed subspaces [GN26, Definition 3.5.14] are in
 `LocallyConvexManifolds.RoughBoundary.Subspace`.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+  (page numbers refer to arXiv:2602.12362v1)
 -/
 
 @[expose] public section
@@ -152,7 +158,7 @@ variable {r : ℕ∞} {E : Type u} [AddCommGroup E] [Module ℝ E] [TopologicalS
 
 namespace RoughAtlas
 
-/-- **Glöckner–Neeb, Example 3.5.4, p. 279**: a nonempty open subset `U` of a manifold with rough
+/-- **[GN26, Example 3.5.4, p. 279]**: a nonempty open subset `U` of a manifold with rough
 boundary is a manifold with rough boundary, with the restrictions of the charts. -/
 def restrict (A : RoughAtlas r E M) (U : Set M) (hU : IsOpen U) [Nonempty U] :
     RoughAtlas r E U where
@@ -203,7 +209,7 @@ dense interior. -/
 def IsAdapted (e : PartialHomeomorph M E) (N : Set M) : Prop :=
   IsLocallyConvexSubset (e.target ∩ e.symm ⁻¹' N) ∧ HasDenseInterior (e.target ∩ e.symm ⁻¹' N)
 
-/-- **Glöckner–Neeb, Definition 3.5.19, p. 284**: `N ⊆ M` is a **full submanifold** if every point
+/-- **[GN26, Definition 3.5.19, p. 284]**: `N ⊆ M` is a **full submanifold** if every point
 of `N` lies in the domain of a chart `e` of the atlas for which `e(U_e ∩ N)` is a locally convex
 subset of `E` with dense interior. (For the maximal atlas, pass `A.maximal`.) -/
 def IsFullSubmanifold (A : RoughAtlas r E M) (N : Set M) : Prop :=
@@ -235,7 +241,7 @@ theorem mem_interior_inter_preimage_iff {e : PartialHomeomorph M E} (he : IsRoug
     rw [hWe] at this
     exact this.2
 
-/-- **Glöckner–Neeb, Definition 3.5.19, p. 284**: a nonempty full submanifold `N` is a manifold
+/-- **[GN26, Definition 3.5.19, p. 284]**: a nonempty full submanifold `N` is a manifold
 with rough boundary, with the restrictions of the adapted charts. -/
 def fullSubmanifold (A : RoughAtlas r E M) (N : Set M) [Nonempty N]
     (hN : A.IsFullSubmanifold N) : RoughAtlas r E N where
@@ -278,7 +284,7 @@ def fullSubmanifold (A : RoughAtlas r E M) (N : Set M) [Nonempty N]
     rw [mem_interior_inter_preimage_iff (A.isRoughChart e' he') hx.2]
     exact ⟨A.mem_interior_of_eq_zero hr e he e' he' x hx hint.1, hint.2⟩
 
-/-- **The boundary of a full submanifold** (Glöckner–Neeb, (3.24), p. 284):
+/-- **The boundary of a full submanifold** [GN26, (3.24), p. 284]:
 `∂N = N ∩ (∂M ∪ (N \ N⁰))`, where `N⁰` is the interior of `N` in `M`. -/
 theorem boundary_fullSubmanifold (A : RoughAtlas r E M) (N : Set M) [Nonempty N]
     (hN : A.IsFullSubmanifold N) :
@@ -317,14 +323,14 @@ namespace RoughAtlas
 
 variable {r : ℕ∞} {M : Type*} [TopologicalSpace M]
 
-/-- **Glöckner–Neeb, Remark 3.5.10(b), p. 281**: a manifold with rough boundary modeled on `ℝ^ι`
+/-- **[GN26, Remark 3.5.10(b), p. 281]**: a manifold with rough boundary modeled on `ℝ^ι`
 is a **manifold with corners** if its maximal atlas contains charts around every point whose
 ranges are open subsets of the quadrant `[0, ∞[^ι`. -/
 def IsWithCorners (A : RoughAtlas r (ι → ℝ) M) : Prop :=
   ∀ x, ∃ e ∈ A.maximal.atlas, x ∈ e.source ∧ ∃ W : Set (ι → ℝ), IsOpen W ∧
     e.target = W ∩ quadrant ι
 
-/-- **Glöckner–Neeb, Remark 3.5.10(a), p. 281**: a manifold with rough boundary modeled on `ℝ^ι`
+/-- **[GN26, Remark 3.5.10(a), p. 281]**: a manifold with rough boundary modeled on `ℝ^ι`
 is a **manifold with boundary** if its maximal atlas contains charts around every point whose
 ranges are open subsets of the half-space `{x | 0 ≤ x i₀}`. -/
 def IsWithBoundary (A : RoughAtlas r (ι → ℝ) M) (i₀ : ι) : Prop :=

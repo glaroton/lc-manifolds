@@ -14,50 +14,60 @@ public import LocallyConvexManifolds.DifferentialForm.DeRham
 /-!
 # Real analytic differential forms
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Remark 3.6.18: on a real
-analytic manifold modeled on a real locally convex space, a differential form is *real analytic*
-if its local representatives `(y, v₁, …, vₙ) ↦ ω_{φ⁻¹ y}(Tφ⁻¹ v₁, …, Tφ⁻¹ vₙ)` are real
-analytic, and "all of the preceding constructions, results and proofs carry over directly".
+Following [GN26, Remark 3.6.18], on a real analytic manifold modeled on a real locally convex
+space, a differential form is *real analytic* if its local representatives
+`(y, v₁, …, vₙ) ↦ ω_{φ⁻¹ y}(Tφ⁻¹ v₁, …, Tφ⁻¹ vₙ)` are real analytic, and "all of the preceding
+constructions, results and proofs carry over directly".
 
 Real analyticity is in the sense of Milnor (`LocallyConvex.Analysis.RealAnalyticOn`: restrictions
 of complex analytic maps on open subsets of the complexification). Since a real analytic manifold
 is in particular smooth (`RealAnalyticManifold.mbManifold`), a real analytic form is a smooth form
 `ω ∈ Ωⁿ(M, F)` with an extra property, `DifferentialForm.IsRealAnalytic`, and the real analytic
 forms are a subspace `Ωⁿ_ω(M, F)` of `Ωⁿ(M, F)`. The constructions on smooth forms then preserve
-real analyticity:
+real analyticity. No completeness of `E` or `F` is assumed.
 
-## Main results
+## Main definitions
 
-* `analyticForms`: the subspace `Ωⁿ_ω(M, F)` of real analytic forms;
-* `IsRealAnalytic.d`: `dω` is real analytic if `ω` is (in a chart, `dω` is a sum of terms
-  `dω_loc ∘ L` with `L` continuous linear, and `dω_loc` is real analytic by
-  `LocallyConvex.Analysis.RealAnalyticOn.dMB`); `analyticDLinear` is `d : Ωⁿ_ω → Ωⁿ⁺¹_ω`;
-* `IsRealAnalytic.compCLM`, `IsRealAnalytic.wedge`: composition with continuous linear maps and
-  wedge products with respect to continuous bilinear maps;
-* `IsRealAnalytic.pullback`: pullbacks along real analytic maps;
-* `SmoothVectorField.IsRealAnalytic`: real analytic vector fields, with
-  `IsRealAnalytic.bracket`; `IsRealAnalytic.interior`, `IsRealAnalytic.lieDeriv`: the insertion
-  of a real analytic vector field and the Lie derivative along it preserve real analytic forms.
-  The identities of Proposition 3.6.16 then hold in `Ωⁿ_ω(M, F)`, since they hold in `Ωⁿ(M, F)`;
+* `DifferentialForm.IsRealAnalytic`: the local representatives of the form are real analytic.
+* `DifferentialForm.analyticForms`: the subspace `Ωⁿ_ω(M, F)` of real analytic forms, and
+  `DifferentialForm.analyticDLinear`: `d : Ωⁿ_ω → Ωⁿ⁺¹_ω`.
+* `SmoothVectorField.IsRealAnalytic`: real analytic vector fields.
 * `AnalyticDeRham`: the real analytic de Rham cohomology
   `H^n_ω(M, F) = Z^n_ω(M, F) / B^n_ω(M, F)`, and the natural linear map
   `AnalyticDeRham.toDeRham : H^n_ω(M, F) → H^n_dR(M, F)`.
+
+## Main results
+
+* `DifferentialForm.IsRealAnalytic.d`: `dω` is real analytic if `ω` is (in a chart, `dω` is a sum
+  of terms `dω_loc ∘ L` with `L` continuous linear, and `dω_loc` is real analytic by
+  `LocallyConvex.Analysis.RealAnalyticOn.dMB`);
+* `DifferentialForm.IsRealAnalytic.compCLM`, `DifferentialForm.IsRealAnalytic.wedge`: composition
+  with continuous linear maps and wedge products with respect to continuous bilinear maps;
+* `DifferentialForm.IsRealAnalytic.pullback`: pullbacks along real analytic maps;
+* `SmoothVectorField.IsRealAnalytic.bracket`: the bracket of real analytic vector fields is real
+  analytic; `DifferentialForm.IsRealAnalytic.interior`, `DifferentialForm.IsRealAnalytic.lieDeriv`:
+  the insertion of a real analytic vector field and the Lie derivative along it preserve real
+  analytic forms. The identities of [GN26, Proposition 3.6.16] then hold in `Ωⁿ_ω(M, F)`, since
+  they hold in `Ωⁿ(M, F)`.
+
+## Implementation notes
 
 The analytic de Rham cohomology is defined with real analytic primitives: a real analytic form is
 *analytically exact* if it is `dη` for a real analytic `η`. Whether a closed real analytic form
 which is exact (as a smooth form) has a real analytic primitive, i.e. whether `toDeRham` is
 injective, is a question we do not address. For a real analytic submanifold `V` of `ℝ^n` the map
-is an isomorphism: this is stated by H. Cartan, *Variétés analytiques réelles et variétés
-analytiques complexes*, Bull. Soc. Math. France 85 (1957), §7, consequence (4), p. 89, as a
-consequence of his Theorem 3 (Theorem B for coherent analytic sheaves on analytic subsets of
-`ℝ^n`); Cartan omits the proof and refers to his earlier seminar and colloquium notes. Every
-second countable real analytic manifold is of this kind: it admits a real analytic, regular and
-proper embedding into some `ℝ^k` (H. Grauert, *On Levi's problem and the imbedding of
-real-analytic manifolds*, Ann. of Math. 68 (1958), Theorem 3, p. 470).
-The proof (complexifications, sheaf cohomology on Stein manifolds) has no counterpart for general
-locally convex models.
+is an isomorphism: this is stated in [Car57, §7, consequence (4), p. 89], as a consequence of
+[Car57, Theorem 3] (Theorem B for coherent analytic sheaves on analytic subsets of `ℝ^n`); Cartan
+omits the proof and refers to his earlier seminar and colloquium notes. Every second countable
+real analytic manifold is of this kind: it admits a real analytic, regular and proper embedding
+into some `ℝ^k` ([Gra58, Theorem 3, p. 470]). The proof (complexifications, sheaf cohomology on
+Stein manifolds) has no counterpart for general locally convex models.
 
-No completeness of `E` or `F` is assumed.
+## References
+
+* [H. Cartan, *Variétés analytiques réelles et variétés analytiques complexes*][Car57]
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [H. Grauert, *On Levi's problem and the imbedding of real-analytic manifolds*][Gra58]
 -/
 
 @[expose] public section
@@ -199,7 +209,7 @@ namespace DifferentialForm
 
 /-- A differential form on a real analytic manifold is **real analytic** if its local
 representatives `(y, v) ↦ ω_{i⁻¹ y}(Ti⁻¹ v)` in the charts `i` of the atlas are real analytic
-(Glöckner–Neeb, Remark 3.6.18). -/
+([GN26, Remark 3.6.18]). -/
 def IsRealAnalytic (ω : DifferentialForm E M F n) : Prop :=
   ∀ i : atlas E M, RealAnalyticOn (ω.localRep i) (i.1.target ×ˢ univ)
 
@@ -285,7 +295,7 @@ variable {E₀ : Type u} [AddCommGroup E₀] [Module ℝ E₀] [TopologicalSpace
 smoothness of pullbacks, near each point the local representative of `φ*ω` in the chart `i` is
 the local pullback of the representative of `ω` in the preferred chart `j` at the image point,
 along the real analytic map `j ∘ φ ∘ i⁻¹`; real analyticity is local
-(`LocallyConvex.Analysis.RealAnalyticOn.of_local`, Glöckner–Neeb, Lemma 2.2.3). -/
+(`LocallyConvex.Analysis.RealAnalyticOn.of_local`, [GN26, Lemma 2.2.3]). -/
 theorem IsRealAnalytic.pullback (hφ : SmoothMBM E₀ E φ)
     (hφa : RealAnalyticMOn (E := E₀) (F := E) φ univ) {ω : DifferentialForm E M F n}
     (hω : ω.IsRealAnalytic) : (ω.pullback hφ).IsRealAnalytic := fun i ↦ by

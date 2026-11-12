@@ -10,32 +10,50 @@ public import LocallyConvexManifolds.Manifold.ContMDiff
 /-!
 # Embedded submanifolds
 
-References: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, Definition 3.1.10 and
-Lemma 1.3.19; G. Larotonda, *Estructuras geométricas para las variedades de Banach*, Cap. 2
-(subvariedad embebida).
-
 A subset `N` of a manifold `M` modeled on `E` is a submanifold modeled on a closed subspace
-`S ⊆ E` (Glöckner–Neeb, Def. 3.1.10) if every point of `N` lies in a chart `φ` of the maximal
-atlas with `φ(U ∩ N) = φ(U) ∩ S`. Then `N` is a manifold modeled on `S`
-(`IsEmbeddedSubmanifold.mbManifold`) and the inclusion is smooth. The calculus fact behind the
-construction is `ContDiffMBOn.codRestrict` (lc-analysis): a `C^k` map with values in a closed
-subspace `T` is `C^k` as a map into `T` (Glöckner–Neeb, Lemma 1.3.19).
+`S ⊆ E` ([GN26, Definition 3.1.10]; see also [Lar22, Cap. 2], *subvariedad embebida*) if every
+point of `N` lies in a chart `φ` of the maximal atlas with `φ(U ∩ N) = φ(U) ∩ S`. Then `N` is a
+manifold modeled on `S` (`IsEmbeddedSubmanifold.mbManifold`) and the inclusion is smooth. The
+calculus fact behind the construction is `ContDiffMBOn.codRestrict` ([LCA]): a `C^k` map with
+values in a closed subspace `T` is `C^k` as a map into `T` ([GN26, Lemma 1.3.19]).
+
+## Main definitions
+
+* `IsSliceChart`: `φ` is a slice chart for `N` with model `S`.
+* `IsEmbeddedSubmanifold`: every point of `N` lies in the domain of a slice chart.
+* `sliceChart`: the chart of `N` induced by a slice chart.
+* `IsEmbeddedSubmanifold.chartedSpace`: the charted space structure of an embedded submanifold,
+  by the induced charts.
+
+## Main results
+
+* `smoothMBOn_sliceChart_transition`: the transition maps between induced charts are smooth.
+* `IsEmbeddedSubmanifold.mbManifold`: an embedded submanifold is a manifold modeled on `S`.
+* `IsEmbeddedSubmanifold.smoothMBM_val`: the inclusion of an embedded submanifold is smooth.
+
+## Implementation notes
 
 **Subtleties (infinite dimensions).**
 
 * No complement of `S` is required. When `S` is complemented, Glöckner–Neeb call `N` a *split*
   submanifold; in the Banach literature (e.g. Bourbaki) "submanifold" usually means split, and
   non-split ones are called quasi-submanifolds. For locally convex models the splitting
-  condition is much less useful (Glöckner–Neeb, Rem. 3.1.11).
+  condition is much less useful ([GN26, Rem. 3.1.11]).
 * The slice charts must be taken in the *maximal* atlas (charts compatible with the atlas): for
   `M = E` the atlas only contains the identity.
 * The usual criteria (regular values, split immersions) need inverse or implicit function
   theorems, which are not available for general locally convex models.
 * Weaker notions are genuinely different in infinite dimensions and are not covered here:
-  initial submanifolds (Glöckner–Neeb, Def. 3.3.22: a universal property for smooth maps into
-  `N`, the topology of `N` may be finer than the induced one), immersions (Glöckner–Neeb,
-  Def. 3.3.25(b): locally a continuous linear map with a continuous linear left inverse), and
-  weak immersions (injective differential whose range need not be closed).
+  initial submanifolds ([GN26, Def. 3.3.22]: a universal property for smooth maps into `N`, the
+  topology of `N` may be finer than the induced one), immersions ([GN26, Def. 3.3.25(b)]: locally
+  a continuous linear map with a continuous linear left inverse), and weak immersions (injective
+  differential whose range need not be closed).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section
@@ -136,6 +154,7 @@ theorem sliceChart_symm_apply_coe {φ : OpenPartialHomeomorph M E} (hφ : IsSlic
   change ((if h : φ.symm y ∈ N then (⟨φ.symm y, h⟩ : N) else p₀ : N) : M) = φ.symm y
   rw [dite_eq_left hN]
 
+omit [MBManifold E M] in
 /-- The transition maps between induced charts are smooth: they are restrictions to `S` of
 transition maps of `M`, with values in `S`. -/
 theorem smoothMBOn_sliceChart_transition (hS : IsClosed (S : Set E))
@@ -164,6 +183,7 @@ theorem smoothMBOn_sliceChart_transition (hS : IsClosed (S : Set E))
     sliceChart_apply_coe hψ p₁ (by rw [(hsub y hy).2]; exact (hsub y hy).1.2), (hsub y hy).2]
   rfl
 
+omit [MBManifold E M] in
 theorem sliceChart_transition_mem (hS : IsClosed (S : Set E))
     {φ ψ : OpenPartialHomeomorph M E} (hφ : IsSliceChart N S φ) (hψ : IsSliceChart N S ψ)
     (p₀ p₁ : N) :
@@ -185,6 +205,7 @@ def IsEmbeddedSubmanifold.chartedSpace (h : IsEmbeddedSubmanifold N S) : Charted
   mem_chart_source p := (h.exists_sliceChart p p.2).choose_spec.2
   chart_mem_atlas p := ⟨_, _, p, rfl⟩
 
+omit [MBManifold E M] in
 /-- **An embedded submanifold is a manifold** modeled on `S`. -/
 theorem IsEmbeddedSubmanifold.mbManifold (h : IsEmbeddedSubmanifold N S) :
     letI := h.chartedSpace; MBManifold S N := by

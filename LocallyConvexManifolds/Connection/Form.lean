@@ -19,35 +19,47 @@ local trivialization over an open set `U ⊆ E`, by symbols `Γ(y)(v, ξ) ∈ F`
 curvature is the `End(F)`-valued `2`-form `Ω = −dA + A ∧ A` (Cartan's structure equation, with
 Lang's sign for the curvature). The local theory below is written for an arbitrary fiber `F`.
 
-**An infinite-dimensional subtlety.** If `F` is not normable, no vector topology on the space
-`L(F)` of continuous linear endomorphisms makes the evaluation `L(F) × F → F` continuous
-(Maissen, Math. Ann. 151 (1963), Satz 1), so `A` cannot be an honest differential form with
-values in a locally convex space of operators. We therefore encode an `End(F)`-valued form as a
-family of `F`-valued forms depending linearly on an extra argument: for `ξ ∈ F`, `connForm Γ ξ` is
-the `F`-valued local `1`-form `(y, v) ↦ Γ(y)(v, ξ)`, and `curvLoc Γ ξ` is the `F`-valued local
-`2`-form `(y, u, v) ↦ R(y)(u, v) ξ`. All the identities below are identities between `F`-valued
-local forms, and never use a topology on `L(F)`. (On a Banach space `F` these families are
-`L(F)`-valued forms in the usual sense.) For the same reason, the transition functions of a vector
-bundle cannot be required to be smooth maps into `GL(F)`; only `(y, ξ) ↦ g(y) ξ` can be required to
-be smooth.
+## Main definitions
+
+* `IsLocalSymbol`: the hypotheses on a family of symbols on an open set (smooth, bilinear).
+* `connForm`, `curvLoc`: the connection form `A^ξ` and the curvature form `Ω^ξ`, as `F`-valued
+  local forms.
+* `torsionLoc`: the torsion `T(u, v) = Γ(u, v) − Γ(v, u)`.
 
 ## Main results
 
-* `IsLocalSymbol`: the hypotheses on a family of symbols on an open set (smooth, bilinear);
-* `IsLocalSymbol.isLocalForm_connForm`: `A^ξ` is a local `1`-form;
+* `IsLocalSymbol.isLocalForm_connForm`: `A^ξ` is a local `1`-form.
 * `curvLoc_eq` (**Cartan's structure equation**): `Ω^ξ = −dA^ξ + (A ∧ A)^ξ`, where
-  `(A ∧ A)(u, v) ξ = A(u) A(v) ξ − A(v) A(u) ξ`;
+  `(A ∧ A)(u, v) ξ = A(u) A(v) ξ − A(v) A(u) ξ`.
 * `IsLocalSymbol.dLoc_curvLoc` (**the second Bianchi identity**): `dΩ = [A ∧ Ω]`, i.e. the
-  covariant exterior derivative `DΩ = dΩ − [A ∧ Ω]` of the curvature vanishes;
+  covariant exterior derivative `DΩ = dΩ − [A ∧ Ω]` of the curvature vanishes.
 * `Connection.connForm_transition`: the gauge transformation law of the connection forms under a
   change of charts, `A_j(τ y)(dτ v)(dτ w) = dτ(A_i(y)(v) w) + d²τ(v, w)`; the inhomogeneous term
-  is why `A` is not a tensor;
-* `Connection.torsionLoc_transition`: the torsion `T(u, v) = Γ(u, v) − Γ(v, u)` is a tensor,
-  because the second derivatives of the transition maps are symmetric;
+  is why `A` is not a tensor.
+* `Connection.torsionLoc_transition`: the torsion is a tensor, because the second derivatives of
+  the transition maps are symmetric.
 * `Connection.curvature_eq_structure`: the curvature of a connection, evaluated on vector fields,
   is given in the preferred chart by Cartan's structure equation.
 
+## Implementation notes
+
+**An infinite-dimensional subtlety.** If `F` is not normable, no vector topology on the space
+`L(F)` of continuous linear endomorphisms makes the evaluation `L(F) × F → F` continuous
+([Mai63, Satz 1]), so `A` cannot be an honest differential form with values in a locally convex
+space of operators. We therefore encode an `End(F)`-valued form as a family of `F`-valued forms
+depending linearly on an extra argument: for `ξ ∈ F`, `connForm Γ ξ` is the `F`-valued local
+`1`-form `(y, v) ↦ Γ(y)(v, ξ)`, and `curvLoc Γ ξ` is the `F`-valued local `2`-form
+`(y, u, v) ↦ R(y)(u, v) ξ`. All the identities above are identities between `F`-valued local
+forms, and never use a topology on `L(F)`. (On a Banach space `F` these families are
+`L(F)`-valued forms in the usual sense.) For the same reason, the transition functions of a vector
+bundle cannot be required to be smooth maps into `GL(F)`; only `(y, ξ) ↦ g(y) ξ` can be required
+to be smooth.
+
 No completeness of `E` is assumed.
+
+## References
+
+* [B. Maissen, *Über Topologien im Endomorphismenraum eines topologischen Vektorraumes*][Mai63]
 -/
 
 @[expose] public section

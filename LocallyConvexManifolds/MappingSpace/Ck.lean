@@ -13,8 +13,7 @@ public import LocallyConvexManifolds.Manifold.CkSuperposition
 Let `M` be a compact manifold modeled on a Hausdorff locally convex space `H` (necessarily
 finite-dimensional if `M ≠ ∅`), `N` a manifold modeled on a Hausdorff locally convex space `E`
 with a local addition `Σ : TN ⊇ Ω → N`, `θ = (π, Σ)` (`LocalAddition`), and `ℓ ∈ ℕ ∪ {∞}`. Following
-H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups* (arXiv:2602.12362), proof of
-Theorem 4.2.2, the space `C^ℓ(M, N)` of `C^ℓ` maps is a smooth manifold with charts
+[GN26, proof of Theorem 4.2.2], the space `C^ℓ(M, N)` of `C^ℓ` maps is a smooth manifold with charts
 
   `φ_f : O'_f → O_f ⊆ Γ_f`,  `g ↦ θ⁻¹ ∘ (f, g)`,
 
@@ -28,36 +27,37 @@ by a compact Hausdorff space) is `LocallyConvexManifolds.MappingSpace.Basic`.
   `CkMap.jetTopology` (the instance): the coarsest topology finer than the compact-open topology
   for which the jets `g ↦ d^(m)(i ∘ g ∘ j⁻¹)|_{K × H^m} ∈ C(K × H^m, E)`, `m ≤ ℓ`, are continuous on
   the open sets `{g : g(j⁻¹ K) ⊆ i.source}` (`j`, `i` charts of `M` and `N`, `K` compact; no
-  interior required). This is Hirsch's weak `C^ℓ` topology in locally convex form; it is the
-  topology of Glöckner–Neeb, Definition 4.1.2, for every Hausdorff `M` and every model
+  interior required). This is Hirsch's weak `C^ℓ` topology [Hir76] in locally convex form; it is
+  the topology of [GN26, Definition 4.1.2], for every Hausdorff `M` and every model
   (`CkMap.topology_eq_gnTopology`, `MappingSpace/TopologyULift.lean`).
 * `CkMap.chartTopology`: the **chart topology**, defined in the same way by the local
   representatives `g ↦ i ∘ g ∘ j⁻¹ ∈ C^ℓ(V, E)` on open sets `V ⊆ L`, `L` compact. It is always
   coarser than the jet topology (`CkMap.jetTopology_le_chartTopology`) and equal to it for a locally
   compact model of `M` (`CkMap.chartTopology_eq_jetTopology`), in particular for `M` compact
   (`CkMap.topology_eq_chartTopology_of_compactSpace`). It is not the instance.
-* `SecCk H E ℓ f`: the space `Γ_f` of `C^ℓ` sections along `f` (Glöckner–Neeb, 4.1.30, 4.2.1),
+* `SecCk H E ℓ f`: the space `Γ_f` of `C^ℓ` sections along `f` ([GN26, 4.1.30, 4.2.1]),
   in fiber coordinates, with the initial topology with respect to the local representatives
   `D_{j,i}(f) → E` in the charts `j` of `M` and `i` of `N`.
 * `LocalAddition.chartCk f`: the chart `φ_f` of `C^ℓ(M, N)` at `f`.
 * `SmoothMap H E M N`, `SecSm H E f`, `LocalAddition.chartSm f`: the same for `ℓ = ∞`, with the
-  initial topologies with respect to the inclusions into the `C^ℓ` spaces (Glöckner–Neeb,
-  Remark 4.1.3(b)): `SmoothMap.jetTopologySm` (the instance), `SmoothMap.chartTopologySm`.
+  initial topologies with respect to the inclusions into the `C^ℓ` spaces ([GN26,
+  Remark 4.1.3(b)]): `SmoothMap.jetTopologySm` (the instance), `SmoothMap.chartTopologySm`.
 
 ## Main results
 
-* `SecCk.instLocallyConvexSpaceReal`, `SecCk.instT2Space`: `Γ_f` is a Hausdorff locally convex
-  space (Glöckner–Neeb, Lemma 4.1.31); `SecCk.isClosed_range_toPi`: the local representatives embed
-  it as a closed subspace of `∏ C^ℓ(D_{j,i}(f), E)` (compare Proposition 4.1.26 and the proof of
-  Proposition 4.1.34); `SecCk.toSec`: `Γ_f` embeds continuously in the space of continuous sections.
+* The instances `LocallyConvexSpace ℝ (SecCk H E ℓ f)`, `T2Space (SecCk H E ℓ f)`: `Γ_f` is a
+  Hausdorff locally convex space ([GN26, Lemma 4.1.31]); `SecCk.isClosed_range_toPi`: the local
+  representatives embed it as a closed subspace of `∏ C^ℓ(D_{j,i}(f), E)` (compare
+  [GN26, Proposition 4.1.26] and [GN26, proof of Proposition 4.1.34]); `SecCk.toSec`: `Γ_f` embeds
+  continuously in the space of continuous sections.
 * `LocalAddition.chartCk`: `φ_f` is a partial homeomorphism of `C^ℓ(M, N)` onto the open set `O_f`
   of `Γ_f`, for the compact-open `C^ℓ` topology.
 * `LocalAddition.smoothMBOn_transitionCk`: the transition maps `φ_g ∘ φ_f⁻¹` are smooth.
-* `LocalAddition.mappingAtlasCk`: **Glöckner–Neeb, Theorem 4.2.2(a), (b) for finite `ℓ`**: the
+* `LocalAddition.mappingAtlasCk`: **[GN26, Theorem 4.2.2(a), (b)] for finite `ℓ`**: the
   charts form an atlas of `C^ℓ(M, N)` with varying models `Γ_f` (`VaryingAtlas`), whose topology
   is the compact-open `C^ℓ` topology. `LocalAddition.mappingAtlasSm`: the same for `ℓ = ∞`.
 * `LocalAddition.smoothMBMOn_eval_chartCk_symm`, `LocalAddition.smoothMBMOn_eval_chartSm_symm`:
-  **Theorem 4.2.2(c)**, point evaluations are smooth in the charts.
+  **[GN26, Theorem 4.2.2(c)]**, point evaluations are smooth in the charts.
 
 ## Implementation notes
 
@@ -68,17 +68,18 @@ by a compact Hausdorff space) is `LocallyConvexManifolds.MappingSpace.Basic`.
   (`locallyCompactSpace_of_compactSpace`), hence finite-dimensional by Riesz's theorem
   (`finiteDimensional_of_compactSpace`): `M` is modeled on some `ℝⁿ`, and only the target `N` may be
   infinite-dimensional. The proofs use only the local compactness of `H` (for uncurrying,
-  Theorem 1.7.30(a), and for superposition operators); it is derived inside the proofs, after
-  disposing of the trivial case `M = ∅` (where `C^ℓ(M, N)` and `Γ_f` are points), so that the public
-  statements carry only Glöckner–Neeb's hypotheses on `M` (compact, Hausdorff).
+  [GN26, Theorem 1.7.30(a)], and for superposition operators); it is derived inside the proofs,
+  after disposing of the trivial case `M = ∅` (where `C^ℓ(M, N)` and `Γ_f` are points), so that the
+  public statements carry only Glöckner–Neeb's hypotheses on `M` (compact, Hausdorff).
 * **The topologies.** Glöckner–Neeb define the compact-open `C^ℓ` topology through the iterated
-  tangent maps `T^j g` (Definition 4.1.2), give `Γ_f` the topology induced by `C^ℓ(M, TN)` (4.1.30)
-  and identify it with spaces of local representatives in charts (Proposition 4.1.26, proof of
-  Proposition 4.1.34; for vector-valued maps Definition 4.1.16 and Lemma 4.1.17 use the chart
-  description from the start). Here `C^ℓ(M, N)` carries the jet topology, defined by jets of local
-  representatives on compact sets in charts, and `Γ_f` the topology of its local representatives
-  on the open sets `D_{j,i}(f)`; the agreement of the jet topology with Definition 4.1.2 for every
-  Hausdorff `M` is proved in `MappingSpace/TopologyJet.lean` (Theorem 4.2.2(b)).
+  tangent maps `T^j g` ([GN26, Definition 4.1.2]), give `Γ_f` the topology induced by
+  `C^ℓ(M, TN)` ([GN26, 4.1.30]) and identify it with spaces of local representatives in charts
+  ([GN26, Proposition 4.1.26, proof of Proposition 4.1.34]; for vector-valued maps
+  [GN26, Definition 4.1.16 and Lemma 4.1.17] use the chart description from the start).
+  Here `C^ℓ(M, N)` carries the jet topology, defined by jets of local representatives on compact
+  sets in charts, and `Γ_f` the topology of its local representatives on the open sets
+  `D_{j,i}(f)`; the agreement of the jet topology with [GN26, Definition 4.1.2] for every
+  Hausdorff `M` is proved in `MappingSpace/TopologyJet.lean` ([GN26, Theorem 4.2.2(b)]).
 * **The jet topology and the chart topology.** The chart topology uses local representatives on
   open sets `V` inside compact sets `L` of the model. If the model of `M` is not locally compact
   (for instance infinite-dimensional), compact sets have empty interior, every such `V` is empty,
@@ -95,7 +96,8 @@ by a compact Hausdorff space) is `LocallyConvexManifolds.MappingSpace.Basic`.
   superposition operator applied to `(i' ∘ g, i ∘ f)` on a smaller neighborhood, and
   `ContDiffMBMap.tendsto_of_tendsto_restrictCLM` glues these local statements.
 * **Smoothness of the transition maps.** Glöckner–Neeb deduce it from the exponential law for
-  sections (Proposition 4.1.34) and the smoothness of the evaluation map (Proposition 4.1.32). Here,
+  sections ([GN26, Proposition 4.1.34]) and the smoothness of the evaluation map
+  ([GN26, Proposition 4.1.32]). Here,
   over the open sets where `f` and `g` lie in charts `i` and `j` of `N`, the local representative of
   `φ_g ∘ φ_f⁻¹` is the superposition operator of the smooth map
   `(y, z, v) ↦ θ⁻¹(j⁻¹ z, Σ(i⁻¹ y, v))` (`LocalAddition.transMap`, from the case `ℓ = 0`) applied to
@@ -104,9 +106,14 @@ by a compact Hausdorff space) is `LocallyConvexManifolds.MappingSpace.Basic`.
   `ContDiffMBMap.contDiffMBOn_of_restrictCLM`. For `ℓ = ∞` the spaces are projective limits of the
   finite-order ones and everything follows from the finite orders. We do not claim these
   arguments are new.
-* The rest of Theorem 4.2.2 is in `MappingSpace/ExponentialLaw.lean` (the exponential law and
-  uniqueness in (a), and (c)), `MappingSpace/Tangent.lean` ((d)) and `MappingSpace/TopologyJet.lean`
-  ((b) in the form of Definition 4.1.2).
+* The rest of [GN26, Theorem 4.2.2] is in `MappingSpace/ExponentialLaw.lean` (the exponential law
+  and uniqueness in (a), and (c)), `MappingSpace/Tangent.lean` ((d)) and
+  `MappingSpace/TopologyJet.lean` ((b) in the form of [GN26, Definition 4.1.2]).
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
+* [M. W. Hirsch, *Differential Topology*][Hir76]
 -/
 
 @[expose] public section
@@ -201,7 +208,7 @@ def sectionSubmoduleCk (ℓ : ℕ) (f : C(M, N)) : Submodule ℝ (M → E) where
     exact h.symm
 
 variable (H E) in
-/-- **The space `Γ_f` of `C^ℓ` sections of `TN` along `f`** (Glöckner–Neeb, 4.1.30 and 4.2.1),
+/-- **The space `Γ_f` of `C^ℓ` sections of `TN` along `f`** ([GN26, 4.1.30 and 4.2.1]),
 written in the fiber coordinates of `TN`: the maps `u : M → E` such that `x ↦ ⟨f x, u x⟩ ∈ TN`
 has `C^ℓ` local representatives. Its topology, defined below, is the initial topology with
 respect to the local representatives `D_{j,i}(f) → E` in the charts `j` of `M` and `i` of `N`,
@@ -332,13 +339,13 @@ instance : TopologicalSpace (SecCk H E ℓ f) := .induced toPi inferInstance
 theorem isEmbedding_toPi : Topology.IsEmbedding (toPi (E := E) (ℓ := ℓ) (f := f) (H := H)) :=
   ⟨⟨rfl⟩, toPi_injective⟩
 
-/-- `Γ_f` is a topological vector space (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is a topological vector space ([GN26, Lemma 4.1.31]). -/
 instance : IsTopologicalAddGroup (SecCk H E ℓ f) := isTopologicalAddGroup_induced toPi
 
-/-- `Γ_f` is a topological vector space (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is a topological vector space ([GN26, Lemma 4.1.31]). -/
 instance : ContinuousSMul ℝ (SecCk H E ℓ f) := continuousSMul_induced toPi
 
-/-- `Γ_f` is locally convex (Glöckner–Neeb, Lemma 4.1.31). -/
+/-- `Γ_f` is locally convex ([GN26, Lemma 4.1.31]). -/
 instance : LocallyConvexSpace ℝ (SecCk H E ℓ f) := LocallyConvexSpace.induced toPi
 
 /-- `Γ_f` is Hausdorff. -/
@@ -795,8 +802,8 @@ def jetTopology : TopologicalSpace (CkMap H E ℓ M N) :=
       ∃ O : Set C(a.K × (Fin m → H), E), IsOpen O ∧ S = a.dom ∩ a.jet m ⁻¹' O}
 
 /-- **The compact-open `C^ℓ` topology on `C^ℓ(M, N)`** is the jet topology `CkMap.jetTopology`
-(the weak `C^ℓ` topology of Hirsch in locally convex form). It is the topology of Glöckner–Neeb,
-Definition 4.1.2, for every Hausdorff `M` modeled on any Hausdorff locally convex space
+(the weak `C^ℓ` topology of [Hir76] in locally convex form). It is the topology of [GN26,
+Definition 4.1.2], for every Hausdorff `M` modeled on any Hausdorff locally convex space
 (`CkMap.topology_eq_gnTopology`, `MappingSpace/TopologyULift.lean`), and the chart topology
 `CkMap.chartTopology` when the model of `M` is locally compact, in particular when `M` is compact
 (`CkMap.topology_eq_chartTopology`, `CkMap.topology_eq_chartTopology_of_compactSpace`). -/
@@ -1520,7 +1527,7 @@ theorem mem_chartSourceCk (f : CkMap H E ℓ M N) : f ∈ A.chartSourceCk f :=
   A.mem_chart_source (CkMap.toC f)
 
 
-/-- **The chart of `C^ℓ(M, N)` at `f`** (Glöckner–Neeb, proof of Theorem 4.2.2):
+/-- **The chart of `C^ℓ(M, N)` at `f`** ([GN26, proof of Theorem 4.2.2]):
 `φ_f : O'_f → O_f ⊆ Γ_f`, `g ↦ θ⁻¹ ∘ (f, g)`, with inverse `τ ↦ Σ ∘ τ`, a partial homeomorphism
 for the compact-open `C^ℓ` topologies. It is modeled on `Γ_f`. -/
 def chartCk (f : CkMap H E ℓ M N) :
@@ -1611,7 +1618,7 @@ theorem isOpen_transitionDomainCk (f g : CkMap H E ℓ M N) :
     IsOpen (A.transitionDomainCk f g) :=
   (A.chartCk f).isOpen_inter_preimage_symm (A.chartCk g).open_source
 
-/-- **The transition maps of `C^ℓ(M, N)` are smooth** (Glöckner–Neeb, proof of Theorem 4.2.2):
+/-- **The transition maps of `C^ℓ(M, N)` are smooth** ([GN26, proof of Theorem 4.2.2]):
 `φ_g ∘ φ_f⁻¹` is smooth on its open domain in `Γ_f`. Over the open sets on which `f` and `g` lie
 in charts `i` and `j` of `N`, the local representatives of the transition map are the
 superposition operators `γ ↦ h ∘ γ` of the smooth map
@@ -1686,7 +1693,7 @@ theorem smoothMBOn_transitionCk (f g : CkMap H E ℓ M N) :
     rw [A.mk_chartCk g _ hτ.2, A.chartCk_symm_apply f hτ.1]
   · rw [ContDiffMBMap.apply_of_notMem _ hx, ContDiffMBMap.apply_of_notMem _ hx]
 
-/-- **The manifold of `C^ℓ` maps** `C^ℓ(M, N)`, `ℓ ∈ ℕ` (Glöckner–Neeb, Theorem 4.2.2(a) and (b),
+/-- **The manifold of `C^ℓ` maps** `C^ℓ(M, N)`, `ℓ ∈ ℕ` ([GN26, Theorem 4.2.2(a) and (b)],
 for finite `ℓ`): for `M` a compact manifold and `N` admitting
 a local addition, the charts `φ_f : O'_f → O_f ⊆ Γ_f`, `g ↦ θ⁻¹ ∘ (f, g)`, form an atlas of
 `C^ℓ(M, N)` with varying models `Γ_f` and smooth transition maps. The charts are partial
@@ -1700,7 +1707,7 @@ def mappingAtlasCk : VaryingAtlas (CkMap H E ℓ M N) where
   mem_chartAt_source g := A.mem_chartCk_source g
   smoothMBOn_transition f g := A.smoothMBOn_transitionCk f g
 
-/-- **Point evaluations are smooth** (Glöckner–Neeb, Theorem 4.2.2(c), for finite `ℓ`): in the
+/-- **Point evaluations are smooth** ([GN26, Theorem 4.2.2(c)], for finite `ℓ`): in the
 chart at `f`, the evaluation `ε_x : g ↦ g(x)` reads `τ ↦ Σ(τ(x))`, which is smooth on `O_f`. -/
 theorem smoothMBMOn_eval_chartCk_symm (f : CkMap H E ℓ M N) (x : M) :
     SmoothMBMOn (SecCk H E ℓ (CkMap.toC f)) E (fun τ ↦ (A.chartCk f).symm τ x)
@@ -1776,7 +1783,7 @@ instance instSubsingleton [IsEmpty M] : Subsingleton (SmoothMap H E M N) :=
 variable (H E M N) in
 /-- **The compact-open `C^∞` topology through jets**: the initial topology on `C^∞(M, N)` with
 respect to the inclusions into the spaces `C^ℓ(M, N)`, `ℓ ∈ ℕ`, with their jet topologies
-(compare Glöckner–Neeb, Remark 4.1.3(b)). This is the instance `SmoothMap.instTopologicalSpace`. -/
+(compare [GN26, Remark 4.1.3(b)]). This is the instance `SmoothMap.instTopologicalSpace`. -/
 @[instance_reducible]
 def jetTopologySm : TopologicalSpace (SmoothMap H E M N) :=
   ⨅ ℓ : ℕ, TopologicalSpace.induced (toCk ℓ) (CkMap.jetTopology H E ℓ M N)
@@ -1792,7 +1799,7 @@ def chartTopologySm : TopologicalSpace (SmoothMap H E M N) :=
 
 /-- **The compact-open `C^∞` topology** on `C^∞(M, N)`: the initial topology with respect to the
 inclusions into the spaces `C^ℓ(M, N)`, `ℓ ∈ ℕ`, each with its compact-open `C^ℓ` topology, the jet
-topology (compare Glöckner–Neeb, Remark 4.1.3(b)). -/
+topology (compare [GN26, Remark 4.1.3(b)]). -/
 instance instTopologicalSpace : TopologicalSpace (SmoothMap H E M N) :=
   jetTopologySm H E M N
 
@@ -1848,7 +1855,7 @@ variable {H : Type u} [AddCommGroup H] [Module ℝ H] [TopologicalSpace H] [IsTo
   {N : Type*} [TopologicalSpace N] [ChartedSpace E N] [MBManifold E N]
 
 variable (H E) in
-/-- **The space `Γ_f` of smooth sections of `TN` along `f`** (Glöckner–Neeb, 4.2.1 for `ℓ = ∞`),
+/-- **The space `Γ_f` of smooth sections of `TN` along `f`** ([GN26, 4.2.1] for `ℓ = ∞`),
 written in fiber coordinates: the sections that are `C^ℓ` for all `ℓ`, with the initial topology
 with respect to the inclusions into the spaces of `C^ℓ` sections. -/
 def SecSm (f : C(M, N)) : Type u := (⨅ ℓ : ℕ, sectionSubmoduleCk H E ℓ f : Submodule ℝ (M → E))
@@ -2043,7 +2050,7 @@ theorem toCk_chartInvFunSm (f : SmoothMap H E M N) (τ : SecSm H E (SmoothMap.to
     rw [h₁]
     exact (chartInvFunCk_of_notMem A (SmoothMap.toCk ℓ f) hτ').symm
 
-/-- **The chart of `C^∞(M, N)` at `f`** (Glöckner–Neeb, proof of Theorem 4.2.2, `ℓ = ∞`):
+/-- **The chart of `C^∞(M, N)` at `f`** ([GN26, proof of Theorem 4.2.2], `ℓ = ∞`):
 `g ↦ θ⁻¹ ∘ (f, g)`, with inverse `τ ↦ Σ ∘ τ`, a partial homeomorphism for the compact-open
 `C^∞` topologies, modeled on the space `Γ_f` of smooth sections along `f`. -/
 def chartSm (f : SmoothMap H E M N) :
@@ -2098,7 +2105,7 @@ def chartSm (f : SmoothMap H E M N) :
 theorem mem_chartSm_source (f : SmoothMap H E M N) : f ∈ (A.chartSm f).source :=
   A.mem_chartSourceCk (SmoothMap.toCk 0 f)
 
-/-- **The transition maps of `C^∞(M, N)` are smooth** (Glöckner–Neeb, proof of Theorem 4.2.2,
+/-- **The transition maps of `C^∞(M, N)` are smooth** ([GN26, proof of Theorem 4.2.2],
 `ℓ = ∞`): composed with the inclusions into the spaces of `C^ℓ` sections, they are the transition
 maps of the `C^ℓ(M, N)`. -/
 theorem smoothMBOn_transitionSm (f g : SmoothMap H E M N) :
@@ -2122,7 +2129,7 @@ theorem smoothMBOn_transitionSm (f g : SmoothMap H E M N) :
   exact ((congrArg (A.chartFunCk (SmoothMap.toCk ℓ g)) (A.toCk_chartInvFunSm f τ ℓ)).symm.trans
     (A.toCkCLM_chartFunSm g _ ℓ).symm)
 
-/-- **The manifold of smooth maps** `C^∞(M, N)` (Glöckner–Neeb, Theorem 4.2.2(a) and (b),
+/-- **The manifold of smooth maps** `C^∞(M, N)` ([GN26, Theorem 4.2.2(a) and (b)],
 `ℓ = ∞`): the charts `g ↦ θ⁻¹ ∘ (f, g)` form an atlas of `C^∞(M, N)` with varying models (the
 spaces `Γ_f` of smooth sections along `f`) and smooth transition maps; they are partial
 homeomorphisms for the compact-open `C^∞` topology. -/
@@ -2134,7 +2141,7 @@ def mappingAtlasSm : VaryingAtlas (SmoothMap H E M N) where
   mem_chartAt_source g := A.mem_chartSm_source g
   smoothMBOn_transition f g := A.smoothMBOn_transitionSm f g
 
-/-- **Point evaluations are smooth** (Glöckner–Neeb, Theorem 4.2.2(c), `ℓ = ∞`): in the chart at
+/-- **Point evaluations are smooth** ([GN26, Theorem 4.2.2(c)], `ℓ = ∞`): in the chart at
 `f`, the evaluation `ε_x : g ↦ g(x)` is smooth on `O_f`. -/
 theorem smoothMBMOn_eval_chartSm_symm (f : SmoothMap H E M N) (x : M) :
     SmoothMBMOn (SecSm H E (SmoothMap.toC f)) E (fun τ ↦ (A.chartSm f).symm τ x)

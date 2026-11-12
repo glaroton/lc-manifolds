@@ -19,6 +19,17 @@ initial submanifold (`not_isInitialSubmanifold_lemniscate`): near the origin the
 branches, and the smooth curve `f(s) = (sin σ, -sin 2σ)`, `σ = (arctan s) / 2`, crosses the
 origin along the branch that `j` only reaches as `t → ±∞`. Its lift `g` with `j ∘ g = f` jumps
 from `g(s) > 1` (for `s > 0`) to `g(0) = 0`.
+
+## Main definitions
+
+* `Lemniscate.j`: the injective immersion `t ↦ (sin θ, sin 2θ)`, `θ = 2 arctan t`.
+* `Lemniscate.f`: the smooth curve `s ↦ (sin σ, -sin 2σ)`, `σ = (arctan s) / 2`, through the origin.
+* `Lemniscate.g`: its lift, with `j ∘ g = f`.
+
+## Main results
+
+* `Lemniscate.isImmersedSubmanifold_lemniscate`: `j` is an injective immersion.
+* `Lemniscate.not_isInitialSubmanifold_lemniscate`: its image is not an initial submanifold.
 -/
 
 @[expose] public section

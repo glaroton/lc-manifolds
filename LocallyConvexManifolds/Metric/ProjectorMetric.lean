@@ -11,11 +11,6 @@ public import LocallyConvexManifolds.Metric.LeviCivita
 /-!
 # Orthogonal projectors and the Levi-Civita connection of a submanifold, any signature
 
-References: G. Larotonda, *Estructuras geométricas para las variedades de Banach*, §6.6
-(Teorema 6.6.1, "derivar y proyectar") and §10.1.1 (the Levi-Civita derivative of a
-submanifold); J. Bognár, *Indefinite Inner Product Spaces*, Springer (1974), Theorem V.3.4 and
-Example V.3.3 (ortho-complemented subspaces of Krein spaces).
-
 Let `β` be a continuous symmetric bilinear form on the ambient space `F`, of **any signature**
 (an inner product, or the indefinite form of a Krein or Pontryagin space), and let `X ⊆ F` be an
 embedded submanifold with a field of projectors `P` onto its tangent spaces
@@ -27,19 +22,32 @@ embedded submanifold with a field of projectors `P` onto its tangent spaces
 `P` is **`β`-orthogonal** if `β(P_p w, t) = β(w, t)` for every `w ∈ F` and every tangent vector
 `t ∈ T_p X`; that is, `ker P_p` is `β`-orthogonal to `T_p X`.
 
+The sources are [Lar22, §6.6 (Teorema 6.6.1, "derivar y proyectar")] and [Lar22, §10.1.1] (the
+Levi-Civita derivative of a submanifold), and [Bog74, Theorem V.3.4 and Example V.3.3]
+(ortho-complemented subspaces of Krein spaces).
+
+## Main definitions
+
+* `ProjectorField.IsOrthogonal`: `P` is `β`-orthogonal.
+* `ProjectorField.inducedForm`: the induced form `G(y)(a, b) = β(dψ_y a, dψ_y b)` in a slice chart.
+* `ProjectorField.inducedMetric`: the induced metric, a smooth field of symmetric bilinear forms
+  on `X`; `ProjectorField.inducedRiemannian`: a weak Riemannian metric when `β` is positive
+  definite.
+
 ## Main results
 
-* `isMetric_symb` (**Gauss**): if `P` is `β`-orthogonal, the connection of `P` is metric for the
-  induced form, in every slice chart:
+* `ProjectorField.isMetric_symb` (**Gauss**): if `P` is `β`-orthogonal, the connection of `P` is
+  metric for the induced form, in every slice chart:
   `∂G(y)(u)(a, b) = − G(y)(Γ(u, a), b) − G(y)(a, Γ(u, b))`.
   The computation is that of the Riemannian case: `∂G` produces `β(d²ψ(u, a), dψ b)`, and
   `dψ Γ(u, a) = −P(d²ψ(u, a))` differs from `−d²ψ(u, a)` by a vector `β`-orthogonal to `T_p X`.
 * `nondegenerate_of_orthogonal`: **orthogonal projectors only exist onto nondegenerate
   subspaces.** If `β` is weakly nondegenerate and `Q` is a `β`-orthogonal projector, no nonzero
   vector of the range of `Q` is `β`-orthogonal to the whole range.
-* `symb_eq_of_isMetric`: hence, if `β` is weakly nondegenerate and `P` is `β`-orthogonal, the
-  symbols of `P` are **the Levi-Civita symbols** of the induced metric: any symmetric symbols
-  compatible with `G` coincide with them (Koszul, `LocallyConvex.Manifolds.eq_of_koszul`).
+* `ProjectorField.symb_eq_of_isMetric`: hence, if `β` is weakly nondegenerate and `P` is
+  `β`-orthogonal, the symbols of `P` are **the Levi-Civita symbols** of the induced metric: any
+  symmetric symbols compatible with `G` coincide with them (Koszul,
+  `LocallyConvex.Manifolds.eq_of_koszul`).
 
 ## The induced metric on `X`
 
@@ -48,33 +56,40 @@ the change of slice charts `τ` (`dMB_param_transition`), the local representati
 `x ↦ β(dψ ·, dψ ·)` (computed in the preferred chart at `x`) in any chart is the induced form of
 that chart (`bilinLocalRep_inducedFun`). This gives:
 
-* `inducedMetric`: the induced metric, a smooth field of symmetric bilinear forms on `X`;
-  `inducedRiemannian`: a weak Riemannian metric when `β` is positive definite;
-* `connection_isMetric`: the connection of a `β`-orthogonal `P` is metric for it
+* `ProjectorField.inducedMetric`: the induced metric, a smooth field of symmetric bilinear forms
+  on `X`; `ProjectorField.inducedRiemannian`: a weak Riemannian metric when `β` is positive
+  definite;
+* `ProjectorField.connection_isMetric`: the connection of a `β`-orthogonal `P` is metric for it
   (`Connection.IsMetric`, in every chart of the atlas of `X`);
-* `inducedMetric_isWeaklyNondegenerate` and `covDeriv_eq_connection`: if `β` is weakly
-  nondegenerate, **every symmetric metric connection of the induced metric has the covariant
-  derivative of `P`**: the Levi-Civita connection of `X` is "derive and project".
+* `ProjectorField.inducedMetric_isWeaklyNondegenerate` and `ProjectorField.covDeriv_eq_connection`:
+  if `β` is weakly nondegenerate, **every symmetric metric connection of the induced metric has the
+  covariant derivative of `P`**: the Levi-Civita connection of `X` is "derive and project".
 
 ## The indefinite case
 
 For an inner product every closed subspace of a Hilbert space has an orthogonal projector, and
-the theory above is that of *Estructuras*, §10.1.1. For an indefinite `β` this is no longer so,
+the theory above is that of [Lar22, §10.1.1]. For an indefinite `β` this is no longer so,
 and `nondegenerate_of_orthogonal` shows the first obstruction: a **degenerate** tangent space
 `T_p X` (one containing a nonzero vector orthogonal to all of `T_p X`, as for the lightlike
 hypersurfaces of a Lorentzian space) admits no `β`-orthogonal projector, and the
 "derive and project" description of the Levi-Civita connection is lost. In a Krein space a
 closed subspace has a `β`-orthogonal projector exactly when it is itself a Krein space with the
-induced form (Bognár, Theorem V.3.4); being closed, nondegenerate and decomposable does not
-suffice (Bognár, Example V.3.3). That characterization uses completeness; it is formalized in
-lc-analysis, `LocallyConvexAnalysis/Krein/OrthoComplemented.lean` (over `ℝ` and `ℂ`), and its
+induced form ([Bog74, Theorem V.3.4]); being closed, nondegenerate and decomposable does not
+suffice ([Bog74, Example V.3.3]). That characterization uses completeness; it is formalized in
+lc-analysis [LCA], `LocallyConvexAnalysis/Krein/OrthoComplemented.lean` (over `ℝ` and `ℂ`), and its
 consequence for this file is in `LocallyConvexManifolds.Metric.KreinProjector`: for
 `β(x, y) = ⟪J x, y⟫` on a Hilbert space, a `β`-orthogonal field of projectors has
 ortho-complemented tangent spaces, which are Krein spaces, and continuous projectors
 (`ProjectorField.isOrthoComplemented_of_isOrthogonal`,
 `ProjectorField.isKreinSpace_of_isOrthogonal`, `ProjectorField.continuous_E_of_isOrthogonal`).
-Example V.3.3 is formalized in lc-analysis,
+[Bog74, Example V.3.3] is formalized in lc-analysis,
 `LocallyConvexAnalysis/Counterexamples/BognarKrein.lean`.
+
+## References
+
+* [J. Bognár, *Indefinite Inner Product Spaces*][Bog74]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [glaroton, *lc-analysis: Michal–Bastiani calculus on locally convex spaces*][LCA]
 -/
 
 @[expose] public section

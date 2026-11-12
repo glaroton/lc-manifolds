@@ -13,30 +13,42 @@ public import Mathlib.LinearAlgebra.Multilinear.TensorProduct
 /-!
 # The wedge product of differential forms
 
-Reference: H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*, §3.6.
-
 Let `β : E₁ × E₂ → E₃` be a continuous bilinear map between locally convex spaces. The wedge
 product of `ω ∈ Ωᵖ(M, E₁)` and `η ∈ Ω^q(M, E₂)` is the form `ω ∧ η ∈ Ω^{p+q}(M, E₃)` given by
 `(ω ∧ η)ₓ(v₁, …, v_{p+q}) = (p! q!)⁻¹ ∑_σ sgn(σ) β(ωₓ(v_{σ 1}, …, v_{σ p}), ηₓ(v_{σ(p+1)}, …))`
-(Glöckner–Neeb, Definition 3.6.3, which follows Lang's conventions).
+([GN26, Definition 3.6.3], which follows Lang's conventions). We follow [GN26, §3.6].
 
-## Main definitions and results
+## Main definitions
 
-* `wedgeFun`: the formula above, for arbitrary functions of the vectors;
+* `wedgeFun`: the formula above, for arbitrary functions of the vectors.
 * `wedgeAlt`: the wedge product of alternating maps, built from `MultilinearMap.alternatization`;
-  its values are given by `wedgeFun` (`wedgeAlt_apply`), so `(ω ∧ η)ₓ` is alternating;
-* `DifferentialForm.wedge`: the wedge product of forms; it is bilinear (`wedge_add_left`,
-  `wedge_smul_left`, …), it is given for `p = q = 1` by
-  `(ω ∧ η)(v₁, v₂) = β(ω v₁, η v₂) − β(ω v₂, η v₁)` (`wedge_apply_one_one`), and it commutes with
-  pullbacks, `φ*(ω ∧ η) = φ*ω ∧ φ*η` (Glöckner–Neeb, (3.28); `pullback_wedge`);
+  its values are given by `wedgeFun` (`wedgeAlt_apply`), so `(ω ∧ η)ₓ` is alternating.
+* `DifferentialForm.wedge`: the wedge product of forms.
 * `DifferentialForm.smulFun`: the product `f ω` of a form by a smooth real function
-  (Glöckner–Neeb, Remark 3.6.5), with the module identities over `C^∞(M, ℝ)`; it is the wedge
-  product with the `0`-form `f` and the scalar multiplication (`wedge_ofFunction`).
+  ([GN26, Remark 3.6.5]).
 
-Glöckner–Neeb form the product `f ∧ ω`, with `f` on the left. We put `f` on the right, so that
+## Main results
+
+* `DifferentialForm.wedge_add_left`, `DifferentialForm.wedge_smul_left`, …: the wedge product is
+  bilinear.
+* `DifferentialForm.wedge_apply_one_one`: for `p = q = 1`,
+  `(ω ∧ η)(v₁, v₂) = β(ω v₁, η v₂) − β(ω v₂, η v₁)`.
+* `DifferentialForm.pullback_wedge`: the wedge product commutes with pullbacks,
+  `φ*(ω ∧ η) = φ*ω ∧ φ*η` ([GN26, (3.28)]).
+* `DifferentialForm.smulFun_add`, `DifferentialForm.mul_smulFun`, …: the module identities over
+  `C^∞(M, ℝ)`; `DifferentialForm.wedge_ofFunction`: `smulFun` is the wedge product with the
+  `0`-form `f` and the scalar multiplication.
+
+## Implementation notes
+
+[GN26] form the product `f ∧ ω`, with `f` on the left. We put `f` on the right, so that
 the degree is `p + 0`, which is definitionally `p`; for `0`-forms both orders give `f(x) ωₓ`.
 
 No completeness of the spaces is assumed.
+
+## References
+
+* [H. Glöckner, K.-H. Neeb, *Infinite-Dimensional Lie Groups*][GN26]
 -/
 
 @[expose] public section
@@ -56,8 +68,8 @@ variable {V E₁ E₂ E₃ : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGrou
   [AddCommGroup E₂] [Module ℝ E₂] [AddCommGroup E₃] [Module ℝ E₃]
   (β : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] E₃) {p q : ℕ}
 
-/-- The wedge product of two functions of `p` and `q` vectors (Glöckner–Neeb,
-Definition 3.6.3). -/
+/-- The wedge product of two functions of `p` and `q` vectors [GN26,
+Definition 3.6.3]. -/
 def wedgeFun (f : (Fin p → V) → E₁) (g : (Fin q → V) → E₂) (v : Fin (p + q) → V) : E₃ :=
   ((p.factorial : ℝ) * q.factorial)⁻¹ • ∑ σ : Perm (Fin (p + q)),
     ((Perm.sign σ : ℤ) : ℝ) •
@@ -95,8 +107,8 @@ theorem wedgeFun_congr {f f' : (Fin p → V) → E₁} {g g' : (Fin q → V) →
   simp only [wedgeFun, hf, hg]
 
 omit [AddCommGroup V] [Module ℝ V] in
-/-- For `p = q = 1`: `(f ∧ g)(v₁, v₂) = β(f v₁, g v₂) − β(f v₂, g v₁)` (Glöckner–Neeb,
-Definition 3.6.3). -/
+/-- For `p = q = 1`: `(f ∧ g)(v₁, v₂) = β(f v₁, g v₂) − β(f v₂, g v₁)` [GN26,
+Definition 3.6.3]. -/
 theorem wedgeFun_one_one (f : (Fin 1 → V) → E₁) (g : (Fin 1 → V) → E₂) (v : Fin 2 → V) :
     wedgeFun β f g v = β (f ![v 0]) (g ![v 1]) - β (f ![v 1]) (g ![v 0]) := by
   have huniv : (Finset.univ : Finset (Perm (Fin 2))) = {1, swap 0 1} := by decide
@@ -174,7 +186,7 @@ namespace DifferentialForm
 
 variable (β) in
 /-- The wedge product `ω ∧ η ∈ Ω^{p+q}(M, E₃)` of `ω ∈ Ωᵖ(M, E₁)` and `η ∈ Ω^q(M, E₂)` with
-respect to a continuous bilinear map `β : E₁ × E₂ → E₃` (Glöckner–Neeb, Definition 3.6.3). -/
+respect to a continuous bilinear map `β : E₁ × E₂ → E₃` [GN26, Definition 3.6.3]. -/
 def wedge (hβ : Continuous fun r : E₁ × E₂ ↦ β r.1 r.2) (ω : DifferentialForm E M E₁ p)
     (η : DifferentialForm E M E₂ q) : DifferentialForm E M E₃ (p + q) where
   toFun x := wedgeFun β (ω x) (η x)
@@ -199,8 +211,8 @@ theorem localRep_wedge (ω : DifferentialForm E M E₁ p) (η : DifferentialForm
   rfl
 
 omit [MBManifold E M] in
-/-- For `p = q = 1`: `(ω ∧ η)ₓ(v₁, v₂) = β(ωₓ v₁, ηₓ v₂) − β(ωₓ v₂, ηₓ v₁)` (Glöckner–Neeb,
-Definition 3.6.3). -/
+/-- For `p = q = 1`: `(ω ∧ η)ₓ(v₁, v₂) = β(ωₓ v₁, ηₓ v₂) − β(ωₓ v₂, ηₓ v₁)` [GN26,
+Definition 3.6.3]. -/
 theorem wedge_apply_one_one (ω : DifferentialForm E M E₁ 1) (η : DifferentialForm E M E₂ 1)
     (x : M) (v : Fin 2 → E) :
     ω.wedge β hβ η x v = β (ω x ![v 0]) (η x ![v 1]) - β (ω x ![v 1]) (η x ![v 0]) :=
@@ -239,7 +251,7 @@ theorem wedge_smul_right (c : ℝ) (ω : DifferentialForm E M E₁ p)
 
 variable (M p q) in
 /-- The wedge product as a bilinear map `Ωᵖ(M, E₁) × Ω^q(M, E₂) → Ω^{p+q}(M, E₃)`
-(Glöckner–Neeb, Definition 3.6.3). -/
+[GN26, Definition 3.6.3]. -/
 def wedgeBilinear :
     DifferentialForm E M E₁ p →ₗ[ℝ] DifferentialForm E M E₂ q →ₗ[ℝ]
       DifferentialForm E M E₃ (p + q) :=
@@ -254,7 +266,7 @@ variable {E₀ : Type u} [AddCommGroup E₀] [Module ℝ E₀] [TopologicalSpace
   [IsTopologicalAddGroup E₀] [ContinuousSMul ℝ E₀] [LocallyConvexSpace ℝ E₀] [T2Space E₀]
   {N : Type*} [TopologicalSpace N] [ChartedSpace E₀ N] [MBManifold E₀ N] {φ : N → M}
 
-/-- `φ*(ω ∧ η) = φ*ω ∧ φ*η` (Glöckner–Neeb, (3.28)). -/
+/-- `φ*(ω ∧ η) = φ*ω ∧ φ*η` [GN26, (3.28)]. -/
 theorem pullback_wedge (hφ : SmoothMBM E₀ E φ) (ω : DifferentialForm E M E₁ p)
     (η : DifferentialForm E M E₂ q) :
     (ω.wedge β hβ η).pullback hφ = (ω.pullback hφ).wedge β hβ (η.pullback hφ) :=
@@ -271,8 +283,8 @@ namespace DifferentialForm
 variable {F : Type u} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F]
   [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F] {n : ℕ}
 
-/-- The product `f ω` of a form by a smooth real function: `(f ω)ₓ = f(x) ωₓ` (Glöckner–Neeb,
-Remark 3.6.5). -/
+/-- The product `f ω` of a form by a smooth real function: `(f ω)ₓ = f(x) ωₓ` [GN26,
+Remark 3.6.5]. -/
 def smulFun (f : M → ℝ) (hf : ∀ k, IsCkFunction E k f) (ω : DifferentialForm E M F n) :
     DifferentialForm E M F n where
   toFun x v := f x • ω x v
@@ -342,7 +354,7 @@ theorem continuous_smulRight : Continuous fun r : F × ℝ ↦ smulRight r.1 r.2
   continuous_snd.smul continuous_fst
 
 /-- The product `f ω` is the wedge product of `ω` with the `0`-form `f`, formed with the scalar
-multiplication (Glöckner–Neeb, Remark 3.6.5). -/
+multiplication [GN26, Remark 3.6.5]. -/
 theorem wedge_ofFunction {f : M → ℝ} (hf : SmoothMBM E ℝ f) (hf' : ∀ k, IsCkFunction E k f)
     (ω : DifferentialForm E M F n) :
     ω.wedge smulRight continuous_smulRight (ofFunction f hf) = smulFun f hf' ω := by

@@ -11,14 +11,24 @@ public import LocallyConvexManifolds.Tangent.Map
 /-!
 # Lifting curves versus lifting neighborhoods
 
-References: G. Larotonda, *The metric geometry of infinite dimensional Lie groups and their
-homogeneous spaces*, Forum Math. 31 (2019), §3, Lemma 3.19.
-
 This file explains where the two continuity conditions of `LocallyConvexManifolds.Metric.Finsler`
 come from. Let `π : N → M` be a `C¹` map (written `pr` in the code, since `π` denotes the real
 number) and `μ` a field of Finsler seminorms on `M`. Typically `μ` is defined through `π`, as a
 quotient metric `μ(w) = inf {μ_N(v) : Tπ v = w}`, and what one controls is the function `μ ∘ Tπ` on
-`TN`.
+`TN`. The motivating example is [Lar19, §3, Lemma 3.19].
+
+## Main definitions
+
+* `FinslerSeminormField.toFinslerLengthStructureOfLifts`: `μ` as a Finsler length structure, when
+  `C¹` curves lift locally along `π`.
+* `FinslerSeminormField.toFinslerMetricOfIsQuotientMap`: `μ` as a Finsler metric, when `Tπ` is a
+  quotient map.
+
+## Main results
+
+* `tangentMap_velocity`: the chain rule `γ̇ = Tπ(Γ̇)` for a lift `Γ` of `γ`.
+
+## Lifting curves and lifting neighborhoods
 
 * **Lifting curves gives a Finsler length structure**
   (`FinslerSeminormField.toFinslerLengthStructureOfLifts`). If every `C¹` curve in `M` has, near
@@ -35,13 +45,18 @@ kernel) has local smooth sections through every point, by the inverse function t
 section), so the hypotheses on `π` of both statements hold. On locally convex manifolds there is
 no inverse function theorem and neither property is automatic: a curve may have `C¹` lifts while
 `Tπ` is not a quotient map. This is the situation of homogeneous spaces `G/K` of infinite
-dimensional Lie groups in Larotonda, Lemma 3.19: under a uniformity assumption on the metric of
+dimensional Lie groups in [Lar19, Lemma 3.19]: under a uniformity assumption on the metric of
 `G`, the quotient metric is continuous along paths that have piecewise smooth lifts, and
 continuous on the tangent bundle when `π_*` is a quotient map.
 
 The difference between the two notions is not specific to infinite dimensions: on `ℝ²` there is a
 Finsler length structure that is not a Finsler metric
 (`LocallyConvexManifolds.Examples.FinslerCusp`).
+
+## References
+
+* [G. Larotonda, *The metric geometry of infinite dimensional Lie groups and their homogeneous
+  spaces*][Lar19]
 -/
 
 @[expose] public section
