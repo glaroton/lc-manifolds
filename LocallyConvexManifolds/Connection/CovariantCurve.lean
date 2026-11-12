@@ -17,7 +17,7 @@ along `α` is, in the chart,
 (`Connection.covDerivAlong`, computed in the preferred chart at `α t`). It does not depend on the
 chart (`Connection.covDerivAlong_chart`): differentiating `μⱼ = dτ(α̃) μᵢ` produces
 `d²τ(α̃̇, μᵢ)`, which cancels with the term of the change of charts law of `Γ`. We follow
-[Lan99, §VIII.3] and [Lar22, Cap. 6].
+[Lan99, §VIII.3] and [Lar24, Cap. 6].
 
 A geodesic is a curve with `D_t α' = 0`, that is `α̃̈ = Γ(α̃̇, α̃̇)` in charts
 (`Connection.IsGeodesic`).
@@ -42,7 +42,7 @@ theorems for ODEs, which fail in general locally convex spaces.
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 -/
 
 @[expose] public section

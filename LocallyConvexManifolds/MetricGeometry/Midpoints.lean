@@ -11,7 +11,7 @@ public import Mathlib.Analysis.SpecificLimits.Basic
 /-!
 # Approximate midpoints and interior metric spaces
 
-This file follows [Lar22, Cap. 8, §8.1 (Lema 8.1.9, Lema 8.1.10, Problemas 8.III and 8.IV)].
+This file follows [Lar24, Cap. 8, §8.1 (Lema 8.1.9, Lema 8.1.10, Problemas 8.III and 8.IV)].
 
 Let `(X, d)` be a pseudometric space. We say that `X` has **approximate midpoints**
 (`HasApproxMidpoints`) if for all `x, y` and `ε > 0` there is `z` with
@@ -28,13 +28,13 @@ closed balls `B̄_{r₁}(x)` and `B̄_{r₂}(y)` is at most `d(x, y) - r₁ - r�
 ## Main results
 
 * `IsInterior.hasBallCondition`: an interior space satisfies the ball condition
-  ([Lar22, Lema 8.1.10], first part);
+  ([Lar24, Lema 8.1.10], first part);
 * `HasBallCondition.hasApproxMidpoints`: the ball condition gives approximate midpoints
-  ([Lar22, Problema 8.III]);
+  ([Lar24, Problema 8.III]);
 * `HasApproxMidpoints.hasBallCondition`: approximate midpoints give the ball condition
-  ([Lar22, Problema 8.IV]), without any completeness assumption;
+  ([Lar24, Problema 8.IV]), without any completeness assumption;
 * `isInterior_of_approx_midpoint`: **a complete space with approximate midpoints is an interior
-  space** (the converse part of [Lar22, Lema 8.1.10]);
+  space** (the converse part of [Lar24, Lema 8.1.10]);
 * `isInterior_iff_hasApproxMidpoints`, `isInterior_iff_hasBallCondition`: the resulting
   characterizations of complete interior spaces.
 
@@ -44,10 +44,10 @@ Given `x, y` with `δ = d(x, y)` and `ε > 0`, repeated choice of approximate mi
 `ε / 4ⁿ⁺¹` produces dyadic chains `Zₙ : ℕ → X` with `Zₙ 0 = x`, `Zₙ 2ⁿ = y`,
 `Zₙ₊₁ (2j) = Zₙ j` and `d(Zₙ j, Zₙ (j + 1)) ≤ (δ + ε) / 2ⁿ` (`HasApproxMidpoints.exists_chain`);
 this is the construction of the book, with the factors `∏ (1 + εₖ)` replaced by additive errors.
-The chains alone give [Lar22, Problema 8.IV]: take the points of index `⌊r₁ / c⌋` and
+The chains alone give [Lar24, Problema 8.IV]: take the points of index `⌊r₁ / c⌋` and
 `2ⁿ - ⌊r₂ / c⌋`, where `c = (δ + ε) / 2ⁿ` is the step.
 
-Instead of extending a Lipschitz map from the dyadic rationals to `[0, 1]` ([Lar22, Lema 8.1.9]),
+Instead of extending a Lipschitz map from the dyadic rationals to `[0, 1]` ([Lar24, Lema 8.1.9]),
 the curve is obtained as the pointwise limit of the step functions `fₙ t = Zₙ ⌊2ⁿ t⌋`: consecutive
 ones are `(δ + ε) / 2ⁿ⁺¹`-close, so they converge by completeness, and the estimate
 `d(fₙ s, fₙ t) ≤ (δ + ε) |s - t| + (δ + ε) / 2ⁿ` passes to the limit, which is therefore
@@ -56,7 +56,7 @@ values of the limit at `0` and `1` are chosen to be `x` and `y`.
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 -/
 
 @[expose] public section
@@ -89,7 +89,7 @@ def HasBallCondition (X : Type*) [PseudoMetricSpace X] : Prop :=
 theorem IsInterior.hasApproxMidpoints (h : IsInterior X) : HasApproxMidpoints X :=
   fun x y _ hε ↦ h.exists_approx_midpoint x y hε
 
-/-- **The ball condition in interior spaces** ([Lar22, Lema 8.1.10, first part]): if
+/-- **The ball condition in interior spaces** ([Lar24, Lema 8.1.10, first part]): if
 `r₁, r₂ > 0` and `r₁ + r₂ ≤ d(x, y)`, then for every `ε > 0` there are `p ∈ B̄_{r₁}(x)` and
 `q ∈ B̄_{r₂}(y)` with `d(p, q) ≤ d(x, y) - r₁ - r₂ + ε`. Take an approximate intermediate point
 `p` at distance `r₁` from `x`, and then an approximate intermediate point `q` between `p` and `y`
@@ -112,11 +112,11 @@ theorem IsInterior.exists_dist_le_sub_sub (h : IsInterior X) {x y : X} {r₁ r�
     (by linarith) (by linarith) (by ring) hη
   exact ⟨q, by rw [mem_closedBall]; linarith, by linarith⟩
 
-/-- Interior spaces satisfy the ball condition ([Lar22, Lema 8.1.10, first part]). -/
+/-- Interior spaces satisfy the ball condition ([Lar24, Lema 8.1.10, first part]). -/
 theorem IsInterior.hasBallCondition (h : IsInterior X) : HasBallCondition X :=
   fun _ _ _ _ hr₁ hr₂ hr _ hε ↦ h.exists_dist_le_sub_sub hr₁ hr₂ hr hε
 
-/-- **The ball condition gives approximate midpoints** ([Lar22, Problema 8.III]): apply it
+/-- **The ball condition gives approximate midpoints** ([Lar24, Problema 8.III]): apply it
 with `r₁ = r₂ = d(x, y) / 2`. -/
 theorem HasBallCondition.hasApproxMidpoints (h : HasBallCondition X) : HasApproxMidpoints X := by
   intro x y ε hε
@@ -165,7 +165,7 @@ private theorem chain_two_pow (m : ℕ → X → X → X) (x y : X) (n : ℕ) :
 
 /-- **Dyadic chains of approximate midpoints.** In a space with approximate midpoints, for
 `x, y` and `ε > 0` there are chains `Zₙ : ℕ → X` with `Zₙ 0 = x`, `Zₙ 2ⁿ = y`,
-`Zₙ₊₁ (2j) = Zₙ j` and steps `d(Zₙ j, Zₙ (j + 1)) ≤ (d(x, y) + ε) / 2ⁿ` ([Lar22, proof of
+`Zₙ₊₁ (2j) = Zₙ j` and steps `d(Zₙ j, Zₙ (j + 1)) ≤ (d(x, y) + ε) / 2ⁿ` ([Lar24, proof of
 Lema 8.1.10]). The midpoints of the `n`-th step are chosen with error `ε / 4ⁿ⁺¹`, and the steps
 are bounded by `(d(x, y) + ε) / 2ⁿ - ε / 4ⁿ`. -/
 theorem HasApproxMidpoints.exists_chain (h : HasApproxMidpoints X) (x y : X) {ε : ℝ}
@@ -211,7 +211,7 @@ theorem dist_le_of_dist_succ_le {Z : ℕ → X} {c : ℝ} (hZ : ∀ j, dist (Z j
   rw [Nat.card_Ico, nsmul_eq_mul, Nat.cast_sub hij, abs_sub_comm,
     abs_of_nonneg (sub_nonneg.mpr (Nat.cast_le.mpr hij))]
 
-/-- **Approximate midpoints give the ball condition** ([Lar22, Problema 8.IV]), in any
+/-- **Approximate midpoints give the ball condition** ([Lar24, Problema 8.IV]), in any
 pseudometric space. In a dyadic chain from `x` to `y` with step `c = (d(x, y) + ε / 2) / 2ⁿ`, take
 the points of indices `⌊r₁ / c⌋` and `2ⁿ - ⌊r₂ / c⌋`; they are at distance
 `≤ d(x, y) - r₁ - r₂ + ε / 2 + 2c`. -/
@@ -295,7 +295,7 @@ private theorem abs_floor_sub_floor_le (s t : ℝ) : |(⌊s⌋₊ : ℝ) - ⌊t�
     linarith
   · linarith [Nat.floor_le ht.le, Nat.sub_one_lt_floor s]
 
-/-- **Curves of almost minimal length from approximate midpoints** ([Lar22, proof of
+/-- **Curves of almost minimal length from approximate midpoints** ([Lar24, proof of
 Lema 8.1.10]): in a complete space with approximate midpoints, for `x, y` and `ε > 0` there is a
 continuous curve from `x` to `y` of length `≤ d(x, y) + ε`; it is `(d(x, y) + ε)`-Lipschitz on
 `[0, 1]`. It is the pointwise limit of the step functions `t ↦ Zₙ ⌊2ⁿ t⌋` given by the dyadic
@@ -385,8 +385,8 @@ theorem HasApproxMidpoints.exists_rectPath_length_le [CompleteSpace X] (h : HasA
   rw [Function.comp_id, eVariationOn_id_Icc, sub_zero, ENNReal.ofReal_one, mul_one] at this
   exact this
 
-/-- **A complete space with approximate midpoints is an interior space** ([Lar22, Lema 8.1.10],
-converse part, through [Lar22, Problema 8.III]): if for all `x, y` and `ε > 0` there is `z`
+/-- **A complete space with approximate midpoints is an interior space** ([Lar24, Lema 8.1.10],
+converse part, through [Lar24, Problema 8.III]): if for all `x, y` and `ε > 0` there is `z`
 with `max (d(x, z), d(z, y)) ≤ d(x, y) / 2 + ε`, then `d = d_ℓ`. -/
 theorem isInterior_of_approx_midpoint [CompleteSpace X]
     (h : ∀ x y : X, ∀ ε > 0, ∃ z, dist x z ≤ dist x y / 2 + ε ∧ dist z y ≤ dist x y / 2 + ε) :
@@ -405,12 +405,12 @@ theorem HasApproxMidpoints.isInterior [CompleteSpace X] (h : HasApproxMidpoints 
     IsInterior X :=
   isInterior_of_approx_midpoint h
 
-/-- **A complete space satisfying the ball condition is an interior space** ([Lar22,
+/-- **A complete space satisfying the ball condition is an interior space** ([Lar24,
 Lema 8.1.10, converse part]). -/
 theorem HasBallCondition.isInterior [CompleteSpace X] (h : HasBallCondition X) : IsInterior X :=
   h.hasApproxMidpoints.isInterior
 
-/-- A complete space is interior iff it has approximate midpoints ([Lar22, Lema 8.1.10 and
+/-- A complete space is interior iff it has approximate midpoints ([Lar24, Lema 8.1.10 and
 Problema 8.III]). -/
 theorem isInterior_iff_hasApproxMidpoints [CompleteSpace X] :
     IsInterior X ↔ HasApproxMidpoints X :=

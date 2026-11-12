@@ -10,24 +10,24 @@ public import LocallyConvexManifolds.MetricGeometry.HopfRinow
 /-!
 # Short geodesics and geodesic spaces
 
-This file follows [Lar22, §8.1.2 (Definición 8.1.11, Observación 8.1.13) and Teorema 8.2.3].
+This file follows [Lar24, §8.1.2 (Definición 8.1.11, Observación 8.1.13) and Teorema 8.2.3].
 
 ## Main definitions
 
-* `IsShortGeodesic γ L` ([Lar22, Definición 8.1.11]): `d(γ s, γ t) = L |s − t|` on `[0, 1]`.
+* `IsShortGeodesic γ L` ([Lar24, Definición 8.1.11]): `d(γ s, γ t) = L |s − t|` on `[0, 1]`.
 * `IsGeodesicSpace`: an interior space in which any two points are joined by a short geodesic.
 
 ## Main results
 
 * `IsShortGeodesic.eVariationOn_eq`: the length of a short geodesic `γ` with constant `L` is `L`.
-* `RectPath.edist_eq_of_length_eq` ([Lar22, Observación 8.1.13]): if a curve realizes the distance
+* `RectPath.edist_eq_of_length_eq` ([Lar24, Observación 8.1.13]): if a curve realizes the distance
   between its end points, so does each of its sub-arcs.
-* `IsInterior.isGeodesicSpace` ([Lar22, Teorema 8.2.3]): a complete, locally compact interior
+* `IsInterior.isGeodesicSpace` ([Lar24, Teorema 8.2.3]): a complete, locally compact interior
   metric space is geodesic.
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 -/
 
 @[expose] public section
@@ -110,7 +110,7 @@ theorem RectPath.edist_eq_of_length_eq {x y : X} (p : RectPath x y) (hp : p.leng
   rw [← ENNReal.ofReal_toReal hV2, ← ENNReal.ofReal_toReal (edist_ne_top (f s) (f t))]
   exact ENNReal.ofReal_le_ofReal (by linarith)
 
-/-- A **geodesic space** ([Lar22, Definición 8.1.11]): an interior metric space in which any
+/-- A **geodesic space** ([Lar24, Definición 8.1.11]): an interior metric space in which any
 two points are joined by a short geodesic. -/
 def IsGeodesicSpace (X : Type*) [PseudoMetricSpace X] : Prop :=
   IsInterior X ∧ ∀ x y : X, ∃ γ : ℝ → X, γ 0 = x ∧ γ 1 = y ∧ IsShortGeodesic γ (dist x y)

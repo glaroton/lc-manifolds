@@ -19,7 +19,7 @@ the forward lengths of the continuous curves from `x` to `y`. We prove the asymm
 the shortest-path part of the metric Hopf–Rinow theorem: if the forward ball
 `{z | b(x, z) ≤ b(x, y) + 1}` is compact and the asymmetry is bounded on it, there is a continuous
 curve from `x` to `y` of forward length `b(x, y)`. The setting is that of [Men13, §3]; the
-symmetric case is [Lar22, Cap. 8, Teorema 8.2.3] (see `HopfRinow.lean`).
+symmetric case is [Lar24, Cap. 8, Teorema 8.2.3] (see `HopfRinow.lean`).
 
 ## Main results
 
@@ -50,7 +50,7 @@ Since `X` is only pseudo-(extended) metric, `[T2Space X]` is used to identify `�
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 * [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 
@@ -88,7 +88,7 @@ theorem continuous_bdist : Continuous fun p : X × X ↦ bdist p.1 p.2 := by
   · exact le_max_right (edist p.1 q.1) (edist p.2 q.2)
 
 /-- **Existence of shortest forward curves** (the asymmetric analogue of the shortest-path part
-of [Lar22, Teorema 8.2.3]). Let `X` be a g-intrinsic asymmetric space and `x, y ∈ X` with
+of [Lar24, Teorema 8.2.3]). Let `X` be a g-intrinsic asymmetric space and `x, y ∈ X` with
 `b(x, y) < ∞`. If the forward ball `B = {z | b(x, z) ≤ b(x, y) + 1}` is compact and the
 asymmetry is bounded on it, `b(w, z) ≤ C b(z, w)` for `z, w ∈ B`, then there is a curve from
 `x` to `y`, continuous for the symmetrized topology, whose forward length is `b(x, y)`.

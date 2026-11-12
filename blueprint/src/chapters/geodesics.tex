@@ -184,7 +184,7 @@ $\alpha(t)$.
   $(a, t_1 + \varepsilon)$, and $t_1 + \varepsilon > b$.
 \end{proof}
 
-\begin{theorem}[Complete Finsler manifolds: geodesics extend {\cite[Prop.~9.2.1]{Lar22}}]
+\begin{theorem}[Complete Finsler manifolds: geodesics extend {\cite[Prop.~9.2.1]{Lar24}}]
   \label{thm:finsler-geodesic-extension}
   \lean{LocallyConvex.Manifolds.Connection.IsGeodesicOn.exists_extend_of_complete}
   \leanok
@@ -205,7 +205,7 @@ $\alpha(t)$.
 \end{proof}
 
 \begin{remark}
-  In \cite{Lar22} the metric is invariant under the parallel transport of the spray, so geodesics
+  In \cite{Lar24} the metric is invariant under the parallel transport of the spray, so geodesics
   have constant speed; we only use bounded speed. Since $\mu$ need not be reversible, both
   $\mu(\dot\alpha)$ and $\mu(-\dot\alpha)$ have to be bounded. With maximal geodesics, the
   statement ``every geodesic is defined on $\mathbb{R}$'' is Theorem~\ref{thm:finsler-geodesically-complete}.
@@ -245,7 +245,7 @@ $\alpha(t)$.
   Theorem~\ref{thm:geodesic-spray-flow}. We do not claim this argument is new.
 \end{proof}
 
-\begin{definition}[The exponential map {\cite[\S IV.4]{Lan99}, \cite[\S9.2]{Lar22}}]
+\begin{definition}[The exponential map {\cite[\S IV.4]{Lan99}, \cite[\S9.2]{Lar24}}]
   \label{def:exp}
   \lean{LocallyConvex.Manifolds.Connection.expDomain, LocallyConvex.Manifolds.Connection.exp,
     LocallyConvex.Manifolds.Connection.expDomainAt, LocallyConvex.Manifolds.Connection.expAt,
@@ -302,7 +302,7 @@ $\alpha(t)$.
 \end{proof}
 
 \begin{theorem}[$D(\exp)$ is open and $\exp$ is smooth {\cite[\S IV.4, p.~107]{Lan99},
-  \cite[\S6.1.2]{Lar22}}]
+  \cite[\S6.1.2]{Lar24}}]
   \label{thm:exp-smooth}
   \lean{LocallyConvex.Manifolds.Connection.expDomain_eq_preimage_flowDomain,
     LocallyConvex.Manifolds.Connection.exp_eq_proj_flow,
@@ -332,7 +332,7 @@ $\alpha(t)$.
 \end{proof}
 
 \begin{theorem}[$\exp_p$ is a local diffeomorphism at $0$ {\cite[Thm.~IV.4.1, p.~108]{Lan99},
-  \cite[Obs.~6.2.2, p.~155]{Lar22}}]
+  \cite[Obs.~6.2.2, p.~157]{Lar24}}]
   \label{thm:exp-local-diffeo}
   \lean{LocallyConvex.Manifolds.exists_openPartialHomeomorph_of_contDiffOn,
     LocallyConvex.Manifolds.smoothMBMOn_trans_chart_symm,
@@ -359,7 +359,7 @@ $\alpha(t)$.
 \end{proof}
 
 \begin{theorem}[$G = (\pi, \exp)$ is a local diffeomorphism at $0_p$
-  {\cite[Prop.~VIII.5.1, p.~215]{Lan99}, \cite[\S6.2.1, p.~156]{Lar22}}]
+  {\cite[Prop.~VIII.5.1, p.~215]{Lan99}, \cite[\S6.2.1, p.~158]{Lar24}}]
   \label{thm:exp-pair-local-diffeo}
   \lean{LocallyConvex.Manifolds.Connection.expChart,
     LocallyConvex.Manifolds.Connection.expChartDomain,
@@ -378,7 +378,7 @@ $\alpha(t)$.
   neighbourhood $V \subseteq D(\exp)$ of $0_p$ onto an open neighbourhood of $(p, p)$. There is an
   open $W \ni p$ with $W \times W \subseteq G(V)$: any $x, y \in W$ are joined by a unique geodesic
   $t \mapsto \exp(tv)$, $0 \le t \le 1$, with $v \in V$, and $v$ depends smoothly on $(x, y)$
-  \cite[Teo.~6.2.3 (1)]{Lar22}, \cite[Cor.~VIII.5.2 (1)]{Lan99}.
+  \cite[Teo.~6.2.3 (1)]{Lar24}, \cite[Cor.~VIII.5.2 (1)]{Lan99}.
 \end{theorem}
 
 \begin{proof}
@@ -390,7 +390,7 @@ $\alpha(t)$.
   concludes. Uniqueness is injectivity of $G$ on $V$.
 \end{proof}
 
-\begin{theorem}[Uniformly normal neighbourhoods {\cite[Teo.~6.2.3 (2), p.~156]{Lar22},
+\begin{theorem}[Uniformly normal neighbourhoods {\cite[Teo.~6.2.3 (2), p.~158]{Lar24},
   \cite[Cor.~VIII.5.2 (2), p.~216]{Lan99}}]
   \label{thm:uniformly-normal}
   \lean{LocallyConvex.Manifolds.OpenPartialHomeomorph.slice,
@@ -422,7 +422,7 @@ $\alpha(t)$.
   not formalized.
 \end{proof}
 
-\begin{theorem}[Complete Finsler manifolds are geodesically complete {\cite[Prop.~9.2.1]{Lar22}}]
+\begin{theorem}[Complete Finsler manifolds are geodesically complete {\cite[Prop.~9.2.1]{Lar24}}]
   \label{thm:finsler-geodesically-complete}
   \lean{LocallyConvex.Manifolds.Connection.velocity_maxGeodesic_zero,
     LocallyConvex.Manifolds.Connection.not_bddAbove_maxInterval_of_complete,
@@ -464,7 +464,7 @@ $\alpha(t)$.
   need not exist: on the ellipsoid image of the unit sphere of a Hilbert space by
   $A = \mathrm{diag}(1, 1 + 2^{-1}, 1 + 2^{-2}, \dots)$, a complete Riemannian Hilbert manifold,
   $e_0$ and $-e_0$ are at distance $\pi$ but every curve joining them is strictly longer
-  (McAlpin, as presented in \cite[Ejemplo~10.4.2, pp.~295--296]{Lar22}). No local compactness is
+  (McAlpin, as presented in \cite[Ejemplo~10.4.2, pp.~297--298]{Lar24}). No local compactness is
   used in the proof above: the extension rests on the uniform existence time of geodesics with
   bounded initial velocity in a chart and on the lower bound of $\mu$.
 \end{remark}

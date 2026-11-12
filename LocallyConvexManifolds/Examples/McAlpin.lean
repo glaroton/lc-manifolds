@@ -14,7 +14,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 /-!
 # McAlpin's example: a complete Riemannian manifold without shortest curves
 
-This is [Lar22, Ejemplo 10.4.2], taken from McAlpin's thesis [McA65].
+This is [Lar24, Ejemplo 10.4.2], taken from McAlpin's thesis [McA65].
 
 Let `H = ℓ²(ℕ)` (real), with standard basis `eₙ` (`e n`), and let `A` be the diagonal operator
 `A eₙ = aₙ eₙ` with `a₀ = 1` and `aₙ = 1 + 2⁻ⁿ` for `n ≥ 1`. Let `S` be the unit sphere and
@@ -30,7 +30,7 @@ The distance `d_M` (`pathDist M`) is the infimum of the lengths of the chains in
 
 In finite dimension this cannot happen: on a connected, finite-dimensional Riemannian manifold
 which is complete as a metric space, any two points are joined by a shortest geodesic
-(Hopf–Rinow, [Lar22, Corolario 10.4.3]; see
+(Hopf–Rinow, [Lar24, Corolario 10.4.3]; see
 `LocallyConvexManifolds/Metric/FinslerHopfRinow.lean` for the Finsler version). In McAlpin's example
 the infimum is approached by the arcs `βₙ`, which run along the directions `eₙ` where `A` is closer
 and closer to an isometry, but never attained, since the only direction where `A` is an isometry is
@@ -71,7 +71,7 @@ The completeness of `M` is not formalized here (only the geometric statements ab
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 * [J. McAlpin, *Infinite dimensional manifolds and Morse theory*][McA65]
 -/
 
@@ -674,7 +674,7 @@ theorem pathDist_le_pi : pathDist M (e 0) (-e 0) ≤ ENNReal.ofReal π := by
   refine (iInf₂_le [β n] (isChain_β hn)).trans (ENNReal.ofReal_le_ofReal ?_)
   simpa using length_β_le hn
 
-/-- **McAlpin's example** ([Lar22, Ejemplo 10.4.2]):
+/-- **McAlpin's example** ([Lar24, Ejemplo 10.4.2]):
 `d_M(e₀, -e₀) = π`. -/
 theorem pathDist_eq_pi : pathDist M (e 0) (-e 0) = ENNReal.ofReal π :=
   le_antisymm pathDist_le_pi <| le_iInf₂ fun _ h ↦ ENNReal.ofReal_le_ofReal (pi_lt_chainLength h).le

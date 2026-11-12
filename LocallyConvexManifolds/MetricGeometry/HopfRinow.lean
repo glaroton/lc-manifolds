@@ -13,11 +13,11 @@ public import Mathlib.Topology.MetricSpace.Lipschitz
 /-!
 # The metric Hopf–Rinow theorem
 
-This file follows [Lar22, Cap. 8, §8.2], which follows Gromov [Gro99].
+This file follows [Lar24, Cap. 8, §8.2], which follows Gromov [Gro99].
 
 Let `(X, d)` be an interior metric space (`IsInterior X`, see `LengthMetric.lean`): the distance
 between two points is the infimum of the lengths of the continuous curves joining them. The
-**metric Hopf–Rinow theorem** ([Lar22, Teorema 8.2.3], due in this generality to Cohn-Vossen)
+**metric Hopf–Rinow theorem** ([Lar24, Teorema 8.2.3], due in this generality to Cohn-Vossen)
 says:
 
 1. if `X` is complete and the closed balls `B̄_r(x)` are compact for all `0 < r < ρ`, then
@@ -27,7 +27,7 @@ says:
    two points are joined by a shortest curve, of length equal to their distance
    (`IsInterior.exists_rectPath_length_eq`).
 
-Conversely, a space whose closed balls are all compact is complete ([Lar22, Observación 8.2.4],
+Conversely, a space whose closed balls are all compact is complete ([Lar24, Observación 8.2.4],
 `completeSpace_of_isCompact_closedBall`).
 
 ## Main results
@@ -36,12 +36,12 @@ Conversely, a space whose closed balls are all compact is complete ([Lar22, Obse
   intermediate points, generalizing the approximate midpoints of
   `IsInterior.exists_approx_midpoint`;
 * `RectPath.exists_lipschitz_reparam`: a curve of finite length `ℓ` can be reparametrized on
-  `[0, 1]` as an `ℓ`-Lipschitz curve ([Lar22, Observación 8.1.5, Corolario 8.1.6]);
+  `[0, 1]` as an `ℓ`-Lipschitz curve ([Lar24, Observación 8.1.5, Corolario 8.1.6]);
 * `IsInterior.isCompact_closedBall_of_lt`, `IsInterior.isCompact_closedBall`,
-  `IsInterior.properSpace`: [Lar22, Teorema 8.2.3], item 1 and the first half of item 2;
+  `IsInterior.properSpace`: [Lar24, Teorema 8.2.3], item 1 and the first half of item 2;
 * `IsInterior.exists_rectPath_length_eq_of_isCompact`, `IsInterior.exists_rectPath_length_eq`:
-  existence of shortest curves, the second half of [Lar22, Teorema 8.2.3], item 2;
-* `completeSpace_of_isCompact_closedBall`: [Lar22, Observación 8.2.4].
+  existence of shortest curves, the second half of [Lar24, Teorema 8.2.3], item 2;
+* `completeSpace_of_isCompact_closedBall`: [Lar24, Observación 8.2.4].
 
 ## Implementation notes
 
@@ -61,7 +61,7 @@ Conversely, a space whose closed balls are all compact is complete ([Lar22, Obse
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 * [M. Gromov, *Metric Structures for Riemannian and Non-Riemannian Spaces*][Gro99]
 -/
 
@@ -129,7 +129,7 @@ theorem IsInterior.exists_dist_le_add (h : IsInterior X) (x y : X) {a b ε : ℝ
     change F t + variationOnFromTo p.toFun s t p.b = _ at hadd
     linarith
 
-/-- **Approximate intermediate points** (generalizing [Lar22, Problema 8.III], that is
+/-- **Approximate intermediate points** (generalizing [Lar24, Problema 8.III], that is
 `IsInterior.exists_approx_midpoint`, which is the case `μ = 1/2`): in an interior space, for
 `μ ∈ [0, 1]` and `ε > 0` there is `z` with `d(x, z) ≤ μ d(x, y) + ε` and
 `d(z, y) ≤ (1 - μ) d(x, y) + ε`. -/
@@ -151,7 +151,7 @@ theorem IsInterior.exists_mem_closedBall_near (h : IsInterior X) {x z : X} {r η
     (by rw [dist_comm]; ring) (by linarith)
   exact ⟨w, by rw [mem_closedBall, dist_comm]; linarith, by linarith⟩
 
-/-- **Hopf–Rinow, item 1** ([Lar22, Teorema 8.2.3, 1]): in a complete interior space, if
+/-- **Hopf–Rinow, item 1** ([Lar24, Teorema 8.2.3, 1]): in a complete interior space, if
 the closed balls `B̄_r(x)` are compact for all `0 < r < ρ`, then so is `B̄_ρ(x)`. It is totally
 bounded: every point of `B̄_ρ(x)` is `3δ`-close to the compact ball `B̄_{ρ-δ}(x)`. -/
 theorem IsInterior.isCompact_closedBall_of_lt [CompleteSpace X] (h : IsInterior X) (x : X)
@@ -203,7 +203,7 @@ theorem IsInterior.exists_isCompact_closedBall_gt [WeaklyLocallyCompactSpace X]
   rw [mem_ball, dist_comm]
   linarith
 
-/-- **Hopf–Rinow, item 2, compactness of balls** ([Lar22, Teorema 8.2.3, 2]): in a
+/-- **Hopf–Rinow, item 2, compactness of balls** ([Lar24, Teorema 8.2.3, 2]): in a
 complete, (weakly) locally compact interior space, every closed ball is compact. The supremum `ρ`
 of the radii of the compact balls centered at `x` is positive by local compactness, `B̄_ρ(x)` is
 compact by item 1, and can be enlarged, so `ρ = ∞`. -/
@@ -226,7 +226,7 @@ theorem IsInterior.isCompact_closedBall [CompleteSpace X] [WeaklyLocallyCompactS
   obtain ⟨ρ', hρ', hρ'c⟩ := h.exists_isCompact_closedBall_gt x (by linarith) hρS
   exact absurd (le_csSup hbdd hρ'c) (not_le.mpr hρ')
 
-/-- **Normal reparametrization** ([Lar22, Observación 8.1.5 and Corolario 8.1.6]): a curve
+/-- **Normal reparametrization** ([Lar24, Observación 8.1.5 and Corolario 8.1.6]): a curve
 of finite length `ℓ` from `x` to `y` can be reparametrized on `[0, 1]` (through its arc length,
 by the intermediate value theorem) as a curve `η` with `η 0 = x`, `η 1 = y` and
 `d(η u, η v) ≤ ℓ |u - v|`. Only the values on `[0, 1]` matter. -/
@@ -279,7 +279,7 @@ theorem RectPath.exists_lipschitz_reparam {x y : X} (p : RectPath x y) (hp : p.l
   refine (hdist (hσ u hu).1 (hσ v hv).1).trans_eq ?_
   rw [(hσ u hu).2, (hσ v hv).2, ← sub_mul, abs_mul, abs_of_nonneg hL0, mul_comm]
 
-/-- A complete, (weakly) locally compact interior space is proper ([Lar22,
+/-- A complete, (weakly) locally compact interior space is proper ([Lar24,
 Teorema 8.2.3, 2]). -/
 theorem IsInterior.properSpace [CompleteSpace X] [WeaklyLocallyCompactSpace X]
     (h : IsInterior X) : ProperSpace X :=
@@ -381,7 +381,7 @@ theorem IsInterior.exists_rectPath_length_eq_of_isCompact {X : Type*} [MetricSpa
   rw [sub_zero, ENNReal.ofReal_one, mul_one, edist_dist]
   rfl
 
-/-- **Metric Hopf–Rinow theorem** ([Lar22, Teorema 8.2.3, 2]): a complete, (weakly)
+/-- **Metric Hopf–Rinow theorem** ([Lar24, Teorema 8.2.3, 2]): a complete, (weakly)
 locally compact interior metric space is geodesic: any two points `x, y` are joined by a
 continuous curve of length `d(x, y)`. -/
 theorem IsInterior.exists_rectPath_length_eq {X : Type*} [MetricSpace X] [CompleteSpace X]
@@ -389,7 +389,7 @@ theorem IsInterior.exists_rectPath_length_eq {X : Type*} [MetricSpace X] [Comple
     ∃ p : RectPath x y, p.length = edist x y :=
   h.exists_rectPath_length_eq_of_isCompact x y (h.isCompact_closedBall x _)
 
-/-- A metric space whose closed balls are all compact is complete ([Lar22,
+/-- A metric space whose closed balls are all compact is complete ([Lar24,
 Observación 8.2.4]): it is a proper space, and Mathlib's `complete_of_proper` applies. -/
 theorem completeSpace_of_isCompact_closedBall {X : Type*} [PseudoMetricSpace X]
     (h : ∀ (x : X) (r : ℝ), IsCompact (closedBall x r)) : CompleteSpace X :=

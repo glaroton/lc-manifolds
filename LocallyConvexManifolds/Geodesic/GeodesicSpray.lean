@@ -20,7 +20,7 @@ over a chart `i` of `M`, reads `(x, w) ↦ (x, w; w, Γᵢ(x)(w, w))`; with the 
 `LocallyConvexManifolds.Geodesic.Banach`, geodesics are the curves with `c'' = Γ_c(c', c')`. We
 follow [Lan99, Ch. IV §3] (second-order vector fields and geodesics, p. 97; local representation,
 p. 98) and [Lan99, Ch. IV §4] (the domain `𝔇` of the exponential map is open and `exp` is a
-morphism, p. 107), and [Lar22, §6.1.2 (p. 154) and Ejercicio 6.III (p. 168)].
+morphism, p. 107), and [Lar24, §6.1.2 (p. 156) and Ejercicio 6.III (p. 170)].
 
 ## Main definitions
 
@@ -64,7 +64,7 @@ morphism, p. 107), and [Lar22, §6.1.2 (p. 154) and Ejercicio 6.III (p. 168)].
 * Infinite-dimensional subtleties. For each `p`, `D(exp_p)` is an open star-shaped neighbourhood
   of `0` in `T_pM`; but since `M` need not be locally compact, openness of `D(exp)` in `TM` does
   not give balls of a uniform radius in `T_pM` for `p` in a closed neighbourhood of a point
-  (uniformly normal neighbourhoods, [Lar22, §6.2.1], need a separate argument with the
+  (uniformly normal neighbourhoods, [Lar24, §6.2.1], need a separate argument with the
   norms of a chart). Both facts are in `LocallyConvexManifolds.Geodesic.Normal`: `exp_p` is a
   local diffeomorphism at `0` ([Lan99, Theorem IV.4.1]), and uniformly normal neighbourhoods come
   from the inverse function theorem applied to `v ↦ (π v, exp v)`.
@@ -74,8 +74,7 @@ morphism, p. 107), and [Lar22, §6.1.2 (p. 154) and Ejercicio 6.III (p. 168)].
 ## References
 
 * [S. Lang, *Fundamentals of Differential Geometry*][Lan99]
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]; the numbers
-  refer to the version of 29 November 2023.
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 -/
 
 @[expose] public section
@@ -422,7 +421,7 @@ theorem exp_eq_proj_flow (v : TangentBundle E M) : C.exp v = (C.spray.flow (1, v
   C.maxGeodesic_eq_proj_flow v 1
 
 /-- **The domain of the exponential map is open in `TM`** ([Lan99, Ch. IV §4,
-p. 107]; [Lar22, §6.1.2, p. 154, and Ejercicio 6.III, p. 168]). -/
+p. 107]; [Lar24, §6.1.2, p. 156, and Ejercicio 6.III, p. 170]). -/
 theorem isOpen_expDomain : IsOpen C.expDomain := by
   rw [expDomain_eq_preimage_flowDomain]
   exact C.spray.isOpen_flowDomain.preimage (continuous_const.prodMk continuous_id)

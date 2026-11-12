@@ -17,11 +17,11 @@ Let `μ` be a **reversible** Finsler length structure on `M`. Its distance `d_b`
 (`FinslerLengthStructure.dist`, defined with piecewise `C¹` paths) is then a pseudo-(extended)
 metric, and `FinslerSpace μ` is a copy of `M` with this distance. Reversibility is needed for the
 symmetry of `d_b`; without it `d_b` is only a quasi-metric (`FinslerLengthStructure.dist_triangle`
-still holds), and the metric theory of [Lar22, Cap. 8], which is symmetric, does not apply as
-such. This file follows [Lar22, Cap. 9, §9.1.1 (Proposición 9.1.2)].
+still holds), and the metric theory of [Lar24, Cap. 8], which is symmetric, does not apply as
+such. This file follows [Lar24, Cap. 9, §9.1.1 (Proposición 9.1.2)].
 
 The topology of `FinslerSpace μ` is the one of `d_b`, which need not be the manifold topology of
-`M`; comparing both is the subject of [Lar22, §9.1.2].
+`M`; comparing both is the subject of [Lar24, §9.1.2].
 
 ## Main definitions
 
@@ -32,9 +32,9 @@ The topology of `FinslerSpace μ` is the one of `d_b`, which need not be the man
 
 * `FinslerLengthStructure.edist_le_abs_length`, `FinslerLengthStructure.continuous_toFinsler`: a
   `C¹` curve of `M` is continuous for `d_b`, since `d_b(γ s, γ t) ≤ |L_b(γ|[s, t])|`;
-* `FinslerLengthStructure.eVariationOn_le_length` ([Lar22, Proposición 9.1.2], first part): the
+* `FinslerLengthStructure.eVariationOn_le_length` ([Lar24, Proposición 9.1.2], first part): the
   metric length of a `C¹` arc is at most its Finsler length, `ℓ(γ) ≤ L_b(γ)`;
-* `FinslerLengthStructure.isInterior` ([Lar22, Proposición 9.1.2]): `(M, d_b)` is an interior
+* `FinslerLengthStructure.isInterior` ([Lar24, Proposición 9.1.2]): `(M, d_b)` is an interior
   metric space, `d_ℓ = d_b`.
 * `FinslerLengthStructure.fwdVar_le_length`, `FinslerLengthStructure.isFwdInterior`: the same
   without reversibility, for the asymmetric distance `d_b` ([Men13]): the forward length of a
@@ -43,7 +43,7 @@ The topology of `FinslerSpace μ` is the one of `d_b`, which need not be the man
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 * [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 

@@ -13,7 +13,7 @@ public import Mathlib.Topology.Order.IntermediateValue
 # Forward lengths of curves in asymmetric spaces
 
 This file follows [Men13, §1.1, §2.2 and §3.2–3.4]; it is the asymmetric counterpart of
-[Lar22, Cap. 8, §8.1] (see `LengthMetric.lean` and `HopfRinow.lean` for the symmetric theory).
+[Lar24, Cap. 8, §8.1] (see `LengthMetric.lean` and `HopfRinow.lean` for the symmetric theory).
 
 Let `(X, b)` be an asymmetric pseudo-(extended) metric space (`AsymmPseudoEMetricSpace`, see
 `AsymmDist.lean`), with the topology of the symmetrized distance `d = max (b, b̄)`, where
@@ -65,7 +65,7 @@ from the forward length of the reversed curve ([Men13, Remark 3.5]).
 
 ## References
 
-* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar22]
+* [G. Larotonda, *Estructuras geométricas para las variedades de Banach*][Lar24]
 * [A. C. G. Mennucci, *On asymmetric distances*][Men13]
 -/
 
