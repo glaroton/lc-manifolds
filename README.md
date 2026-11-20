@@ -559,9 +559,11 @@ namespaces of their own.
     models, the manifold structure of the domain.
 * [`LocallyConvexManifolds/MappingSpace/Diffeomorphism/Open.lean`](LocallyConvexManifolds/MappingSpace/Diffeomorphism/Open.lean):
   the diffeomorphisms of a compact manifold [GN26, Prop. 13.1.10].
-  * `SmoothMap.isOpen_setOf_isDiffeo`: the diffeomorphisms of a compact manifold `K` form an open
-    subset of `C^∞(K, K)` (only the `C^1` topology enters); `SmoothMap.IsDiffeo.comp`,
-    `SmoothMap.IsDiffeo.symm`: they form a group. Glöckner–Neeb's proof is unfinished in the
+  * `CkMap.isOpen_setOf_isDiffeo`, `SmoothMap.isOpen_setOf_isDiffeo`: for `ℓ ≥ 1` the
+    `C^ℓ`-diffeomorphisms of a compact manifold `K` form an open subset of `C^ℓ(K, K)`, and the
+    smooth ones an open subset of `C^∞(K, K)` (only the `C^1` topology enters); `IsDiffeo.comp`,
+    `IsDiffeo.symm`: they form a group. The finite case rests on the agreement of Michal–Bastiani
+    and Fréchet `C^ℓ` maps in finite dimensions (lc-analysis, `contDiffMBOn_iff_contDiffOn`). Glöckner–Neeb's proof is unfinished in the
     current manuscript and uses sequences (metrizability of `C^1(K, K)` through Whitney's
     theorem); here the argument goes through neighborhoods and the tube lemma;
   * `exists_injOn_of_fderiv_near` (`Diffeomorphism/Normed.lean`), `exists_isOpen_eventually_injOn`:
@@ -1115,10 +1117,8 @@ distinction between the notions that coincide in finite dimension (flagged in ea
 
 1. Manifolds of mappings, continued: fine box products and manifolds of mappings on non-compact
    manifolds (their Sections 4.3 and 4.4), built on the jet topology of `C^ℓ(M, N)`
-   (`MappingSpace/TopologyJet.lean`); `Diff_{C^ℓ}(K)` open in `C^ℓ(K, K)` for finite `ℓ` (the case
-   `ℓ = ∞` is done), which needs the agreement of Michal–Bastiani and Fréchet `C^ℓ` maps in finite
-   dimensions. The smoothness of the group operations of `Diff(K)` belongs to the Lie group
-   library.
+   (`MappingSpace/TopologyJet.lean`). The smoothness of the group operations of `Diff(K)` belongs
+   to the Lie group library.
 2. Flows of vector fields: time-dependent fields and parameters. Maximal flows on Banach manifolds,
    with open domain and smooth dependence (`Flow/Maximal.lean`), real analytic maximal flows
    (`Flow/Analytic.lean`), a completeness criterion (`Flow/Complete.lean`) and the Darboux theorem,
