@@ -66,9 +66,11 @@ public import LocallyConvexManifolds.Manifold.ContMDiff
 public import LocallyConvexManifolds.Manifold.LocalDiffeo
 public import LocallyConvexManifolds.Manifold.Product
 public import LocallyConvexManifolds.Manifold.VaryingAtlas
+public import LocallyConvexManifolds.Manifold.VaryingAtlasProd
 public import LocallyConvexManifolds.MappingSpace.Basic
 public import LocallyConvexManifolds.MappingSpace.Ck
 public import LocallyConvexManifolds.MappingSpace.Composition
+public import LocallyConvexManifolds.MappingSpace.CompositionMap
 public import LocallyConvexManifolds.MappingSpace.ExponentialLaw
 public import LocallyConvexManifolds.MappingSpace.Tangent
 public import LocallyConvexManifolds.MappingSpace.Topology

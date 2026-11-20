@@ -548,6 +548,15 @@ namespaces of their own.
   * `LocalAddition.contMDiffOn_compLeft`: `C^ℓ(M, h)` is `C^k` if `h` is `C^{k+ℓ}`;
     `LocalAddition.smooth_compLeft`, `LocalAddition.smooth_compLeftSm`: it is smooth on
     `C^ℓ(M, N₁)` and on `C^∞(M, N₁)` if `h` is smooth.
+* [`LocallyConvexManifolds/MappingSpace/CompositionMap.lean`](LocallyConvexManifolds/MappingSpace/CompositionMap.lean):
+  the composition map [GN26, Prop. 13.1.2(a)].
+  * `LocalAddition.contMDiffOn_comp`: `C^{ℓ+k}(L, M) × C^ℓ(K, L) → C^ℓ(K, M)`, `(γ, η) ↦ γ ∘ η`,
+    is `C^k`, for compact `K`, `L` and `L`, `M` with local additions;
+  * `LocalAddition.smooth_comp_smoothMap`, `LocalAddition.smooth_compSm`: with `C^∞(L, M)` in the
+    first factor it is smooth, into `C^ℓ(K, M)` and into `C^∞(K, M)`;
+  * `ContMDiffMB₂.comp_eval`: the underlying statement on evaluation maps;
+  * `VaryingAtlas.prod` (`Manifold/VaryingAtlasProd.lean`): products of atlases with varying
+    models, the manifold structure of the domain.
 * [`LocallyConvexManifolds/MappingSpace/Tangent.lean`](LocallyConvexManifolds/MappingSpace/Tangent.lean):
   tangent spaces of `C^ℓ(M, N)` [GN26, Thm. 4.2.2(d)].
   * `LocalAddition.tangentMapAt_eval`, `LocalAddition.tangentEquivSecCk` (and `…Sm`): for a
