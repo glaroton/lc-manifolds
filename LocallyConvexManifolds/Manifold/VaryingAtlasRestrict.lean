@@ -24,6 +24,9 @@ of a manifold of mappings, such as the group `Diff(K)` of diffeomorphisms of a c
 
 * `VaryingAtlas.restrict_chart_apply`, `VaryingAtlas.restrict_chart_symm_apply`: the charts of
   the restriction.
+* `VaryingAtlas.smooth_val`: the inclusion `U → X` is smooth.
+* `VaryingAtlas.contMDiffOn_restrict_iff`: a map into `U` is `C^k` if and only if it is `C^k` as a
+  map into `X`.
 * `ContMDiffMB₂.restrict`: restrictions of `C^{k,ℓ}` maps `X × M → N` to `U × M` are `C^{k,ℓ}`.
 
 ## References
@@ -97,6 +100,53 @@ theorem restrict_chart_source (p : (A.restrict U hU).ι) :
 
 theorem restrict_chart_target_subset (p : (A.restrict U hU).ι) :
     ((A.restrict U hU).chart p).target ⊆ (A.chart p.1).target := fun _ ha ↦ ha.1
+
+/-- **The inclusion of an open subset is smooth.** -/
+theorem smooth_val : (A.restrict U hU).Smooth A Subtype.val := by
+  intro k
+  refine ⟨continuous_subtype_val.continuousOn, fun p j ↦ ?_⟩
+  set s := (A.restrict U hU).chart p
+  have hD := isOpen_chartDomain isOpen_univ continuous_subtype_val.continuousOn s (A.chart j)
+  have hsub : chartDomain Subtype.val univ s (A.chart j) ⊆
+      (A.chart p.1).target ∩ (A.chart p.1).symm ⁻¹' (A.chart j).source := by
+    rintro a ⟨ha, -, haj⟩
+    refine ⟨A.restrict_chart_target_subset hU p ha, ?_⟩
+    rw [mem_preimage, ← A.restrict_chart_symm_apply hU p ha]
+    exact haj
+  refine ContDiffMBOn.congr_of_isOpen hD (fun a ha ↦ ?_)
+    ((A.smoothMBOn_transition p.1 j k).mono hsub)
+  change A.chart j ((A.chart p.1).symm a) = A.chart j (s.symm a : X)
+  rw [A.restrict_chart_symm_apply hU p ha.1]
+
+/-- **Maps into an open subset**: `f : Z → U` is `C^k` for the restricted atlas if and only if it
+is `C^k` as a map into `X`. -/
+theorem contMDiffOn_restrict_iff {Z : Type*} [TopologicalSpace Z] {C : VaryingAtlas.{u, _, _} Z}
+    {k : ℕ} {f : Z → U} {W : Set Z} :
+    C.ContMDiffOn (A.restrict U hU) k f W ↔ C.ContMDiffOn A k (fun z ↦ (f z : X)) W := by
+  have hc : ContinuousOn f W ↔ ContinuousOn (fun z ↦ (f z : X)) W :=
+    Topology.IsInducing.subtypeVal.continuousOn_iff
+  have hD : ∀ (i : C.ι) (q : (A.restrict U hU).ι),
+      chartDomain f W (C.chart i) ((A.restrict U hU).chart q) =
+        chartDomain (fun z ↦ (f z : X)) W (C.chart i) (A.chart q.1) := by
+    intro i q
+    ext a
+    simp only [chartDomain, mem_inter_iff, mem_preimage, OpenPartialHomeomorph.subtypeRestr_source]
+  constructor
+  · rintro ⟨h1, h2⟩
+    refine ⟨hc.1 h1, fun i j ↦ ?_⟩
+    rcases isEmpty_or_nonempty U with hUe | ⟨⟨x⟩⟩
+    · have : chartDomain (fun z ↦ (f z : X)) W (C.chart i) (A.chart j) = ∅ :=
+        eq_empty_of_forall_notMem fun a ha ↦ isEmptyElim (f ((C.chart i).symm a))
+      rw [this]
+      exact ContDiffMBOn.congr_of_isOpen isOpen_empty (fun _ h ↦ h.elim)
+        (contDiffMBOn_const k (0 : A.model j) ∅)
+    · have := h2 i (j, x)
+      rw [hD] at this
+      exact this
+  · rintro ⟨h1, h2⟩
+    refine ⟨hc.2 h1, fun i q ↦ ?_⟩
+    rw [hD]
+    exact h2 i q.1
 
 end VaryingAtlas
 

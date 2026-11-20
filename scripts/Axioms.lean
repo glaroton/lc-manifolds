@@ -319,3 +319,7 @@ open LocallyConvex.Manifolds LocallyConvex.Analysis
 -- Inverses of families of diffeomorphisms (`MappingSpace/Diffeomorphism/Inverse.lean`)
 #print axioms ContMDiffMB₂.inverse
 #print axioms ContMDiffMB₂.restrict
+#print axioms VaryingAtlas.contMDiffOn_restrict_iff
+#print axioms VaryingAtlas.smooth_val
+#print axioms VaryingAtlas.ContMDiffOn.prodMk
+#print axioms VaryingAtlas.smooth_fst

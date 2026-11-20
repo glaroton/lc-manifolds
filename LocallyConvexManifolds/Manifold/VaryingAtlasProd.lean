@@ -23,6 +23,9 @@ manifolds of mappings this is the manifold structure on products such as
 
 * `VaryingAtlas.prod_chart_apply`, `VaryingAtlas.prod_chart_symm_apply`,
   `VaryingAtlas.prod_chart_source`, `VaryingAtlas.prod_chart_target`: the charts of the product.
+* `VaryingAtlas.ContMDiffOn.prodMk`, `VaryingAtlas.smooth_fst`, `VaryingAtlas.smooth_snd`,
+  `VaryingAtlas.smoothOn_const`: pairs of `C^k` maps are `C^k`, the projections and the constant
+  maps are smooth.
 
 ## References
 
@@ -94,6 +97,74 @@ theorem prod_chart_target (p : (A.prod B).ι) :
     ((A.prod B).chart p).target = (A.chart p.1).target ×ˢ (B.chart p.2).target :=
   rfl
 
+variable {A B} {Z : Type*} [TopologicalSpace Z] {C : VaryingAtlas.{u, _, _} Z}
+
+/-- **Pairs of `C^k` maps are `C^k`**, into the product atlas. -/
+theorem ContMDiffOn.prodMk {k : ℕ} {f : Z → X} {g : Z → Y} {U : Set Z} (hU : IsOpen U)
+    (hf : C.ContMDiffOn A k f U) (hg : C.ContMDiffOn B k g U) :
+    C.ContMDiffOn (A.prod B) k (fun z ↦ (f z, g z)) U := by
+  refine ⟨hf.1.prodMk hg.1, fun i j ↦ ?_⟩
+  have hD : chartDomain (fun z ↦ (f z, g z)) U (C.chart i) ((A.prod B).chart j) =
+      chartDomain f U (C.chart i) (A.chart j.1) ∩ chartDomain g U (C.chart i) (B.chart j.2) := by
+    ext a
+    simp only [chartDomain, mem_inter_iff, mem_preimage, OpenPartialHomeomorph.prod_source,
+      mem_prod]
+    tauto
+  rw [hD]
+  have hO := (isOpen_chartDomain hU hf.1 (C.chart i) (A.chart j.1)).inter
+    (isOpen_chartDomain hU hg.1 (C.chart i) (B.chart j.2))
+  exact ContDiffMBOn.prodMk hO ((hf.2 i j.1).mono inter_subset_left)
+    ((hg.2 i j.2).mono inter_subset_right)
+
+/-- Pairs of smooth maps are smooth. -/
+theorem SmoothOn.prodMk {f : Z → X} {g : Z → Y} {U : Set Z} (hU : IsOpen U)
+    (hf : C.SmoothOn A f U) (hg : C.SmoothOn B g U) :
+    C.SmoothOn (A.prod B) (fun z ↦ (f z, g z)) U := fun k ↦
+  (hf k).prodMk hU (hg k)
+
+/-- Pairs of smooth maps are smooth. -/
+theorem Smooth.prodMk {f : Z → X} {g : Z → Y} (hf : C.Smooth A f) (hg : C.Smooth B g) :
+    C.Smooth (A.prod B) (fun z ↦ (f z, g z)) :=
+  SmoothOn.prodMk isOpen_univ hf hg
+
+variable (A B) in
+/-- **The first projection is smooth.** -/
+theorem smooth_fst : (A.prod B).Smooth A Prod.fst := by
+  intro k
+  refine ⟨continuous_fst.continuousOn, fun i j ↦ ?_⟩
+  have hS := (A.chart i.1).isOpen_inter_preimage_symm (A.chart j).open_source
+  have h := ContDiffMBOn.comp_clm (ContinuousLinearMap.fst ℝ (A.model i.1) (B.model i.2)) hS
+    (A.smoothMBOn_transition i.1 j k)
+  have hsub : chartDomain Prod.fst univ ((A.prod B).chart i) (A.chart j) ⊆
+      ContinuousLinearMap.fst ℝ (A.model i.1) (B.model i.2) ⁻¹'
+        ((A.chart i.1).target ∩ (A.chart i.1).symm ⁻¹' (A.chart j).source) :=
+    fun a ha ↦ ⟨ha.1.1, ha.2.2⟩
+  exact ContDiffMBOn.congr_of_isOpen
+    (isOpen_chartDomain isOpen_univ continuous_fst.continuousOn _ _) (fun _ _ ↦ rfl)
+    (h.mono hsub)
+
+variable (A B) in
+/-- **The second projection is smooth.** -/
+theorem smooth_snd : (A.prod B).Smooth B Prod.snd := by
+  intro k
+  refine ⟨continuous_snd.continuousOn, fun i j ↦ ?_⟩
+  have hS := (B.chart i.2).isOpen_inter_preimage_symm (B.chart j).open_source
+  have h := ContDiffMBOn.comp_clm (ContinuousLinearMap.snd ℝ (A.model i.1) (B.model i.2)) hS
+    (B.smoothMBOn_transition i.2 j k)
+  have hsub : chartDomain Prod.snd univ ((A.prod B).chart i) (B.chart j) ⊆
+      ContinuousLinearMap.snd ℝ (A.model i.1) (B.model i.2) ⁻¹'
+        ((B.chart i.2).target ∩ (B.chart i.2).symm ⁻¹' (B.chart j).source) :=
+    fun a ha ↦ ⟨ha.1.2, ha.2.2⟩
+  exact ContDiffMBOn.congr_of_isOpen
+    (isOpen_chartDomain isOpen_univ continuous_snd.continuousOn _ _) (fun _ _ ↦ rfl)
+    (h.mono hsub)
+
+variable (C A) in
+/-- **Constant maps are smooth.** -/
+theorem smoothOn_const (x : X) (U : Set Z) : C.SmoothOn A (fun _ ↦ x) U := fun k ↦
+  ⟨continuousOn_const, fun _ j ↦ contDiffMBOn_const k (A.chart j x) _⟩
+
 end VaryingAtlas
+
 
 end LocallyConvex.Manifolds

@@ -581,7 +581,11 @@ namespaces of their own.
   * `isUnit_fderiv_normedRep_of_leftInverse`: invertible derivatives in any charts;
   * `VaryingAtlas.restrict` (`Manifold/VaryingAtlasRestrict.lean`): the restriction of an atlas
     with varying models to an open subset, the manifold structure of `Diff(K)`;
-    `ContMDiffMB₂.restrict`.
+    `VaryingAtlas.smooth_val`, `VaryingAtlas.contMDiffOn_restrict_iff` (maps into the open
+    subset), `ContMDiffMB₂.restrict`;
+  * `VaryingAtlas.ContMDiffOn.prodMk`, `VaryingAtlas.smooth_fst`, `VaryingAtlas.smooth_snd`,
+    `VaryingAtlas.smoothOn_const` (`Manifold/VaryingAtlasProd.lean`): pairs, projections and
+    constants for products of atlases with varying models.
 * [`LocallyConvexManifolds/MappingSpace/Tangent.lean`](LocallyConvexManifolds/MappingSpace/Tangent.lean):
   tangent spaces of `C^ℓ(M, N)` [GN26, Thm. 4.2.2(d)].
   * `LocalAddition.tangentMapAt_eval`, `LocalAddition.tangentEquivSecCk` (and `…Sm`): for a
