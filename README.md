@@ -557,6 +557,17 @@ namespaces of their own.
   * `ContMDiffMB₂.comp_eval`: the underlying statement on evaluation maps;
   * `VaryingAtlas.prod` (`Manifold/VaryingAtlasProd.lean`): products of atlases with varying
     models, the manifold structure of the domain.
+* [`LocallyConvexManifolds/MappingSpace/Diffeomorphism/Open.lean`](LocallyConvexManifolds/MappingSpace/Diffeomorphism/Open.lean):
+  the diffeomorphisms of a compact manifold [GN26, Prop. 13.1.10].
+  * `SmoothMap.isOpen_setOf_isDiffeo`: the diffeomorphisms of a compact manifold `K` form an open
+    subset of `C^∞(K, K)` (only the `C^1` topology enters); `SmoothMap.IsDiffeo.comp`,
+    `SmoothMap.IsDiffeo.symm`: they form a group. Glöckner–Neeb's proof is unfinished in the
+    current manuscript and uses sequences (metrizability of `C^1(K, K)` through Whitney's
+    theorem); here the argument goes through neighborhoods and the tube lemma;
+  * `exists_injOn_of_fderiv_near` (`Diffeomorphism/Normed.lean`), `exists_isOpen_eventually_injOn`:
+    local uniform injectivity [GN26, Lemmas 13.1.5, 13.1.6];
+  * `exists_localInverse`, `isOpenMap_of_hasInvDerivAt`, `smoothMBM_symm_of_hasInvDerivAt`: the
+    inverse function theorem on a compact manifold, through Euclidean charts (`normedRep`).
 * [`LocallyConvexManifolds/MappingSpace/Tangent.lean`](LocallyConvexManifolds/MappingSpace/Tangent.lean):
   tangent spaces of `C^ℓ(M, N)` [GN26, Thm. 4.2.2(d)].
   * `LocalAddition.tangentMapAt_eval`, `LocalAddition.tangentEquivSecCk` (and `…Sm`): for a
@@ -1104,7 +1115,10 @@ distinction between the notions that coincide in finite dimension (flagged in ea
 
 1. Manifolds of mappings, continued: fine box products and manifolds of mappings on non-compact
    manifolds (their Sections 4.3 and 4.4), built on the jet topology of `C^ℓ(M, N)`
-   (`MappingSpace/TopologyJet.lean`); diffeomorphism groups.
+   (`MappingSpace/TopologyJet.lean`); `Diff_{C^ℓ}(K)` open in `C^ℓ(K, K)` for finite `ℓ` (the case
+   `ℓ = ∞` is done), which needs the agreement of Michal–Bastiani and Fréchet `C^ℓ` maps in finite
+   dimensions. The smoothness of the group operations of `Diff(K)` belongs to the Lie group
+   library.
 2. Flows of vector fields: time-dependent fields and parameters. Maximal flows on Banach manifolds,
    with open domain and smooth dependence (`Flow/Maximal.lean`), real analytic maximal flows
    (`Flow/Analytic.lean`), a completeness criterion (`Flow/Complete.lean`) and the Darboux theorem,

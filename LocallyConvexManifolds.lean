@@ -71,6 +71,8 @@ public import LocallyConvexManifolds.MappingSpace.Basic
 public import LocallyConvexManifolds.MappingSpace.Ck
 public import LocallyConvexManifolds.MappingSpace.Composition
 public import LocallyConvexManifolds.MappingSpace.CompositionMap
+public import LocallyConvexManifolds.MappingSpace.Diffeomorphism.Normed
+public import LocallyConvexManifolds.MappingSpace.Diffeomorphism.Open
 public import LocallyConvexManifolds.MappingSpace.ExponentialLaw
 public import LocallyConvexManifolds.MappingSpace.Tangent
 public import LocallyConvexManifolds.MappingSpace.Topology
