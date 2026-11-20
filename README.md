@@ -526,6 +526,9 @@ namespaces of their own.
   * `ContMDiffMB₂`, `ContMDiffMB₂.continuous`, `ContMDiffMB₂.contDiffMBOn₂`: the definition,
     continuity, and chart independence [GN26, Remark 3.5.26(a)]; the first factor may be any
     atlas with varying models [GN26, Remark 3.5.28];
+  * `contDiffMBOn₂_comp_left`, `ContMDiffMB₂.comp_left`: the chain rule, `h ∘ f` is `C^{k,ℓ}` if
+    `f` is `C^{k,ℓ}` and `h` is `C^{k+ℓ}`, on open sets [GN26, Prop. 1.7.28] and on manifolds
+    [GN26, Prop. 3.5.27];
   * `locallyCompactSpace_of_compactSpace`, `finiteDimensional_of_compactSpace`
     (`Manifold/CkSuperposition.lean`): a nonempty compact manifold has a locally compact, hence
     (Riesz) finite-dimensional, model.
@@ -539,6 +542,12 @@ namespaces of their own.
   * `LocalAddition.contMDiffMB₂_eval`, `LocalAddition.smooth_eval` (and `…Sm`): the evaluation
     map `C^ℓ(M, N) × M → N` is `C^{∞,ℓ}` and the point evaluations are smooth
     [GN26, Thm. 4.2.2(c)].
+* [`LocallyConvexManifolds/MappingSpace/Composition.lean`](LocallyConvexManifolds/MappingSpace/Composition.lean):
+  composition on the left [GN26, Lemma 4.2.6].
+  * `CkMap.compLeft`, `SmoothMap.compLeft`: `C^ℓ(M, h) : f ↦ h ∘ f`;
+  * `LocalAddition.contMDiffOn_compLeft`: `C^ℓ(M, h)` is `C^k` if `h` is `C^{k+ℓ}`;
+    `LocalAddition.smooth_compLeft`, `LocalAddition.smooth_compLeftSm`: it is smooth on
+    `C^ℓ(M, N₁)` and on `C^∞(M, N₁)` if `h` is smooth.
 * [`LocallyConvexManifolds/MappingSpace/Tangent.lean`](LocallyConvexManifolds/MappingSpace/Tangent.lean):
   tangent spaces of `C^ℓ(M, N)` [GN26, Thm. 4.2.2(d)].
   * `LocalAddition.tangentMapAt_eval`, `LocalAddition.tangentEquivSecCk` (and `…Sm`): for a

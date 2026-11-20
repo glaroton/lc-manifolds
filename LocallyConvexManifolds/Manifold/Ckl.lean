@@ -5,6 +5,7 @@ Authors: glaroton
 -/
 module
 
+public import LocallyConvexAnalysis.Calculus.DenseInterior.CklRules
 public import LocallyConvexAnalysis.Calculus.SmoothExponentialLaw
 public import LocallyConvexManifolds.Manifold.CkSuperposition
 public import LocallyConvexManifolds.Manifold.VaryingAtlas
@@ -64,6 +65,35 @@ noncomputable section
 universe u
 
 namespace LocallyConvex.Manifolds
+
+/-! ### The chain rule for `C^{k,ℓ}` maps on open sets -/
+
+section OpenSets
+
+variable {E₁ E₂ F₁ : Type u} {F : Type*}
+  [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁] [IsTopologicalAddGroup E₁]
+  [ContinuousSMul ℝ E₁] [LocallyConvexSpace ℝ E₁] [T2Space E₁]
+  [AddCommGroup E₂] [Module ℝ E₂] [TopologicalSpace E₂] [IsTopologicalAddGroup E₂]
+  [ContinuousSMul ℝ E₂] [LocallyConvexSpace ℝ E₂] [T2Space E₂]
+  [AddCommGroup F₁] [Module ℝ F₁] [TopologicalSpace F₁] [IsTopologicalAddGroup F₁]
+  [ContinuousSMul ℝ F₁] [LocallyConvexSpace ℝ F₁] [T2Space F₁]
+  [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [IsTopologicalAddGroup F]
+  [ContinuousSMul ℝ F] [LocallyConvexSpace ℝ F] [T2Space F]
+
+/-- **Chain rule for `C^{k,ℓ}` maps on open sets** ([GN26, Proposition 1.7.28]): if `f` is
+`C^{k,ℓ}` on `U × V` with `f(U × V) ⊆ W` and `g` is `C^{k+ℓ}` on `W`, all three sets open, then
+`g ∘ f` is `C^{k,ℓ}` on `U × V`. The case of [LCA] for sets with dense interior,
+`ContDiffLC₂.comp_left`, read on open sets. -/
+theorem contDiffMBOn₂_comp_left {k ℓ : ℕ} {f : E₁ × E₂ → F₁} {g : F₁ → F} {U : Set E₁}
+    {V : Set E₂} {W : Set F₁} (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W)
+    (hf : ContDiffMBOn₂ k ℓ f U V) (hg : ContDiffMBOn (k + ℓ) g W)
+    (hfW : MapsTo f (U ×ˢ V) W) : ContDiffMBOn₂ k ℓ (fun p ↦ g (f p)) U V := by
+  rw [← contDiffLC₂_iff_contDiffMBOn₂ hU hV] at hf ⊢
+  exact hf.comp_left hU.isLocallyConvexSubset hU.hasDenseInterior hV.isLocallyConvexSubset
+    hV.hasDenseInterior hW.isLocallyConvexSubset hW.hasDenseInterior
+    ((contDiffLC_iff_contDiffMBOn hW).2 hg) hfW
+
+end OpenSets
 
 /-! ### `C^{k,ℓ}` maps on products of manifolds -/
 
@@ -227,6 +257,66 @@ theorem ContMDiffMB₂.contMDiffOn_left {B : VaryingAtlas.{u, _, _} L} {k ℓ : 
       (hrep.contDiffMBOn_left 0 (Nat.zero_le ℓ) (e' y) hyV Fin.elim0)
     change c (f ((B.chart i).symm a, e'.symm (e' y))) = c (f ((B.chart i).symm a, y))
     rw [hey]
+
+section ChainRule
+
+variable {F' : Type u} [AddCommGroup F'] [Module ℝ F'] [TopologicalSpace F']
+  [IsTopologicalAddGroup F'] [ContinuousSMul ℝ F'] [LocallyConvexSpace ℝ F'] [T2Space F']
+  {N' : Type*} [TopologicalSpace N'] [ChartedSpace F' N'] [MBManifold F' N']
+
+omit [MBManifold H M] in
+/-- **Chain rule for `C^{k,ℓ}` maps** ([GN26, Proposition 3.5.27]): if `f : L × M → N` is
+`C^{k,ℓ}` and `h : N → N'` is `C^{k+ℓ}`, then `h ∘ f` is `C^{k,ℓ}`. -/
+theorem ContMDiffMB₂.comp_left {B : VaryingAtlas.{u, _, _} L} {k ℓ : ℕ} {f : L × M → N}
+    {h : N → N'} (hf : ContMDiffMB₂ H F B k ℓ f) (hh : ContMDiffMB F F' (k + ℓ) h) :
+    ContMDiffMB₂ H F' B k ℓ (h ∘ f) := by
+  intro x y
+  obtain ⟨i, e', he', c, hc, U, V, hx, hy, hxU, hyV, hbox, hrep⟩ := hf x y
+  set e := B.chart i
+  set c' := chartAt F' (h (f (x, y)))
+  set W := chartDomain h univ c c'
+  have hW : IsOpen W := isOpen_chartDomain isOpen_univ hh.1 c c'
+  have hg : ContDiffMBOn (k + ℓ) (c' ∘ h ∘ c.symm) W :=
+    hh.contDiffMBOn_chart isOpen_univ hc (chart_mem_atlas F' _)
+  have hUV := hbox.isOpen_left.prod hbox.isOpen_right
+  have hrc : ContinuousOn (localRep₂ f e e' c) (U ×ˢ V) := by
+    have h := hrep.continuousOn 0 (Nat.zero_le k) 0 (Nat.zero_le ℓ)
+    have hj : Continuous fun p : B.model i × H ↦
+        (p, ((Fin.elim0 : Fin 0 → B.model i), (Fin.elim0 : Fin 0 → H))) := by fun_prop
+    exact (h.comp hj.continuousOn fun p hp ↦ ⟨hp, mem_univ _⟩ :)
+  -- `f` in the chart `c`, read back through `c⁻¹`
+  have hback : ∀ a ∈ U, ∀ b ∈ V,
+      c.symm (localRep₂ f e e' c (a, b)) = f (e.symm a, e'.symm b) := fun a ha b hb ↦
+    c.left_inv (hbox.mapsTo a ha b hb)
+  set O := (U ×ˢ V) ∩ localRep₂ f e e' c ⁻¹' W
+  have hO : IsOpen O := hrc.isOpen_inter_preimage hUV hW
+  have hxy : f (e.symm (e x), e'.symm (e' y)) = f (x, y) := by
+    rw [e.left_inv hx, e'.left_inv hy]
+  have hpO : (e x, e' y) ∈ O := by
+    refine ⟨⟨hxU, hyV⟩, ?_, ?_⟩
+    · exact c.map_source (hxy ▸ hbox.mapsTo _ hxU _ hyV)
+    · refine ⟨mem_univ _, ?_⟩
+      change h (c.symm (localRep₂ f e e' c (e x, e' y))) ∈ c'.source
+      rw [hback _ hxU _ hyV, hxy]
+      exact mem_chart_source F' _
+  obtain ⟨U₂, V₂, hU₂, hV₂, hxU₂, hyV₂, hsub⟩ := isOpen_prod_iff.1 hO (e x) (e' y) hpO
+  have hW' : ∀ a ∈ U₂ ∩ U, ∀ b ∈ V₂ ∩ V, localRep₂ f e e' c (a, b) ∈ W := fun a ha b hb ↦
+    (hsub ⟨ha.1, hb.1⟩).2
+  refine ⟨i, e', he', c', chart_mem_atlas F' _, U₂ ∩ U, V₂ ∩ V, hx, hy, ⟨hxU₂, hxU⟩,
+    ⟨hyV₂, hyV⟩, ⟨hU₂.inter hbox.isOpen_left, hV₂.inter hbox.isOpen_right,
+    inter_subset_right.trans hbox.subset_left, inter_subset_right.trans hbox.subset_right,
+    fun a ha b hb ↦ ?_⟩, ?_⟩
+  · have := (hW' a ha b hb).2.2
+    rw [mem_preimage, hback a ha.2 b hb.2] at this
+    exact this
+  · have h₂ := contDiffMBOn₂_comp_left (hU₂.inter hbox.isOpen_left)
+      (hV₂.inter hbox.isOpen_right) hW (hrep.mono inter_subset_right inter_subset_right) hg
+      fun p hp ↦ hW' p.1 hp.1 p.2 hp.2
+    refine h₂.congr (hU₂.inter hbox.isOpen_left) (hV₂.inter hbox.isOpen_right) fun p hp ↦ ?_
+    change c' (h (c.symm (localRep₂ f e e' c (p.1, p.2)))) = c' (h (f (e.symm p.1, e'.symm p.2)))
+    rw [hback p.1 hp.1.2 p.2 hp.2.2]
+
+end ChainRule
 
 end Manifolds
 

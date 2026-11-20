@@ -68,6 +68,7 @@ public import LocallyConvexManifolds.Manifold.Product
 public import LocallyConvexManifolds.Manifold.VaryingAtlas
 public import LocallyConvexManifolds.MappingSpace.Basic
 public import LocallyConvexManifolds.MappingSpace.Ck
+public import LocallyConvexManifolds.MappingSpace.Composition
 public import LocallyConvexManifolds.MappingSpace.ExponentialLaw
 public import LocallyConvexManifolds.MappingSpace.Tangent
 public import LocallyConvexManifolds.MappingSpace.Topology
