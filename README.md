@@ -570,6 +570,18 @@ namespaces of their own.
     local uniform injectivity [GN26, Lemmas 13.1.5, 13.1.6];
   * `exists_localInverse`, `isOpenMap_of_hasInvDerivAt`, `smoothMBM_symm_of_hasInvDerivAt`: the
     inverse function theorem on a compact manifold, through Euclidean charts (`normedRep`).
+* [`LocallyConvexManifolds/MappingSpace/Diffeomorphism/Inverse.lean`](LocallyConvexManifolds/MappingSpace/Diffeomorphism/Inverse.lean):
+  inverses of families of diffeomorphisms [GN26, Lemma 13.1.8].
+  * `ContMDiffMB₂.inverse`: if `f : P × K → K` is `C^{n,n}` for all `n` and each `f(p, ·)` is a
+    diffeomorphism of the compact manifold `K`, then `(p, y) ↦ f(p, ·)⁻¹(y)` is `C^{k,ℓ}` for all
+    `k, ℓ`. Glöckner–Neeb's proof refers to an implicit function theorem still to be added to the
+    manuscript; here the model of `K` is finite-dimensional and lc-analysis's
+    `contDiffMBOn_of_implicit` applies, with continuity of the inverse from compactness (closed
+    graph, `continuous_of_leftInverse_rightInverse`);
+  * `isUnit_fderiv_normedRep_of_leftInverse`: invertible derivatives in any charts;
+  * `VaryingAtlas.restrict` (`Manifold/VaryingAtlasRestrict.lean`): the restriction of an atlas
+    with varying models to an open subset, the manifold structure of `Diff(K)`;
+    `ContMDiffMB₂.restrict`.
 * [`LocallyConvexManifolds/MappingSpace/Tangent.lean`](LocallyConvexManifolds/MappingSpace/Tangent.lean):
   tangent spaces of `C^ℓ(M, N)` [GN26, Thm. 4.2.2(d)].
   * `LocalAddition.tangentMapAt_eval`, `LocalAddition.tangentEquivSecCk` (and `…Sm`): for a
@@ -1118,13 +1130,14 @@ distinction between the notions that coincide in finite dimension (flagged in ea
 1. Manifolds of mappings, continued: fine box products and manifolds of mappings on non-compact
    manifolds (their Sections 4.3 and 4.4), built on the jet topology of `C^ℓ(M, N)`
    (`MappingSpace/TopologyJet.lean`). The smoothness of the group operations of `Diff(K)` belongs
-   to the Lie group library.
+   to the Lie group library, [lc-lie-groups](https://github.com/glaroton/lc-lie-groups).
 2. Flows of vector fields: time-dependent fields and parameters. Maximal flows on Banach manifolds,
    with open domain and smooth dependence (`Flow/Maximal.lean`), real analytic maximal flows
    (`Flow/Analytic.lean`), a completeness criterion (`Flow/Complete.lean`) and the Darboux theorem,
    smooth and real analytic (`Symplectic/Darboux.lean`, `Symplectic/DarbouxAnalytic.lean`), are
    done.
-3. Lie groups modeled on locally convex spaces and their Lie algebras [Nee06, GN26].
+3. Lie groups modeled on locally convex spaces and their Lie algebras [Nee06, GN26]: in
+   [lc-lie-groups](https://github.com/glaroton/lc-lie-groups).
 
 ## References
 

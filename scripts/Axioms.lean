@@ -316,3 +316,6 @@ open LocallyConvex.Manifolds LocallyConvex.Analysis
 #print axioms Distribution.IsInvolutive.exists_flat_chart
 #print axioms Distribution.isInvolutive_of_flat
 #print axioms Distribution.isInvolutive_iff_flat
+-- Inverses of families of diffeomorphisms (`MappingSpace/Diffeomorphism/Inverse.lean`)
+#print axioms ContMDiffMB₂.inverse
+#print axioms ContMDiffMB₂.restrict
