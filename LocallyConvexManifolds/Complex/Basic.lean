@@ -57,8 +57,8 @@ structures. No completeness of the model space is assumed.
   required to be positive: pseudo-Kähler metrics are included. Accordingly, `ω` is in general
   only a *weak* symplectic form.
 * The converse of the integrability of complex structures is, in finite dimensions, the
-  Newlander–Nirenberg theorem [NN57]. Its real analytic case on Banach manifolds is in
-  `LocallyConvexManifolds.Complex.NewlanderNirenberg`. In infinite dimensions:
+  Newlander–Nirenberg theorem [NN57, Theorem 1.1, p. 393]. Its real analytic case on Banach
+  manifolds is in `LocallyConvexManifolds.Complex.NewlanderNirenberg`. In infinite dimensions:
   - it holds for real analytic almost complex structures on real analytic Banach manifolds
     (Beltiță [Bel05, Theorem 7]);
   - it fails for smooth structures on some Banach manifolds (Patyi [Pat99, Theorem 3.1, p. 401]);
