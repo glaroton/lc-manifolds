@@ -768,6 +768,23 @@ open sets.
   compact, Lemma~\ref{lem:compact-finite-dim}).
 \end{definition}
 
+\begin{proposition}[$C^{k,\ell}$ maps on products {\cite[Prop.~1.7.33]{GN26}}]
+  \label{prop:ckl-product}
+  \lean{LocallyConvex.Manifolds.ContMDiffMB.contMDiffMB₂,
+    LocallyConvex.Manifolds.ContMDiffMB₂.contMDiffMB,
+    LocallyConvex.Manifolds.smoothMBM_iff_contMDiffMB₂}
+  \leanok
+  \uses{def:ckl-manifold}
+  For manifolds $L$, $M$, $N$, a $C^{k+\ell}$ map $f \colon L \times M \to N$ is $C^{k,\ell}$, and a
+  $C^{k,k}$ map is $C^k$; so $f$ is smooth if and only if it is $C^{k,\ell}$ for all $k, \ell$.
+\end{proposition}
+
+\begin{proof}
+  \leanok
+  In product charts, by \cite[Prop.~1.7.33(a), (b)]{GN26}: an open neighborhood in the product
+  contains a box $U \times V$.
+\end{proof}
+
 \section{The exponential law for manifolds of mappings}
 
 \begin{theorem}[Exponential law {\cite[Thm.~4.2.2(a)]{GN26}}]

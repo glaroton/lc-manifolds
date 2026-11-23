@@ -62,6 +62,7 @@ public import LocallyConvexManifolds.LocalAddition.Normalize
 public import LocallyConvexManifolds.Manifold.Basic
 public import LocallyConvexManifolds.Manifold.CkSuperposition
 public import LocallyConvexManifolds.Manifold.Ckl
+public import LocallyConvexManifolds.Manifold.CklProd
 public import LocallyConvexManifolds.Manifold.ContMDiff
 public import LocallyConvexManifolds.Manifold.LocalDiffeo
 public import LocallyConvexManifolds.Manifold.Product

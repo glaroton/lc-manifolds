@@ -532,6 +532,10 @@ namespaces of their own.
   * `locallyCompactSpace_of_compactSpace`, `finiteDimensional_of_compactSpace`
     (`Manifold/CkSuperposition.lean`): a nonempty compact manifold has a locally compact, hence
     (Riesz) finite-dimensional, model.
+* [`LocallyConvexManifolds/Manifold/CklProd.lean`](LocallyConvexManifolds/Manifold/CklProd.lean):
+  `ContMDiffMB.contMDiffMB₂`, `ContMDiffMB₂.contMDiffMB`, `smoothMBM_iff_contMDiffMB₂`: a map on a
+  product of manifolds is smooth if and only if it is `C^{k,ℓ}` for all `k, ℓ`
+  [GN26, Prop. 1.7.33(a), (b)].
 * [`LocallyConvexManifolds/MappingSpace/ExponentialLaw.lean`](LocallyConvexManifolds/MappingSpace/ExponentialLaw.lean):
   the exponential law for manifolds of mappings [GN26, Thm. 4.2.2(a)].
   * `LocalAddition.contMDiffOn_mappingAtlasCk_iff`, `LocalAddition.contMDiffOn_mappingAtlasSm_iff`:
