@@ -88,9 +88,11 @@ public import LocallyConvexManifolds.Metric.FinslerBounded
 public import LocallyConvexManifolds.Metric.FinslerExp
 public import LocallyConvexManifolds.Metric.FinslerGeodesics
 public import LocallyConvexManifolds.Metric.FinslerHopfRinow
+public import LocallyConvexManifolds.Metric.FinslerMaps
 public import LocallyConvexManifolds.Metric.FinslerMetricSpace
 public import LocallyConvexManifolds.Metric.FinslerQuotient
 public import LocallyConvexManifolds.Metric.FinslerSymmetrization
+public import LocallyConvexManifolds.Metric.FinslerTopology
 public import LocallyConvexManifolds.Metric.KreinProjector
 public import LocallyConvexManifolds.Metric.LeviCivita
 public import LocallyConvexManifolds.Metric.ProjectorMetric
