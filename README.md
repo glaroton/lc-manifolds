@@ -263,6 +263,15 @@ namespaces of their own.
   continuous, `μ` is a Finsler metric. Includes the chain rule `Tπ(Γ̇) = (π ∘ Γ)˙`
   (`tangentMap_velocity`) and a discussion of Banach submersions versus homogeneous spaces of
   locally convex Lie groups.
+* [`LocallyConvexManifolds/Metric/FinslerMaps.lean`](LocallyConvexManifolds/Metric/FinslerMaps.lean):
+  a `C¹` map with `μ'(Tf v) ≤ C μ(v)` takes `C¹` curves to `C¹` curves, multiplies lengths by at
+  most `C` and is `C`-Lipschitz for the Finsler distances (`dist_map_le`) ([Lar19, Prop. 2.10(3)]
+  for an arbitrary map).
+* [`LocallyConvexManifolds/Metric/FinslerTopology.lean`](LocallyConvexManifolds/Metric/FinslerTopology.lean):
+  for a Finsler metric on a manifold modeled on **any locally convex space**, `d(x₀, y) → 0` and
+  `d(y, x₀) → 0` as `y → x₀`; the distance is continuous on `M × M` and the identity
+  `M → (M, d)` is continuous ([Lar19, Prop. 2.10(1), (2)]). No normability, completeness or bound
+  on `μ` is needed: segments in a chart, reparametrized by a smooth transition, have small length.
 * [`LocallyConvexManifolds/Metric/Bilinear.lean`](LocallyConvexManifolds/Metric/Bilinear.lean):
   smooth fields of symmetric bilinear forms, by signature. **Weak Riemannian** metrics (Schmeding,
   Definition 4.1; "weak" refers to the topology of the fibers, `IsStrongAt` to the strong case) are

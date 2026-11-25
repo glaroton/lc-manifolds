@@ -188,6 +188,56 @@ This is \cite[Def.~2.7]{Lar19}, where the infimum is taken over piecewise $\Ck{1
   manifold vanishes \cite[Thm.~5.2]{MM05}. So $d_\mu$ is in general only a pseudo-distance.
 \end{remark}
 
+\section{Lipschitz maps and the topology of the distance}
+\label{sec:mt-lipschitz}
+
+\begin{lemma}[Lipschitz maps]
+  \label{lem:mt-lipschitz}
+  \lean{LocallyConvex.Manifolds.IsCkCurve.comp, LocallyConvex.Manifolds.FinslerLengthStructure.length_comp_le, LocallyConvex.Manifolds.FinslerLengthStructure.length_comp_eq, LocallyConvex.Manifolds.FinslerLengthStructure.Reach.map, LocallyConvex.Manifolds.FinslerLengthStructure.dist_map_le, LocallyConvex.Manifolds.FinslerLengthStructure.dist_map_le_of_le}
+  \leanok
+  \uses{thm:mt-triangle}
+  Let $f\colon M \to N$ be $\Ck{1}$, and $\mu$, $\mu'$ Finsler length structures on $M$, $N$
+  with $\mu'(\T f\, v) \leq C \mu(v)$ for every tangent vector $v$. Then $f$ takes $\Ck{1}$
+  curves to $\Ck{1}$ curves, $L_{\mu'}(f \circ \gamma) \leq C L_\mu(\gamma)$, and, if $C > 0$,
+  $d_{\mu'}(f x, f y) \leq C\, d_\mu(x, y)$.
+\end{lemma}
+
+\begin{proof}
+  \leanok
+  The velocity of $f \circ \gamma$ is $\T f(\dot\gamma)$ (Lemma~\ref{lem:mt-chain}); integrate
+  the bound, and map chains of arcs to chains of arcs.
+\end{proof}
+
+This is the argument of \cite[Prop.~2.10(3)]{Lar19} for left translations of a Lie group,
+written for an arbitrary map.
+
+\begin{theorem}[The topology of the distance is coarser]
+  \label{thm:mt-dist-continuous}
+  \lean{LocallyConvex.Manifolds.FinslerLengthStructure.dist_le_of_segment, LocallyConvex.Manifolds.FinslerMetric.exists_convex_nhds_lt, LocallyConvex.Manifolds.FinslerMetric.tendsto_dist_left, LocallyConvex.Manifolds.FinslerMetric.tendsto_dist_right, LocallyConvex.Manifolds.FinslerMetric.continuous_dist, LocallyConvex.Manifolds.FinslerMetric.continuous_toFinsler}
+  \leanok
+  \uses{def:finsler-metric, thm:mt-triangle}
+  Let $\mu$ be a Finsler metric on a manifold modeled on a locally convex space. Then
+  $d_\mu(x_0, y) \to 0$ and $d_\mu(y, x_0) \to 0$ as $y \to x_0$ in $M$. Hence
+  $d_\mu\colon M \times M \to [0, \infty]$ is continuous and the identity $M \to (M, d_\mu)$ is
+  continuous \cite[Prop.~2.10(1), (2)]{Lar19}.
+\end{theorem}
+
+\begin{proof}
+  \leanok
+  In the chart $\varphi$ at $x_0$, the function $(a, w) \mapsto \mu(\varphi^{-1}(a), w)$ is
+  continuous and vanishes at $(\varphi x_0, 0)$, so there is a symmetric convex neighborhood $W$
+  of $0$ with $\mu(\varphi^{-1}(\varphi x_0 + w'), w) < \varepsilon$ for $w, w' \in W$. If
+  $\varphi y - \varphi x_0 \in W$, the segment from $\varphi x_0$ to $\varphi y$, reparametrized by
+  a smooth monotone transition $\sigma$ from $0$ to $1$, is a $\Ck{1}$ curve of length at most
+  $\int_0^1 \sigma' \varepsilon = \varepsilon$; the same holds backwards. Continuity of $d_\mu$
+  follows from the triangle inequality.
+\end{proof}
+
+No normability or completeness of the model, and no bound on $\mu$, is needed. In
+\cite[Prop.~2.10(2)]{Lar19} the topology $\tau_\mu$ of the distance is said to be \emph{finer}
+than the manifold topology; what is proved there, and here, is that $\tau_\mu$ is
+\emph{coarser}. The reverse inclusion fails in general (Remark on degenerate distances above).
+
 \section{Lifting curves versus lifting neighborhoods}
 \label{sec:mt-quotients}
 

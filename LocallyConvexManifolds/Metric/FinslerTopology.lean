@@ -310,7 +310,8 @@ theorem continuous_dist : Continuous fun p : M × M ↦ μ.dist p.1 p.2 := by
     by_contra hle
     rw [not_lt] at hle
     have htri : d₀ ≤ μ.dist x₀ p.1 + μ.dist p.1 p.2 + μ.dist p.2 y₀ :=
-      (μ.toFinslerLengthStructure.dist_triangle x₀ p.2 y₀).trans (add_le_add_left (μ.toFinslerLengthStructure.dist_triangle x₀ p.1 p.2) _)
+      (μ.toFinslerLengthStructure.dist_triangle x₀ p.2 y₀).trans
+        (add_le_add_left (μ.toFinslerLengthStructure.dist_triangle x₀ p.1 p.2) _)
     exact absurd (htri.trans (by gcongr)) (not_le.mpr hp)
   · -- upper bound: `d(x, y) ≤ d(x, x₀) + d₀ + d(y₀, y)`
     have hlim : Tendsto (fun p : M × M ↦ μ.dist p.1 x₀ + d₀ + μ.dist y₀ p.2) (𝓝 (x₀, y₀))
